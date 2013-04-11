@@ -25,7 +25,7 @@ setup(
 	entry_points=\
 	"""
         [ckan.plugins]
-	# Add plugins here, eg
-	# myplugin=ckanext.dara:PluginClass
+	# Add plugins here
+    dara=ckanext.dara.plugin:DaraMetadataPlugin
 	""",
 )

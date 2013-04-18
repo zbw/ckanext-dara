@@ -1,10 +1,89 @@
 {% ckan_extends %}
 
+
+
+
+
+
+
+{% block package_basic_fields_title %}
+    {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
+{% endblock %}
+
+{% block package_basic_fields_url %}
+{% set prefix = h.url_for(controller='package', action='read', id='') %}
+{% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+{% set domain = domain|replace("http://", "")|replace("https://", "") %}
+{% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
+
+{{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
+{% endblock %}
+
+{% block package_basic_fields_description %}
+{{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes) }}
+{% endblock %}
+
+{% block package_basic_fields_tags %}
+{% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+{{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+{% endblock %}
+
+{% block package_basic_fields_license %}
+<div class="control-group">
+  {% set error = errors.license_id %}
+  <label class="control-label" for="field-license">{{ _("License") }}</label>
+  <div class="controls">
+    <select id="field-license" name="license_id" data-module="autocomplete">
+      {% for licence_desc, licence_id in licences|sort if licence_desc  %}
+        <option value="{{ licence_id }}" {% if data.get('license_id', 'notspecified') == licence_id %}selected="selected"{% endif %}>{{ licence_desc }}</option>
+      {% endfor %}
+    </select>
+    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+    <span class="info-block info-inline">
+      <i class="icon-info-sign"></i>
+      {% trans %}
+        License definitions and additional information can be found
+        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
+      {% endtrans %}
+    </span>
+  </div>
+</div>
+
+{#we'll put group selection here. originally it's in the metadate block #}
+{% block dataset_fields %}
+    {% if data.groups %}
+      <div class="control-group">
+        <label class="control-label">{{ _('Groups') }}</label>
+        <div class="controls">
+          {% for group in data.groups %}
+            <label class="checkbox" for="field-group-{{ loop.index0 }}">
+              <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked" />
+              {{ group.title }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% set group_name = 'groups__%s__id' % data.groups|length %}
+    {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
+    {{ form.input(group_name, label=_('Add Group'), id="field-group", value=data[group_name], classes=['control-medium'], attrs=group_attrs) }}
+  {% endblock %}
+
+
+{% endblock %}
+
+
+
+  
+
+
+{#
 {% block package_basic_fields_custom %}
 {{ form.input('custom_text', label=_('Custom Text'), id='field-custom_text', 
     placeholder=_('custom text'), 
     value=data.custom_text, 
     error=errors.custom_text, 
     classes=['control-medium']) }}
-
 {% endblock %}
+#}
+

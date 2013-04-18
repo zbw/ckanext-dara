@@ -7,8 +7,18 @@ won't work. #}
 {% block custom_fields %}
 {% endblock %}
 
+{# we only want metadata here, not ckan-internals #}
+{% block dataset_fields %}
+{% endblock %}
+
+{% block package_metadata_fields_maintainer %}
+{% endblock %}
+
+
+
 {% block package_metadata_fields %}
 
+{#
   <div class="control-group">
     <label class="control-label" for="field-country_code">{{ _("Country Code") }}</label>
     <div class="controls">
@@ -18,16 +28,69 @@ won't work. #}
         {% endfor %}
       </select>
     </div>
-    </div>
+  </div>
+#}
 
-{{ form.input('dara_year', label=_('Year'), id='field-dara_year', 
-    placeholder=_('Year'), 
+
+{# XXX not sure if we need this at all. most probably all uploaded datasets are
+datasets, aren't they ;-) #}
+<div class="control-group">
+    <label class="control-label" for="field-dara_resourceType">{{ _("Type") }}</label>
+    <div class="controls">
+        <select id="field-dara_resourceType" name="dara_resourceType">
+            <option value="1">
+                Study
+                </option>
+            <option value="2" selected="selected">
+                Dataset
+            </option>
+        </select>
+    </div>
+</div>
+
+
+
+{% block package_metadata_author %}
+{{ form.input('author', label=_('Author'), id='field-author', placeholder=_('Sven Vlaeminck'), value=data.author, error=errors.author, classes=['control-medium']) }}
+{% endblock %}
+
+{{ form.input('dara_year', label=_('Publication Year'), id='field-dara_year', 
+    placeholder=_('2013'), 
     value=data.dara_year, 
     error=errors.dara_year, 
     classes=['control-medium']) }}
 
+{{ form.input('DOI', label=_('DOI'), id='field-DOI', 
+    placeholder=_('10.5432/edawax.001'), 
+    value=data.DOI, 
+    error=errors.DOI, 
+    classes=['control-medium']) }}
+
+<div class="control-group">
+    <label class="control-label" for="field-dara_availability">{{
+        _("Availability") }}</label>
+    <div class="controls">
+        <select id="field-dara_availability" name="dara_availability">
+            <option value="1">
+                Download
+            </option>
+            <option value="2">
+                Lieferbar
+            </option>
+            <option value="3">
+                Vor-Ort-Nutzung
+            </option>
+            <option value="4">
+                Nicht verfügbar
+            </option>
+            <option value="5">
+                Unbekannt
+            </option>
+        </select>
+    </div>
+</div>
 
 
-  {{ super() }}
+
 
 {% endblock %}

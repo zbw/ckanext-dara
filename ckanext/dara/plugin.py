@@ -6,6 +6,52 @@
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+from pylons import c
+#from pylons import h
+
+#i'm lazy
+dara_optional = [
+        'OtherTitle', 
+        'currentVersion', 
+        'language', 
+        'AlternativeIdentifier_ID',
+        'AlternativeIdentifier_Type', 
+        'Universe_area', 
+        'Universe_sampled',
+        'SelectionMethod', 
+        'CollectionDate_free', 
+        'TimeDimension_free',
+        'DataCollector_name', 
+        'CollectionMode_free', 
+        'Note_text',
+        'Availabilityfree', 
+        'Rights',]
+
+
+
+def dara_extras():
+    """returns dara extra metadata as separate dictionary
+    """
+    prefix = 'dara_'
+    try:
+        pkg = c.pkg_dict
+        extras = pkg['extras']
+    
+        #simplifying the pkg[extras]
+        normalised_extras = {}
+        for extra in extras:
+            normalised_extras[extra['key']] = extra['value']
+        
+        #filtering dara extras
+        dara_extras = {}
+        for key,value in normalised_extras.items():
+            if key.startswith(prefix):
+                dara_extras[key] = value
+        return dara_extras
+
+    except:
+        return None
+    
 
 class DaraMetadataPlugin(plugins.SingletonPlugin,
         tk.DefaultDatasetForm):
@@ -25,7 +71,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
 
     def get_helpers(self):
         #return {'country_codes': country_codes}
-        return {}
+        return {'dara_extras' : dara_extras}
+        #return {}
 
     def is_fallback(self):
         # Return True to register this plugin as the default handler for
@@ -55,7 +102,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
                })
 
         schema.update({
-            'DOI': [
+            'dara_DOI': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_extras')
                 ]
@@ -67,7 +114,25 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
                 tk.get_converter('convert_to_extras')
                 ]
             })
-               
+
+        ### optional fields ###
+        #XXX very basic here. what about validation???
+       #for element in dara_optional:
+       #    schema.update({
+       #        element : [
+       #            tk.get_validator('ignore_missing'),
+       #            tk.get_converter('convert_to_extras')
+       #            ]
+       #        })
+
+      # schema.update({
+      #     'dara_OtherTitle' : [
+      #         tk.get_validator('ignore_missing'),
+      #         tk.get_converter('convert_to_extras')
+      #         ]
+      #     })
+
+
         return  schema
                
     def create_package_schema(self):
@@ -87,8 +152,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
         # Don't show vocab tags mixed in with normal 'free' tags
         # (e.g. on dataset pages, or on the search page)
         schema['tags']['__extras'].append(tk.get_converter('free_tags_only'))
-
         
+        #TODO: validation does not work. 'not_empty' and 'not_missing' are
+        #both throwing errors ('error.rRightsesource'). Dont know yet how to handle
+        #that...
+        
+        ###mandatory fields ###
+
         schema.update({
                'dara_resourceType': [
                    tk.get_validator('ignore_missing'),
@@ -98,17 +168,44 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
 
         schema.update({
             'dara_year': [
+                tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')
                 ]
             })
 
         schema.update({
-            'DOI': [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')
+            'dara_DOI': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_from_extras')
                 ]
             })
+
+        schema.update({
+            'dara_availability' : [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_from_extras')
+                ]
+            })
+
+
+        ### optional fields ###
+        #XXX very basic here. what about validation???
+       #for element in dara_optional:
+       #    name = 'dara_' + element
+       #    schema.update({
+       #        name : [
+       #            tk.get_validator('ignore_missing'),
+       #            tk.get_converter('convert_from_extras')
+       #            ]
+       #        })
+       #
+      # schema.update({
+      #     'dara_OtherTitle' : [
+      #         tk.get_validator('ignore_missing'),
+      #         tk.get_converter('convert_from_extras')
+      #         ]
+      #     })
+
 
 
         return schema

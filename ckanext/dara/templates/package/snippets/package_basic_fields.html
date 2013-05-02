@@ -1,89 +1,143 @@
+{#
 {% ckan_extends %}
+#}
 
+{% import 'macros/form.html' as form %}
 
-
-
-
+{% block package_basic_fields_license %}
+{% endblock %}
 
 
 {% block package_basic_fields_title %}
-    {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
+    {{ form.input('title', id='field-title', 
+        label=_('Title'), 
+        placeholder=_('eg. A descriptive title'), 
+        value=data.title, 
+        error=errors.title, 
+        classes=['control-full', 'control-large'], 
+        attrs={'data-module': 'slug-preview-target'}) }}
 {% endblock %}
 
 {% block package_basic_fields_url %}
-{% set prefix = h.url_for(controller='package', action='read', id='') %}
-{% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
-{% set domain = domain|replace("http://", "")|replace("https://", "") %}
-{% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
+    {% set prefix = h.url_for(controller='package', action='read', id='') %}
+    {% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+    {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+    {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
 
-{{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
+    {{ form.prepend('name', id='field-name', label=_('URL'), 
+        prepend=prefix, 
+        placeholder=_('eg. my-dataset'), 
+        value=data.name, 
+        error=errors.name, 
+        attrs=attrs) }}
 {% endblock %}
 
 {% block package_basic_fields_description %}
-{{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes) }}
+    {{ form.markdown('notes', id='field-notes', 
+        label=_('Description'), 
+        placeholder=_('eg. Some useful notes about the data'), 
+        value=data.notes, 
+        error=errors.notes) }}
 {% endblock %}
+
+{# dara level 1 (mandatory) fields #}
+{% block package_basic_fields_custom %}
+    {% set dara = h.dara_extras() %}
+
+    <hr />
+ 
+    <h4>da|ra mandatory fields</h4>
+
+    {# use form.* here #}
+
+    {{ form.input('dara_DOI', label=_('DOI'), id='field-dara_DOI', 
+        placeholder=_('10.5432/edawax.001'), 
+        value=dara.dara_DOI, 
+        error=errors.dara_DOI, 
+        classes=['control-medium']) }}
+
+    {{ form.input('dara_year', label=_('Publication Year'), id='field-dara_year', 
+        placeholder=_('2013'), 
+        value=dara.dara_year,
+        error=errors.dara_year, 
+        classes=['control-medium']) }}
+        
+    {{ form.select('dara_resourceType', id='field-dara_resourceType', 
+        label=_('Type'),
+        options=[{'value': '1', 'text' :'Study'}, {'value': '2', 'text' : 'Dataset'}],
+        selected='2',
+        error=errors.dara_resourceType,
+        classes=['control-medium']) }}
+
+    {{ form.select('dara_availability', id='field-dara_availability', 
+        label=_('Availability'),
+        options=[{'value': '1', 'text' :'Download'}, 
+                {'value': '2', 'text' : 'Lieferbar'}, 
+                {'value': '3', 'text' :'Vor-Ort-Nutzung'},
+                {'value' : '4', 'text' : 'Nicht verfügbar'},
+                {'value' : '5', 'text' : 'Unbekannt'},
+                ],
+        selected=1,
+        error=errors.dara_availability,
+        classes=['control-medium']) }}
+
+    <hr />
+
+{% endblock %}
+
+
 
 {% block package_basic_fields_tags %}
-{% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-{{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+    {% set tag_attrs = {
+                'data-module': 'autocomplete', 
+                'data-module-tags': '', 
+                 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
+                } 
+                %}
+    {{ form.input('tag_string', id='field-tags', 
+        label=_('Tags'), 
+        placeholder=_('eg. economy, mental health, government'), 
+        value=data.tag_string, error=errors.tags, 
+        classes=['control-full'], 
+        attrs=tag_attrs) }}
 {% endblock %}
 
-{% block package_basic_fields_license %}
-<div class="control-group">
-  {% set error = errors.license_id %}
-  <label class="control-label" for="field-license">{{ _("License") }}</label>
-  <div class="controls">
-    <select id="field-license" name="license_id" data-module="autocomplete">
-      {% for licence_desc, licence_id in licences|sort if licence_desc  %}
-        <option value="{{ licence_id }}" {% if data.get('license_id', 'notspecified') == licence_id %}selected="selected"{% endif %}>{{ licence_desc }}</option>
-      {% endfor %}
-    </select>
-    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-    <span class="info-block info-inline">
-      <i class="icon-info-sign"></i>
-      {% trans %}
-        License definitions and additional information can be found
-        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
-      {% endtrans %}
-    </span>
-  </div>
-</div>
 
-{#we'll put group selection here. originally it's in the metadate block #}
-{% block dataset_fields %}
-    {% if data.groups %}
-      <div class="control-group">
-        <label class="control-label">{{ _('Groups') }}</label>
-        <div class="controls">
-          {% for group in data.groups %}
-            <label class="checkbox" for="field-group-{{ loop.index0 }}">
-              <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked" />
-              {{ group.title }}
-            </label>
+{% block package_basic_fields_org %}
+{# if we have a default group then this wants remembering #}
+{% if data.group_id %}
+  <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
+{% endif %}
+{% set existing_org = data.owner_org or data.group_id %}
+{% if h.check_access('sysadmin') or data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
+  {% set organizations_available = h.organizations_available('create_dataset') %}
+  {% if organizations_available %}
+    <div class="control-group">
+      <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
+      <div class="controls">
+        <select id="field-organizations" name="owner_org" data-module="autocomplete">
+          <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('Select an organization...') }}</option>
+          {% for organization in organizations_available %}
+            {# get out first org from users list only if there is not an existing org #}
+            {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and organization.id == organizations_available[0].id) %}
+            <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.name }}</option>
           {% endfor %}
-        </div>
+        </select>
       </div>
-    {% endif %}
-    {% set group_name = 'groups__%s__id' % data.groups|length %}
-    {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
-    {{ form.input(group_name, label=_('Add Group'), id="field-group", value=data[group_name], classes=['control-medium'], attrs=group_attrs) }}
-  {% endblock %}
-
-
+    </div>
+  {% endif %}
+{% endif %}
 {% endblock %}
 
 
 
-  
 
 
-{#
-{% block package_basic_fields_custom %}
-{{ form.input('custom_text', label=_('Custom Text'), id='field-custom_text', 
-    placeholder=_('custom text'), 
-    value=data.custom_text, 
-    error=errors.custom_text, 
-    classes=['control-medium']) }}
-{% endblock %}
-#}
+
+
+
+
+
+
+
 

@@ -48,14 +48,14 @@ Example:
 
   <li class="last {{ s3 }}">
     {% if s3 != 'complete' %}
-      <span class="highlight">{{ _('Add Metadata (dara)') }}</span>
+      <span class="highlight">{{ _('Add Metadata (da|ra)') }}</span>
     {% else %}
       {% if s1 == 'active' or s2 == 'active' %}
         {# stage 1 #}
         <button class="highlight" name="save" value="go-metadata"
-            type="submit">{{ _('Add Metadata (dara)') }}</button>
+            type="submit">{{ _('Add Metadata (da|ra)') }}</button>
       {% else %}
-        {% link_for _('Add Metadata (dara)'), controller='package', action='new', class_="highlight" %}{{ s2 }}
+        {% link_for _('Add Metadata (da|ra)'), controller='package', action='new', class_="highlight" %}{{ s2 }}
       {% endif %}
     {% endif %}
     </li>

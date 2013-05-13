@@ -1,0 +1,13 @@
+
+.ui-widget {
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-size: 1em !important;
+}
+
+.ui-accordion-header {
+    font-weight:bold !important;
+}
+
+.ui-widget-content {
+    font-size:80% !important;
+}

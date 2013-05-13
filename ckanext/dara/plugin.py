@@ -8,8 +8,13 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 from pylons import c
 #from pylons import h
+#from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 
-#i'm lazy
+
+
+###TODO write list for mandatory fields. choose the original names from dara
+#schema
+
 dara_optional = [
         'OtherTitle', 
         'currentVersion', 
@@ -53,21 +58,31 @@ def dara_extras():
         return None
     
 
-class DaraMetadataPlugin(plugins.SingletonPlugin,
-        tk.DefaultDatasetForm):
+class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
     A CKAN plugin for adding da|ra metadata schema
     '''
     
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IDatasetForm, inherit=False)
-    plugins.implements(plugins.ITemplateHelpers, inherit=False)
+    plugins.implements(plugins.IDatasetForm, inherit=True)
+    plugins.implements(plugins.ITemplateHelpers, inherit=True)
+    plugins.implements(plugins.IPackageController, inherit=True)
 
     
+   #def after_update(self,context, pkg_dict):
+   #    """
+   #    test
+   #    """
+   #    import pdb; pdb.set_trace()
+
+
+
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
         # that CKAN will use this plugin's custom templates.
         tk.add_template_directory(config, 'templates')
+        tk.add_public_directory(config, 'public')
+        tk.add_resource('resources', 'edawax')
 
     def get_helpers(self):
         #return {'country_codes': country_codes}
@@ -89,48 +104,49 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
        
         schema.update({
             'dara_year' : [
-                tk.get_validator('ignore_missing'),
+                tk.get_validator('not_empty'),
                 tk.get_converter('convert_to_extras')
                 ]
             })
 
         schema.update({
                'dara_resourceType': [
-                   tk.get_validator('ignore_missing'),
+                   tk.get_validator('not_empty'),
                    tk.get_converter('convert_to_extras')
                    ]
                })
 
         schema.update({
             'dara_DOI': [
-                tk.get_validator('ignore_missing'),
+                tk.get_validator('not_empty'),
                 tk.get_converter('convert_to_extras')
                 ]
             })
 
         schema.update({
             'dara_availability' : [
-                tk.get_validator('ignore_missing'),
+                tk.get_validator('not_empty'),
                 tk.get_converter('convert_to_extras')
                 ]
             })
 
         ### optional fields ###
         #XXX very basic here. what about validation???
-       #for element in dara_optional:
-       #    schema.update({
-       #        element : [
-       #            tk.get_validator('ignore_missing'),
-       #            tk.get_converter('convert_to_extras')
-       #            ]
-       #        })
+        for element in dara_optional:
+            field_name = 'dara_' + element
+            schema.update({
+                field_name : [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')
+                    ]
+                })
 
-      # schema.update({
-      #     'dara_OtherTitle' : [
-      #         tk.get_validator('ignore_missing'),
-      #         tk.get_converter('convert_to_extras')
-      #         ]
-      #     })
+       #schema.update({
+       #    'dara_OtherTitle' : [
+       #        tk.get_validator('ignore_missing'),
+       #        tk.get_converter('convert_to_extras'),
+       #        ]
+       #    })
 
 
         return  schema
@@ -148,105 +164,57 @@ class DaraMetadataPlugin(plugins.SingletonPlugin,
 
     def show_package_schema(self):
         schema = super(DaraMetadataPlugin, self).show_package_schema()
+        #schema = self._dara_package_schema(schema)
 
-        # Don't show vocab tags mixed in with normal 'free' tags
-        # (e.g. on dataset pages, or on the search page)
-        schema['tags']['__extras'].append(tk.get_converter('free_tags_only'))
-        
-        #TODO: validation does not work. 'not_empty' and 'not_missing' are
-        #both throwing errors ('error.rRightsesource'). Dont know yet how to handle
-        #that...
-        
         ###mandatory fields ###
 
         schema.update({
                'dara_resourceType': [
-                   tk.get_validator('ignore_missing'),
-                   tk.get_converter('convert_from_extras')
+                   tk.get_converter('convert_from_extras'),
+                   tk.get_validator('not_empty'),
                    ]
                })
 
         schema.update({
             'dara_year': [
-                tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_from_extras'),
+                tk.get_validator('not_empty'),
                 ]
             })
 
         schema.update({
             'dara_DOI': [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_from_extras')
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('not_empty'),
                 ]
             })
 
         schema.update({
             'dara_availability' : [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_from_extras')
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('not_empty'),
                 ]
             })
 
 
-        ### optional fields ###
         #XXX very basic here. what about validation???
-       #for element in dara_optional:
-       #    name = 'dara_' + element
-       #    schema.update({
-       #        name : [
-       #            tk.get_validator('ignore_missing'),
-       #            tk.get_converter('convert_from_extras')
-       #            ]
-       #        })
-       #
-      # schema.update({
-      #     'dara_OtherTitle' : [
-      #         tk.get_validator('ignore_missing'),
-      #         tk.get_converter('convert_from_extras')
-      #         ]
-      #     })
-
-
-
+        for element in dara_optional:
+            field_name = 'dara_' + element
+            schema.update({
+                field_name : [
+                    tk.get_converter('convert_from_extras'),
+                    tk.get_validator('ignore_missing'),    
+                    ]
+                })
+        
+       #schema.update({
+       #    'dara_OtherTitle' : [
+       #        tk.get_converter('convert_from_extras'),
+       #        tk.get_validator('ignore_missing')
+       #        ]
+       #    })
+        
+       
         return schema
 
-
-
-### example code ###
-
-#def create_country_codes():
-#   '''Create country_codes vocab and tags, if they don't exist already.
-
-#   Note that you could also create the vocab and tags using CKAN's API,
-#   and once they are created you can edit them (e.g. to add and remove
-#   possible dataset country code values) using the API.
-
-#   '''
-#   user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
-#   context = {'user': user['name']}
-#   try:
-#       data = {'id': 'country_codes'}
-#       tk.get_action('vocabulary_show')(context, data)
-#       logging.info("Example genre vocabulary already exists, skipping.")
-#   except tk.ObjectNotFound:
-#       logging.info("Creating vocab 'country_codes'")
-#       data = {'name': 'country_codes'}
-#       vocab = tk.get_action('vocabulary_create')(context, data)
-#       for tag in (u'uk', u'ie', u'de', u'fr', u'es'):
-#           logging.info(
-#                   "Adding tag {0} to vocab 'country_codes'".format(tag))
-#           data = {'name': tag, 'vocabulary_id': vocab['id']}
-#           tk.get_action('tag_create')(context, data)
-
-
-#def country_codes():
-#   '''Return the list of country codes from the country codes vocabulary.'''
-#   create_country_codes()
-#   try:
-#       country_codes = tk.get_action('tag_list')(
-#               data_dict={'vocabulary_id': 'country_codes'})
-#       return country_codes
-#   except tk.ObjectNotFound:
-#       return None
-
-
+ 

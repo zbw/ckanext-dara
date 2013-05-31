@@ -16,7 +16,29 @@ won't work. #}
 
 
 {% block package_metadata_fields %}
+
+{#
+wir lassen stage3 drinnen. damit ließe sich dann im package dara die template
+original erhalten und nur in z.B. einem Theme und Layout package speziell f.
+edawax anpassen / ersetzen. Hier jetzt erstmal noch in dara package
+
+TODO: special edawax tweaks should go into theme package
+
+#}
+
+<h4>Disclaimer</h4>
+<div style="font-size:125%">
+<p>By clicking 'Finish' and submitting your dataset you'll agree with the
+following...</p>
+
+<p>Note: we don't need this stage for data input this time, since we put all
+dara metadata in stage1. We leave it here
+for testing purposes and perhaps it would be useful for several other usecases,
+such as 'Disclaimer'</p>
+
+</div>
 {% endblock %}
+
 
 
 

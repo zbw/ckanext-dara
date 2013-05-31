@@ -15,6 +15,7 @@ from pylons import c
 ###TODO write list for mandatory fields. choose the original names from dara
 #schema
 
+
 dara_optional = [
         'OtherTitle', 
         'currentVersion', 
@@ -82,7 +83,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # that CKAN will use this plugin's custom templates.
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'public')
-        tk.add_resource('resources', 'edawax')
+        tk.add_resource('resources', 'dara')
 
     def get_helpers(self):
         #return {'country_codes': country_codes}
@@ -164,7 +165,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(DaraMetadataPlugin, self).show_package_schema()
-        #schema = self._dara_package_schema(schema)
 
         ###mandatory fields ###
 

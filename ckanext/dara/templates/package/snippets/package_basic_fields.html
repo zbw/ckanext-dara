@@ -53,36 +53,14 @@
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
 {% set dara = h.dara_extras() %}
-{% resource 'edawax/dara.css' %}
-{% resource 'edawax/dara.js' %} 
-{% resource 'edawax/jquery-ui.js' %}
-{#{% resource 'edawax/jquery-ui.css' %}#}
-
-<!--
-<div id="dara_test">
-<h3>Section 1</h3>
-  <div>
-    <p>
-    Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer
-    ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit
-    amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut
-    odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.
-    </p>
-  </div>
-  <h3>Section 2</h3>
-  <div>
-    <p>
-    Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
-    purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
-    velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
-    suscipit faucibus urna.
-    </p>
-  </div>
-</div>
--->
+{% resource 'dara/dara.css' %}
+{% resource 'dara/dara.js' %} 
+{% resource 'dara/jquery-ui.js' %}
+{#{% resource 'dara/jquery-ui.css' %}#}
 
 <hr>
-    <h4>da|ra mandatory fields</h4>
+    {#XXX change heading #}
+    <h4>[da|ra mandatory fields]</h4>
     {# use form.* here #}
     
     {{ form.input('dara_DOI', label=_('DOI'), id='field-dara_DOI', 
@@ -118,7 +96,8 @@
         
     <div id="dara_" style="margin-bottom:25px;">
 
-    <h4>da|ra additional metadata</h4>    
+        {#TODO change heading #}
+    <h4 id="dara_additional">[da|ra additional metadata]</h4>    
     <div id="dara_additional_fields">
 
 
@@ -304,10 +283,11 @@
   {% set organizations_available = h.organizations_available('create_dataset') %}
   {% if organizations_available %}
     <div class="control-group">
-      <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
+      <label for="field-organizations" class="control-label">{{ _('Journal') }}</label>
       <div class="controls">
         <select id="field-organizations" name="owner_org" data-module="autocomplete">
-          <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('Select an organization...') }}</option>
+          <option value="" {% if not selected_org and data.id %}
+          selected="selected" {% endif %}>{{ _('Select a journal...') }}</option>
           {% for organization in organizations_available %}
             {# get out first org from users list only if there is not an existing org #}
             {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and organization.id == organizations_available[0].id) %}

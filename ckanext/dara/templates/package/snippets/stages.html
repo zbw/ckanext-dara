@@ -12,17 +12,12 @@ Example:
     {% snippet 'package/snippets/stages.html', stages=['active', 'complete', 'complete'] %}
 
 #}
-
-
 {% set s1 = stages[0] or 'active' %}
 {% set s2 = stages[1] or 'uncomplete' %}
 {% set s3 = stages[2] or 'uncomplete' %}
-
-
 {% if s1 != 'uncomplete' %}{% set class = 'stage-1' %}{% endif %}
 {% if s2 != 'uncomplete' %}{% set class = 'stage-2' %}{% endif %}
 {% if s3 != 'uncomplete' %}{% set class = 'stage-3' %}{% endif %}
-
 
 <ol class="stages {{ class }}">
   <li class="first {{ s1 }}">
@@ -43,21 +38,18 @@ Example:
         {% link_for _('Add data'), controller='package', action='new', class_="highlight" %}
       {% endif %}
     {% endif %}
-    </li>
-
+  </li>
   <li class="last {{ s3 }}">
     {% if s3 != 'complete' %}
-      <span class="highlight">{{ _('Add Metadata (da|ra)') }}</span>
+      <span class="highlight">{{ _('Additional data') }}</span>
     {% else %}
       {% if s1 == 'active' or s2 == 'active' %}
         {# stage 1 #}
         <button class="highlight" name="save" value="go-metadata"
-            type="submit">{{ _('Add Metadata (da|ra)') }}</button>
+            type="submit">{{ _('Additional data') }}button</button>
       {% else %}
-        {% link_for _('Add Metadata (da|ra)'), controller='package', action='new', class_="highlight" %}{{ s2 }}
+        {% link_for _('Additional data'), controller='package', action='new', class_="highlight" %}{{ s2 }}
       {% endif %}
     {% endif %}
-    </li>
-
-
+  </li>
 </ol>

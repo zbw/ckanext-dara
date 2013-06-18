@@ -63,26 +63,32 @@
     <h4>[da|ra mandatory fields]</h4>
     {# use form.* here #}
     
+    {#removed. DOIs will be generated
     {{ form.input('dara_DOI', label=_('DOI'), id='field-dara_DOI', 
         placeholder=_('10.5432/edawax.001'), 
         value=dara.dara_DOI, 
         error=errors.dara_DOI, 
         classes=['control-medium']) }}
+        #}
 
-    {{ form.input('dara_year', label=_('Publication Year'), id='field-dara_year', 
+    {{ form.input('dara_PublicationDate', label=_('Publication Year'), id='field-dara_year', 
         placeholder=_('2013'), 
-        value=dara.dara_year,
-        error=errors.dara_year, 
+        value=dara.dara_PublicationDate,
+        error=errors.dara_PublicationDate, 
         classes=['control-medium']) }}
-        
+
+    
+        {# resource type will always be 'Dataset' for now    
     {{ form.select('dara_resourceType', id='field-dara_resourceType', 
         label=_('Type'),
         options=[{'value': '1', 'text' :'Study'}, {'value': '2', 'text' : 'Dataset'}],
         selected='2',
         error=errors.dara_resourceType,
         classes=['control-medium']) }}
+        #}
 
-    {{ form.select('dara_availability', id='field-dara_availability', 
+
+    {{ form.select('dara_Availabilitycontrolled', id='field-dara_availability', 
         label=_('Availability'),
         options=[{'value': '1', 'text' :'Download'}, 
                 {'value': '2', 'text' : 'Lieferbar'}, 
@@ -91,7 +97,7 @@
                 {'value' : '5', 'text' : 'Unbekannt'},
                 ],
         selected=1,
-        error=errors.dara_availability,
+        error=errors.dara_Availabilitycontrolled,
         classes=['control-medium']) }}
         
     <div id="dara_" style="margin-bottom:25px;">
@@ -107,9 +113,6 @@
                 value=dara.dara_OtherTitle, 
                 error=errors,
                 classes=['control-medium']) }}
-
-
-
 
     {{ form.input('dara_currentVersion', label=_('Current Version'),
                 id='field-dara_currentVersion', 

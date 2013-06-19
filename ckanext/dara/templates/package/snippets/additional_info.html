@@ -60,7 +60,7 @@
       {% for extra in h.sorted_extras(pkg_dict.extras) %}
       {% set key, value = extra %}
       
-      {% if value %}
+      {% if value and key in dara_md %}
       
         <tr rel="dc:relation" resource="_:extra{{ i }}">
             <th scope="row" class="dataset-label" property="rdfs:label">

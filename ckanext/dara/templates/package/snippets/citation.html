@@ -1,0 +1,24 @@
+{% set dmd = h.dara_extras() %}
+<section class="module-content package-citation">
+
+<h3>Citation</h3>
+
+{{ pkg_dict.author }} 
+
+{# this is just for demo. PublicationDate will be the final key! #}
+{% if dmd.dara_PublicationDate %}
+    ({{ dmd.dara_PublicationDate }}):
+{% else %}
+    ({{ dmd.dara_year }}):
+{% endif %}
+
+{{ pkg_dict.title }}. 
+{% if dmd.dara_currentVersion %}
+Version {{ dmd.dara_currentVersion }}. 
+{% endif %}
+ZBW - Leibniz Information Centre Economics.
+doi:10.5432/fake.DOI.
+<a
+    href="http://dx.doi.org/105432/fake.DOI">http://dx.doi.org/105432/fake.DOI</a>
+
+</section>

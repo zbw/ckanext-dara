@@ -1,13 +1,24 @@
 {% ckan_extends %}
 
-{% block package_description %}
+{% block primary_content_inner %}
+   
+  {% block package_description %}
   {{ super() }}
+  {% endblock %}
 
-  {# Add our custom country_code field to the dataset read page. #}
-  {% if pkg.get('country_code') %}
-    <section id="dataset-country_code" class="resources module-content">
-    <p><strong>Country Code</strong>: {{ pkg.country_code[0] }}</p>
-    </section>
-  {% endif %}
+  {% block package_resources %}
+    {{ super () }}
+  {% endblock %}
+   
+  {% snippet "package/snippets/citation.html", pkg_dict=pkg %}
+
+{% block package_tags %}
+    {{ super() }}
+  {% endblock %}
+   
+  {% block package_additional_info %}
+    {{ super() }}
+  {% endblock %}
+
 
 {% endblock %}

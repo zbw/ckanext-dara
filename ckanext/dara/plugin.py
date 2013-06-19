@@ -12,14 +12,12 @@ from pylons import c
 from ckanext.dara.md_schema import level_1, level_2
 
 
-###TODO write list for mandatory fields. choose the original names from dara
-#schema
-
+PREFIX = 'dara_'
 
 def dara_extras():
     """returns dara extra metadata as separate dictionary
     """
-    prefix = 'dara_'
+    
     try:
         pkg = c.pkg_dict
         extras = pkg['extras']
@@ -32,7 +30,7 @@ def dara_extras():
         #filtering dara extras
         dara_extras = {}
         for key,value in normalised_extras.items():
-            if key.startswith(prefix):
+            if key.startswith(PREFIX):
                 dara_extras[key] = value
         return dara_extras
 
@@ -46,10 +44,10 @@ def dara_md():
     """
     all_levels = {}
     for key in level_1:
-        d = 'dara_' + key
+        d = PREFIX + key
         all_levels[d] = {'name':level_1[key]['name']}
     for key in level_2:
-        d = 'dara_' + key
+        d = PREFIX + key
         all_levels[d] = {'name':level_2[key]['name']}
     return all_levels
 
@@ -107,7 +105,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #mandatory fields
         for key in level_1:
             name = level_1[key]['name']
-            field_name = 'dara_' + key
+            field_name = PREFIX + key
             schema.update({
                 field_name : [
                    tk.get_validator('not_empty'),
@@ -119,7 +117,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         ### optional fields ###
         #XXX very basic here. what about validation???
         for key in level_2:
-            field_name = 'dara_' + key
+            field_name = PREFIX + key
             schema.update({
                 field_name : [
                     tk.get_validator('ignore_missing'),
@@ -143,14 +141,17 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return schema
 
 
-    def show_package_schema(self):
+    def show_package_schema(self): 
+ 
+ 
+
         schema = super(DaraMetadataPlugin, self).show_package_schema()
 
         ###mandatory fields ###
 
         for key in level_1:
             name = level_1[key]['name']
-            field_name = 'dara_' + key
+            field_name = PREFIX + key
             schema.update({
                 field_name : [
                    tk.get_converter('convert_from_extras'),
@@ -159,28 +160,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
               })
 
 
-      #     'dara_year': [
-      #         tk.get_converter('convert_from_extras'),
-      #         tk.get_validator('not_empty'),
-      #         ]
-      #     })
-
-      # schema.update({
-      #     'dara_DOI': [
-      #         tk.get_converter('convert_from_extras'),
-      #         tk.get_validator('not_empty'),
-      #         ]
-      #     })
-
-      # schema.update({
-      #     'dara_availability' : [
-      #         tk.get_converter('convert_from_extras'),
-      #         tk.get_validator('not_empty'),
-      #         ]
-      #     })
-
         for key in level_2:
-            field_name = 'dara_' + key
+            field_name = PREFIX + key
             schema.update({
                 field_name : [
                     tk.get_converter('convert_from_extras'),

@@ -5,14 +5,14 @@
 ## Level 1 just contains fields that are not in standard CKAN fields. Title,
 # Author are not in here.
 
-level_1 = {
+LEVEL_1 = {
         'PublicationDate' : 
             {'name' : 'Publication Date'},
         'Availabilitycontrolled' : 
             {'name' : 'Availability (controlled)'},
         }
 
-level_2 = {
+LEVEL_2 = {
     'AlternativeIdentifier_ID': 
         {'name': 'Alternative Identifier'},
     'AlternativeIdentifier_Type': 

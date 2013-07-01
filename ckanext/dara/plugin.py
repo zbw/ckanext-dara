@@ -145,8 +145,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         ###mandatory fields ###
 
-        for key in level_1:
-            name = level_1[key]['name']
+        for key in LEVEL_1:
+            name = LEVEL_1[key]['name']
             field_name = PREFIX + key
             schema.update({
                 field_name : [
@@ -156,7 +156,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
               })
 
 
-        for key in level_2:
+        for key in LEVEL_2:
             field_name = PREFIX + key
             schema.update({
                 field_name : [

@@ -11,3 +11,13 @@ font-size: 1em !important;
 .ui-widget-content {
     font-size:80% !important;
 }
+
+#dara_additional_fields {
+	background-color: lightyellow;
+}
+
+.dara_info {
+	font-size: 11px;
+	color:grey;
+	padding-right:25%;
+}

@@ -58,20 +58,12 @@
 {% resource 'dara/jquery-ui.js' %}
 {#{% resource 'dara/jquery-ui.css' %}#}
 
-<hr>
-    {#XXX change heading #}
-    <h4>[da|ra mandatory fields]</h4>
-    {# use form.* here #}
-    
-    {#removed. DOIs will be generated
-    {{ form.input('dara_DOI', label=_('DOI'), id='field-dara_DOI', 
-        placeholder=_('10.5432/edawax.001'), 
-        value=dara.dara_DOI, 
-        error=errors.dara_DOI, 
-        classes=['control-medium']) }}
-        #}
+{# dara metadata start #}
+   {# use form.* here #}
 
-    {{ form.input('dara_PublicationDate', label=_('Publication Year'), id='field-dara_year', 
+    
+    {{ form.input('dara_PublicationDate', label=_('Publication Year'),
+        id='field-dara_PublicationDate', 
         placeholder=_('2013'), 
         value=dara.dara_PublicationDate,
         error=errors.dara_PublicationDate, 
@@ -103,32 +95,44 @@
     <div id="dara_" style="margin-bottom:25px;">
 
         {#TODO change heading #}
-    <h4 id="dara_additional">[da|ra additional metadata]</h4>    
+    <h4 id="dara_additional">da|ra Level 2</h4>    
+    
     <div id="dara_additional_fields">
 
+        <p class="dara_info"> Info for adding da|ra level 2 metadata.  Lorem
+        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+        diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+        Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+        dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+        elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+        aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
+        dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+        est Lorem ipsum dolor sit amet. </p>
 
-    {{ form.input('dara_OtherTitle', label=_('Other Title'),
-                id='field-dara_OtherTitle', 
-                placeholder=_('eg. Subtitle, alternative title'), 
-                value=dara.dara_OtherTitle, 
-                error=errors,
-                classes=['control-medium']) }}
 
-    {{ form.input('dara_currentVersion', label=_('Current Version'),
-                id='field-dara_currentVersion', 
-                placeholder=_('1.1'), 
-                value=dara.dara_currentVersion, 
-                error=errors.dara_currentVersion, 
+        {{ form.input('dara_OtherTitle', label=_('Other Title'),
+                    id='field-dara_OtherTitle', 
+                    placeholder=_('eg. Subtitle, alternative title'), 
+                    value=dara.dara_OtherTitle, 
+                    error=errors,
+                    classes=['control-medium']) }}
+
+        {{ form.input('dara_currentVersion', label=_('Current Version'),
+                    id='field-dara_currentVersion', 
+                    placeholder=_('1.1'), 
+                    value=dara.dara_currentVersion, 
+                    error=errors.dara_currentVersion, 
+                    ) }}
+
+        {#TODO add more languages #}    
+        {{ form.select('dara_language', id='field-dara_language', 
+                label=_('Language'),
+                options=[{'value' : 'eng', 'text':'English'},
+                        {'value' : 'ger', 'text' : 'Deutsch'}],
+                selected='eng',
+                error=errors.dara_language,
                 ) }}
-
-    {#TODO add more languages #}    
-    {{ form.select('dara_language', id='field-dara_language', 
-            label=_('Language'),
-            options=[{'value' : 'eng', 'text':'English'},
-                    {'value' : 'ger', 'text' : 'Deutsch'}],
-            selected='eng',
-            error=errors.dara_language,
-            ) }}
 
 
         {#additional identifier
@@ -136,7 +140,7 @@
         {{ form.input('dara_AlternativeIdentifier_ID', 
                 label=_('Alternative Identifier'),
                 id='field-dara_AlternativeIdentifier_ID', 
-                placeholder=_('eg. ISBN, Handle'), 
+                placeholder=_('eg. ISBN, Handle, DOI'), 
                 value=dara.dara_AlternativeIdentifier_ID, 
                 error=errors.dara_AlternativeIdentifier_ID, 
                 classes=['control-medium']) }}
@@ -145,8 +149,8 @@
         {{ form.select('dara_AlternativeIdentifier_Type', id='field-dara_AlternativeIdentifier_Type', 
             label=_('Alternative Identifier Type'),
             options=[
-                    {'text': 'ARK', 'value': 'ARK'}, 
                     {'text': 'DOI', 'value': 'DOI'}, 
+                    {'text': 'ARK', 'value': 'ARK'}, 
                     {'text': 'EAN13', 'value': 'EAN13'}, 
                     {'text': 'EISSN', 'value': 'EISSN'}, 
                     {'text': 'Handle', 'value': 'Handle'}, 
@@ -180,7 +184,6 @@
                 error=errors.dara_Universe_sampled,
             classes=['control-medium']) }}
 
-
         {{ form.markdown('dara_SelectionMethod', 
                 label=_('Sampling'),
                 id='field-dara_SelectionMethod', 
@@ -207,7 +210,7 @@
                 error=errors.dara_TimeDimension_free,
                 classes=['control-medium']) }}
                 
-    {#TODO attributes #}        
+        {#TODO attributes #}        
         {{ form.input('dara_DataCollector_name', 
                 label=_('Data Collector'),
                 id='field-dara_DataCollector_name', 
@@ -216,7 +219,7 @@
                 error=errors.dara_DataCollector_name,
                 classes=['control-medium']) }}
 
-    {#TODO controlled  #}        
+        {#TODO controlled  #}        
         {{ form.input('dara_CollectionMode_free', 
                 label=_('Collection Mode'),
                 id='field-dara_CollectionMode_free', 

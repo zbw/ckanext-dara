@@ -1,4 +1,10 @@
-#HB 2013-04-11
+#Dr. Hendrik Bunke
+#ZBW - Leibniz Information Centre for Economics
+#2013-04-11
+
+"""
+CKAN plugin for da|ra schema based metadata
+"""
 
 #import logging
 import ckan.plugins as plugins
@@ -60,7 +66,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
 
-    ###XXX debugging methods XXX
+    #XXX debugging methods
 
    #def after_update(self,context, pkg_dict):
    #    """
@@ -70,7 +76,34 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
    #def before_view(self, pkg_dict):
    #    dmd = dara_md
+   #    daraextras = dara_extras
    #    import pdb; pdb.set_trace()
+
+    def _dara_package_schema(self, schema):
+        # Add our custom metadata field to the schema.
+
+        #mandatory fields
+        for key in LEVEL_1:
+            field_name = PREFIX + key
+            schema.update({
+                field_name: [
+                    tk.get_validator('not_empty'),
+                    tk.get_converter('convert_to_extras')
+                ]
+            })
+
+        ## optional fields ###
+        #XXX very basic here. what about validation???
+        for key in LEVEL_2:
+            field_name = PREFIX + key
+            schema.update({
+                field_name: [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')
+                ]
+            })
+
+        return schema
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -80,8 +113,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_resource('resources', 'dara')
 
     def get_helpers(self):
-        #return {'country_codes': country_codes}
-        return {'dara_extras' : dara_extras, 'dara_md' : dara_md,}
+        return {'dara_extras': dara_extras, 'dara_md': dara_md}
 
         #return {}
 
@@ -95,78 +127,36 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # registers itself as the default (above).
         return []
 
-    def _dara_package_schema(self, schema):
-        # Add our custom metadata field to the schema.
-
-        #mandatory fields
-        for key in LEVEL_1:
-            name = LEVEL_1[key]['name']
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                   tk.get_validator('not_empty'),
-                   tk.get_converter('convert_to_extras')
-                  ]
-              })
-
-
-        ### optional fields ###
-        #XXX very basic here. what about validation???
-        for key in LEVEL_2:
-            field_name = PREFIX + key
-            schema.update({
-                field_name : [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_converter('convert_to_extras')
-                    ]
-                })
-
-
-        return  schema
-    
-
     def create_package_schema(self):
         schema = super(DaraMetadataPlugin, self).create_package_schema()
         schema = self._dara_package_schema(schema)
         return schema
 
-    
     def update_package_schema(self):
         schema = super(DaraMetadataPlugin, self).update_package_schema()
         schema = self._dara_package_schema(schema)
         return schema
 
-
-    def show_package_schema(self): 
- 
- 
+    def show_package_schema(self):
 
         schema = super(DaraMetadataPlugin, self).show_package_schema()
 
-        ###mandatory fields ###
-
         for key in LEVEL_1:
-            name = LEVEL_1[key]['name']
             field_name = PREFIX + key
             schema.update({
-                field_name : [
-                   tk.get_converter('convert_from_extras'),
-                   tk.get_validator('not_empty'),
-                  ]
-              })
-
+                field_name: [
+                    tk.get_converter('convert_from_extras'),
+                    tk.get_validator('not_empty'),
+                ]
+            })
 
         for key in LEVEL_2:
             field_name = PREFIX + key
             schema.update({
-                field_name : [
+                field_name: [
                     tk.get_converter('convert_from_extras'),
                     tk.get_validator('ignore_missing'),
-                    ]
-                })
+                ]
+            })
 
-
-       
         return schema
-
- 

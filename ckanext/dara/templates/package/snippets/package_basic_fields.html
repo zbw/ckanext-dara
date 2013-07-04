@@ -8,7 +8,6 @@
 {% block package_basic_fields_license %}
 {% endblock %}
 
-
 {% block package_basic_fields_title %}
     {{ form.input('title', id='field-title', 
         label=_('Title'), 
@@ -21,9 +20,15 @@
 
 {% block package_basic_fields_url %}
     {% set prefix = h.url_for(controller='package', action='read', id='') %}
-    {% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+    {% set domain = h.url_for(controller='package', action='read', 
+                                id='', qualified=true) %}
     {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-    {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
+    {% set attrs = {
+        'data-module': 'slug-preview-slug', 
+        'data-module-prefix': domain, 
+        'data-module-placeholder': '<dataset>'
+        } 
+    %}
 
     {{ form.prepend('name', id='field-name', label=_('URL'), 
         prepend=prefix, 
@@ -39,29 +44,28 @@
         placeholder=_('eg. Some useful notes about the data'), 
         value=data.notes, 
         error=errors.notes) }}
-        {% endblock %}
+{% endblock %}
 
 {% block package_metadata_author %}
-        {{ form.input('author', label=_('Author'), 
-        id='field-author', 
-        placeholder=_('Joe Bloggs'), 
-        value=data.author, 
-        error=errors.author, 
-        classes=['control-medium']) }}
+    {{ form.input('author', label=_('Author'), 
+    id='field-author', 
+    placeholder=_('Joe Bloggs'), 
+    value=data.author, 
+    error=errors.author, 
+    classes=['control-medium']) }}
 {% endblock %}
 
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
-{% set dara = h.dara_extras() %}
-{% resource 'dara/dara.css' %}
-{% resource 'dara/dara.js' %} 
-{% resource 'dara/jquery-ui.js' %}
-{#{% resource 'dara/jquery-ui.css' %}#}
+    {% set dara = h.dara_extras() %}
+    {% resource 'dara/dara.css' %}
+    {% resource 'dara/dara.js' %} 
+    {% resource 'dara/jquery-ui.js' %}
+    {#{% resource 'dara/jquery-ui.css' %}#}
 
-{# dara metadata start #}
-   {# use form.* here #}
-
-    
+    {# dara metadata start #}
+       {# use form.* here #}
+        
     {{ form.input('dara_PublicationDate', label=_('Publication Year'),
         id='field-dara_PublicationDate', 
         placeholder=_('2013'), 
@@ -95,60 +99,63 @@
     <div id="dara_" style="margin-bottom:25px;">
 
         {#TODO change heading #}
-    <h4 id="dara_additional">da|ra Level 2</h4>    
-    
-    <div id="dara_additional_fields">
+        <h4 id="dara_additional">da|ra Level 2</h4>    
+        
+        <div id="dara_additional_fields">
 
-        <p class="dara_info"> Info for adding da|ra level 2 metadata.  Lorem
-        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-        diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-        Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
-        dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-        elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-        aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-        dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
-        est Lorem ipsum dolor sit amet. </p>
+            <p class="dara_info">Info for adding da|ra level 2 metadata.  Lorem
+            ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+            diam voluptua. At vero eos et accusam et justo duo dolores et ea
+            rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+            et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+            accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+            no sea takimata sanctus est Lorem ipsum dolor sit amet. </p>
 
 
-        {{ form.input('dara_OtherTitle', label=_('Other Title'),
+            {{ form.input('dara_OtherTitle', label=_('Other Title'),
                     id='field-dara_OtherTitle', 
                     placeholder=_('eg. Subtitle, alternative title'), 
                     value=dara.dara_OtherTitle, 
                     error=errors,
-                    classes=['control-medium']) }}
+                    classes=['control-medium']) 
+            }}
 
-        {{ form.input('dara_currentVersion', label=_('Current Version'),
+            {{ form.input('dara_currentVersion', label=_('Current Version'),
                     id='field-dara_currentVersion', 
                     placeholder=_('1.1'), 
                     value=dara.dara_currentVersion, 
-                    error=errors.dara_currentVersion, 
-                    ) }}
+                    error=errors.dara_currentVersion, ) 
+            }}
 
-        {#TODO add more languages #}    
-        {{ form.select('dara_language', id='field-dara_language', 
-                label=_('Language'),
-                options=[{'value' : 'eng', 'text':'English'},
-                        {'value' : 'ger', 'text' : 'Deutsch'}],
-                selected='eng',
-                error=errors.dara_language,
-                ) }}
+            {#TODO add more languages #}    
+            {{ form.select('dara_language', id='field-dara_language', 
+                    label=_('Language'),
+                    options=[{'value' : 'eng', 'text':'English'},
+                            {'value' : 'ger', 'text' : 'Deutsch'}],
+                    selected='eng',
+                    error=errors.dara_language,) 
+            }}
 
 
-        {#additional identifier
-        TODO need to group this! #}
-        {{ form.input('dara_AlternativeIdentifier_ID', 
-                label=_('Alternative Identifier'),
-                id='field-dara_AlternativeIdentifier_ID', 
-                placeholder=_('eg. ISBN, Handle, DOI'), 
-                value=dara.dara_AlternativeIdentifier_ID, 
-                error=errors.dara_AlternativeIdentifier_ID, 
-                classes=['control-medium']) }}
-        
-        <div style="margin-left:50px;" >
-        {{ form.select('dara_AlternativeIdentifier_Type', id='field-dara_AlternativeIdentifier_Type', 
-            label=_('Alternative Identifier Type'),
-            options=[
+            {#additional identifier
+            TODO need to group this! #}
+            {{ form.input('dara_AlternativeIdentifier_ID', 
+                    label=_('Alternative Identifier'),
+                    id='field-dara_AlternativeIdentifier_ID', 
+                    placeholder=_('eg. ISBN, Handle, DOI'), 
+                    value=dara.dara_AlternativeIdentifier_ID, 
+                    error=errors.dara_AlternativeIdentifier_ID, 
+                    classes=['control-medium']) 
+            }}
+            
+            <div style="margin-left:50px;" >
+            {{ form.select('dara_AlternativeIdentifier_Type', 
+                id='field-dara_AlternativeIdentifier_Type', 
+                label=_('Alternative Identifier Type'),
+                options=[
                     {'text': 'DOI', 'value': 'DOI'}, 
                     {'text': 'ARK', 'value': 'ARK'}, 
                     {'text': 'EAN13', 'value': 'EAN13'}, 
@@ -163,112 +170,113 @@
                     {'text': 'UPC', 'value': 'UPC'}, 
                     {'text': 'URL', 'value': 'URL'}, 
                     {'text': 'URN', 'value': 'URN'}],
-            error=errors.dara_AlternativeIdentifier_Type,
-            ) }}
+                error=errors.dara_AlternativeIdentifier_Type,) 
+            }}
+            
+            </div>
+
+            {# geographic cover FREE. TODO: need also with controlled vocabulary
+             here #}
+            {{ form.input('dara_Universe_area', 
+                    label=_('Geographic Coverage'),
+                    id='field-dara_Universe_area', 
+                    placeholder=_('eg. West-Germany'), 
+                    value=dara.dara_Universe_area, 
+                    error=errors.dara_Universe_area,
+                    classes=['control-medium']) }}
+
+            {{ form.input('dara_Universe_sampled', 
+                    label=_('Sampled Universe'),
+                    id='field-dara_Universe_sampled', 
+                    placeholder=_('eg. Persons in private households'), 
+                    value=dara.dara_Universe_sampled, 
+                    error=errors.dara_Universe_sampled,
+                classes=['control-medium']) }}
+
+            {{ form.markdown('dara_SelectionMethod', 
+                    label=_('Sampling'),
+                    id='field-dara_SelectionMethod', 
+                    placeholder=_('Describe your selection method'), 
+                    value=dara.dara_SelectionMethod, 
+                    error=errors.dara_SelectionMethod,
+                    classes=['control-full']) }}
+
+            {#TODO need also CollectionDate_formal here #}
+            {{ form.input('dara_CollectionDate_free', 
+                    label=_('Collection Date'),
+                    id='field-dara_CollectionDate_free', 
+                    placeholder=_('eg. Spring 1999'), 
+                    value=dara.dara_CollectionDate_free, 
+                    error=errors.dara_CollectionDate_free,
+                    classes=['control-medium']) }}
+
+            {#TODO need also TimeDimension_controlled here #}
+            {{ form.input('dara_TimeDimension_free', 
+                    label=_('Collection Date'),
+                    id='field-dara_TimeDimension_free', 
+                    placeholder=_('eg. Zeitreihe'), 
+                    value=dara.dara_TimeDimension_free, 
+                    error=errors.dara_TimeDimension_free,
+                    classes=['control-medium']) }}
+                    
+            {#TODO attributes #}        
+            {{ form.input('dara_DataCollector_name', 
+                    label=_('Data Collector'),
+                    id='field-dara_DataCollector_name', 
+                    placeholder=_('eg. EMNID'), 
+                    value=dara.dara_DataCollector_name, 
+                    error=errors.dara_DataCollector_name,
+                    classes=['control-medium']) }}
+
+            {#TODO controlled  #}        
+            {{ form.input('dara_CollectionMode_free', 
+                    label=_('Collection Mode'),
+                    id='field-dara_CollectionMode_free', 
+                    placeholder=_('eg. Interview'), 
+                    value=dara.dara_CollectionMode_free, 
+                    error=errors.dara_CollectionMode_free,
+                    classes=['control-medium']) }}
+
+            {{ form.markdown('dara_Note_text', 
+                    label=_('Notes'),
+                    id='field-dara_Note_text', 
+                    placeholder=_('any additional notes'), 
+                    value=dara.dara_Note_txt, 
+                    error=errors.dara_Note_text,
+                    classes=['control-full']) }}
+
+            {{ form.input('dara_Availabilityfree', 
+                    label=_('Availability (free)'),
+                    id='field-dara_Availabilityfree', 
+                    placeholder=_('eg. Die Datennutzung unterliegt schriftlichen 
+                        Datenschutzvereinbarungen'), 
+                    value=dara.dara_Availabilityfree, 
+                    error=errors.dara_Availabilityfree,
+                    classes=['control-medium']) }}
+
+            {{ form.input('dara_Rights', 
+                    label=_('Rights'),
+                    id='field-dara_Rights', 
+                    placeholder=_('Copyright Joe Biggs'), 
+                    value=dara.dara_Rights, 
+                    error=errors.dara_Rights,
+                    classes=['control-medium']) }}          
+
+
         </div>
-
-        {#geographic cover FREE. TODO: need also with controlled vocabulary here #}
-        {{ form.input('dara_Universe_area', 
-                label=_('Geographic Coverage'),
-                id='field-dara_Universe_area', 
-                placeholder=_('eg. West-Germany'), 
-                value=dara.dara_Universe_area, 
-                error=errors.dara_Universe_area,
-                classes=['control-medium']) }}
-
-        {{ form.input('dara_Universe_sampled', 
-                label=_('Sampled Universe'),
-                id='field-dara_Universe_sampled', 
-                placeholder=_('eg. Persons in private households'), 
-                value=dara.dara_Universe_sampled, 
-                error=errors.dara_Universe_sampled,
-            classes=['control-medium']) }}
-
-        {{ form.markdown('dara_SelectionMethod', 
-                label=_('Sampling'),
-                id='field-dara_SelectionMethod', 
-                placeholder=_('Describe your selection method'), 
-                value=dara.dara_SelectionMethod, 
-                error=errors.dara_SelectionMethod,
-                classes=['control-full']) }}
-
-        {#TODO need also CollectionDate_formal here #}
-        {{ form.input('dara_CollectionDate_free', 
-                label=_('Collection Date'),
-                id='field-dara_CollectionDate_free', 
-                placeholder=_('eg. Spring 1999'), 
-                value=dara.dara_CollectionDate_free, 
-                error=errors.dara_CollectionDate_free,
-                classes=['control-medium']) }}
-
-        {#TODO need also TimeDimension_controlled here #}
-        {{ form.input('dara_TimeDimension_free', 
-                label=_('Collection Date'),
-                id='field-dara_TimeDimension_free', 
-                placeholder=_('eg. Zeitreihe'), 
-                value=dara.dara_TimeDimension_free, 
-                error=errors.dara_TimeDimension_free,
-                classes=['control-medium']) }}
-                
-        {#TODO attributes #}        
-        {{ form.input('dara_DataCollector_name', 
-                label=_('Data Collector'),
-                id='field-dara_DataCollector_name', 
-                placeholder=_('eg. EMNID'), 
-                value=dara.dara_DataCollector_name, 
-                error=errors.dara_DataCollector_name,
-                classes=['control-medium']) }}
-
-        {#TODO controlled  #}        
-        {{ form.input('dara_CollectionMode_free', 
-                label=_('Collection Mode'),
-                id='field-dara_CollectionMode_free', 
-                placeholder=_('eg. Interview'), 
-                value=dara.dara_CollectionMode_free, 
-                error=errors.dara_CollectionMode_free,
-                classes=['control-medium']) }}
-
-        {{ form.markdown('dara_Note_text', 
-                label=_('Notes'),
-                id='field-dara_Note_text', 
-                placeholder=_('any additional notes'), 
-                value=dara.dara_Note_txt, 
-                error=errors.dara_Note_text,
-                classes=['control-full']) }}
-
-        {{ form.input('dara_Availabilityfree', 
-                label=_('Availability (free)'),
-                id='field-dara_Availabilityfree', 
-                placeholder=_('eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen'), 
-                value=dara.dara_Availabilityfree, 
-                error=errors.dara_Availabilityfree,
-                classes=['control-medium']) }}
-
-        {{ form.input('dara_Rights', 
-                label=_('Rights'),
-                id='field-dara_Rights', 
-                placeholder=_('Copyright Joe Biggs'), 
-                value=dara.dara_Rights, 
-                error=errors.dara_Rights,
-                classes=['control-medium']) }}          
-
-
-    </div>
     </div>
 
-
-
-   
+       
 {% endblock %}
 
 
 {% block package_basic_fields_tags %}
     {% set tag_attrs = {
-                'data-module': 'autocomplete', 
-                'data-module-tags': '', 
-                 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
-                } 
-                %}
+        'data-module-tags': '', 
+        'data-module': 'autocomplete', 
+        'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
+        } 
+    %}
     {{ form.input('tag_string', id='field-tags', 
         label=_('Tags'), 
         placeholder=_('eg. economy, mental health, government'), 
@@ -285,18 +293,28 @@
   <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
 {% endif %}
 {% set existing_org = data.owner_org or data.group_id %}
-{% if h.check_access('sysadmin') or data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
+{% if h.check_access('sysadmin') 
+    or data.get('state', 'draft').startswith('draft') 
+    or data.get('state', 'none') ==  'none' 
+%}
   {% set organizations_available = h.organizations_available('create_dataset') %}
   {% if organizations_available %}
     <div class="control-group">
-      <label for="field-organizations" class="control-label">{{ _('Journal') }}</label>
+      <label for="field-organizations" class="control-label">{{ _('Journal') }}
+      </label>
       <div class="controls">
-        <select id="field-organizations" name="owner_org" data-module="autocomplete">
-          <option value="" {% if not selected_org and data.id %}
-          selected="selected" {% endif %}>{{ _('Select a journal...') }}</option>
+        <select id="field-organizations" name="owner_org" 
+            data-module="autocomplete">
+          <option value="" 
+            {% if not selected_org and data.id %}
+                selected="selected" 
+            {% endif %}>{{ _('Select a journal...') }}</option>
           {% for organization in organizations_available %}
             {# get out first org from users list only if there is not an existing org #}
-            {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and organization.id == organizations_available[0].id) %}
+            {% set selected_org = 
+                (existing_org and existing_org == organization.id) 
+                or (not existing_org and not data.id and organization.id == organizations_available[0].id)
+            %}
             <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.name }}</option>
           {% endfor %}
         </select>

@@ -68,16 +68,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     #XXX debugging methods
 
-   #def after_update(self,context, pkg_dict):
-   #    """
-   #    test
-   #    """
-   #    import pdb; pdb.set_trace()
+    # def after_update(self,context, pkg_dict):
+    #     """
+    #     test
+    #     """
+    #     import ipdb; ipdb.set_trace()
 
-   #def before_view(self, pkg_dict):
-   #    dmd = dara_md
-   #    daraextras = dara_extras
-   #    import pdb; pdb.set_trace()
+    # def before_view(self, pkg_dict):
+
+    #     import ipdb; ipdb.set_trace()
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
@@ -100,6 +99,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 field_name: [
                     tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')
+                ]
+            })
+
+        schema.update({
+            'Counter': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_extras')
                 ]
             })
 
@@ -159,4 +165,5 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
 
+        
         return schema

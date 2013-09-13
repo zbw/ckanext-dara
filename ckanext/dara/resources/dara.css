@@ -12,12 +12,28 @@ font-size: 1em !important;
     font-size:80% !important;
 }
 
-#dara_additional_fields {
-	background-color: lightyellow;
+.dara_level {
+	background-color: lightyellow !important;
 }
 
 .dara_info {
 	font-size: 11px;
 	color:grey;
 	padding-right:25%;
+}
+
+.dara_level_head {
+    font-weight:400 !important;
+    font-size:17.5px !important;
+  }
+
+.dara_info_text {
+  font-size:11px;
+  color:rgb(80,80,80);
+  max-width:450px;
+  margin-left:15px;
+}
+
+.dara_form_header {
+    font-size:14px;
 }

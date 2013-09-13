@@ -45,3 +45,18 @@ LEVEL_2 = {
         {'name': 'Language'}
     }
 
+LEVEL_3 = {
+    
+    'Author_name' :
+        {'name' : 'Author of Publication'},
+    'Publication_title':
+        {'name':'Title of Pubication'},
+    'Publication_Year':
+        {'name': 'Year of Publication'},
+    'Publication_PID':
+        {'name': 'Persistent Identifier of Publication'},
+    'Publication_PIDType':
+        {'name': 'Type of Persistent Identifier'}
+
+}
+

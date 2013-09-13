@@ -1,34 +1,47 @@
-<div id="dara_" style="margin-bottom:25px;">
 
-<h4>da|ra additional metadata</h4>    
-<div id="dara_additional_fields">
+<h4 class="dara_level_head"
+    title="Metadata Level 2: Support findability of your data in disciplinary 
+    portals ">Metadata Level 2 <br />
+    <span style="font-size:14px;">
+       Support findability of your data in disciplinary portals
+    </span>
+</h4>    
+
+<div class="dara_level">
+
+    <p class="dara_info_text">
+        By adding metadata on this level your dataset can be discovered in
+    disciplinary portals, by search engines or in data bases. Also linking
+    data to (already published) publications is enabled. You have to fill in
+    at maximum 25 metadata fields with additional required subfields.  This
+    amount of information is not sufficient to link your datasets to  other
+    outputs of your scientific work or to those of your institution.
+    </p>
 
 
-{{ form.input('dara_OtherTitle', label=_('Other Title'),
+    {{ form.input('dara_OtherTitle', label=_('Other Title'),
             id='field-dara_OtherTitle', 
             placeholder=_('eg. Subtitle, alternative title'), 
             value=dara.dara_OtherTitle, 
             error=errors,
-            classes=['control-medium']) }}
+            classes=['control-medium']) 
+    }}
 
-
-
-
-{{ form.input('dara_currentVersion', label=_('Current Version'),
+    {{ form.input('dara_currentVersion', label=_('Current Version'),
             id='field-dara_currentVersion', 
             placeholder=_('1.1'), 
             value=dara.dara_currentVersion, 
-            error=errors.dara_currentVersion, 
-            ) }}
+            error=errors.dara_currentVersion, ) 
+    }}
 
-{#TODO add more languages #}    
-{{ form.select('dara_language', id='field-dara_language', 
-        label=_('Language'),
-        options=[{'value' : 'eng', 'text':'English'},
-                 {'value' : 'ger', 'text' : 'Deutsch'}],
-        selected='eng',
-        error=errors.dara_language,
-        ) }}
+    {#TODO add more languages #}    
+    {{ form.select('dara_language', id='field-dara_language', 
+            label=_('Language'),
+            options=[{'value' : 'eng', 'text':'English'},
+                    {'value' : 'ger', 'text' : 'Deutsch'}],
+            selected='eng',
+            error=errors.dara_language,) 
+    }}
 
 
     {#additional identifier
@@ -36,35 +49,39 @@
     {{ form.input('dara_AlternativeIdentifier_ID', 
             label=_('Alternative Identifier'),
             id='field-dara_AlternativeIdentifier_ID', 
-            placeholder=_('eg. ISBN, Handle'), 
+            placeholder=_('eg. ISBN, Handle, DOI'), 
             value=dara.dara_AlternativeIdentifier_ID, 
             error=errors.dara_AlternativeIdentifier_ID, 
-            classes=['control-medium']) }}
-    
+            classes=['control-medium']) 
+    }}
+
     <div style="margin-left:50px;" >
-    {{ form.select('dara_AlternativeIdentifier_Type', id='field-dara_AlternativeIdentifier_Type', 
+    {{ form.select('dara_AlternativeIdentifier_Type', 
+        id='field-dara_AlternativeIdentifier_Type', 
         label=_('Alternative Identifier Type'),
         options=[
-                {'text': 'ARK', 'value': 'ARK'}, 
-                {'text': 'DOI', 'value': 'DOI'}, 
-                {'text': 'EAN13', 'value': 'EAN13'}, 
-                {'text': 'EISSN', 'value': 'EISSN'}, 
-                {'text': 'Handle', 'value': 'Handle'}, 
-                {'text': 'ISBN', 'value': 'ISBN'}, 
-                {'text': 'ISSN', 'value': 'ISSN'}, 
-                {'text': 'ISTC', 'value': 'ISTC'}, 
-                {'text': 'LISSN', 'value': 'LISSN'}, 
-                {'text': 'LSID', 'value': 'LSID'}, 
-                {'text': 'PURL', 'value': 'PURL'}, 
-                {'text': 'UPC', 'value': 'UPC'}, 
-                {'text': 'URL', 'value': 'URL'}, 
-                {'text': 'URN', 'value': 'URN'}],
-        error=errors.dara_AlternativeIdentifier_Type,
-        ) }}
+            {'text': 'DOI', 'value': 'DOI'}, 
+            {'text': 'ARK', 'value': 'ARK'}, 
+            {'text': 'EAN13', 'value': 'EAN13'}, 
+            {'text': 'EISSN', 'value': 'EISSN'}, 
+            {'text': 'Handle', 'value': 'Handle'}, 
+            {'text': 'ISBN', 'value': 'ISBN'}, 
+            {'text': 'ISSN', 'value': 'ISSN'}, 
+            {'text': 'ISTC', 'value': 'ISTC'}, 
+            {'text': 'LISSN', 'value': 'LISSN'}, 
+            {'text': 'LSID', 'value': 'LSID'}, 
+            {'text': 'PURL', 'value': 'PURL'}, 
+            {'text': 'UPC', 'value': 'UPC'}, 
+            {'text': 'URL', 'value': 'URL'}, 
+            {'text': 'URN', 'value': 'URN'}],
+        error=errors.dara_AlternativeIdentifier_Type,) 
+    }}
+
     </div>
 
-     {#geographic cover FREE. TODO: need also with controlled vocabulary here #}
-     {{ form.input('dara_Universe_area', 
+    {# geographic cover FREE. TODO: need also with controlled vocabulary
+     here #}
+    {{ form.input('dara_Universe_area', 
             label=_('Geographic Coverage'),
             id='field-dara_Universe_area', 
             placeholder=_('eg. West-Germany'), 
@@ -79,7 +96,6 @@
             value=dara.dara_Universe_sampled, 
             error=errors.dara_Universe_sampled,
         classes=['control-medium']) }}
-
 
     {{ form.markdown('dara_SelectionMethod', 
             label=_('Sampling'),
@@ -107,7 +123,7 @@
             error=errors.dara_TimeDimension_free,
             classes=['control-medium']) }}
             
- {#TODO attributes #}        
+    {#TODO attributes #}        
     {{ form.input('dara_DataCollector_name', 
             label=_('Data Collector'),
             id='field-dara_DataCollector_name', 
@@ -116,7 +132,7 @@
             error=errors.dara_DataCollector_name,
             classes=['control-medium']) }}
 
-{#TODO controlled  #}        
+    {#TODO controlled  #}        
     {{ form.input('dara_CollectionMode_free', 
             label=_('Collection Mode'),
             id='field-dara_CollectionMode_free', 
@@ -136,7 +152,8 @@
     {{ form.input('dara_Availabilityfree', 
             label=_('Availability (free)'),
             id='field-dara_Availabilityfree', 
-            placeholder=_('eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen'), 
+            placeholder=_('eg. Die Datennutzung unterliegt schriftlichen 
+                Datenschutzvereinbarungen'), 
             value=dara.dara_Availabilityfree, 
             error=errors.dara_Availabilityfree,
             classes=['control-medium']) }}
@@ -151,5 +168,8 @@
 
 
 </div>
-</div>
+
+
+
+
 

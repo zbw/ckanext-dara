@@ -1,0 +1,41 @@
+LEVEL 1:
+
+Purpose: - Ensure citability
+
+Advantages: 
+- Others that are using your data areenabled to cite you in a standardized way. 
+- You receive credit for sharing your data.
+
+Projected efforts: - Only a fistful of metadata fields are required tofill in.
+Limitations:
+ - Very few information on your submitted data, - “Only” citations of datasets are enabled.- No indexing in Thomson Reuters Data Citation Index.
+
+LEVEL 2:
+Findability
+
+Purpose: 
+- Support findability of your data in disciplinary portals
+
+Advantages: 
+- your dataset can be discovered in disciplinary portals, by search engines or in data bases. Also linking data to (already published) publications is enabled.
+
+Projected efforts: 
+- You have to fill in 25 metadata fields with additional subfields are required. 
+
+Limitations: 
+- This amount of information is not sufficient to link your datasets to other outputs of your scientific work or to those of your institution.  
+
+LEVEL 3: 
+Linkability
+
+Purpose: 
+- Interrelate all kinds of scientific outpus
+
+Advantages: 
+- By integrating authority files a linkage across various data stocks is enabled (for instance it is possible to link persons to their affiliations, to other publications, their institutions or to their respective fields of research. Also future reuse of these (meta)data by semantic web technologies is enabled.
+
+Projected efforts: 
+- The 25 metadata fields with additional subfields are required. In addition all IDs for the different authority files must be submitted.  
+
+Limitations: 
+- Not all information of the so called data lifecycle can be included. 

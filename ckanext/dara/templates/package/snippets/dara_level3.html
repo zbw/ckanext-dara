@@ -1,0 +1,76 @@
+<h4 class="dara_level_head"
+    title="Metadata Level 3: Interrelate all kinds of scientific output">Metadata Level 3 <br />
+    <span style="font-size:14px;">
+       Interrelate all kinds of scientific output
+    </span>
+</h4>    
+
+<div class="dara_level">
+
+    <p class="dara_info_text">
+        By adding metadata on this level your dataset can be discovered in
+    disciplinary portals, by search engines or in data bases. Also linking
+    data to (already published) publications is enabled. You have to fill in
+    at maximum 25 metadata fields with additional required subfields.  This
+    amount of information is not sufficient to link your datasets to  other
+    outputs of your scientific work or to those of your institution.
+    </p>
+
+    <p class="dara_form_header">Publication</p>
+
+    {{ form.input('dara_Author_name', label=_('Author of Publication'),
+            id='field-dara_Author_name', 
+            placeholder=_('eg. Name of the author'), 
+            value=dara.dara_dara_Author_name, 
+            error=errors,
+            classes=['control-medium']) 
+    }}
+
+    {{ form.input('dara_Publication_title', label=_('Title of Publication'),
+            id='field-dara_Publication_title', 
+            placeholder=_(''), 
+            value=dara.dara_Publication_title, 
+            error=errors.dara_Publication_title,
+            classes=['control-medium'] ) 
+    }}
+    
+    {{ form.input('dara_Publication_Year', label=_('Year of Publication'),
+            id='field-dara_Publication_Year', 
+            placeholder=_('eg. 2013'), 
+            value=dara.dara_Publication_Year, 
+            error=errors.dara_Publication_Year, ) 
+    }}
+    
+    {{ form.input('dara_Publication_PID', label=_('Persistent Identifier of Publication'),
+            id='field-dara_Publication_PID', 
+            placeholder=_('eg. 10.434/econ.23Aq'), 
+            value=dara.dara_Publication_PID, 
+            error=errors.dara_Publication_PID, ) 
+    }}
+
+        <div style="margin-left:50px;" >
+    {{ form.select('dara_PublicationPID_Type', 
+        id='field-dara_PublicationPID_Type', 
+        label=_('Publication Persistent Identifier Type'),
+        options=[
+            {'text': 'DOI', 'value': 'DOI'}, 
+            {'text': 'ARK', 'value': 'ARK'}, 
+            {'text': 'EAN13', 'value': 'EAN13'}, 
+            {'text': 'EISSN', 'value': 'EISSN'}, 
+            {'text': 'Handle', 'value': 'Handle'}, 
+            {'text': 'ISBN', 'value': 'ISBN'}, 
+            {'text': 'ISSN', 'value': 'ISSN'}, 
+            {'text': 'ISTC', 'value': 'ISTC'}, 
+            {'text': 'LISSN', 'value': 'LISSN'}, 
+            {'text': 'LSID', 'value': 'LSID'}, 
+            {'text': 'PURL', 'value': 'PURL'}, 
+            {'text': 'UPC', 'value': 'UPC'}, 
+            {'text': 'URL', 'value': 'URL'}, 
+            {'text': 'URN', 'value': 'URN'}],
+        error=errors.dara_PublicationPID_Type,) 
+    }}
+
+        </div>
+
+
+</div>

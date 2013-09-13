@@ -12,7 +12,7 @@ import ckan.plugins.toolkit as tk
 from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
-from ckanext.dara.md_schema import LEVEL_1, LEVEL_2
+from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3
 
 
 PREFIX = 'dara_'
@@ -38,6 +38,7 @@ def dara_extras():
                 dara_extras[key] = value
         return dara_extras
 
+
     except:
         return None
 
@@ -53,6 +54,9 @@ def dara_md():
     for key in LEVEL_2:
         d = PREFIX + key
         all_levels[d] = {'name': LEVEL_2[key]['name']}
+    for key in LEVEL_3:
+        d = PREFIX + key
+        all_levels[d] = {'name': LEVEL_3[key]['name']}
     return all_levels
 
 
@@ -68,15 +72,16 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     #XXX debugging methods
 
-    # def after_update(self,context, pkg_dict):
+    #def after_update(self,context, pkg_dict):
+    #
     #     """
     #     test
     #     """
     #     import ipdb; ipdb.set_trace()
 
     # def before_view(self, pkg_dict):
-
-    #     import ipdb; ipdb.set_trace()
+    
+    #     import pdb; pdb.set_trace()
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
@@ -94,6 +99,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         ## optional fields ###
         #XXX very basic here. what about validation???
         for key in LEVEL_2:
+            field_name = PREFIX + key
+            schema.update({
+                field_name: [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')
+                ]
+            })
+
+        for key in LEVEL_3:
             field_name = PREFIX + key
             schema.update({
                 field_name: [
@@ -165,5 +179,14 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
 
+
+        for key in LEVEL_3:
+            field_name = PREFIX + key
+            schema.update({
+                field_name: [
+                    tk.get_converter('convert_from_extras'),
+                    tk.get_validator('ignore_missing'),
+                ]
+            })
         
         return schema

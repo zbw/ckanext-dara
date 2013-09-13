@@ -4,7 +4,13 @@ $(function() {
       activeHeader: "ui-icon-circle-arrow-s"
     };
     */
-    $( "#dara_" ).accordion({
+    $( "#dara_2" ).accordion({
+      collapsible: true,
+      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
+      active : 2 //2 gibts nicht, weswegen alle deactive sind
+    });
+
+    $( "#dara_3" ).accordion({
       collapsible: true,
       icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
       active : 2 //2 gibts nicht, weswegen alle deactive sind

@@ -17,30 +17,37 @@ from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3
 
 PREFIX = 'dara_'
 
+def dara_debug():
+    import ipdb; ipdb.set_trace()
 
 def dara_extras():
     """returns dara extra metadata as separate dictionary
     """
-
-    try:
-        pkg = c.pkg_dict
-        extras = pkg['extras']
-
-        #simplifying the pkg[extras]
-        normalised_extras = {}
-        for extra in extras:
-            normalised_extras[extra['key']] = extra['value']
+   
+    #this does not work with ckan 2.1
+    #pkg = c.pkg_dict
+    
+    #this is new for 2.1
+    pkg = c.pkg
+    
+    #an empty package returns ''
+    if pkg:
+        extras = pkg.extras
 
         #filtering dara extras
         dara_extras = {}
-        for key, value in normalised_extras.items():
+        for key, value in extras.items():
             if key.startswith(PREFIX):
                 dara_extras[key] = value
         return dara_extras
+    return None
 
 
-    except:
-        return None
+def dara_pkg():
+    """to avoid pkg changes by ckan
+    """
+    return c.pkg
+
 
 
 def dara_md():
@@ -133,7 +140,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_resource('resources', 'dara')
 
     def get_helpers(self):
-        return {'dara_extras': dara_extras, 'dara_md': dara_md}
+        return {'dara_extras': dara_extras, 'dara_md': dara_md, 'dara_pkg':dara_pkg}
 
         #return {}
 

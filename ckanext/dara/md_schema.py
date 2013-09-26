@@ -60,3 +60,9 @@ LEVEL_3 = {
 
 }
 
+
+def dara_all_levels():
+    dara_all = LEVEL_1.copy()
+    dara_all.update(LEVEL_2)
+    dara_all.update(LEVEL_3)
+    return dara_all

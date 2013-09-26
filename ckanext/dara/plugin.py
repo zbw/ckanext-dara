@@ -12,19 +12,21 @@ import ckan.plugins.toolkit as tk
 from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
-from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3
+from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels
 
 
 PREFIX = 'dara_'
 
 def dara_debug():
+    pkg_dict = c.pkg_dict
+
     import ipdb; ipdb.set_trace()
 
 def dara_extras():
     """returns dara extra metadata as separate dictionary
     """
    
-    #this does not work with ckan 2.1
+    #this does not work with ckan 2.1?
     #pkg = c.pkg_dict
     
     #this is new for 2.1
@@ -49,22 +51,22 @@ def dara_pkg():
     return c.pkg
 
 
+def dara_c():
+    return c
+
+
 
 def dara_md():
     """
     returns dara keys with dara names
     """
-    all_levels = {}
-    for key in LEVEL_1:
+    named_levels = {}
+    all_levels = dara_all_levels()
+    
+    for key in all_levels.keys():
         d = PREFIX + key
-        all_levels[d] = {'name': LEVEL_1[key]['name']}
-    for key in LEVEL_2:
-        d = PREFIX + key
-        all_levels[d] = {'name': LEVEL_2[key]['name']}
-    for key in LEVEL_3:
-        d = PREFIX + key
-        all_levels[d] = {'name': LEVEL_3[key]['name']}
-    return all_levels
+        named_levels[d] = {'name': all_levels[key]['name']}
+    return named_levels
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -88,7 +90,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     # def before_view(self, pkg_dict):
     
-    #     import pdb; pdb.set_trace()
+    #      import pdb; pdb.set_trace()
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
@@ -129,7 +131,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('convert_to_extras')
                 ]
             })
-
+        
         return schema
 
     def update_config(self, config):
@@ -140,10 +142,14 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_resource('resources', 'dara')
 
     def get_helpers(self):
-        return {'dara_extras': dara_extras, 'dara_md': dara_md, 'dara_pkg':dara_pkg}
+        return {'dara_extras': dara_extras, 
+                'dara_md': dara_md, 
+                'dara_pkg':dara_pkg, 
+                'dara_debug':dara_debug,
+                'dara_c' : dara_c
+                }
 
-        #return {}
-
+        
     def is_fallback(self):
         # Return True to register this plugin as the default handler for
         # package types not handled by any other IDatasetForm plugin.

@@ -57,12 +57,17 @@
 
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
+    
     {% set dara = h.dara_extras() %}
+    {% set c = h.dara_c() %}
+    {% set form_style = c.form_style or c.action %}
+    {# {% set debug = h.dara_debug() %} #}
   
     {% resource 'dara/dara.css' %}
     {% resource 'dara/dara.js' %} 
     {% resource 'dara/jquery-ui.js' %}
     {#{% resource 'dara/jquery-ui.css' %}#}
+
 
     {# dara metadata start #}
        {# use form.* here #}
@@ -74,39 +79,31 @@
         error=errors.dara_PublicationDate, 
         classes=['control-medium']) }}
 
-    
-        {# resource type will always be 'Dataset' for now    
-    {{ form.select('dara_resourceType', id='field-dara_resourceType', 
-        label=_('Type'),
-        options=[{'value': '1', 'text' :'Study'}, {'value': '2', 'text' : 'Dataset'}],
-        selected='2',
-        error=errors.dara_resourceType,
-        classes=['control-medium']) }}
-        #}
-
-
     {{ form.select('dara_Availabilitycontrolled', id='field-dara_availability', 
         label=_('Availability'),
         options=[{'value': '1', 'text' :'Download'}, 
-                {'value': '2', 'text' : 'Lieferbar'}, 
-                {'value': '3', 'text' :'Vor-Ort-Nutzung'},
-                {'value' : '4', 'text' : 'Nicht verfügbar'},
-                {'value' : '5', 'text' : 'Unbekannt'},
+                {'value': '2', 'text' : 'Delivery'}, 
+                {'value': '3', 'text' :'Onsite'},
+                {'value' : '4', 'text' : 'Not available'},
+                {'value' : '5', 'text' : 'Unknown'},
                 ],
         selected=1,
         error=errors.dara_Availabilitycontrolled,
         classes=['control-medium']) }}
+   
+   
+   {# da|ra levels 2 and 3 are not shown at first dataset edit #}
+   {% if form_style == 'edit' %}
+        <div id="dara_2" style="margin-bottom:25px;">
+            {% snippet "package/snippets/dara_level2.html", form=form, dara=dara,
+                errors=errors %}  
+        </div>
         
-    <div id="dara_2" style="margin-bottom:25px;">
-        {% snippet "package/snippets/dara_level2.html", form=form, dara=dara,
-            errors=errors %}  
-    </div>
-    
-    <div id="dara_3" style="margin-bottom:25px;">
-        {% snippet "package/snippets/dara_level3.html", form=form, dara=dara,
-            errors=errors %}  
-    </div>
-
+        <div id="dara_3" style="margin-bottom:25px;">
+            {% snippet "package/snippets/dara_level3.html", form=form, dara=dara,
+                errors=errors %}  
+        </div>
+    {% endif %}
 
 {% endblock %}
 
@@ -124,8 +121,6 @@
         classes=['control-full'], 
         attrs=tag_attrs) }}
 {% endblock %}
-
-
 
 {% block package_basic_fields_org %}
 {# if we have a default group then this wants remembering #}

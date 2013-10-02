@@ -1,6 +1,6 @@
 
 .ui-widget {
-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 font-size: 1em !important;
 }
 
@@ -13,7 +13,8 @@ font-size: 1em !important;
 }
 
 .dara_level {
-	background-color: lightyellow !important;
+	background-color: rgb(235,235,235) !important;
+
 }
 
 .dara_info {

@@ -35,6 +35,7 @@ def dara_extras():
     #an empty package returns ''
     if pkg:
         extras = pkg.extras
+        
 
         #filtering dara extras
         dara_extras = {}
@@ -55,7 +56,6 @@ def dara_c():
     return c
 
 
-
 def dara_md():
     """
     returns dara keys with dara names
@@ -67,6 +67,28 @@ def dara_md():
         d = PREFIX + key
         named_levels[d] = {'name': all_levels[key]['name']}
     return named_levels
+
+
+def dara_authors():
+    """
+    return all author fields
+    """
+    extras = dara_extras()
+    authors = []
+    for k in extras.keys():
+        if 'author' in k:
+            authors.append(extras[k])
+
+    #XXX this can only be a temporary workaround! XXX
+    #when deleting a field in the form, the author extras is not removed, but
+    #just empty. So we have to filter those empty strings out of here
+    #return filter(None, authors)
+    return authors
+    
+
+
+
+
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -88,9 +110,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     #     """
     #     import ipdb; ipdb.set_trace()
 
+
     # def before_view(self, pkg_dict):
-    
-    #      import pdb; pdb.set_trace()
+    #       import pdb; pdb.set_trace()
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
@@ -131,6 +153,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('convert_to_extras')
                 ]
             })
+
+        for n in range(2,21):
+            field_name = PREFIX + 'author_' + str(n)
+            schema.update({
+                field_name: [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_extras')
+                ]
+            })
         
         return schema
 
@@ -146,7 +177,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_md': dara_md, 
                 'dara_pkg':dara_pkg, 
                 'dara_debug':dara_debug,
-                'dara_c' : dara_c
+                'dara_c' : dara_c,
+                'dara_authors' : dara_authors
                 }
 
         
@@ -201,5 +233,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing'),
                 ]
             })
-        
+
+        for n in range(2,21):
+            field_name = PREFIX + 'author_' + str(n)
+            schema.update({
+                field_name: [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_from_extras')
+                ]
+            })
         return schema

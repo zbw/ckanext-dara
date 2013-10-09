@@ -50,11 +50,12 @@
             error=errors.dara_Publication_PID, ) 
     }}
 
-        <div style="margin-left:50px;" >
+        <div class="dara_subfield" id="dara_PublicationPID_Type">
     {{ form.select('dara_PublicationPID_Type', 
         id='field-dara_PublicationPID_Type', 
         label=_('Publication Persistent Identifier Type'),
         options=[
+            {'text': '', 'value': ''},
             {'text': 'DOI', 'value': 'DOI'}, 
             {'text': 'ARK', 'value': 'ARK'}, 
             {'text': 'EAN13', 'value': 'EAN13'}, 

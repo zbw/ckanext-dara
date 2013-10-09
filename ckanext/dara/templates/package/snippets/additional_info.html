@@ -69,13 +69,16 @@
         {% set value = dara_pkg.extras[k] %}
   
         {% if value %}
-          {% set named_key = dara_md[key]['name'] %}
-                
+          {# this is just a temporary precaution, because we dont have all 
+            author keys in dara_md yet #}
+          {% if key in dara_md %}
+            {% set named_key = dara_md[key]['name'] %}
+
         <tr rel="dc:relation" resource="_:extra{{ i }}">
           <th scope="row" class="dataset-label" property="rdfs:label">{{ named_key }}</th>
           <td class="dataset-details" property="rdf:value">{{ value }}</td>
         </tr>
-
+          {% endif %}
         {% endif %}
 
         {% endfor %}

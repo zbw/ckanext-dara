@@ -50,23 +50,34 @@ $(function() {
         return false;
      });
 
-    
-    // conditional field based on input 
-    var value = $('field-dara_Publication_PID').attr('value');
-    if (!!value) {
-     $('#dara_PublicationPID_Type').hide();
-    }
-    $('#field-dara_Publication_PID').bind("change keyup paste", function () 
-    {
-      if(value) {
-        $('#dara_PublicationPID_Type').show();
-      }
-      else {
-        $('#dara_PublicationPID_Type').hide();
-      }
-    });
 
 });
 
 
+$(function master_slave_set() {
+
+  // conditional field based on input 
+    $('.dara_master_slave').each(function () 
+      {
+      var master = $(this).find('.dara_master').find('input').first();
+      var slave = $(this).find('.dara_slave');
+      var value = master.attr('value');
+
+      if(value == "") {
+        slave.hide();
+        }
+
+      master.bind("change keyup paste", function () 
+    // we cannot use the 'value' var here since it wont change after defining it
+        {
+          if(master.attr('value') !="") {
+            slave.fadeIn();
+          }
+          else {
+           slave.fadeOut(); 
+        }
+      });
+    });
+
+});
 

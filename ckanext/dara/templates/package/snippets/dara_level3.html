@@ -27,7 +27,9 @@
             error=errors,
             classes=['control-medium']) 
     }}
-
+    
+    <div class="dara_master_slave">
+        <div class="dara_master">master1:
     {{ form.input('dara_Publication_title', label=_('Title of Publication'),
             id='field-dara_Publication_title', 
             placeholder=_(''), 
@@ -35,45 +37,77 @@
             error=errors.dara_Publication_title,
             classes=['control-medium'] ) 
     }}
+        </div>
     
-    {{ form.input('dara_Publication_Year', label=_('Year of Publication'),
+        <div class="dara_master_slave dara_slave">
+            <div class="dara_slave dara_master">slave1 and master2:
+            {{ form.input('dara_Publication_Year', label=_('Year of Publication 1'),
+                    id='field-dara_Publication_Year', 
+                    placeholder=_('eg. 2013'), 
+                    value=dara.dara_Publication_Year, 
+                    error=errors.dara_Publication_Year, ) 
+            }}
+            </div>
+
+            <div class="dara_slave">slave 1.1
+                {{ form.input('dara_Publication_Year', label=_('Year of Publication'),
+                    id='field-dara_Publication_Year', 
+                    placeholder=_('eg. 2013'), 
+                    value=dara.dara_Publication_Year, 
+                    error=errors.dara_Publication_Year, ) 
+                }}
+            </div>
+        </div
+    
+
+    <div class="dara_slave">slave2:
+    {{ form.input('dara_Publication_Year', label=_('Year of Publication 2'),
             id='field-dara_Publication_Year', 
             placeholder=_('eg. 2013'), 
             value=dara.dara_Publication_Year, 
             error=errors.dara_Publication_Year, ) 
     }}
+</div>
+
+
     
-    {{ form.input('dara_Publication_PID', label=_('Persistent Identifier of Publication'),
-            id='field-dara_Publication_PID', 
-            placeholder=_('eg. 10.434/econ.23Aq'), 
-            value=dara.dara_Publication_PID, 
-            error=errors.dara_Publication_PID, ) 
-    }}
 
-        <div class="dara_subfield" id="dara_PublicationPID_Type">
-    {{ form.select('dara_PublicationPID_Type', 
-        id='field-dara_PublicationPID_Type', 
-        label=_('Publication Persistent Identifier Type'),
-        options=[
-            {'text': '', 'value': ''},
-            {'text': 'DOI', 'value': 'DOI'}, 
-            {'text': 'ARK', 'value': 'ARK'}, 
-            {'text': 'EAN13', 'value': 'EAN13'}, 
-            {'text': 'EISSN', 'value': 'EISSN'}, 
-            {'text': 'Handle', 'value': 'Handle'}, 
-            {'text': 'ISBN', 'value': 'ISBN'}, 
-            {'text': 'ISSN', 'value': 'ISSN'}, 
-            {'text': 'ISTC', 'value': 'ISTC'}, 
-            {'text': 'LISSN', 'value': 'LISSN'}, 
-            {'text': 'LSID', 'value': 'LSID'}, 
-            {'text': 'PURL', 'value': 'PURL'}, 
-            {'text': 'UPC', 'value': 'UPC'}, 
-            {'text': 'URL', 'value': 'URL'}, 
-            {'text': 'URN', 'value': 'URN'}],
-        error=errors.dara_PublicationPID_Type,) 
-    }}
-
+    <div class="dara_master_slave">
+        <div class="dara_master">
+        {{ form.input('dara_Publication_PID', 
+                label=_('Persistent Identifier of Publication'),
+                id='field-dara_Publication_PID', 
+                placeholder=_('eg. 10.434/econ.23Aq'), 
+                value=dara.dara_Publication_PID, 
+                error=errors.dara_Publication_PID, ) 
+        }}
         </div>
+
+        <div class="dara_slave">
+        {{ form.select('dara_PublicationPID_Type', 
+            id='field-dara_PublicationPID_Type', 
+            label=_('Publication Persistent Identifier Type'),
+            options=[
+                {'text': '', 'value': ''},
+                {'text': 'DOI', 'value': 'DOI'}, 
+                {'text': 'ARK', 'value': 'ARK'}, 
+                {'text': 'EAN13', 'value': 'EAN13'}, 
+                {'text': 'EISSN', 'value': 'EISSN'}, 
+                {'text': 'Handle', 'value': 'Handle'}, 
+                {'text': 'ISBN', 'value': 'ISBN'}, 
+                {'text': 'ISSN', 'value': 'ISSN'}, 
+                {'text': 'ISTC', 'value': 'ISTC'}, 
+                {'text': 'LISSN', 'value': 'LISSN'}, 
+                {'text': 'LSID', 'value': 'LSID'}, 
+                {'text': 'PURL', 'value': 'PURL'}, 
+                {'text': 'UPC', 'value': 'UPC'}, 
+                {'text': 'URL', 'value': 'URL'}, 
+                {'text': 'URN', 'value': 'URN'}],
+            error=errors.dara_PublicationPID_Type,) 
+        }}
+        </div>
+            
+    </div>
 
 
 </div>

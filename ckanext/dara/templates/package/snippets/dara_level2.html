@@ -18,15 +18,34 @@
     outputs of your scientific work or to those of your institution.
     </p>
 
+    <fieldset class="dara_master_slave">
 
     {{ form.input('dara_OtherTitle', label=_('Other Title'),
             id='field-dara_OtherTitle', 
             placeholder=_('eg. Subtitle, alternative title'), 
             value=dara.dara_OtherTitle, 
             error=errors,
-            classes=['control-medium']) 
+            classes=['control-medium', 'dara_master']) 
     }}
+        
+    {% set selected = dara.dara_OtherTitleType %}
+        {{ form.select('dara_OtherTitleType', 
+            id='field-dara_OtherTitleType', 
+            label="Type of other title",
+            classes=['dara_slave'],
+            options=[
+                {'value': '1', 'text' :'Alternative Title'}, 
+                {'value': '2', 'text' : 'Translated Title'}, 
+                {'value': '3', 'text' :'Subtitle'},
+                {'value' : '4', 'text' : 'Original Title'},
+            ],
+            error=errors.dara_OtherTitleType,
+            selected=selected,
+            ) 
+        }}
 
+    </fieldset>
+    
     {{ form.input('dara_currentVersion', label=_('Current Version'),
             id='field-dara_currentVersion', 
             placeholder=_('1.1'), 
@@ -44,55 +63,67 @@
     }}
 
 
-    {#additional identifier
-    TODO need to group this! #}
-    {{ form.input('dara_AlternativeIdentifier_ID', 
-            label=_('Alternative Identifier'),
-            id='field-dara_AlternativeIdentifier_ID', 
-            placeholder=_('eg. ISBN, Handle, DOI'), 
-            value=dara.dara_AlternativeIdentifier_ID, 
-            error=errors.dara_AlternativeIdentifier_ID, 
-            classes=['control-medium']) 
-    }}
+    <fieldset class="dara_master_slave">
+        {{ form.input('dara_AlternativeIdentifier_ID', 
+                label=_('Alternative Identifier'),
+                id='field-dara_AlternativeIdentifier_ID', 
+                placeholder=_('eg. ISBN, Handle, DOI'), 
+                value=dara.dara_AlternativeIdentifier_ID, 
+                error=errors.dara_AlternativeIdentifier_ID, 
+                classes=['dara_master']) 
+        }}
 
-    <div style="margin-left:50px;" >
-    {{ form.select('dara_AlternativeIdentifier_Type', 
-        id='field-dara_AlternativeIdentifier_Type', 
-        label=_('Alternative Identifier Type'),
-        options=[
-            {'text': 'DOI', 'value': 'DOI'}, 
-            {'text': 'ARK', 'value': 'ARK'}, 
-            {'text': 'EAN13', 'value': 'EAN13'}, 
-            {'text': 'EISSN', 'value': 'EISSN'}, 
-            {'text': 'Handle', 'value': 'Handle'}, 
-            {'text': 'ISBN', 'value': 'ISBN'}, 
-            {'text': 'ISSN', 'value': 'ISSN'}, 
-            {'text': 'ISTC', 'value': 'ISTC'}, 
-            {'text': 'LISSN', 'value': 'LISSN'}, 
-            {'text': 'LSID', 'value': 'LSID'}, 
-            {'text': 'PURL', 'value': 'PURL'}, 
-            {'text': 'UPC', 'value': 'UPC'}, 
-            {'text': 'URL', 'value': 'URL'}, 
-            {'text': 'URN', 'value': 'URN'}],
-        error=errors.dara_AlternativeIdentifier_Type,) 
-    }}
-
-    </div>
-
-    {# geographic cover FREE. TODO: need also with controlled vocabulary
-     here #}
-    {{ form.input('dara_Universe_area', 
-            label=_('Geographic Coverage'),
+        {% set selected = dara.dara_AlternativeIdentifier_Type %}
+        {{ form.select('dara_AlternativeIdentifier_Type', 
+            id='field-dara_AlternativeIdentifier_Type', 
+            label=_('Alternative Identifier Type'),
+            classes=['dara_slave'],
+            options=[
+                {'text' : ''},
+                {'text': 'DOI', 'value': 'DOI'}, 
+                {'text': 'ARK', 'value': 'ARK'}, 
+                {'text': 'EAN13', 'value': 'EAN13'}, 
+                {'text': 'EISSN', 'value': 'EISSN'}, 
+                {'text': 'Handle', 'value': 'Handle'}, 
+                {'text': 'ISBN', 'value': 'ISBN'}, 
+                {'text': 'ISSN', 'value': 'ISSN'}, 
+                {'text': 'ISTC', 'value': 'ISTC'}, 
+                {'text': 'LISSN', 'value': 'LISSN'}, 
+                {'text': 'LSID', 'value': 'LSID'}, 
+                {'text': 'PURL', 'value': 'PURL'}, 
+                {'text': 'UPC', 'value': 'UPC'}, 
+                {'text': 'URL', 'value': 'URL'}, 
+                {'text': 'URN', 'value': 'URN'}],
+            error=errors.dara_AlternativeIdentifier_Type,
+            selected=selected,
+            ) 
+        }}
+    </fieldset>
+    
+    {% set selected = dara.dara_Universe_areaControlled %}
+    {{ form.select('dara_Universe_areaControlled', 
+            label=_('Geographic Coverage (controlled)'),
             id='field-dara_Universe_area', 
-            placeholder=_('eg. West-Germany'), 
-            value=dara.dara_Universe_area, 
             error=errors.dara_Universe_area,
+            options=[
+                {'text' : ''},
+                {'text' : 'TODO'}
+            ],
+            classes=['todo']
+            ) }}    
+
+    {{ form.input('dara_Universe_areaFree', 
+            label=_('Geographic Coverage (free)'),
+            id='field-dara_Universe_areaFree', 
+            placeholder=_('eg. West-Germany'), 
+            value=dara.dara_Universe_areaFree, 
+            error=errors.dara_Universe_areaFree,
             classes=['control-medium']) }}
 
     {{ form.input('dara_Universe_sampled', 
             label=_('Sampled Universe'),
             id='field-dara_Universe_sampled', 
-            placeholder=_('eg. Persons in private households'), 
+            placeholder=_('eg. adults in Eastern and Western Germany'), 
             value=dara.dara_Universe_sampled, 
             error=errors.dara_Universe_sampled,
         classes=['control-medium']) }}
@@ -105,18 +136,50 @@
             error=errors.dara_SelectionMethod,
             classes=['control-full']) }}
 
-    {#TODO need also CollectionDate_formal here #}
-    {{ form.input('dara_CollectionDate_free', 
+    {{ form.input('dara_CollectionDate_controlled', 
             label=_('Collection Date'),
+            id='field-dara_CollectionDate_controlled', 
+            value=dara.dara_CollectionDate_controlled, 
+            error=errors.dara_CollectionDate_controlled,
+            type="date",
+            classes=['control-medium', 'todo']
+            ) }}
+
+    {{ form.input('dara_CollectionDate_free', 
+            label=_('Collection Date (free)'),
             id='field-dara_CollectionDate_free', 
             placeholder=_('eg. Spring 1999'), 
             value=dara.dara_CollectionDate_free, 
             error=errors.dara_CollectionDate_free,
             classes=['control-medium']) }}
-
-    {#TODO need also TimeDimension_controlled here #}
+    
+     {% set selected = dara.dara_TimeDimension_controlled %}
+        {{ form.select('dara_TimeDimension_controlled', 
+            id='field-dara_TimeDimension_controlled', 
+            label="Time Dimension",
+            options=[
+                {'value' : '', 'text' : ''},
+                {'value': '1', 'text' :'Longitudinal '}, 
+                {'value': '2', 
+                'text' : 'Longitudinal.CohortEventBased '}, 
+                {'value': '3', 'text' :'Longitudinal.TrendRepeatedCrossSection '},
+                {'value' : '4', 'text' : 'Longitudinal.Panel '},
+                {'value' : '5', 'text' : 'Longitudinal.Panel.Continuous'},
+                {'value' : '6', 'text' : 'Longitudinal: Panel: Interval'},
+                {'value' : '7', 'text' : 'Time Series'},
+                {'value' : '8', 'text' : 'TimeSeries: Continuous'},
+                {'value' : '9', 'text' : 'TimeSeries: Discrete'},
+                {'value' : '10', 'text' : 'Cross-section'},
+                {'value' : '11', 'text' : 'Cross-section ad-hoc follow-up'},
+                {'value' : '12', 'text' : 'Other'}
+            ],
+            error=errors.dara_OtherTitleType,
+            selected=selected,
+            ) 
+        }}
+ 
     {{ form.input('dara_TimeDimension_free', 
-            label=_('Collection Date'),
+            label=_('Time Dimension (free)'),
             id='field-dara_TimeDimension_free', 
             placeholder=_('eg. Zeitreihe'), 
             value=dara.dara_TimeDimension_free, 
@@ -149,6 +212,7 @@
             error=errors.dara_Note_text,
             classes=['control-full']) }}
 
+    {# now in package_basic_fields
     {{ form.input('dara_Availabilityfree', 
             label=_('Availability (free)'),
             id='field-dara_Availabilityfree', 
@@ -156,6 +220,7 @@
             value=dara.dara_Availabilityfree, 
             error=errors.dara_Availabilityfree,
             classes=['control-medium']) }}
+    #}
 
     {{ form.input('dara_Rights', 
             label=_('Rights'),

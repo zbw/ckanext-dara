@@ -93,7 +93,7 @@ def dara_authors():
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
-    A CKAN plugin for adding da|ra metadata schema
+    A CKAN plugin for da|ra metadata schema
     '''
 
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -165,6 +165,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         
         return schema
 
+    
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
         # that CKAN will use this plugin's custom templates.

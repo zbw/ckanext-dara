@@ -19,6 +19,8 @@ LEVEL_2 = {
         {'name': 'Type of Alternative Identifier'},
     'Availabilityfree': 
         {'name': 'Availability (free)'},
+    'CollectionDate_controlled' :
+        {'name': "Collection Date (controlled)"},
     'CollectionDate_free': 
         {'name': 'Temporal Coverage (free)'},
     'CollectionMode_free': 
@@ -28,21 +30,29 @@ LEVEL_2 = {
     'Note_text': 
         {'name': 'Notes'},
     'OtherTitle': 
-        {'name': 'Other Titles'},
+        {'name': 'Other Title'},
+    'OtherTitleType' :
+        {'name' : 'Type of other Title'},
     'Rights': 
         {'name': 'Rights'},
     'SelectionMethod': 
         {'name': 'Sampling'},
+    'TimeDimension_controlled' :
+        {'name': 'Time Dimension (controlled)'},
     'TimeDimension_free': 
         {'name': 'Time Dimension (free)'},
-    'Universe_area': 
-        {'name': 'Geographic Coverage'},
+    'Universe_areaControlled' :
+        {'name' : 'Geographic Coverage (controlled)'},
+    'Universe_areaFree': 
+        {'name': 'Geographic Coverage (free)'},
     'Universe_sampled': 
         {'name': 'Sampled Universe'},
     'currentVersion': 
         {'name': 'Version'},
     'language': 
-        {'name': 'Language'}
+        {'name': 'Language'},
+    'DescriptionType' : 
+        {'name' : 'Type of Description'},
     }
 
 LEVEL_3 = {

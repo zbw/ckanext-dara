@@ -3,6 +3,16 @@
 #}
 
 {% import 'macros/form.html' as form %}
+{% set dara = h.dara_extras() %}
+{% set c = h.dara_c() %}
+{% set dara_authors = h.dara_authors() %}
+{% set form_style = c.form_style or c.action %}
+{#{% set debug = h.dara_debug() %} #}
+
+{% resource 'dara/dara.css' %}
+{% resource 'dara/dara.js' %} 
+{% resource 'dara/jquery-ui.js' %}
+{#{% resource 'dara/jquery-ui.css' %}#}
 
 
 {% block package_basic_fields_license %}
@@ -11,7 +21,7 @@
 {% block package_basic_fields_title %}
     {{ form.input('title', id='field-title', 
         label=_('Title'), 
-        placeholder=_('eg. A descriptive title'), 
+        placeholder=_('eg. A descriptive title.'), 
         value=data.title, 
         error=errors.title, 
         classes=['control-full', 'control-large'], 
@@ -38,18 +48,43 @@
         attrs=attrs) }}
 {% endblock %}
 
+
 {% block package_basic_fields_description %}
+      
     {{ form.markdown('notes', id='field-notes', 
         label=_('Description'), 
         placeholder=_('eg. Some useful notes about the data'), 
         value=data.notes, 
-        error=errors.notes) }}
+        error=errors.notes,
+        )
+    }}
+
+    {# dara.js.master_slave_input() does not work properly for markdown fields
+    {% set selected = dara.dara_DescriptionType %}
+    {{ form.select('dara_DescriptionType', 
+        id='field-dara_DescriptionType', 
+        label="Type of Description",
+        classes=['dara_slave'],
+        options=[
+            {'value': '1', 'text' :'Abstract'}, 
+            {'value': '2', 'text' : 'Series Information'}, 
+            {'value': '3', 'text' :'Table of Contents'},
+            {'value' : '4', 'text' : 'Other'},
+        ],
+        error=errors.dara_DescriptionType,
+        selected=selected
+        ) 
+    }} 
+    #}   
+
 {% endblock %}
+
+
 
 {% block package_metadata_author %}
     {{ form.input('author', label=_('Author'), 
     id='field-author', 
-    placeholder=_('Joe Bloggs'), 
+    placeholder=_('eg. Klaus Tochtermann'), 
     value=data.author, 
     error=errors.author, 
     classes=['control-medium']) }}
@@ -57,30 +92,6 @@
 
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
-    
-    {% set dara = h.dara_extras() %}
-    {% set c = h.dara_c() %}
-    {% set dara_authors = h.dara_authors() %}
-    {% set form_style = c.form_style or c.action %}
-    {#{% set debug = h.dara_debug() %} #}
-  
-    {% resource 'dara/dara.css' %}
-    {% resource 'dara/dara.js' %} 
-    {% resource 'dara/jquery-ui.js' %}
-    {#{% resource 'dara/jquery-ui.css' %}#}
-
-
-    {# dara metadata start #}
-       {# use form.* here #}
-   
-   {# debug display 
-   <div>
-        {% for author in dara_authors %}
-        {{ author }}<br />
-        {% endfor %}
-    </div>
-    #}
-    
  
     <div id="dara_additional_authors" style="margin-left:50px;">
         <div id="current_number_of_authors" style="display:none">{{ dara_authors|count }}</div>
@@ -123,22 +134,37 @@
     
     {{ form.input('dara_PublicationDate', label=_('Publication Year'),
         id='field-dara_PublicationDate', 
+        type="text",
         placeholder='eg. 2013', 
         value=dara.dara_PublicationDate,
         error=errors.dara_PublicationDate, 
-        classes=['control-medium']) }}
-
-    {{ form.select('dara_Availabilitycontrolled', id='field-dara_availability', 
+        ) 
+    }}
+    
+    {% set selected = dara.dara_Availabilitycontrolled %}
+    {{ form.select('dara_Availabilitycontrolled', 
+        id='field-dara_availability', 
         label=_('Availability'),
-        options=[{'value': '1', 'text' :'Download'}, 
+        options=[
+                {'value': '', 'text':""},
+                {'value': '1', 'text' :'Download'}, 
                 {'value': '2', 'text' : 'Delivery'}, 
                 {'value': '3', 'text' :'Onsite'},
                 {'value' : '4', 'text' : 'Not available'},
                 {'value' : '5', 'text' : 'Unknown'},
                 ],
-        selected=1,
+        selected=selected,
         error=errors.dara_Availabilitycontrolled,
-        classes=['control-medium']) }}
+        ) 
+    }}
+
+   {{ form.input('dara_Availabilityfree', 
+            label=_('Availability (free)'),
+            id='field-dara_Availabilityfree', 
+            placeholder=_('eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen'), 
+            value=dara.dara_Availabilityfree, 
+            error=errors.dara_Availabilityfree,
+            classes=['control-full']) }} 
    
    
    {# da|ra levels 2 and 3 are not shown at first dataset edit #}

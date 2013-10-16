@@ -28,64 +28,29 @@
             classes=['control-medium']) 
     }}
     
-    <div class="dara_master_slave">
-        <div class="dara_master">master1:
     {{ form.input('dara_Publication_title', label=_('Title of Publication'),
-            id='field-dara_Publication_title', 
-            placeholder=_(''), 
-            value=dara.dara_Publication_title, 
-            error=errors.dara_Publication_title,
-            classes=['control-medium'] ) 
+                    id='field-dara_Publication_title', 
+                    placeholder=_(''), 
+                    value=dara.dara_Publication_title, 
+                    error=errors.dara_Publication_title,
+                    classes=['control-medium'] ) 
     }}
-        </div>
     
-        <div class="dara_master_slave dara_slave">
-            <div class="dara_slave dara_master">slave1 and master2:
-            {{ form.input('dara_Publication_Year', label=_('Year of Publication 1'),
-                    id='field-dara_Publication_Year', 
-                    placeholder=_('eg. 2013'), 
-                    value=dara.dara_Publication_Year, 
-                    error=errors.dara_Publication_Year, ) 
+    
+        <fieldset class="dara_master_slave">
+            {{ form.input('dara_Publication_PID', 
+                    label=_('Persistent Identifier of Publication'),
+                    id='field-dara_Publication_PID', 
+                    placeholder=_('eg. 10.434/econ.23Aq'), 
+                    value=dara.dara_Publication_PID, 
+                    error=errors.dara_Publication_PID,
+                    classes=['dara_master'] ) 
             }}
-            </div>
-
-            <div class="dara_slave">slave 1.1
-                {{ form.input('dara_Publication_Year', label=_('Year of Publication'),
-                    id='field-dara_Publication_Year', 
-                    placeholder=_('eg. 2013'), 
-                    value=dara.dara_Publication_Year, 
-                    error=errors.dara_Publication_Year, ) 
-                }}
-            </div>
-        </div
-    
-
-    <div class="dara_slave">slave2:
-    {{ form.input('dara_Publication_Year', label=_('Year of Publication 2'),
-            id='field-dara_Publication_Year', 
-            placeholder=_('eg. 2013'), 
-            value=dara.dara_Publication_Year, 
-            error=errors.dara_Publication_Year, ) 
-    }}
-</div>
-
-
-    
-
-    <div class="dara_master_slave">
-        <div class="dara_master">
-        {{ form.input('dara_Publication_PID', 
-                label=_('Persistent Identifier of Publication'),
-                id='field-dara_Publication_PID', 
-                placeholder=_('eg. 10.434/econ.23Aq'), 
-                value=dara.dara_Publication_PID, 
-                error=errors.dara_Publication_PID, ) 
-        }}
-        </div>
-
-        <div class="dara_slave">
-        {{ form.select('dara_PublicationPID_Type', 
-            id='field-dara_PublicationPID_Type', 
+ 
+ 
+        {% set selected = dara.dara_Publication_PIDType %}
+        {{ form.select('dara_Publication_PIDType', 
+            id='field-dara_Publication_PIDType', 
             label=_('Publication Persistent Identifier Type'),
             options=[
                 {'text': '', 'value': ''},
@@ -103,11 +68,14 @@
                 {'text': 'UPC', 'value': 'UPC'}, 
                 {'text': 'URL', 'value': 'URL'}, 
                 {'text': 'URN', 'value': 'URN'}],
-            error=errors.dara_PublicationPID_Type,) 
+            error=errors.dara_PublicationPID_Type,
+            selected=selected,
+            classes=['dara_slave'],
+            )
+                      
         }}
-        </div>
-            
-    </div>
+                   
+     </fieldset>
 
 
 </div>

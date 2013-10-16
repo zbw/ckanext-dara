@@ -54,7 +54,7 @@ $(function() {
 });
 
 
-$(function master_slave_set() {
+$(function master_slave_input() {
 
   // conditional field based on input 
     $('.dara_master_slave').each(function () 

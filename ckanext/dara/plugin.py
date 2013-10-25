@@ -75,15 +75,18 @@ def dara_authors():
     """
     extras = dara_extras()
     authors = []
-    for k in extras.keys():
-        if 'author' in k:
-            authors.append(extras[k])
+    try:
+        for k in extras.keys():
+            if 'author' in k:
+                authors.append(extras[k])
 
     #XXX this can only be a temporary workaround! XXX
     #when deleting a field in the form, the author extras is not removed, but
     #just empty. So we have to filter those empty strings out of here
     #return filter(None, authors)
-    return authors
+        return authors
+    except:
+        return None
     
 
 

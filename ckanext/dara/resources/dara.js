@@ -13,6 +13,11 @@ $(function() {
 
     
     // dara metadata forms
+    $( "#dara_1" ).accordion({
+      collapsible: true,
+      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
+      active : 0 //2 gibts nicht, weswegen alle deactive sind
+    });
     $( "#dara_2" ).accordion({
       collapsible: true,
       icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },

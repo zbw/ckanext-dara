@@ -5,6 +5,7 @@
     <span style="font-size:14px;">
        Support findability of your data in disciplinary portals
     </span>
+<span class="dara_level_number">2</span>
 </h4>    
 
 <div class="dara_level">
@@ -54,14 +55,40 @@
     }}
 
     {#TODO add more languages #}    
+    {% set selected = dara.dara_language %}
     {{ form.select('dara_language', id='field-dara_language', 
             label=_('Language'),
-            options=[{'value' : 'eng', 'text':'English'},
-                    {'value' : 'ger', 'text' : 'Deutsch'}],
-            selected='eng',
+            options=[
+                {'value' : '', 'text' : ''},
+                {'value' : 'bel', 'text' : 'Belarusian'},
+                {'value' : 'bos', 'text' : 'Bosnian'},
+                {'value' : 'cze', 'text' : 'Czech'},
+                {'value' : 'dut', 'text' : 'Dutch'},
+                {'value' : 'eng', 'text' : 'English'},
+                {'value' : 'est', 'text' : 'Estonian'},
+                {'value' : 'fin', 'text' : 'Finnish'},
+                {'value' : 'fre', 'text' : 'French'},
+                {'value' : 'ger', 'text' : 'German'},
+                {'value' : 'gre', 'text' : 'Greek'},
+                {'value' : 'hrv', 'text' : 'Croatian'},
+                {'value' : 'hun', 'text' : 'Hungarian'},
+                {'value' : 'ita', 'text' : 'Italian'},
+                {'value' : 'lav', 'text' : 'Latvian'},
+                {'value' : 'lit', 'text' : 'Lithuanian'},
+                {'value' : 'nor', 'text' : 'Norwegian'},
+                {'value' : 'pol', 'text' : 'Polish'},
+                {'value' : 'rum', 'text' : 'Romanian'},
+                {'value' : 'rus', 'text' : 'Russian'},
+                {'value' : 'slo', 'text' : 'Slovak'},
+                {'value' : 'slv', 'text' : 'Slovenian'},
+                {'value' : 'spa', 'text' : 'Spanish'},
+                {'value' : 'srp', 'text' : 'Serbian'},
+                {'value' : 'swe', 'text' : 'Swedish'},
+                {'value' : 'ukr', 'text' : 'Ukrainian'},
+            ],
+            selected=selected,
             error=errors.dara_language,) 
     }}
-
 
     <fieldset class="dara_master_slave">
         {{ form.input('dara_AlternativeIdentifier_ID', 
@@ -77,7 +104,7 @@
         {{ form.select('dara_AlternativeIdentifier_Type', 
             id='field-dara_AlternativeIdentifier_Type', 
             label=_('Alternative Identifier Type'),
-            classes=['dara_slave'],
+            classes=['dara_slave', 'select_small'],
             options=[
                 {'text' : ''},
                 {'text': 'DOI', 'value': 'DOI'}, 
@@ -100,17 +127,14 @@
         }}
     </fieldset>
     
-    {% set selected = dara.dara_Universe_areaControlled %}
-    {{ form.select('dara_Universe_areaControlled', 
-            label=_('Geographic Coverage (controlled)'),
-            id='field-dara_Universe_area', 
-            error=errors.dara_Universe_area,
-            options=[
-                {'text' : ''},
-                {'text' : 'TODO'}
-            ],
-            classes=['todo']
-            ) }}    
+    {# need to have Ajax country codes for js autocomplete #}
+    {{ form.input('dara_Universe_areaControlled', 
+            label=_('Geographic Coverage'),
+            id='field-dara_Universe_areaControlled', 
+            placeholder=_('will be an input with autocomplete via Ajax'), 
+            value=dara.dara_Universe_areaControlled, 
+            error=errors.dara_Universe_areaControlled,
+            classes=['control-medium', 'todo']) }}
 
     {{ form.input('dara_Universe_areaFree', 
             label=_('Geographic Coverage (free)'),
@@ -152,6 +176,52 @@
             value=dara.dara_CollectionDate_free, 
             error=errors.dara_CollectionDate_free,
             classes=['control-medium']) }}
+
+    {% set selected = dara.dara_CollectionMode_controlled %}
+    {{ form.select('dara_CollectionMode_controlled', 
+        id='field-dara_CollectionMode_controlled', 
+        label="Collection Mode",
+        options=[
+            {'value' : '', 'text' : ''},
+            {'value' : '1', 'text' : 'Interview'},
+            {'value' : '2', 'text' : 'Interview: Face-to-Face'},
+            {'value' : '3', 'text' : 'Interview: Telephone'},
+            {'value' : '4', 'text' : 'Interview: E-Mail'},
+            {'value' : '5', 'text' : 'Interview: CATI'},
+            {'value' : '6', 'text' : 'Interview: CAPI'},
+            {'value' : '7', 'text' : 'Self-completed questionnaire'},
+            {'value' : '8', 'text' : 'Self-completed questionnaire: Paper/Pencil'},
+            {'value' : '9', 'text' : 'Self-completed questionnaire: Web-based'},
+            {'value' : '10', 'text' : 'Self-completed questionnaire: CASI'},
+            {'value' : '11', 'text' : 'Self-completed questionnaire: ACASI'},
+            {'value' : '12', 'text' : 'Coding'},
+            {'value' : '13', 'text' : 'Transcription'},
+            {'value' : '14', 'text' : 'Compilation'},
+            {'value' : '15', 'text' : 'Synthesis'},
+            {'value' : '16', 'text' : 'Recording'},
+            {'value' : '17', 'text' : 'Simulation'},
+            {'value' : '18', 'text' : 'Observation'},
+            {'value' : '19', 'text' : 'Observation: Field'},
+            {'value' : '20', 'text' : 'Observation: Laboratory'},
+            {'value' : '21', 'text' : 'Observation: Participant'},
+            {'value' : '22', 'text' : 'Experiments'},
+            {'value' : '23', 'text' : 'Focus Group'},
+            {'value' : '24', 'text' : 'Other'},
+        ],
+        error=errors.dara_CollectionMode_controlled,
+        selected=selected,
+        ) 
+    }}   
+
+
+    {{ form.input('dara_CollectionMode_free', 
+            label=_('Collection Mode (free)'),
+            id='field-dara_CollectionMode_free', 
+            placeholder=_('eg. Interview'), 
+            value=dara.dara_CollectionMode_free, 
+            error=errors.dara_CollectionMode_free,
+            classes=['control-medium']) }}
+
     
      {% set selected = dara.dara_TimeDimension_controlled %}
         {{ form.select('dara_TimeDimension_controlled', 
@@ -195,33 +265,8 @@
             error=errors.dara_DataCollector_name,
             classes=['control-medium']) }}
 
-    {#TODO controlled  #}        
-    {{ form.input('dara_CollectionMode_free', 
-            label=_('Collection Mode'),
-            id='field-dara_CollectionMode_free', 
-            placeholder=_('eg. Interview'), 
-            value=dara.dara_CollectionMode_free, 
-            error=errors.dara_CollectionMode_free,
-            classes=['control-medium']) }}
-
-    {{ form.markdown('dara_Note_text', 
-            label=_('Notes'),
-            id='field-dara_Note_text', 
-            placeholder=_('any additional notes'), 
-            value=dara.dara_Note_txt, 
-            error=errors.dara_Note_text,
-            classes=['control-full']) }}
-
-    {# now in package_basic_fields
-    {{ form.input('dara_Availabilityfree', 
-            label=_('Availability (free)'),
-            id='field-dara_Availabilityfree', 
-            placeholder=_('eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen'), 
-            value=dara.dara_Availabilityfree, 
-            error=errors.dara_Availabilityfree,
-            classes=['control-medium']) }}
-    #}
-
+    
+    
     {{ form.input('dara_Rights', 
             label=_('Rights'),
             id='field-dara_Rights', 
@@ -230,10 +275,16 @@
             error=errors.dara_Rights,
             classes=['control-medium']) }}          
 
+    {{ form.markdown('dara_Note_text', 
+            label=_('Notes'),
+            id='field-dara_Note_text', 
+            placeholder=_('any additional notes'), 
+            value=dara.dara_Note_txt, 
+            error=errors.dara_Note_text,
+            classes=['control-full']) }}
+    
+    
 
 </div>
-
-
-
 
 

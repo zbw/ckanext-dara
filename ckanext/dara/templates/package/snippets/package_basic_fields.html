@@ -14,160 +14,51 @@
 {% resource 'dara/jquery-ui.js' %}
 {#{% resource 'dara/jquery-ui.css' %}#}
 
-
 {% block package_basic_fields_license %}
 {% endblock %}
 
 {% block package_basic_fields_title %}
-    {{ form.input('title', id='field-title', 
-        label=_('Title'), 
-        placeholder=_('eg. A descriptive title.'), 
-        value=data.title, 
-        error=errors.title, 
-        classes=['control-full', 'control-large'], 
-        attrs={'data-module': 'slug-preview-target'}) }}
 {% endblock %}
 
 {% block package_basic_fields_url %}
-    {% set prefix = h.url_for(controller='package', action='read', id='') %}
-    {% set domain = h.url_for(controller='package', action='read', 
-                                id='', qualified=true) %}
-    {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-    {% set attrs = {
-        'data-module': 'slug-preview-slug', 
-        'data-module-prefix': domain, 
-        'data-module-placeholder': '<dataset>'
-        } 
-    %}
-
-    {{ form.prepend('name', id='field-name', label=_('URL'), 
-        prepend=prefix, 
-        placeholder=_('eg. my-dataset'), 
-        value=data.name, 
-        error=errors.name, 
-        attrs=attrs) }}
 {% endblock %}
-
 
 {% block package_basic_fields_description %}
-      
-    {{ form.markdown('notes', id='field-notes', 
-        label=_('Description'), 
-        placeholder=_('eg. Some useful notes about the data'), 
-        value=data.notes, 
-        error=errors.notes,
-        )
-    }}
-
-    {# dara.js.master_slave_input() does not work properly for markdown fields
-    {% set selected = dara.dara_DescriptionType %}
-    {{ form.select('dara_DescriptionType', 
-        id='field-dara_DescriptionType', 
-        label="Type of Description",
-        classes=['dara_slave'],
-        options=[
-            {'value': '1', 'text' :'Abstract'}, 
-            {'value': '2', 'text' : 'Series Information'}, 
-            {'value': '3', 'text' :'Table of Contents'},
-            {'value' : '4', 'text' : 'Other'},
-        ],
-        error=errors.dara_DescriptionType,
-        selected=selected
-        ) 
-    }} 
-    #}   
-
 {% endblock %}
-
-
 
 {% block package_metadata_author %}
-    {{ form.input('author', label=_('Author'), 
-    id='field-author', 
-    placeholder=_('eg. Klaus Tochtermann'), 
-    value=data.author, 
-    error=errors.author, 
-    classes=['control-medium']) }}
 {% endblock %}
+
+{% block package_basic_fields_org %}
+{% endblock %}
+
+{% block package_basic_fields_tags %}
+{% endblock %}
+
+
 
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
- 
-    <div id="dara_additional_authors" style="margin-left:50px;">
-        <div id="current_number_of_authors" style="display:none">{{ dara_authors|count }}</div>
-        {% set counter = 1 %}
-        {% for author in dara_authors %}
-            {% set counter = counter+1 %}
-            {% set name = "dara_author_" ~ counter %}
-            {% set label = 'Author ' ~ counter %}
-            {% set value = author %}
-            {% set field = 'field-' ~ name %}
 
-           {#}
-            {{ form.input(name, label=label, 
-            id=field, 
-            placeholder=_('Joe Bloggs'), 
-            value=value, 
-            error=errors.author, 
-            classes=['control-medium']) 
-            }} 
-            #}
-        
-        {# XXX this way no validation is possible! XXX #}    
-        <div class="control-group control-medium dara_author">
-            <label class="control-label" for="{{ field }}">{{ label }}</label>
-            <div class="controls ">
-                <input id="{{ field }}" type="text" name="{{ name }}" 
-                value="{{ author }}" placeholder="Joe Bloggs" />
-                <a href="#" id="remove_author">Remove</a>
-            </div>
-        </div>
+<div id="dara_1" style="margin-bottom:25px;">
 
-        {% endfor %}
-              
-        <div id="additional_authors">  
-            <!-- add author -->
-        </div>
-    <p style="margin-bottom:25px"><a href="#" class="btn" id="add_author">
-        Add Author</a></p>
+    <h4 class="dara_level_head"
+    title="Metadata Level 1: Ensure citability">Metadata Level 1<br />
+    <span style="font-size:14px;">
+       Ensure citability
+    </span>
+    <span class="dara_level_number">1</span>
+    </h4>    
+
+    <div class="dara_level">    
+        {% snippet "package/snippets/dara_level1.html", form=form, dara=dara,
+                errors=errors, dara_authors=dara_authors, data=data %}
     </div>
-    
-    {{ form.input('dara_PublicationDate', label=_('Publication Year'),
-        id='field-dara_PublicationDate', 
-        type="text",
-        placeholder='eg. 2013', 
-        value=dara.dara_PublicationDate,
-        error=errors.dara_PublicationDate, 
-        ) 
-    }}
-    
-    {% set selected = dara.dara_Availabilitycontrolled %}
-    {{ form.select('dara_Availabilitycontrolled', 
-        id='field-dara_availability', 
-        label=_('Availability'),
-        options=[
-                {'value': '', 'text':""},
-                {'value': '1', 'text' :'Download'}, 
-                {'value': '2', 'text' : 'Delivery'}, 
-                {'value': '3', 'text' :'Onsite'},
-                {'value' : '4', 'text' : 'Not available'},
-                {'value' : '5', 'text' : 'Unknown'},
-                ],
-        selected=selected,
-        error=errors.dara_Availabilitycontrolled,
-        ) 
-    }}
 
-   {{ form.input('dara_Availabilityfree', 
-            label=_('Availability (free)'),
-            id='field-dara_Availabilityfree', 
-            placeholder=_('eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen'), 
-            value=dara.dara_Availabilityfree, 
-            error=errors.dara_Availabilityfree,
-            classes=['control-full']) }} 
-   
-   
-   {# da|ra levels 2 and 3 are not shown at first dataset edit #}
+</div>  
+
+
+{# da|ra levels 2 and 3 are not shown at first dataset edit #}
    {% if form_style == 'edit' %}
         <div id="dara_2" style="margin-bottom:25px;">
             {% snippet "package/snippets/dara_level2.html", form=form, dara=dara,
@@ -182,57 +73,6 @@
 
 {% endblock %}
 
-{% block package_basic_fields_tags %}
-    {% set tag_attrs = {
-        'data-module-tags': '', 
-        'data-module': 'autocomplete', 
-        'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
-        } 
-    %}
-    {{ form.input('tag_string', id='field-tags', 
-        label=_('Tags'), 
-        placeholder=_('eg. economy, mental health, government'), 
-        value=data.tag_string, error=errors.tags, 
-        classes=['control-full'], 
-        attrs=tag_attrs) }}
-{% endblock %}
-
-{% block package_basic_fields_org %}
-{# if we have a default group then this wants remembering #}
-{% if data.group_id %}
-  <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
-{% endif %}
-{% set existing_org = data.owner_org or data.group_id %}
-{% if h.check_access('sysadmin') 
-    or data.get('state', 'draft').startswith('draft') 
-    or data.get('state', 'none') ==  'none' 
-%}
-  {% set organizations_available = h.organizations_available('create_dataset') %}
-  {% if organizations_available %}
-    <div class="control-group">
-      <label for="field-organizations" class="control-label">{{ _('Journal') }}
-      </label>
-      <div class="controls">
-        <select id="field-organizations" name="owner_org" 
-            data-module="autocomplete">
-          <option value="" 
-            {% if not selected_org and data.id %}
-                selected="selected" 
-            {% endif %}>{{ _('Select a journal...') }}</option>
-          {% for organization in organizations_available %}
-            {# get out first org from users list only if there is not an existing org #}
-            {% set selected_org = 
-                (existing_org and existing_org == organization.id) 
-                or (not existing_org and not data.id and organization.id == organizations_available[0].id)
-            %}
-            <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.title }}</option>
-          {% endfor %}
-        </select>
-      </div>
-    </div>
-  {% endif %}
-{% endif %}
-{% endblock %}
 
 
 

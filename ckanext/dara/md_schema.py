@@ -23,6 +23,8 @@ LEVEL_2 = {
         {'name': "Collection Date (controlled)"},
     'CollectionDate_free': 
         {'name': 'Temporal Coverage (free)'},
+    'CollectionMode_controlled': 
+        {'name': 'Collection Mode (controlled)'},
     'CollectionMode_free': 
         {'name': 'Collection Mode (free)'},
     'DataCollector_name': 

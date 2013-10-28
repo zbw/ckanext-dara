@@ -15,6 +15,9 @@
 {#{% resource 'dara/jquery-ui.css' %}#}
 
 {% block package_basic_fields_license %}
+    {% if form_style=='edit' %}
+    <h2>Edit Dataset</h2>
+    {% endif %}
 {% endblock %}
 
 {% block package_basic_fields_title %}

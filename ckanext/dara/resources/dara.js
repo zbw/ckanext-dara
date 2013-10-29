@@ -16,7 +16,7 @@ $(function() {
     $( "#dara_1" ).accordion({
       collapsible: true,
       icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
-      active : 0 //2 gibts nicht, weswegen alle deactive sind
+      active : 0 
     });
     $( "#dara_2" ).accordion({
       collapsible: true,
@@ -33,13 +33,13 @@ $(function() {
     //add author field
     $('#add_author').live('click', function() {
 
-      $('<div class="control-group control-medium dara_author">\
+      $('<div class="control-group dara_author">\
           <label class="control-label" for="field-dara_author_' + i +'">\
           Author '+ i +'</label>\
           <div class="controls ">\
             <input id="field-dara_author_'+ i +'" type="text" name="dara_author_' + i +'" \
               value="" placeholder="Author Name" /> \
-              <a href="#" id="remove_author">Remove</a>\
+              <a href="#" class="dara_red" id="remove_author">Remove</a>\
           </div></div>').appendTo(addAuthorDiv);
       i++;
       return false;

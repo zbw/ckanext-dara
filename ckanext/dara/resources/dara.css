@@ -1,21 +1,23 @@
 
 .ui-widget {
 font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-font-size: 1em !important;
+/* font-size: 1em !important;*/
 }
 
 .ui-accordion-header {
     font-weight:bold !important;
 }
 
-.ui-widget-content {
-    font-size:80% !important;
+.ui-widget-content, .dara_level {
+  background: rgb(235,235,235) !important;
 }
 
-.dara_level {
-	background-color: rgb(235,235,235) !important;
 
+/* try later:; different colors for level head
+.ui-state-default {
+  background: lightgreen !important;
 }
+*/
 
 .dara_info {
 	font-size: 11px;
@@ -36,10 +38,11 @@ font-size: 1em !important;
 }
 
 .dara_info_text {
-  font-size:11px;
+  font-size:12px;
   color:rgb(80,80,80);
   max-width:450px;
   margin-left:15px;
+  margin-bottom: 25px;
 }
 
 .dara_form_header {
@@ -80,8 +83,8 @@ font-size: 1em !important;
 }
 
 
-.select_small > * > select {
-  width:55px;
+.select_auto > * > select {
+  width:auto;
 
 }
 
@@ -89,3 +92,22 @@ font-size: 1em !important;
   margin-bottom:25px;
   font-size:115%;
 }
+
+
+.ui-widget input, 
+.ui-widget select, 
+.ui-widget textarea, 
+.ui-widget button {
+font-size:14px !important;
+}
+
+.dara_red {
+  color:  rgb(129, 6, 6) !important;
+}
+
+.dara_required label:after {
+  content:':*';
+  color:rgb(129, 6, 6);
+  font-weight:bold;
+}
+

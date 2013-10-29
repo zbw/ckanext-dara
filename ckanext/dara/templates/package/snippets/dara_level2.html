@@ -33,7 +33,7 @@
         {{ form.select('dara_OtherTitleType', 
             id='field-dara_OtherTitleType', 
             label="Type of other title",
-            classes=['dara_slave'],
+            classes=['dara_slave', 'select_auto'],
             options=[
                 {'value': '1', 'text' :'Alternative Title'}, 
                 {'value': '2', 'text' : 'Translated Title'}, 
@@ -87,7 +87,8 @@
                 {'value' : 'ukr', 'text' : 'Ukrainian'},
             ],
             selected=selected,
-            error=errors.dara_language,) 
+            error=errors.dara_language,
+            classes=['select_auto']) 
     }}
 
     <fieldset class="dara_master_slave">
@@ -104,7 +105,7 @@
         {{ form.select('dara_AlternativeIdentifier_Type', 
             id='field-dara_AlternativeIdentifier_Type', 
             label=_('Alternative Identifier Type'),
-            classes=['dara_slave', 'select_small'],
+            classes=['dara_slave', 'select_auto'],
             options=[
                 {'text' : ''},
                 {'text': 'DOI', 'value': 'DOI'}, 
@@ -210,6 +211,7 @@
         ],
         error=errors.dara_CollectionMode_controlled,
         selected=selected,
+        classes=['select_auto']
         ) 
     }}   
 
@@ -245,6 +247,7 @@
             ],
             error=errors.dara_OtherTitleType,
             selected=selected,
+            classes=["select_auto"]
             ) 
         }}
  

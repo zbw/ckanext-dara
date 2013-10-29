@@ -4,7 +4,7 @@
             placeholder=_('eg. A descriptive title.'), 
             value=data.title, 
             error=errors.title, 
-            classes=['control-full', 'control-large'], 
+            classes=['control-full', 'control-large', 'dara_required'], 
             attrs={'data-module': 'slug-preview-target'}) }}
         
         {% set prefix = h.url_for(controller='package', action='read', id='') %}
@@ -57,7 +57,7 @@
         placeholder=_('eg. Klaus Tochtermann'), 
         value=data.author, 
         error=errors.author, 
-        classes=['control-medium']) }}
+        classes=['control-medium', 'dara_required']) }}
      
         <div id="dara_additional_authors" style="margin-left:50px;">
             <div id="current_number_of_authors" style="display:none">
@@ -73,12 +73,12 @@
                     {% set field = 'field-' ~ name %}
                    
                 {# XXX this way no validation is possible! XXX #}    
-                <div class="control-group control-medium dara_author">
+                <div class="control-group dara_author">
                     <label class="control-label" for="{{ field }}">{{ label }}</label>
                     <div class="controls ">
                         <input id="{{ field }}" type="text" name="{{ name }}" 
                         value="{{ author }}" placeholder="Joe Bloggs" />
-                        <a href="#" id="remove_author">Remove</a>
+                        <a href="#" class="dara_red" id="remove_author">Remove</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -97,7 +97,8 @@
             type="text",
             placeholder='eg. 2013', 
             value=dara.dara_PublicationDate,
-            error=errors.dara_PublicationDate, 
+            error=errors.dara_PublicationDate,
+            classes=['dara_required'] 
             ) 
         }}
         
@@ -114,7 +115,7 @@
                     {'value' : '5', 'text' : 'Unknown'},
                     ],
             selected=selected,
-            
+            classes=['dara_required']
             ) 
         }}
 
@@ -173,7 +174,7 @@
             label=_('Tags'), 
             placeholder=_('eg. economy, mental health, government'), 
             value=data.tag_string, error=errors.tags, 
-            classes=['control-full'], 
+            classes=['control-medium'], 
             attrs=tag_attrs) }}
 
 

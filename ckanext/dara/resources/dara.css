@@ -4,9 +4,6 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 /* font-size: 1em !important;*/
 }
 
-.ui-accordion-header {
-    font-weight:bold !important;
-}
 
 .ui-widget-content, .dara_level {
   background: rgb(235,235,235) !important;
@@ -27,7 +24,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 .dara_level_head {
     font-weight:400 !important;
-    font-size:17.5px !important;
+    font-size:22px !important;
   }
 
 .dara_level_number {

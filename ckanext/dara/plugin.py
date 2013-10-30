@@ -89,11 +89,6 @@ def dara_authors():
         return None
     
 
-
-
-
-
-
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
     A CKAN plugin for da|ra metadata schema
@@ -168,43 +163,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         
         return schema
 
-    
-    def update_config(self, config):
-        # Add this plugin's templates dir to CKAN's extra_template_paths, so
-        # that CKAN will use this plugin's custom templates.
-        tk.add_template_directory(config, 'templates')
-        tk.add_public_directory(config, 'public')
-        tk.add_resource('resources', 'dara')
-
-    def get_helpers(self):
-        return {'dara_extras': dara_extras, 
-                'dara_md': dara_md, 
-                'dara_pkg':dara_pkg, 
-                'dara_debug':dara_debug,
-                'dara_c' : dara_c,
-                'dara_authors' : dara_authors
-                }
-
-        
-    def is_fallback(self):
-        # Return True to register this plugin as the default handler for
-        # package types not handled by any other IDatasetForm plugin.
-        return True
-
-    def package_types(self):
-        # This plugin doesn't handle any special package types, it just
-        # registers itself as the default (above).
-        return []
-
-    def create_package_schema(self):
-        schema = super(DaraMetadataPlugin, self).create_package_schema()
-        schema = self._dara_package_schema(schema)
-        return schema
-
-    def update_package_schema(self):
-        schema = super(DaraMetadataPlugin, self).update_package_schema()
-        schema = self._dara_package_schema(schema)
-        return schema
 
     def show_package_schema(self):
 
@@ -247,3 +205,42 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
         return schema
+
+    
+    def update_config(self, config):
+        # Add this plugin's templates dir to CKAN's extra_template_paths, so
+        # that CKAN will use this plugin's custom templates.
+        tk.add_template_directory(config, 'templates')
+        tk.add_public_directory(config, 'public')
+        tk.add_resource('resources', 'dara')
+
+    def get_helpers(self):
+        return {'dara_extras': dara_extras, 
+                'dara_md': dara_md, 
+                'dara_pkg':dara_pkg, 
+                'dara_debug':dara_debug,
+                'dara_c' : dara_c,
+                'dara_authors' : dara_authors
+                }
+
+        
+    def is_fallback(self):
+        # Return True to register this plugin as the default handler for
+        # package types not handled by any other IDatasetForm plugin.
+        return True
+
+    def package_types(self):
+        # This plugin doesn't handle any special package types, it just
+        # registers itself as the default (above).
+        return []
+
+    def create_package_schema(self):
+        schema = super(DaraMetadataPlugin, self).create_package_schema()
+        schema = self._dara_package_schema(schema)
+        return schema
+
+    def update_package_schema(self):
+        schema = super(DaraMetadataPlugin, self).update_package_schema()
+        schema = self._dara_package_schema(schema)
+        return schema
+

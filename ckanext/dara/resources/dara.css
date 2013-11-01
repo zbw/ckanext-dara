@@ -9,12 +9,36 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   background: rgb(235,235,235) !important;
 }
 
-
-/* try later:; different colors for level head
-.ui-state-default {
-  background: lightgreen !important;
+.ui-accordion-header {
+    font-size:18px;
+    font-weight:400;
 }
-*/
+
+
+#dara_1, #dara_2, #dara_3 {
+  margin-bottom: 25px;
+}
+
+/* try later:; different colors for level head */
+#dara_1 > h4 {
+  background-color: #FF7373 !important;
+  background-image:none !important;
+}
+
+#dara_2 > h4 {
+ background-color: #FFD073 !important;
+ background-image:none !important; 
+}
+
+#dara_3 > h4 {
+ /*background-color: #C9F76F !important; */
+ /* background-color: #8cc68a !important; */
+ background-color: #c5e2c4 !important;
+
+ background-image:none !important; 
+}
+
+
 
 .dara_info {
 	font-size: 11px;
@@ -108,3 +132,6 @@ font-size:14px !important;
   font-weight:bold;
 }
 
+.dara_inline {
+  
+}

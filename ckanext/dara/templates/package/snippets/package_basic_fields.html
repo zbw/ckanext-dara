@@ -20,7 +20,7 @@
 
 {% block package_basic_fields_title %}
 {% if form_style=='edit' %}
-    <h2>Edit Dataset</h2>
+    <h1>Edit Dataset</h1>
 {% endif %}
 {% endblock %}
 
@@ -45,7 +45,7 @@
 {% block package_basic_fields_custom %}
 
 {% if form_style == 'edit' %}
-    <div id="dara_1" style="margin-bottom:25px;">
+    <div id="dara_1">
         <h4 class="dara_level_head"
         title="Metadata Level 1: Ensure citability">Metadata Level 1<br />
         <span style="font-size:14px;">
@@ -68,12 +68,12 @@
 
 {# da|ra levels 2 and 3 are not shown at first dataset edit #}
    {% if form_style == 'edit' %}
-        <div id="dara_2" style="margin-bottom:25px;">
+        <div id="dara_2">
             {% snippet "package/snippets/dara_level2.html", form=form, dara=dara,
                 errors=errors %}  
         </div>
         
-        <div id="dara_3" style="margin-bottom:25px;">
+        <div id="dara_3">
             {% snippet "package/snippets/dara_level3.html", form=form, dara=dara,
                 errors=errors %}  
         </div>

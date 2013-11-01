@@ -13,6 +13,7 @@ from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels
+from collections import OrderedDict
 
 
 PREFIX = 'dara_'
@@ -42,7 +43,10 @@ def dara_extras():
         for key, value in extras.items():
             if key.startswith(PREFIX):
                 dara_extras[key] = value
-        return dara_extras
+        #XXX sorting is still to be done. this is way it does not work exactly.
+        # we'll need the dara_md['name'] as key!
+        ordered_dara_extras = OrderedDict(sorted(dara_extras.items()))        
+        return ordered_dara_extras
     return None
 
 

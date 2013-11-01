@@ -15,7 +15,7 @@
     disciplinary portals, by search engines or in data bases. Also linking
     data to (already published) publications is enabled. You have to fill in
     at maximum 25 metadata fields with additional required subfields.  This
-    amount of information is not sufficient to link your datasets to  other
+    kind of information is not sufficient to link your datasets to  other
     outputs of your scientific work or to those of your institution.
     </p>
 
@@ -33,7 +33,7 @@
         {{ form.select('dara_OtherTitleType', 
             id='field-dara_OtherTitleType', 
             label="Type of other title",
-            classes=['dara_slave', 'select_auto'],
+            classes=['dara_slave', 'select_auto', 'dara_inline', 'dara_required'],
             options=[
                 {'value': '1', 'text' :'Alternative Title'}, 
                 {'value': '2', 'text' : 'Translated Title'}, 
@@ -105,7 +105,7 @@
         {{ form.select('dara_AlternativeIdentifier_Type', 
             id='field-dara_AlternativeIdentifier_Type', 
             label=_('Alternative Identifier Type'),
-            classes=['dara_slave', 'select_auto'],
+            classes=['dara_slave', 'select_auto', 'dara_inline', 'dara_required'],
             options=[
                 {'text' : ''},
                 {'text': 'DOI', 'value': 'DOI'}, 

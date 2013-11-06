@@ -1,3 +1,9 @@
+    {# ich würde hier erstmal keinen Einleitungstext hinschreiben, zumal er auch nicht auf alle der folgenden Felder zutrifft 
+    <p class="dara_info_text">
+        We believe that you should cite data in just the same way that you can cite other sources of information, such as articles and books. Data citation can help by enabling easy reuse and verification of data, allowing the impact of data to be tracked, and creating a scholarly structure that recognises and rewards data producers.
+    </p>
+    #}
+    
 
     {{ form.input('title', id='field-title', 
             label=_('Title'), 
@@ -54,7 +60,7 @@
 
         {{ form.input('author', label=_('Author'), 
         id='field-author', 
-        placeholder=_('eg. Klaus Tochtermann'), 
+        placeholder=_('eg. Olaf Siegert'), 
         value=data.author, 
         error=errors.author, 
         classes=['control-medium', 'dara_required']) }}

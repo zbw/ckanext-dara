@@ -44,6 +44,7 @@
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
 
+
 {% if form_style == 'edit' %}
     <div id="dara_1">
         <h4 class="dara_level_head"
@@ -55,15 +56,15 @@
         </h4>    
 
         <div class="dara_level">    
-            {% snippet "package/snippets/dara_level1.html", form=form, dara=dara,
-                   errors=errors, dara_authors=dara_authors, data=data %}
+            {% snippet "package/snippets/dara_level1.html", form=form, 
+            dara=dara, errors=errors, dara_authors=dara_authors, data=data %}
         </div>
     </div> 
-
  {% else %}
      {% snippet "package/snippets/dara_level1.html", form=form, dara=dara,
                    errors=errors, dara_authors=dara_authors, data=data %}
 {% endif %}
+
 
 
 {# da|ra levels 2 and 3 are not shown at first dataset edit #}

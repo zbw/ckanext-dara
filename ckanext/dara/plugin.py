@@ -13,7 +13,9 @@ from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels
-from collections import OrderedDict
+
+### OrderedDict is not available in 2.6, which the Python Version on CentOS...
+#from collections import OrderedDict
 
 
 PREFIX = 'dara_'
@@ -45,8 +47,9 @@ def dara_extras():
                 dara_extras[key] = value
         #XXX sorting is still to be done. this is way it does not work exactly.
         # we'll need the dara_md['name'] as key!
-        ordered_dara_extras = OrderedDict(sorted(dara_extras.items()))        
-        return ordered_dara_extras
+        #ordered_dara_extras = OrderedDict(sorted(dara_extras.items()))        
+        #return ordered_dara_extras
+        return dara_extras
     return None
 
 def package_extras():

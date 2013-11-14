@@ -113,10 +113,11 @@
             id='field-dara_availability', 
             label=_('Availability'),
             options=[
-                    {'value': '', 'text':""},
-                    {'value': '1', 'text' :'Download'}, 
-                    {'value': '2', 'text' : 'Delivery'}, 
-                    {'value': '3', 'text' :'Onsite'},
+                    {
+                    'value': '', 'text':"Please select"},
+                    {'value': '1', 'text' :'Free Download'}, 
+                    {'value': '2', 'text' : 'Delivery on demand'}, 
+                    {'value': '3', 'text' :'Onsite only'},
                     {'value' : '4', 'text' : 'Not available'},
                     {'value' : '5', 'text' : 'Unknown'},
                     ],
@@ -169,6 +170,18 @@
       {% endif %}
     {% endif %}
 
+
+    {# this is temporary. We will later 'dock' the article url with 
+    dara_metadata for publications in level 2
+    #}
+    {{ form.input('edawax_article_url', label="URL of related article", 
+        id='field-edawax_article_url', 
+        placeholder='http://yourjournal.org/article-1234', 
+        value=data.edawax_article_url, 
+        error=errors.edawax_article_url, 
+        classes=['control-medium']) }}
+
+
     {# old block package_basic_fields_tags #}
     {% set tag_attrs = {
             'data-module-tags': '', 
@@ -177,7 +190,7 @@
             } 
         %}
         {{ form.input('tag_string', id='field-tags', 
-            label=_('Tags'), 
+            label=_('Keywords'), 
             placeholder=_('eg. economy, mental health, government'), 
             value=data.tag_string, error=errors.tags, 
             classes=['control-medium'], 

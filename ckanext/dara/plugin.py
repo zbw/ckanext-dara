@@ -49,6 +49,15 @@ def dara_extras():
         return ordered_dara_extras
     return None
 
+def package_extras():
+    """
+    """
+    pkg = c.pkg
+    if pkg:
+        extras = pkg.extras
+        return extras
+    return None
+
 
 def dara_pkg():
     """to avoid pkg changes by ckan
@@ -149,12 +158,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
 
-        schema.update({
-            'Counter': [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_to_extras')
-                ]
-            })
+        # schema.update({
+        #     'Counter': [
+        #         tk.get_validator('ignore_missing'),
+        #         tk.get_converter('convert_to_extras')
+        #         ]
+        #     })
 
         for n in range(2,21):
             field_name = PREFIX + 'author_' + str(n)
@@ -164,6 +173,18 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('convert_to_extras')
                 ]
             })
+
+                
+        # better in edawax_theme?
+        schema.update({
+             'edawax_article_url' : [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_extras')
+             ]
+
+        })
+
+        
         
         return schema
 
@@ -208,6 +229,16 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('convert_from_extras')
                 ]
             })
+
+
+        schema.update({
+             'edawax_article_url' : [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_from_extras')
+             ]
+        })
+
+
         return schema
 
     
@@ -224,7 +255,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_pkg':dara_pkg, 
                 'dara_debug':dara_debug,
                 'dara_c' : dara_c,
-                'dara_authors' : dara_authors
+                'dara_authors' : dara_authors,
+                'package_extras' : package_extras
                 }
 
         

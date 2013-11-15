@@ -136,7 +136,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             field_name = PREFIX + key
             schema.update({
                 field_name: [
-                    tk.get_validator('not_empty'),
+                    tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')
                 ]
             })
@@ -201,7 +201,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             schema.update({
                 field_name: [
                     tk.get_converter('convert_from_extras'),
-                    tk.get_validator('not_empty'),
+                    tk.get_validator('ignore_missing'),
                 ]
             })
 

@@ -113,8 +113,6 @@
             id='field-dara_availability', 
             label=_('Availability'),
             options=[
-                    {
-                    'value': '', 'text':"Please select"},
                     {'value': '1', 'text' :'Free Download'}, 
                     {'value': '2', 'text' : 'Delivery on demand'}, 
                     {'value': '3', 'text' :'Onsite only'},
@@ -122,8 +120,9 @@
                     {'value' : '5', 'text' : 'Unknown'},
                     ],
             selected=selected,
+            error=errors.dara_Availabilitycontrolled,
             classes=['dara_required']
-            ) 
+         )
         }}
 
        {{ form.input('dara_Availabilityfree', 

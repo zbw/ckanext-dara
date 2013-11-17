@@ -1,19 +1,4 @@
-{% if form_style == 'edit' %}
-    <div id="dara_1">
-        <h4 class="dara_level_head"
-        title="Metadata Level 1: Ensure citability">Metadata Level 1<br />
-        <span style="font-size:14px;">
-           Ensure citability
-        </span>
-        <span class="dara_level_number">1</span>
-        </h4>    
 
-        <div class="dara_level">    
-            {% snippet "package/snippets/dara_level1.html", form=form, 
-            dara=dara, errors=errors, dara_authors=dara_authors, data=data %}
-        </div>
-    </div> 
-{% endif %}
 
     {# ich würde hier erstmal keinen Einleitungstext hinschreiben, zumal er auch nicht auf alle der folgenden Felder zutrifft 
     <p class="dara_info_text">

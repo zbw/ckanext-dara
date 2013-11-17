@@ -228,16 +228,16 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             field_name = PREFIX + 'author_' + str(n)
             schema.update({
                 field_name: [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_from_extras')
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')
                 ]
             })
 
 
         schema.update({
              'edawax_article_url' : [
+                tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_from_extras')
              ]
         })
 

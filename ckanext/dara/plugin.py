@@ -10,20 +10,27 @@ import ckan.plugins.toolkit as tk
 from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
-from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels
+from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels, publication_fields, PUBLICATION
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...
 #from collections import OrderedDict
+#from ckanext.dara.ordered_dict import OrderedDict
+import uuid
+
 
 
 PREFIX = 'dara_'
+
+def dara_uuid():
+    u = uuid.uuid4()
+    return u
 
 
 def dara_debug():
     pkg_dict = c.pkg_dict
 
-    import ipdb; ipdb.set_trace()
+    import pdb; pdb.set_trace()
 
 
 def dara_extras():
@@ -106,6 +113,28 @@ def dara_authors():
     except:
         return None
 
+def dara_publications():
+    """
+    checks for publications
+    """
+    extras = dara_extras()
+    for k in extras.keys():
+        if 'dara_Publication_' in k and extras[k] is not u'':
+            return True
+    return False
+    
+
+def dara_publication_fields():
+    """
+    returns fields for related publications forms
+    """
+    
+    fields = PUBLICATION
+
+    #import pdb; pdb.set_trace()
+    #return PUBLICATION
+    return fields
+
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
@@ -179,6 +208,20 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
 
+        #publications
+        # for now we support only ONE publication per dataset. Again, the flat
+        # structure of CKANs extras is a pain in the ass here
+        #for n in range(1,11):
+        for key in PUBLICATION:
+            field_name = PREFIX + 'Publication' + '_' + key
+            schema.update({
+                field_name: [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_extras')
+                ]   
+            })
+
+
         # better in edawax_theme?
         schema.update({
             'edawax_article_url': [
@@ -223,6 +266,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
 
+        #authors
         for n in range(2,21):
             field_name = PREFIX + 'author_' + str(n)
             schema.update({
@@ -231,6 +275,21 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing')
                 ]
             })
+        
+        #publications
+        #publications
+        # for now we support only ONE publication per dataset. Again, the flat
+        # structure of CKANs extras is a pain in the ass here
+        #for n in range(1,11):
+        for key in PUBLICATION:
+            field_name = PREFIX + 'Publication' + '_' + key
+            schema.update({
+                field_name: [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')
+                ]   
+            })
+
 
 
         schema.update({
@@ -249,6 +308,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_public_directory(config, 'public')
         tk.add_resource('resources', 'dara')
 
+
+
     def get_helpers(self):
         return {'dara_extras': dara_extras,
                 'dara_md': dara_md,
@@ -256,7 +317,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_debug': dara_debug,
                 'dara_c': dara_c,
                 'dara_authors': dara_authors,
-                'package_extras': package_extras
+                'package_extras': package_extras,
+                'dara_publication_fields': dara_publication_fields,
+                'dara_uuid': dara_uuid,
+                'dara_publications': dara_publications
                 }
 
     def is_fallback(self):

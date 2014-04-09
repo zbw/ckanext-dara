@@ -44,7 +44,6 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
  /*background-color: #C9F76F !important; */
  /* background-color: #8cc68a !important; */
  background-color: #c5e2c4 !important;
-
  background-image:none !important; 
 }
 
@@ -78,7 +77,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 .dara_form_header {
-    font-size:14px;
+    font-size:16px;
 }
 
 #add_author {
@@ -152,4 +151,19 @@ font-size:14px !important;
   background-color: yellow;
 
 }
+
+.additional {
+    background-color:lightyellow;
+    margin-left:30px;
+}
+
+.remove {
+    float:right;
+}
+
+.hidden {
+/*    display:none; */
+    visibility:hidden;
+}
+
 

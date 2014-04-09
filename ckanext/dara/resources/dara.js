@@ -65,11 +65,79 @@ $(function add_authors() {
 });
 
 
-$(function master_slave_input() {
+/*
+$(function add_publication() {
+  
+  var addPublicationDiv = $('#additional_publication');
+  var current_publications = $('#current_number_of_publications').text();
+  var i = parseInt(current_publications);  
+
+  //var prefix = 'dara_publication#' + i;
+  
+  //add publication fields
+  $('#add_publication').live('click', function() {
+      
+      i++;
+      publication = '#dara_publication_' +i;
+      //console.log($('#dara_publication#1'));
+      $(publication).removeClass('hidden');
+    
+    //i++;
+    master_slave_input();
+    return false;
+  });
+
+  $('#remove_publication').live('click', function() { 
+      if( i > 1 ) {
+          $(this).parents('div.additional').remove();
+          i--;
+      }
+      return false;
+  });
+
+
+});
+*/
+
+$(function publications() {
+  
+  var publication = $('#dara_Publication');
+  var pubs = $('#pubs').text();
+  $(publication).hide();
+  if( pubs ) {
+     $(publication).show();
+     $('#add_publication').hide();
+  }; 
+
+
+  $('#add_publication').live('click', function() {
+    $(publication).show();
+    master_slave_input();
+    $('#add_publication').hide();
+    return false;
+  });
+
+  $('#remove_publication').live('click', function() { 
+        $(this).parent().hide();
+        $('#add_publication').show();
+        return false;
+  });
+
+    
+
+});
+
+
+
+//calling master_slave for the first time
+$(master_slave_input());
+
+// this is not bind to a jquery document.ready() object since we need to call it
+// more than once, for example in add_publication().
+function master_slave_input() {
 
   // conditional field based on input 
-    $('.dara_master_slave').each(function () 
-      {
+    $('.dara_master_slave').each(function () {
       var master = $(this).find('.dara_master').find('input').first();
       var slave = $(this).find('.dara_slave');
       var value = master.attr('value');
@@ -79,7 +147,6 @@ $(function master_slave_input() {
         }
 
       master.bind("change keyup paste", function () 
-    // we cannot use the 'value' var here since it wont change after defining it
         {
           if(master.attr('value') !="") {
             slave.fadeIn();
@@ -90,5 +157,5 @@ $(function master_slave_input() {
       });
     });
 
-});
+}
 

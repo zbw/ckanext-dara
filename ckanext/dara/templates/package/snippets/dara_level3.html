@@ -8,69 +8,121 @@
 
 <div class="dara_level">
 
-    <p class="dara_info_text">
-    By submitting even more information, the author's datasets will be interlinked to his or her other scientific resources - for example to related publications, or the author's affiliation. 
-    To fill in the required information, some information provided by library authority files may be useful. 
-      </p>
+    <p class="dara_info_text">By submitting even more information, the
+    author's datasets will be interlinked to his or her other scientific
+    resources - for example to related publications, or the author's
+    affiliation.  To fill in the required information, some information
+    provided by library authority files may be useful.</p>
 
-    <p class="dara_form_header">Publication</p>
+    <p class="dara_form_header">Publications</p>
 
-    {{ form.input('dara_Author_name', label=_('Author of Publication'),
-            id='field-dara_Author_name', 
-            placeholder=_('eg. Name of the author'), 
-            value=dara.dara_dara_Author_name, 
-            error=errors,
-            classes=['control-medium']) 
-    }}
+
+    <div id="dara_publications" >
+                
+        <div id="current_number_of_publications" style="display:none">
+                {#    {{ dara_authors|count if dara_authors else 0 }} #}
+                0
+        </div>
+        <p>
+           <a href="#" id="add_publication" class="btn">Add Publication</a>
+        </p>
+       
+
+        {% set fields = h.dara_publication_fields() %}
+        {% set publications = h.dara_publications() %}
+
+        {# for now only one publication per dataset 
+        {% for n in range(1,6) %}
+        #}
+        
+         <div id="pubs" style="display:none">
+                    {{ 'True' if publications else 'False' }} 
+        </div>
+
+
+        {# {% set uuid = h.dara_uuid() %} #}
+        {% set prefix = 'dara_Publication' %}
+        {% set suffix = '_' %}
+        {% set class = 'hidden' if dara_publications else '' %}
+        
     
-    {{ form.input('dara_Publication_title', label=_('Title of Publication'),
-                    id='field-dara_Publication_title', 
-                    placeholder=_(''), 
-                    value=dara.dara_Publication_title, 
-                    error=errors.dara_Publication_title,
-                    classes=['control-medium'] ) 
-    }}
-    
-    
-        <fieldset class="dara_master_slave">
-            {{ form.input('dara_Publication_PID', 
-                    label=_('Persistent Identifier of Publication'),
-                    id='field-dara_Publication_PID', 
-                    placeholder=_('eg. 10.434/econ.23Aq'), 
-                    value=dara.dara_Publication_PID, 
-                    error=errors.dara_Publication_PID,
-                    classes=['dara_master'] ) 
-            }}
- 
- 
-        {% set selected = dara.dara_Publication_PIDType %}
-        {{ form.select('dara_Publication_PIDType', 
-            id='field-dara_Publication_PIDType', 
-            label=_('Publication Persistent Identifier Type'),
-            options=[
-                {'text': '', 'value': ''},
-                {'text': 'DOI', 'value': 'DOI'}, 
-                {'text': 'ARK', 'value': 'ARK'}, 
-                {'text': 'EAN13', 'value': 'EAN13'}, 
-                {'text': 'EISSN', 'value': 'EISSN'}, 
-                {'text': 'Handle', 'value': 'Handle'}, 
-                {'text': 'ISBN', 'value': 'ISBN'}, 
-                {'text': 'ISSN', 'value': 'ISSN'}, 
-                {'text': 'ISTC', 'value': 'ISTC'}, 
-                {'text': 'LISSN', 'value': 'LISSN'}, 
-                {'text': 'LSID', 'value': 'LSID'}, 
-                {'text': 'PURL', 'value': 'PURL'}, 
-                {'text': 'UPC', 'value': 'UPC'}, 
-                {'text': 'URL', 'value': 'URL'}, 
-                {'text': 'URN', 'value': 'URN'}],
-            error=errors.dara_PublicationPID_Type,
-            selected=selected,
-            classes=['dara_slave', 'select_auto'],
-            )
-                      
-        }}
-                   
-     </fieldset>
+        <div id={{ prefix }} class={{ class }}>
+            <a href="#" class="remove dara_red" id="remove_publication">
+                <span class="icon-minus-sign"/></a>
+                            
+            {% for key, values in fields.iteritems() %}
+                {% set name = key  %}
+                {% set values = values %}
+                {% set id = prefix ~ suffix ~ name %}
+                {% set value = dara[id] %}
+                {% set field_id = 'field-' ~id %}
+                {% set label = values['name'] %}
+                {% set classes = [] %}
+                
+            
+                {# this relies on the correct sort order in fields dict! #}
+                {% if values['role'] == 'master' %}
+                    {% do classes.append('dara_master') %} 
+                    <fieldset class="dara_master_slave">
+                {% endif %}
+                
+                {% if values['role'] == 'slave' %}
+                    {% do classes.append('dara_slave') %}
+                {% endif %}
+
+                {% if values['size'] == 'medium' %}
+                    {% do classes.append('control-medium') %}
+                {% endif %}
+                
+                {% if values['form_type'] == 'input' %}
+                    {{ form.input(id, label=label,
+                            id= field_id,
+                            placeholder='', 
+                            value=value,
+                            error=errors,
+                            classes=classes) 
+                    }}
+                {% endif %}
+
+                {% if values['form_type'] == 'select' %}
+                    {% set selected = dara.dara_Publication_ ~ name %}
+                    {% set options = values['options'] %}
+                    {% do classes.append('select-auto')  %}
+                    {% do classes.append('control-select') %}
+                    {{ form.select(id, 
+                        id = field_id,
+                        label = label,
+                        options = options,
+                        error=errors,
+                        selected=selected,
+                        classes=classes,
+                        )
+                                
+                    }}
+                {% endif %}
+            
+                {#XXX this works only when there's only one slave! #}
+                {% if values['role'] == 'slave' %}
+                    </fieldset>
+                {% endif %}
 
 
+            {% endfor %}
+        </div>
+        {# {% endfor %} #}
+        
+                
+        {# TODO: 
+            -   remove-button 
+            -   hide-button, incl. jquery funktion
+            -   ids und namen stimmen noch nicht
+            #}
+
+    </div>
+    
+    <div id="test">
+        <p>hier gehts mit dem formular dann weiter</p>
+    </div>
+
+{# dara_level end #}
 </div>

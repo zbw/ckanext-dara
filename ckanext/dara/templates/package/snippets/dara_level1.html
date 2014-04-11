@@ -42,7 +42,10 @@
             )
         }}
 
-        {# dara.js.master_slave_input() does not work properly for markdown fields
+        {# dara.js.master_slave_input() does not work properly for markdown
+        fields?  
+        TODO try again when restructuring fields in md_schema
+
             {% set selected = dara.dara_DescriptionType %}
             {{ form.select('dara_DescriptionType', 
                 id='field-dara_DescriptionType', 

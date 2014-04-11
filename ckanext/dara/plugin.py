@@ -16,15 +16,10 @@ from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels, p
 #CentOS...
 #from collections import OrderedDict
 #from ckanext.dara.ordered_dict import OrderedDict
-import uuid
 
 
 
 PREFIX = 'dara_'
-
-def dara_uuid():
-    u = uuid.uuid4()
-    return u
 
 
 def dara_debug():
@@ -113,6 +108,7 @@ def dara_authors():
     except:
         return None
 
+
 def dara_publications():
     """
     checks for publications
@@ -122,7 +118,7 @@ def dara_publications():
         if 'dara_Publication_' in k and extras[k] is not u'':
             return True
     return False
-    
+
 
 def dara_publication_fields():
     """
@@ -133,6 +129,13 @@ def dara_publication_fields():
 
     #import pdb; pdb.set_trace()
     #return PUBLICATION
+    return fields
+
+
+def dara_level3_fields():
+    """
+    """
+    fields = LEVEL_3
     return fields
 
 
@@ -319,8 +322,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_authors': dara_authors,
                 'package_extras': package_extras,
                 'dara_publication_fields': dara_publication_fields,
-                'dara_uuid': dara_uuid,
-                'dara_publications': dara_publications
+                'dara_publications': dara_publications,
+                'dara_level3_fields': dara_level3_fields,
                 }
 
     def is_fallback(self):

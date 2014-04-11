@@ -1,0 +1,79 @@
+{# dara form template macros #}
+
+{% import 'macros/form.html' as form %}
+
+
+{#XXX for some reason helpers (h) are not in here automatically, so we need it as
+    a parameter here #}
+{% macro md(fields, helpers, prefix='dara_') -%}
+     
+    {% set h = helpers %}
+    {% set dara = h.dara_extras() %}
+    {#{% set debug = h.dara_debug() %} #}
+
+    {% for key, values in fields.iteritems() %}
+        {% set name = key  %}
+        {% set values = values %}
+        {% set id = prefix ~ name %}
+        {% set value = dara[id] %}
+        {% set field_id = 'field-' ~id %}
+        {% set label = values['name'] %}
+        {% set classes = [] %}
+        
+    
+        {# this relies on the correct sort order in fields dict! #}
+        {% if values['role'] == 'master' %}
+            {% do classes.append('dara_master') %} 
+            <fieldset class="dara_master_slave">
+        {% endif %}
+        
+        {% if values['role'] == 'slave' %}
+            {% do classes.append('dara_slave') %}
+        {% endif %}
+
+        {% if values['size'] == 'medium' %}
+            {% do classes.append('control-medium') %}
+        {% endif %}
+
+        {% if values['size'] == 'small' %}
+            {% do classes.append('control-small') %}
+        {% endif %}
+        
+        {% if values['form_type'] == 'input' %}
+            {{ form.input(id, label=label,
+                    id= field_id,
+                    placeholder='', 
+                    value=value,
+                    error=errors,
+                    classes=classes) 
+            }}
+        {% endif %}
+
+        {% if values['form_type'] == 'select' %}
+        {% set selected = dara[id] %}
+            {% set options = values['options'] %}
+            {% do classes.append('select-auto')  %}
+            {% do classes.append('control-select') %}
+            {{ form.select(id, 
+                id = field_id,
+                label = label,
+                options = options,
+                error=errors,
+                selected=selected,
+                classes=classes,
+                )
+                        
+            }}
+        {% endif %}
+    
+        {#XXX this works only when there's only one slave! #}
+        {% if values['role'] == 'slave' %}
+            </fieldset>
+        {% endif %}
+
+
+    {% endfor %}
+
+{%- endmacro %}
+
+

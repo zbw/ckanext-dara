@@ -1,7 +1,6 @@
 /* 
 Hendrik Bunke
 ZBW - Leibniz Information Centre for Economics
-2013-09-01
 
 adds some usability to dara metadata forms
 
@@ -25,6 +24,7 @@ $(function metadata_level() {
     $( "#dara_3" ).accordion({
       collapsible: true,
       icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
+      heightStyle: "content",
       active : 2 // 2 is not a valid option so all levels are inactive
     });
 
@@ -65,40 +65,8 @@ $(function add_authors() {
 });
 
 
-/*
-$(function add_publication() {
-  
-  var addPublicationDiv = $('#additional_publication');
-  var current_publications = $('#current_number_of_publications').text();
-  var i = parseInt(current_publications);  
 
-  //var prefix = 'dara_publication#' + i;
-  
-  //add publication fields
-  $('#add_publication').live('click', function() {
-      
-      i++;
-      publication = '#dara_publication_' +i;
-      //console.log($('#dara_publication#1'));
-      $(publication).removeClass('hidden');
-    
-    //i++;
-    master_slave_input();
-    return false;
-  });
-
-  $('#remove_publication').live('click', function() { 
-      if( i > 1 ) {
-          $(this).parents('div.additional').remove();
-          i--;
-      }
-      return false;
-  });
-
-
-});
-*/
-
+/* XXX if not using jquery-ui.accordion use this one
 $(function publications() {
   
   var publication = $('#dara_Publication');
@@ -122,9 +90,23 @@ $(function publications() {
         $('#add_publication').show();
         return false;
   });
-
     
 
+});
+*/
+
+
+$(function publication() {
+    var publication = $('#dara_Publication');
+    var pubs = $('#pubs').text();
+    var active = parseInt(pubs);
+
+    $(publication).accordion({
+      collapsible: true,
+      heightStyle: "content",
+      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
+      active : active
+    });
 });
 
 

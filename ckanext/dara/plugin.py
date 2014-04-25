@@ -138,6 +138,12 @@ def dara_level3_fields():
     fields = LEVEL_3
     return fields
 
+def dara_level2_fields():
+    """
+    """
+    fields = LEVEL_2
+    return fields
+
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
@@ -324,6 +330,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_publication_fields': dara_publication_fields,
                 'dara_publications': dara_publications,
                 'dara_level3_fields': dara_level3_fields,
+                'dara_level2_fields': dara_level2_fields,
                 }
 
     def is_fallback(self):

@@ -1,3 +1,7 @@
+{# XXX New style #}
+
+{% import 'macros/dara_form.html' as dara_form %}
+
 
 <h4 class="dara_level_head"
     title="Metadata Level 2: Support findability of your data in disciplinary portals">Metadata Level 2 <br />
@@ -9,282 +13,23 @@
 
 <div class="dara_level">
 
-    <p class="dara_info_text">If the datasets is accompanied with     additional
-information (=metadata), the data becomes easier discoverable. Others     who
-re-use the data and cite it in their own research help to raise interest in the
-author's research and increase the impact within the author's field and beyond.
-By submitting these addional metadata other researchers could find your dataset
-even when they are searching for keywords only or for geographic locations. With
-these additional information other researchers can easily assess whether this
-dataset is suitable for their own interests and research questions. </p>
-
-    <fieldset class="dara_master_slave">
-
-    {{ form.input('dara_OtherTitle', label=_('Other Title'),
-            id='field-dara_OtherTitle', 
-            placeholder=_('eg. Subtitle, alternative title'), 
-            value=dara.dara_OtherTitle, 
-            error=errors,
-            classes=['control-medium', 'dara_master']) 
-    }}
-        
-    {% set selected = dara.dara_OtherTitleType %}
-        {{ form.select('dara_OtherTitleType', 
-            id='field-dara_OtherTitleType', 
-            label="Type of other title",
-            classes=['dara_slave', 'select_auto', 'dara_inline', 'dara_required'],
-            options=[
-                {'value': '1', 'text' :'Alternative Title'}, 
-                {'value': '2', 'text' : 'Translated Title'}, 
-                {'value': '3', 'text' :'Subtitle'},
-                {'value' : '4', 'text' : 'Original Title'},
-            ],
-            error=errors.dara_OtherTitleType,
-            selected=selected,
-            ) 
-        }}
-
-    </fieldset>
-    
-    {{ form.input('dara_currentVersion', label=_('Current Version'),
-            id='field-dara_currentVersion', 
-            placeholder=_('1.1'), 
-            value=dara.dara_currentVersion, 
-            error=errors.dara_currentVersion, ) 
-    }}
-
-    {#TODO add more languages #}    
-    {% set selected = dara.dara_language %}
-    {{ form.select('dara_language', id='field-dara_language', 
-            label=_('Language'),
-            options=[
-                {'value' : '', 'text' : ''},
-                {'value' : 'bel', 'text' : 'Belarusian'},
-                {'value' : 'bos', 'text' : 'Bosnian'},
-                {'value' : 'cze', 'text' : 'Czech'},
-                {'value' : 'dut', 'text' : 'Dutch'},
-                {'value' : 'eng', 'text' : 'English'},
-                {'value' : 'est', 'text' : 'Estonian'},
-                {'value' : 'fin', 'text' : 'Finnish'},
-                {'value' : 'fre', 'text' : 'French'},
-                {'value' : 'ger', 'text' : 'German'},
-                {'value' : 'gre', 'text' : 'Greek'},
-                {'value' : 'hrv', 'text' : 'Croatian'},
-                {'value' : 'hun', 'text' : 'Hungarian'},
-                {'value' : 'ita', 'text' : 'Italian'},
-                {'value' : 'lav', 'text' : 'Latvian'},
-                {'value' : 'lit', 'text' : 'Lithuanian'},
-                {'value' : 'nor', 'text' : 'Norwegian'},
-                {'value' : 'pol', 'text' : 'Polish'},
-                {'value' : 'rum', 'text' : 'Romanian'},
-                {'value' : 'rus', 'text' : 'Russian'},
-                {'value' : 'slo', 'text' : 'Slovak'},
-                {'value' : 'slv', 'text' : 'Slovenian'},
-                {'value' : 'spa', 'text' : 'Spanish'},
-                {'value' : 'srp', 'text' : 'Serbian'},
-                {'value' : 'swe', 'text' : 'Swedish'},
-                {'value' : 'ukr', 'text' : 'Ukrainian'},
-            ],
-            selected=selected,
-            error=errors.dara_language,
-            classes=['select_auto']) 
-    }}
-
-    <fieldset class="dara_master_slave">
-        {{ form.input('dara_AlternativeIdentifier_ID', 
-                label=_('Alternative Identifier'),
-                id='field-dara_AlternativeIdentifier_ID', 
-                placeholder=_('eg. ISBN, Handle, DOI'), 
-                value=dara.dara_AlternativeIdentifier_ID, 
-                error=errors.dara_AlternativeIdentifier_ID, 
-                classes=['dara_master']) 
-        }}
-
-        {% set selected = dara.dara_AlternativeIdentifier_Type %}
-        {{ form.select('dara_AlternativeIdentifier_Type', 
-            id='field-dara_AlternativeIdentifier_Type', 
-            label=_('Alternative Identifier Type'),
-            classes=['dara_slave', 'select_auto', 'dara_inline', 'dara_required'],
-            options=[
-                {'text' : ''},
-                {'text': 'DOI', 'value': 'DOI'}, 
-                {'text': 'ARK', 'value': 'ARK'}, 
-                {'text': 'EAN13', 'value': 'EAN13'}, 
-                {'text': 'EISSN', 'value': 'EISSN'}, 
-                {'text': 'Handle', 'value': 'Handle'}, 
-                {'text': 'ISBN', 'value': 'ISBN'}, 
-                {'text': 'ISSN', 'value': 'ISSN'}, 
-                {'text': 'ISTC', 'value': 'ISTC'}, 
-                {'text': 'LISSN', 'value': 'LISSN'}, 
-                {'text': 'LSID', 'value': 'LSID'}, 
-                {'text': 'PURL', 'value': 'PURL'}, 
-                {'text': 'UPC', 'value': 'UPC'}, 
-                {'text': 'URL', 'value': 'URL'}, 
-                {'text': 'URN', 'value': 'URN'}],
-            error=errors.dara_AlternativeIdentifier_Type,
-            selected=selected,
-            ) 
-        }}
-    </fieldset>
-    
-    {# need to have Ajax country codes for js autocomplete #}
-    {{ form.input('dara_Universe_areaControlled', 
-            label=_('Geographic Coverage'),
-            id='field-dara_Universe_areaControlled', 
-            placeholder=_('will be an input with autocomplete via Ajax'), 
-            value=dara.dara_Universe_areaControlled, 
-            error=errors.dara_Universe_areaControlled,
-            classes=['control-medium', 'todo']) }}
-
-    {{ form.input('dara_Universe_areaFree', 
-            label=_('Geographic Coverage (free)'),
-            id='field-dara_Universe_areaFree', 
-            placeholder=_('eg. West-Germany'), 
-            value=dara.dara_Universe_areaFree, 
-            error=errors.dara_Universe_areaFree,
-            classes=['control-medium']) }}
-
-    {{ form.input('dara_Universe_sampled', 
-            label=_('Sampled Universe'),
-            id='field-dara_Universe_sampled', 
-            placeholder=_('eg. adults in Eastern and Western Germany'), 
-            value=dara.dara_Universe_sampled, 
-            error=errors.dara_Universe_sampled,
-        classes=['control-medium']) }}
-
-    {{ form.markdown('dara_SelectionMethod', 
-            label=_('Sampling'),
-            id='field-dara_SelectionMethod', 
-            placeholder=_('Describe your selection method'), 
-            value=dara.dara_SelectionMethod, 
-            error=errors.dara_SelectionMethod,
-            classes=['control-full']) }}
-
-    {{ form.input('dara_CollectionDate_controlled', 
-            label=_('Collection Date'),
-            id='field-dara_CollectionDate_controlled', 
-            value=dara.dara_CollectionDate_controlled, 
-            error=errors.dara_CollectionDate_controlled,
-            type="date",
-            classes=['control-medium', 'todo']
-            ) }}
-
-    {{ form.input('dara_CollectionDate_free', 
-            label=_('Collection Date (free)'),
-            id='field-dara_CollectionDate_free', 
-            placeholder=_('eg. Spring 1999'), 
-            value=dara.dara_CollectionDate_free, 
-            error=errors.dara_CollectionDate_free,
-            classes=['control-medium']) }}
-
-    {% set selected = dara.dara_CollectionMode_controlled %}
-    {{ form.select('dara_CollectionMode_controlled', 
-        id='field-dara_CollectionMode_controlled', 
-        label="Collection Mode",
-        options=[
-            {'value' : '', 'text' : ''},
-            {'value' : '1', 'text' : 'Interview'},
-            {'value' : '2', 'text' : 'Interview: Face-to-Face'},
-            {'value' : '3', 'text' : 'Interview: Telephone'},
-            {'value' : '4', 'text' : 'Interview: E-Mail'},
-            {'value' : '5', 'text' : 'Interview: CATI'},
-            {'value' : '6', 'text' : 'Interview: CAPI'},
-            {'value' : '7', 'text' : 'Self-completed questionnaire'},
-            {'value' : '8', 'text' : 'Self-completed questionnaire: Paper/Pencil'},
-            {'value' : '9', 'text' : 'Self-completed questionnaire: Web-based'},
-            {'value' : '10', 'text' : 'Self-completed questionnaire: CASI'},
-            {'value' : '11', 'text' : 'Self-completed questionnaire: ACASI'},
-            {'value' : '12', 'text' : 'Coding'},
-            {'value' : '13', 'text' : 'Transcription'},
-            {'value' : '14', 'text' : 'Compilation'},
-            {'value' : '15', 'text' : 'Synthesis'},
-            {'value' : '16', 'text' : 'Recording'},
-            {'value' : '17', 'text' : 'Simulation'},
-            {'value' : '18', 'text' : 'Observation'},
-            {'value' : '19', 'text' : 'Observation: Field'},
-            {'value' : '20', 'text' : 'Observation: Laboratory'},
-            {'value' : '21', 'text' : 'Observation: Participant'},
-            {'value' : '22', 'text' : 'Experiments'},
-            {'value' : '23', 'text' : 'Focus Group'},
-            {'value' : '24', 'text' : 'Other'},
-        ],
-        error=errors.dara_CollectionMode_controlled,
-        selected=selected,
-        classes=['select_auto']
-        ) 
-    }}   
+    <p class="dara_info_text">If the datasets is accompanied with
+    additional information (=metadata), the data becomes easier discoverable.
+    Others who re-use the data and cite it in their own research help to
+    raise interest in the author's research and increase the impact within the
+    author's field and beyond.  By submitting these addional metadata other
+    researchers could find your dataset even when they are searching for
+    keywords only or for geographic locations. With these additional
+    information other researchers can easily assess whether this dataset is
+    suitable for their own interests and research questions. </p>
 
 
-    {{ form.input('dara_CollectionMode_free', 
-            label=_('Collection Mode (free)'),
-            id='field-dara_CollectionMode_free', 
-            placeholder=_('eg. Interview'), 
-            value=dara.dara_CollectionMode_free, 
-            error=errors.dara_CollectionMode_free,
-            classes=['control-medium']) }}
 
-    
-     {% set selected = dara.dara_TimeDimension_controlled %}
-        {{ form.select('dara_TimeDimension_controlled', 
-            id='field-dara_TimeDimension_controlled', 
-            label="Time Dimension",
-            options=[
-                {'value' : '', 'text' : ''},
-                {'value': '1', 'text' :'Longitudinal '}, 
-                {'value': '2', 
-                'text' : 'Longitudinal.CohortEventBased '}, 
-                {'value': '3', 'text' :'Longitudinal.TrendRepeatedCrossSection '},
-                {'value' : '4', 'text' : 'Longitudinal.Panel '},
-                {'value' : '5', 'text' : 'Longitudinal.Panel.Continuous'},
-                {'value' : '6', 'text' : 'Longitudinal: Panel: Interval'},
-                {'value' : '7', 'text' : 'Time Series'},
-                {'value' : '8', 'text' : 'TimeSeries: Continuous'},
-                {'value' : '9', 'text' : 'TimeSeries: Discrete'},
-                {'value' : '10', 'text' : 'Cross-section'},
-                {'value' : '11', 'text' : 'Cross-section ad-hoc follow-up'},
-                {'value' : '12', 'text' : 'Other'}
-            ],
-            error=errors.dara_OtherTitleType,
-            selected=selected,
-            classes=["select_auto"]
-            ) 
-        }}
- 
-    {{ form.input('dara_TimeDimension_free', 
-            label=_('Time Dimension (free)'),
-            id='field-dara_TimeDimension_free', 
-            placeholder=_('eg. Zeitreihe'), 
-            value=dara.dara_TimeDimension_free, 
-            error=errors.dara_TimeDimension_free,
-            classes=['control-medium']) }}
-            
-    {#TODO attributes #}        
-    {{ form.input('dara_DataCollector_name', 
-            label=_('Data Collector'),
-            id='field-dara_DataCollector_name', 
-            placeholder=_('eg. EMNID'), 
-            value=dara.dara_DataCollector_name, 
-            error=errors.dara_DataCollector_name,
-            classes=['control-medium']) }}
+    <div id="dara_level_2">
+        {{ dara_form.md(h.dara_level2_fields(), h) }}
+    </div>
 
-    
-    
-    {{ form.input('dara_Rights', 
-            label=_('Rights'),
-            id='field-dara_Rights', 
-            placeholder=_('Copyright Joe Biggs'), 
-            value=dara.dara_Rights, 
-            error=errors.dara_Rights,
-            classes=['control-medium']) }}          
 
-    {{ form.markdown('dara_Note_text', 
-            label=_('Notes'),
-            id='field-dara_Note_text', 
-            placeholder=_('any additional notes'), 
-            value=dara.dara_Note_txt, 
-            error=errors.dara_Note_text,
-            classes=['control-full']) }}
-    
+{# dara_level end #}
 </div>
-
 

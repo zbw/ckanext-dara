@@ -18,8 +18,18 @@
         {% set value = dara[id] %}
         {% set field_id = 'field-' ~id %}
         {% set label = values['name'] %}
+        {% set additional_classes = values['classes'] %}
         {% set classes = [] %}
         
+        {% if values['placeholder'] %}
+           {% set placeholder = values['placeholder'] %}
+           {% else %}
+           {% set placeholder = '' %}
+        {% endif %}
+
+        {% for c in additional_classes %}
+           {% do classes.append(c) %}
+        {% endfor %}
     
         {# this relies on the correct sort order in fields dict! #}
         {% if values['role'] == 'master' %}
@@ -42,7 +52,7 @@
         {% if values['form_type'] == 'input' %}
             {{ form.input(id, label=label,
                     id= field_id,
-                    placeholder='', 
+                    placeholder=placeholder, 
                     value=value,
                     error=errors,
                     classes=classes) 
@@ -65,6 +75,31 @@
                         
             }}
         {% endif %}
+
+        {% if values['form_type'] == 'text' %}
+            {% do classes.append('control-full') %}
+            {{ form.markdown(id, label=label,
+                    id= field_id,
+                    placeholder='', 
+                    value=value,
+                    error=errors,
+                    classes=classes) 
+            }}
+        {% endif %}
+        
+
+        {% if values['form_type'] == 'date' %}
+             {{ form.input(id, label=label,
+                    id= field_id,
+                    placeholder='', 
+                    value=value,
+                    error=errors,
+                    type="date",
+                    classes=classes) 
+            }}
+        {% endif %}
+
+        
     
         {#XXX this works only when there's only one slave! #}
         {% if values['role'] == 'slave' %}

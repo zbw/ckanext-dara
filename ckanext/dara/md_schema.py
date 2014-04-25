@@ -2,62 +2,274 @@
 
 from ckanext.dara.ordered_dict import OrderedDict
 
+#XXX This is only a first rough schema implementation. I'd like better
+#abstraction level, objects... We also still have presentation classes here
+
+
 
 
 ## Level 1 just contains fields that are not in standard CKAN fields. Title,
 # Author are not in here.
 
+
 LEVEL_1 = {
         'PublicationDate' : 
             {'name' : 'Publication Date'},
+        
         'Availabilitycontrolled' : 
             {'name' : 'Availability (controlled)'},
+        
+        #actually this is Level 2, but we put it for usability reasons in level1
+        'Availabilityfree':
+            {'name': 'Availability (free)'}, 
         }
 
-LEVEL_2 = {
-    'AlternativeIdentifier_ID': 
-        {'name': 'Alternative Identifier'},
-    'AlternativeIdentifier_Type': 
-        {'name': 'Type of Alternative Identifier'},
-    'Availabilityfree': 
-        {'name': 'Availability (free)'},
-    'CollectionDate_controlled' :
-        {'name': "Collection Date (controlled)"},
-    'CollectionDate_free': 
-        {'name': 'Temporal Coverage (free)'},
-    'CollectionMode_controlled': 
-        {'name': 'Collection Mode (controlled)'},
-    'CollectionMode_free': 
-        {'name': 'Collection Mode (free)'},
-    'DataCollector_name': 
-        {'name': 'Data Collector'},
-    'Note_text': 
-        {'name': 'Notes'},
-    'OtherTitle': 
-        {'name': 'Other Title'},
-    'OtherTitleType' :
-        {'name' : 'Type of other Title'},
-    'Rights': 
-        {'name': 'Rights'},
-    'SelectionMethod': 
-        {'name': 'Sampling'},
-    'TimeDimension_controlled' :
-        {'name': 'Time Dimension (controlled)'},
-    'TimeDimension_free': 
-        {'name': 'Time Dimension (free)'},
-    'Universe_areaControlled' :
-        {'name' : 'Geographic Coverage (controlled)'},
-    'Universe_areaFree': 
-        {'name': 'Geographic Coverage (free)'},
-    'Universe_sampled': 
-        {'name': 'Sampled Universe'},
-    'currentVersion': 
-        {'name': 'Version'},
-    'language': 
-        {'name': 'Language'},
-    'DescriptionType' : 
-        {'name' : 'Type of Description'},
-    }
+
+
+def level_2():
+    """
+    """
+
+    fields = [
+
+            ('OtherTitle', 
+                {'form_type': 'input', 
+                'name': 'Other Title',
+                'role' : 'master',
+                'size': 'medium',
+                'placeholder': u'eg. Subtitle, alternative title',
+            }), 
+
+
+            ('OtherTitleType', 
+                {'form_type': 'select', 
+                'name': 'Type of other Title',
+                'role': 'slave',
+                'options' : [
+                    {'value': '1', 'text' :'Alternative Title'}, 
+                    {'value': '2', 'text' : 'Translated Title'}, 
+                    {'value': '3', 'text' :'Subtitle'},
+                    {'value' : '4', 'text' : 'Original Title'},]
+            }), 
+            
+            ('currentVersion', 
+                {'form_type': 'input', 
+                'name': 'Version',
+                'size': 'small',
+                'placeholder': 'eg. 1.1',
+            }), 
+
+            ('language', 
+                {'form_type': 'select', 
+                'name': 'Language',
+                'options' : [
+                    {'value' : '', 'text' : ''},
+                    {'value' : 'bel', 'text' : 'Belarusian'},
+                    {'value' : 'bos', 'text' : 'Bosnian'},
+                    {'value' : 'cze', 'text' : 'Czech'},
+                    {'value' : 'dut', 'text' : 'Dutch'},
+                    {'value' : 'eng', 'text' : 'English'},
+                    {'value' : 'est', 'text' : 'Estonian'},
+                    {'value' : 'fin', 'text' : 'Finnish'},
+                    {'value' : 'fre', 'text' : 'French'},
+                    {'value' : 'ger', 'text' : 'German'},
+                    {'value' : 'gre', 'text' : 'Greek'},
+                    {'value' : 'hrv', 'text' : 'Croatian'},
+                    {'value' : 'hun', 'text' : 'Hungarian'},
+                    {'value' : 'ita', 'text' : 'Italian'},
+                    {'value' : 'lav', 'text' : 'Latvian'},
+                    {'value' : 'lit', 'text' : 'Lithuanian'},
+                    {'value' : 'nor', 'text' : 'Norwegian'},
+                    {'value' : 'pol', 'text' : 'Polish'},
+                    {'value' : 'rum', 'text' : 'Romanian'},
+                    {'value' : 'rus', 'text' : 'Russian'},
+                    {'value' : 'slo', 'text' : 'Slovak'},
+                    {'value' : 'slv', 'text' : 'Slovenian'},
+                    {'value' : 'spa', 'text' : 'Spanish'},
+                    {'value' : 'srp', 'text' : 'Serbian'},
+                    {'value' : 'swe', 'text' : 'Swedish'},
+                    {'value' : 'ukr', 'text' : 'Ukrainian'},
+                ]
+            }), 
+            
+            
+            ('AlternativeIdentifier_ID', 
+                {'form_type': 'input', 
+                'name': 'Alternative Identifier',
+                'role': 'master',
+                'placeholder': u'eg. ISBN, Handle, DOI',
+            }),
+
+
+            
+            ('AlternativeIdentifier_Type', 
+                {'form_type': 'select', 
+                'name': 'Type of Alternative Identifier',
+                'role': 'slave',
+                'master': 'AlternativeIdentifier_ID',
+                'options': [
+                    {'text' : ''},
+                    {'text': 'DOI', 'value': 'DOI'}, 
+                    {'text': 'ARK', 'value': 'ARK'}, 
+                    {'text': 'EAN13', 'value': 'EAN13'}, 
+                    {'text': 'EISSN', 'value': 'EISSN'}, 
+                    {'text': 'Handle', 'value': 'Handle'}, 
+                    {'text': 'ISBN', 'value': 'ISBN'}, 
+                    {'text': 'ISSN', 'value': 'ISSN'}, 
+                    {'text': 'ISTC', 'value': 'ISTC'}, 
+                    {'text': 'LISSN', 'value': 'LISSN'}, 
+                    {'text': 'LSID', 'value': 'LSID'}, 
+                    {'text': 'PURL', 'value': 'PURL'}, 
+                    {'text': 'UPC', 'value': 'UPC'}, 
+                    {'text': 'URL', 'value': 'URL'}, 
+                    {'text': 'URN', 'value': 'URN'}],
+                
+            }),
+
+
+            ('Universe_areaControlled', {'form_type': 'select', 
+                'name': 'Geographic Coverage (controlled)',
+                'form_type': 'select',
+                'options': [
+                    {'text' : ''},
+                    ],
+                'classes': ['todo']
+                }),
+            
+            ('Universe_areaFree', {'form_type': 'input', 
+                'name': 'Geographic Coverage (free)',
+                'size': 'medium',
+                'placeholder': u'eg. West-Germany',
+
+            }),
+
+
+            ('Universe_sampled', 
+                {'form_type': 'input', 
+                'name': 'Sampled Universe',
+                'size': 'medium',
+                'placeholder': u'eg. adults in Eastern and Western Germany', 
+
+            }), 
+
+
+            ('SelectionMethod', {'form_type': 'text', 
+                'name': 'Sampling',
+                'placeholder': u'Describe your selection method',
+            }), 
+
+            #XXX needs better date widget/selection    
+            ('CollectionDate_controlled', 
+                {'form_type': 'date', 
+                'name': 'Collection Date (controlled)',
+                'classes': ['todo']
+            }), 
+
+            ('CollectionDate_free', 
+                {'form_type': 'input', 
+                'name': 'Collection Date (free)',
+                'size': 'medium',
+                'placeholder': u'eg. Spring 1999', 
+
+                }), 
+
+            ('CollectionMode_controlled', 
+                {'form_type': 'select', 
+                'name': 'Collection Mode (controlled)',
+                'options': [
+                    {'value': '', 'text': ''},
+                    {'value': '1', 'text': 'Interview'},
+                    {'value': '2', 'text': 'Interview: Face-to-Face'},
+                    {'value': '3', 'text': 'Interview: Telephone'},
+                    {'value': '4', 'text': 'Interview: E-Mail'},
+                    {'value': '5', 'text': 'Interview: CATI'},
+                    {'value': '6', 'text': 'Interview: CAPI'},
+                    {'value': '7', 'text': 'Self-completed questionnaire'},
+                    {'value': '8', 'text': 'Self-completed questionnaire: Paper/Pencil'},
+                    {'value': '9', 'text': 'Self-completed questionnaire: Web-based'},
+                    {'value': '10', 'text': 'Self-completed questionnaire: CASI'},
+                    {'value': '11', 'text': 'Self-completed questionnaire: ACASI'},
+                    {'value': '12', 'text': 'Coding'},
+                    {'value': '13', 'text': 'Transcription'},
+                    {'value': '14', 'text': 'Compilation'},
+                    {'value': '15', 'text': 'Synthesis'},
+                    {'value': '16', 'text': 'Recording'},
+                    {'value': '17', 'text': 'Simulation'},
+                    {'value': '18', 'text': 'Observation'},
+                    {'value': '19', 'text': 'Observation: Field'},
+                    {'value': '20', 'text': 'Observation: Laboratory'},
+                    {'value': '21', 'text': 'Observation: Participant'},
+                    {'value': '22', 'text': 'Experiments'},
+                    {'value': '23', 'text': 'Focus Group'},
+                    {'value': '24', 'text': 'Other'},
+                ],
+                
+            }), 
+            
+            
+            ('CollectionMode_free', 
+                {'form_type': 'input', 
+                'name': 'Collection Mode (free)',
+                'size': 'medium',
+                'placeholder': u'eg. Interview',
+            }), 
+
+                
+            ('TimeDimension_controlled', 
+                {'form_type': 'select', 
+                'name': 'Time Dimension (controlled)',
+                'options': [
+                    {'value': '', 'text': ''},
+                    {'value': '1', 'text':'Longitudinal '}, 
+                    {'value': '2', 'text': 'Longitudinal.CohortEventBased '}, 
+                    {'value': '3', 'text':'Longitudinal.TrendRepeatedCrossSection '},
+                    {'value': '4', 'text': 'Longitudinal.Panel '},
+                    {'value': '5', 'text': 'Longitudinal.Panel.Continuous'},
+                    {'value': '6', 'text': 'Longitudinal: Panel: Interval'},
+                    {'value': '7', 'text': 'Time Series'},
+                    {'value': '8', 'text': 'TimeSeries: Continuous'},
+                    {'value': '9', 'text': 'TimeSeries: Discrete'},
+                    {'value': '10', 'text': 'Cross-section'},
+                    {'value': '11', 'text': 'Cross-section ad-hoc follow-up'},
+                    {'value': '12', 'text': 'Other'}],
+                }), 
+            
+            ('TimeDimension_free', 
+                {'form_type': 'input', 
+                'name': 'Time Dimension (free)',
+                'size': 'medium',
+                'placeholder': u'eg. Zeitreihe',
+            }), 
+
+
+            #TODO DataCollector has several attributes
+            ('DataCollector_name', 
+                    {'form_type': 'input', 
+                    'name': 'Data Collector',
+                    'classes': ['todo'], 
+                    'placeholder': u'eg. EMNID', 
+             }),
+
+            ('Rights', 
+                    {'form_type': 'input', 'name': 'Rights',
+                     'size': 'medium',
+                    'placeholder': u'eg. Copyright Joe Biggs',
+            }), 
+            
+                       
+            ('Note_text', 
+                {'form_type': 'text', 'name': 'Notes',
+                    'placeholder': u'any additional notes',
+            })
+                    
+                        
+        ]
+
+
+    schema = OrderedDict(fields)
+    return schema
+
+
 
 
 def level_3():
@@ -212,6 +424,24 @@ def publication_fields():
             
             ('RelationType',
                 {'name': 'Relation Type', 'form_type': 'text'}),
+            
+            ('DocType',
+                {'name': 'Document Type', 'form_type': 'select',
+                    'options': [
+                        {'text': '', 'value': ''}, 
+                        {'text': 'Working Paper', 'value': '1'}, 
+                        {'text': 'Article', 'value': '2'}, 
+                        {'text': 'Report', 'value': '3'}, 
+                        {'text': 'Book/Monograph', 'value': '4'}, 
+                        {'text': 'Manuscript', 'value': '5'}, 
+                        {'text': 'Reference Book', 'value': '6'}, 
+                        {'text': 'Review', 'value': '7'}, 
+                        {'text': 'Series', 'value': '8'}, 
+                        {'text': 'Journal', 'value': '9'}, 
+                        {'text': 'Magazine', 'value': '10'}
+                    ],
+                    
+                })
 
             ]
 
@@ -235,4 +465,5 @@ def dara_all_levels():
 
 #for legacy code
 PUBLICATION = publication_fields()
+LEVEL_2 = level_2()
 LEVEL_3 = level_3()

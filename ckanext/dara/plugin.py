@@ -10,17 +10,19 @@ import ckan.plugins.toolkit as tk
 from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
-from ckanext.dara.md_schema import LEVEL_1, LEVEL_2, LEVEL_3, dara_all_levels, publication_fields, PUBLICATION
+from ckanext.dara.md_schema import DaraFields
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...
 #from collections import OrderedDict
-#from ckanext.dara.ordered_dict import OrderedDict
 
-
-
+Fields = DaraFields()
+LEVEL_1 = Fields.level_1()
+LEVEL_2 = Fields.level_2()
+LEVEL_3 = Fields.level_3()
+LEVEL_ALL = Fields.level_all()
+PUBLICATION = Fields.publication_fields()
 PREFIX = 'dara_'
-
 
 def dara_debug():
     pkg_dict = c.pkg_dict
@@ -81,7 +83,7 @@ def dara_md():
     returns dara keys with dara names
     """
     named_levels = {}
-    all_levels = dara_all_levels()
+    all_levels = LEVEL_ALL
 
     for key in all_levels.keys():
         d = PREFIX + key
@@ -127,8 +129,6 @@ def dara_publication_fields():
     
     fields = PUBLICATION
 
-    #import pdb; pdb.set_trace()
-    #return PUBLICATION
     return fields
 
 
@@ -143,6 +143,9 @@ def dara_level2_fields():
     """
     fields = LEVEL_2
     return fields
+
+def dara_level1_fields():
+    return LEVEL_1
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -222,7 +225,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # structure of CKANs extras is a pain in the ass here
         #for n in range(1,11):
         for key in PUBLICATION:
-            field_name = PREFIX + 'Publication' + '_' + key
+            field_name = PREFIX + key
             schema.update({
                 field_name: [
                 tk.get_validator('ignore_missing'),
@@ -291,7 +294,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # structure of CKANs extras is a pain in the ass here
         #for n in range(1,11):
         for key in PUBLICATION:
-            field_name = PREFIX + 'Publication' + '_' + key
+            field_name = PREFIX + key
             schema.update({
                 field_name: [
                 tk.get_converter('convert_from_extras'),
@@ -331,6 +334,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_publications': dara_publications,
                 'dara_level3_fields': dara_level3_fields,
                 'dara_level2_fields': dara_level2_fields,
+                'dara_level1_fields': dara_level1_fields,
                 }
 
     def is_fallback(self):

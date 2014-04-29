@@ -26,7 +26,6 @@
     {# TODO add unstructured publication #}
         {% set fields = h.dara_publication_fields() %}
         {% set publications = h.dara_publications() %}
-        {% set prefix = 'dara_Publication_' %}
         {% set class = 'hidden' if dara_publications else '' %}
 
 
@@ -51,7 +50,7 @@
                     <span class="icon-minus-sign"/></a>
             #}
             
-                {{ dara_form.md(fields, h, prefix) }}
+                {{ dara_form.md(fields, h) }}
 
             </div>
 

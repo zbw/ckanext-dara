@@ -1,3 +1,4 @@
+{% import 'macros/dara_form.html' as dara_form %}
 
 
     {# ich würde hier erstmal keinen Einleitungstext hinschreiben, zumal er auch nicht auf alle der folgenden Felder zutrifft 
@@ -102,41 +103,11 @@
             Add Author</a></p>
         </div>
         
-
-        {{ form.input('dara_PublicationDate', label=_('Publication Year'),
-            id='field-dara_PublicationDate', 
-            type="text",
-            placeholder='eg. 2013', 
-            value=dara.dara_PublicationDate,
-            error=errors.dara_PublicationDate,
-            classes=['dara_required'] 
-            ) 
-        }}
-        
-        {% set selected = dara.dara_Availabilitycontrolled %}
-        {{ form.select('dara_Availabilitycontrolled', 
-            id='field-dara_availability', 
-            label=_('Availability'),
-            options=[
-                    {'value': '1', 'text' :'Free Download'}, 
-                    {'value': '2', 'text' : 'Delivery on demand'}, 
-                    {'value': '3', 'text' :'Onsite only'},
-                    {'value' : '4', 'text' : 'Not available'},
-                    {'value' : '5', 'text' : 'Unknown'},
-                    ],
-            selected=selected,
-            error=errors.dara_Availabilitycontrolled,
-            classes=['dara_required']
-         )
-        }}
-
-       {{ form.input('dara_Availabilityfree', 
-                label=_('Availability (free)'),
-                id='field-dara_Availabilityfree', 
-                placeholder=_('eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen'), 
-                value=dara.dara_Availabilityfree, 
-                error=errors.dara_Availabilityfree,
-                classes=['control-full']) }} 
+        {# fields generated from md_schema #}
+        <div id="dara_level_1">
+            {{ dara_form.md(h.dara_level1_fields(), h) }}
+        </div>
+       
 
         {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}

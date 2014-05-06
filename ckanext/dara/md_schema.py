@@ -1,16 +1,23 @@
 #HB 2013-06-17
 
-from ckanext.dara.ordered_dict import OrderedDict
 
-#XXX This is only a first rough schema implementation.
+#XXX This is only a first very rough schema implementation.
+
+#OrderedDict is not available in Python > 2.7
+try:
+    from collections import OrderedDict   # 2.7
+except ImportError:
+    #don't know which one's better...
+    #from sqlalchemy.util import OrderedDict
+    from ckanext.dara.ordered_dict import OrderedDict
 
 
 class DaraField(object):
     """
     """
-    
+
     def __init__(self, id, widget):
-        
+
         self.id = id
         self.widget = widget
 
@@ -18,7 +25,7 @@ class DaraField(object):
 class DaraWidget(object):
     """
     """
-    
+
     def __init__(self, form_type='input', name=u'', role=None, classes=[]):
         """
         """
@@ -47,11 +54,10 @@ class Select(DaraWidget):
     def __init__(self, options, **kw):
         """
         """
-        
+
         super(Select, self).__init__(**kw)
         self.form_type = 'select'
         self.options = options
-
 
 
 class Text(DaraWidget):
@@ -68,13 +74,12 @@ class Text(DaraWidget):
 class Date(DaraWidget):
     """
     """
-    
+
     def __init__(self, **kw):
         """
         """
         super(Date, self).__init__(**kw)
-        self.form_type="date"
-
+        self.form_type = "date"
 
 
 class DaraFields(object):
@@ -85,24 +90,24 @@ class DaraFields(object):
     def level_1(self):
 
         fields = [
-                
-            DaraField('PublicationDate', 
+
+            DaraField('PublicationDate',
                 Input(
                     placeholder="eg. 2011",
-                    name = "Publication Year",
-                    size = 'small',
-                    classes = ['dara_required']
+                    name="Publication Year",
+                    size='small',
+                    classes=['dara_required']
                     )
                 ),
 
             DaraField('Availabilitycontrolled',
                 Select(
-                    options = [
-                        {'value': '1', 'text' :'Free Download'}, 
-                        {'value': '2', 'text' : 'Delivery on demand'}, 
-                        {'value': '3', 'text' :'Onsite only'},
-                        {'value' : '4', 'text' : 'Not available'},
-                        {'value' : '5', 'text' : 'Unknown'},
+                    options=[
+                        {'value': '1', 'text': 'Free Download'},
+                        {'value': '2', 'text': 'Delivery on demand'},
+                        {'value': '3', 'text': 'Onsite only'},
+                        {'value': '4', 'text': 'Not available'},
+                        {'value': '5', 'text': 'Unknown'},
                         ],
                     name = 'Availability (controlled)',
                     classes = ['dara_required']

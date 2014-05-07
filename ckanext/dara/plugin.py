@@ -10,7 +10,7 @@ import ckan.plugins.toolkit as tk
 from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
-from ckanext.dara.md_schema import DaraFields
+from ckanext.dara.schema import DaraFields
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...

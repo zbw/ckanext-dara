@@ -1,9 +1,6 @@
-#HB 2013-06-17
-
-
 #XXX This is only a first very rough schema implementation.
 
-#OrderedDict is not available in Python > 2.7
+#OrderedDict is not available in Python < 2.7
 try:
     from collections import OrderedDict   # 2.7
 except ImportError:
@@ -118,7 +115,8 @@ class DaraFields(object):
                 Input(
                     name = 'Availability (free)',
                     size = 'medium',
-                    placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
+                    placeholder = 'eg. Die Datennutzung unterliegt \
+                            schriftlichen Datenschutzvereinbarungen',
                     )
                 )
             ]
@@ -341,6 +339,14 @@ class DaraFields(object):
                     )
             ),
 
+            DaraField('Frequency',
+                    Input(
+                        name='Frequency',
+                        placeholder="eg. weekly, monthly",
+                        )
+            ),
+
+
             DaraField('DataCollector_name',
                     Input(
                     classes = ['todo'],
@@ -376,61 +382,69 @@ class DaraFields(object):
         """
         
         fields = [
-                
-            DaraField('DataSet_dataType',
-                Input(
-                name = 'Type of Units',
-                )
-            ),
+        #       
+        #   DaraField('DataSet_dataType',
+        #       Input(
+        #       name = 'Type of Units',
+        #       )
+        #   ),
 
-            DaraField('DataSet_numberUnits',
-                Input(
-                name = 'Number of Units',
-                size = 'small',
-                )
-            ),
+        #   
+        #   DaraField('DataSet_unitType',
+        #       Input(
+        #       name = 'Type of Units',
+        #       placeholder='eg. persons, households, firms'
+        #       )
+        #   ),
 
-            DaraField('DataSet_numberVariables',
-                Input(
-                name = 'Number of Variables',
-                size = 'small',
-                )
-            ),
+        #   DaraField('DataSet_numberUnits',
+        #       Input(
+        #       name = 'Number of Units',
+        #       size = 'small',
+        #       )
+        #   ),
 
-            DaraField('DataSet_dataType',
-                Input(
-                name = 'Type of Data',
-                )
-            ),
+        #   DaraField('DataSet_numberVariables',
+        #       Input(
+        #       name = 'Number of Variables',
+        #       size = 'small',
+        #       )
+        #   ),
 
-            DaraField('File_format',
-                Input(
-                name = 'File Format',
-                )
-            ),
+        #   DaraField('DataSet_dataType',
+        #       Input(
+        #       name = 'Type of Data',
+        #       )
+        #   ),
 
-            DaraField('File_size',
-                Input(
-                name = 'Size',
-                size = 'small',
-                )
-            ),
+        #   DaraField('File_format',
+        #       Input(
+        #       name = 'File Format',
+        #       )
+        #   ),
 
-            DaraField('File_fingerprint',
-                Input(
-                role = 'master',
-                name = 'Data Fingerprint',
-                )
-            ),
+        #   DaraField('File_size',
+        #       Input(
+        #       name = 'Size',
+        #       size = 'small',
+        #       )
+        #   ),
 
-            DaraField('File_fingerprintMethod',
-                Input(
-                role = 'slave',
-                name = 'Method Fingerprint',
-                size = 'small',
-                )
-            ),
-                
+        #   DaraField('File_fingerprint',
+        #       Input(
+        #       role = 'master',
+        #       name = 'Data Fingerprint',
+        #       )
+        #   ),
+
+        #   DaraField('File_fingerprintMethod',
+        #       Input(
+        #       role = 'slave',
+        #       name = 'Method Fingerprint',
+        #       size = 'small',
+        #       )
+        #   ),
+        #       
         ]
 
         f = self.__transform(fields)

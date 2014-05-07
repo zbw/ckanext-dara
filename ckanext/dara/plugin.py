@@ -7,7 +7,7 @@
 #import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-from pylons import c
+#from pylons import c
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.schema import DaraFields
@@ -38,7 +38,7 @@ def dara_extras():
     #pkg = c.pkg_dict
 
     #this is new for 2.1
-    pkg = c.pkg
+    pkg = tk.c.pkg
 
     #an empty package returns ''
     if pkg:
@@ -61,7 +61,7 @@ def dara_extras():
 def package_extras():
     """
     """
-    pkg = c.pkg
+    pkg = tk.c.pkg
     if pkg:
         extras = pkg.extras
         return extras
@@ -71,11 +71,7 @@ def package_extras():
 def dara_pkg():
     """to avoid pkg changes by ckan
     """
-    return c.pkg
-
-
-def dara_c():
-    return c
+    return tk.c.pkg
 
 
 def dara_md():
@@ -327,7 +323,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_md': dara_md,
                 'dara_pkg': dara_pkg,
                 'dara_debug': dara_debug,
-                'dara_c': dara_c,
+                'dara_c': tk.c,
                 'dara_authors': dara_authors,
                 'package_extras': package_extras,
                 'dara_publication_fields': dara_publication_fields,

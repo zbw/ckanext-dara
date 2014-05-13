@@ -1,0 +1,28 @@
+{% ckan_extends %}
+{% import 'macros/dara_form.html' as dara_form %}
+
+{% block metadata_fields %}
+    {% resource 'dara/dara.css' %}
+    {% resource 'dara/dara.js' %}
+    {% resource 'dara/jquery-ui.js' %}
+
+    {% set fields = h.dara_resource_fields() %}
+    <div id="dara_Resource">
+    
+        {#     <h4 class="dara_form_header dara_form_collapse">Additional Info
+            (da|ra)</h4> #}
+        
+        <div>
+<div class="todo">
+            not clear if we'll need more fields here</div>
+        </p>
+
+            {{ dara_form.md(fields, h) }}
+        </div>
+
+
+    </div>
+            
+    {{ super() }}
+{% endblock %}
+

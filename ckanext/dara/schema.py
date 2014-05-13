@@ -4,9 +4,7 @@
 try:
     from collections import OrderedDict   # 2.7
 except ImportError:
-    #don't know which one's better...
-    #from sqlalchemy.util import OrderedDict
-    from ckanext.dara.ordered_dict import OrderedDict
+    from sqlalchemy.util import OrderedDict
 
 
 class DaraField(object):
@@ -355,6 +353,40 @@ class DaraFields(object):
                     )
             ),
 
+            DaraField('DataSet_dataType',
+                Input(
+                name = 'Type of Units',
+                )
+            ),
+
+            
+            DaraField('DataSet_unitType',
+                Input(
+                name = 'Type of Units',
+                placeholder='eg. persons, households, firms'
+                )
+            ),
+
+            DaraField('DataSet_numberUnits',
+                Input(
+                name = 'Number of Units',
+                size = 'small',
+                )
+            ),
+
+            DaraField('DataSet_numberVariables',
+                Input(
+                name = 'Number of Variables',
+                size = 'small',
+                )
+            ),
+
+            DaraField('DataSet_dataType',
+                Input(
+                name = 'Type of Data',
+                )
+            ),
+
             DaraField('Rights',
                     Input(
                     placeholder = 'eg. Copyright Joe Biggs',
@@ -383,68 +415,7 @@ class DaraFields(object):
         
         fields = [
         #       
-        #   DaraField('DataSet_dataType',
-        #       Input(
-        #       name = 'Type of Units',
-        #       )
-        #   ),
-
-        #   
-        #   DaraField('DataSet_unitType',
-        #       Input(
-        #       name = 'Type of Units',
-        #       placeholder='eg. persons, households, firms'
-        #       )
-        #   ),
-
-        #   DaraField('DataSet_numberUnits',
-        #       Input(
-        #       name = 'Number of Units',
-        #       size = 'small',
-        #       )
-        #   ),
-
-        #   DaraField('DataSet_numberVariables',
-        #       Input(
-        #       name = 'Number of Variables',
-        #       size = 'small',
-        #       )
-        #   ),
-
-        #   DaraField('DataSet_dataType',
-        #       Input(
-        #       name = 'Type of Data',
-        #       )
-        #   ),
-
-        #   DaraField('File_format',
-        #       Input(
-        #       name = 'File Format',
-        #       )
-        #   ),
-
-        #   DaraField('File_size',
-        #       Input(
-        #       name = 'Size',
-        #       size = 'small',
-        #       )
-        #   ),
-
-        #   DaraField('File_fingerprint',
-        #       Input(
-        #       role = 'master',
-        #       name = 'Data Fingerprint',
-        #       )
-        #   ),
-
-        #   DaraField('File_fingerprintMethod',
-        #       Input(
-        #       role = 'slave',
-        #       name = 'Method Fingerprint',
-        #       size = 'small',
-        #       )
-        #   ),
-        #       
+               
         ]
 
         f = self.__transform(fields)
@@ -609,6 +580,53 @@ class DaraFields(object):
         schema = OrderedDict(f)
         return schema
 
+    
+    def resource_fields(self):
+        """
+        """
+
+        fields = [
+            
+            #CKAN level 1    
+           #DaraField('File_format',
+           #    Input(
+           #    name = 'File Format',
+           #    )
+           #),
+
+           #TODO get automatically 
+           DaraField('File_size',
+                Input(
+                name = 'File Size (MB)',
+                size = 'small',
+                classes=['todo'],
+                placeholder='will be calculated automatically',
+                )
+            ),
+
+            DaraField('File_fingerprint',
+                Input(
+                role = 'master',
+                name = 'Data Fingerprint',
+
+                )
+            ),
+
+            DaraField('File_fingerprintMethod',
+                Input(
+                role = 'slave',
+                name = 'Method Fingerprint',
+                size = 'small',
+                placeholder='eg. MD5'
+                )
+            ),
+            
+        ]
+
+        f = self.__transform(fields)
+
+        schema = OrderedDict(f)
+        return schema
 
     
     def level_all(self):

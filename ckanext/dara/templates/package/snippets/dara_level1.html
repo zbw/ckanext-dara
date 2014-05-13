@@ -43,7 +43,7 @@
             )
         }}
 
-        {# dara.js.master_slave_input() does not work properly for markdown
+        {# master_slave_input() does not work properly for markdown
         fields?  
         TODO try again when restructuring fields in md_schema
 
@@ -99,11 +99,11 @@
             <div id="additional_authors">  
                 <!-- add author -->
             </div>
-        <p style="margin-bottom:25px"><a href="#" class="btn" id="add_author">
-            Add Author</a></p>
+            <p style="margin-bottom:25px"><a href="#" class="btn" id="add_author">
+                Add Author</a> </p>
         </div>
         
-        {# fields generated from md_schema #}
+        {# fields generated from schema #}
         <div id="dara_level_1">
             {{ dara_form.md(h.dara_level1_fields(), h) }}
         </div>

@@ -34,7 +34,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 
-#dara_2 > h4 {
+#dara_2 > h4, #dara_Resource h4.dara_form_collapse {
  background-color: #FFD073 !important;
  background-image:none !important; 
 }

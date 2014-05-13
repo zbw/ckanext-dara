@@ -35,25 +35,25 @@ $(function add_authors() {
   
   var addAuthorDiv = $('#additional_authors');
   var current_authors = $('#current_number_of_authors').text();
-  var i = parseInt(current_authors) + 2   
+  var i = parseInt(current_authors) + 2;
   
   //add author field
-  $('#add_author').live('click', function() {
-
+  $('#add_author').on('click', function() {
     $('<div class="control-group dara_author">\
         <label class="control-label" for="field-dara_author_' + i +'">\
-        Author '+ i +'</label>\
+            Author '+ i +'</label>\
         <div class="controls ">\
           <input id="field-dara_author_'+ i +'" type="text" name="dara_author_' + i +'" \
             value="" placeholder="Author Name" /> \
-            <a href="#" class="dara_red" id="remove_author">Remove</a>\
-        </div></div>').appendTo(addAuthorDiv);
+                <a href="#" class="dara_red remove_author">Remove</a>\
+         </div>\
+       </div>').appendTo(addAuthorDiv);
     i++;
     return false;
   });
-
+   
   //remove author field
-  $('#remove_author').live('click', function() { 
+  $(addAuthorDiv).on('click', '.remove_author', function() { 
       if( i > 1 ) {
           $(this).parents('div.dara_author').remove();
           i--;
@@ -78,14 +78,14 @@ $(function publications() {
   }; 
 
 
-  $('#add_publication').live('click', function() {
+  $('#add_publication').on('click', function() {
     $(publication).show();
     master_slave_input();
     $('#add_publication').hide();
     return false;
   });
 
-  $('#remove_publication').live('click', function() { 
+  $('#remove_publication').on('click', function() { 
         $(this).parent().hide();
         $('#add_publication').show();
         return false;
@@ -110,6 +110,21 @@ $(function publication() {
 });
 
 
+/* resource folding off since we have only two fields right now
+$(function resource() {
+    var resource = $('#dara_Resource');
+
+    $(resource).accordion({
+      collapsible: true,
+      heightStyle: "content",
+      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
+      active : 2
+    });
+
+});
+*/
+
+
 
 //calling master_slave for the first time
 $(master_slave_input());
@@ -122,7 +137,7 @@ function master_slave_input() {
     $('.dara_master_slave').each(function () {
       var master = $(this).find('.dara_master').find('input').first();
       var slave = $(this).find('.dara_slave');
-      var value = master.attr('value');
+      var value = master.prop('value');
 
       if(value == "") {
         slave.hide();
@@ -130,7 +145,7 @@ function master_slave_input() {
 
       master.bind("change keyup paste", function () 
         {
-          if(master.attr('value') !="") {
+          if(master.prop('value') !="") {
             slave.fadeIn();
           }
           else {

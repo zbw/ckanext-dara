@@ -22,10 +22,11 @@ LEVEL_2 = Fields.level_2()
 LEVEL_3 = Fields.level_3()
 LEVEL_ALL = Fields.level_all()
 PUBLICATION = Fields.publication_fields()
+RESOURCE = Fields.resource_fields()
 PREFIX = 'dara_'
 
 def dara_debug():
-    pkg_dict = c.pkg_dict
+    pkg_dict = tk.c.pkg_dict
 
     import pdb; pdb.set_trace()
 
@@ -143,6 +144,19 @@ def dara_level2_fields():
 def dara_level1_fields():
     return LEVEL_1
 
+def dara_resource_fields():
+    return RESOURCE
+
+
+class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
+    """
+    testing resource manipulation
+    """
+    plugins.implements(plugins.IResourceController, inherit=False)
+
+    def before_show(self):
+        import pdb; pdb.set_trace()
+
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
@@ -153,6 +167,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IDatasetForm, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
+    plugins.implements(plugins.IResourceController, inherit=True)
+
 
     #XXX debugging methods
 
@@ -165,6 +181,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     # def before_view(self, pkg_dict):
     #       import pdb; pdb.set_trace()
+    
+    #def before_show(self, resource_dict):
+    #    import pdb; pdb.set_trace()
+    #    return resource_dict
 
 
     def _dara_package_schema(self, schema):
@@ -331,6 +351,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_level3_fields': dara_level3_fields,
                 'dara_level2_fields': dara_level2_fields,
                 'dara_level1_fields': dara_level1_fields,
+                'dara_resource_fields': dara_resource_fields,
                 }
 
     def is_fallback(self):
@@ -352,3 +373,4 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(DaraMetadataPlugin, self).update_package_schema()
         schema = self._dara_package_schema(schema)
         return schema
+    

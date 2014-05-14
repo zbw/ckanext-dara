@@ -110,7 +110,6 @@ $(function publication() {
 });
 
 
-/* resource folding off since we have only two fields right now
 $(function resource() {
     var resource = $('#dara_Resource');
 
@@ -122,7 +121,6 @@ $(function resource() {
     });
 
 });
-*/
 
 
 

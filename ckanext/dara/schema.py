@@ -353,41 +353,7 @@ class DaraFields(object):
                     )
             ),
 
-            DaraField('DataSet_dataType',
-                Input(
-                name = 'Type of Units',
-                )
-            ),
-
-            
-            DaraField('DataSet_unitType',
-                Input(
-                name = 'Type of Units',
-                placeholder='eg. persons, households, firms'
-                )
-            ),
-
-            DaraField('DataSet_numberUnits',
-                Input(
-                name = 'Number of Units',
-                size = 'small',
-                )
-            ),
-
-            DaraField('DataSet_numberVariables',
-                Input(
-                name = 'Number of Variables',
-                size = 'small',
-                )
-            ),
-
-            DaraField('DataSet_dataType',
-                Input(
-                name = 'Type of Data',
-                )
-            ),
-
-            DaraField('Rights',
+                        DaraField('Rights',
                     Input(
                     placeholder = 'eg. Copyright Joe Biggs',
                     name = 'Rights',
@@ -593,6 +559,38 @@ class DaraFields(object):
            #    name = 'File Format',
            #    )
            #),
+            
+                        
+            DaraField('DataSet_unitType',
+                Input(
+                name = 'Type of Units',
+                placeholder='eg. persons, households, firms'
+                )
+            ),
+
+            DaraField('DataSet_numberUnits',
+                Input(
+                name = 'Number of Units',
+                placeholder='eg 3456',
+                size = 'small',
+                )
+            ),
+
+            DaraField('DataSet_numberVariables',
+                Input(
+                name= 'Number of Variables',
+                placeholder= 'eg. 210',
+                size = 'small',
+                )
+            ),
+
+            DaraField('DataSet_dataType',
+                Input(
+                name = 'Type of Data',
+                placeholder= ''
+                )
+            ),
+
 
            #TODO get automatically 
            DaraField('File_size',
@@ -608,7 +606,7 @@ class DaraFields(object):
                 Input(
                 role = 'master',
                 name = 'Data Fingerprint',
-
+                placeholder='eg. 00994e0caa89bc6bf394c12d9a2e72e6',
                 )
             ),
 

@@ -8,6 +8,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 #from pylons import c
+import ckan.model as model
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.schema import DaraFields
@@ -25,8 +26,27 @@ PUBLICATION = Fields.publication_fields()
 RESOURCE = Fields.resource_fields()
 PREFIX = 'dara_'
 
+def _get_pkg():
+    """
+    """
+    #this does not work with ckan 2.1?
+    #pkg = c.pkg_dict
+    
+    #XXX from 2.2 on there's no pkg in c!
+    #this was new for 2.1
+    #pkg = c.pkg
+
+    #this is new for 2.2
+    #XXX can we import pkg without calling the model?
+    
+    pkg_id = tk.c.id
+    pkg = model.Package.by_name(pkg_id)
+    #import pdb; pdb.set_trace()
+    return pkg
+
+
 def dara_debug():
-    pkg_dict = tk.c.pkg_dict
+    #pkg_dict = c.pkg_dict
 
     import pdb; pdb.set_trace()
 
@@ -35,12 +55,7 @@ def dara_extras():
     """returns dara extra metadata as separate dictionary
     """
 
-    #this does not work with ckan 2.1?
-    #pkg = c.pkg_dict
-
-    #this is new for 2.1
-    pkg = tk.c.pkg
-
+    pkg = _get_pkg()
     #an empty package returns ''
     if pkg:
         extras = pkg.extras
@@ -62,7 +77,7 @@ def dara_extras():
 def package_extras():
     """
     """
-    pkg = tk.c.pkg
+    pkg = _get_pkg()
     if pkg:
         extras = pkg.extras
         return extras
@@ -72,7 +87,7 @@ def package_extras():
 def dara_pkg():
     """to avoid pkg changes by ckan
     """
-    return tk.c.pkg
+    return _get_pkg()
 
 
 def dara_md():

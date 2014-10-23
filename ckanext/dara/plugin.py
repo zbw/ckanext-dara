@@ -7,15 +7,23 @@
 #import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-#from pylons import c
+from pylons import c
 import ckan.model as model
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.schema import DaraFields
+from ckanext.dara import utils
+from datetime import datetime
+from hashids import Hashids
+import random
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...
 #from collections import OrderedDict
+
+
+###TODO dara auto fields als helper methode uebergeben und fertig ;-)
+
 
 Fields = DaraFields()
 LEVEL_1 = Fields.level_1()
@@ -25,6 +33,7 @@ LEVEL_ALL = Fields.level_all()
 PUBLICATION = Fields.publication_fields()
 RESOURCE = Fields.resource_fields()
 PREFIX = 'dara_'
+
 
 def _get_pkg():
     """
@@ -38,10 +47,9 @@ def _get_pkg():
 
     #this is new for 2.2
     #XXX can we import pkg without calling the model?
-    
+
     pkg_id = tk.c.id
     pkg = model.Package.by_name(pkg_id)
-    #import pdb; pdb.set_trace()
     return pkg
 
 
@@ -122,6 +130,14 @@ def dara_authors():
     except:
         return None
 
+def dara_first_author():
+    """
+    workaround until we have a proper authors implementation
+    """
+    pkg = _get_pkg()
+    author = pkg.author
+    return utils.author_name_split(author)
+
 
 def dara_publications():
     """
@@ -163,6 +179,44 @@ def dara_resource_fields():
     return RESOURCE
 
 
+def dara_auto_fields():
+    pkg = _get_pkg()
+    auto = Fields.auto_fields(pkg)
+    return auto
+
+
+def dara_doi():
+    """
+    this should go in a function directly after package is created. 
+    DOI would than be stored in pkg_dict and not created here. That way we 
+    could use random ints. For now it only takes the pkg creation date and
+    creates a unique hash of it. If there are than one uploads in one second
+    and for the same journal/organization we'd have a collision. This case
+    might be rare ;-)
+    """
+    
+    prefix = u"10.2345" #XXX fake! change this. could be config
+    cpkg = c.pkg_dict
+    org = cpkg['organization']
+    journal = org['name']
+    hashids = Hashids()
+    created = cpkg['metadata_created'] #date string
+    dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f") #object
+    datestring = dt.strftime("%Y%m%d%H%M%S")
+    
+    ###XXX only use random int when doi is created and stored directly after
+    #package creation
+    #numrange = range(0,100) #twodigit
+    #rd_num = random.choice(numrange)
+    #date  = datestring + str(rd_num)
+    
+    date = int(datestring)
+    num = hashids.encrypt(date)
+
+    doi = prefix + '/' + journal + '.' + num
+    return doi
+    
+
 class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     """
     testing resource manipulation
@@ -197,6 +251,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     # def before_view(self, pkg_dict):
     #       import pdb; pdb.set_trace()
     
+
+
     #def before_show(self, resource_dict):
     #    import pdb; pdb.set_trace()
     #    return resource_dict
@@ -264,16 +320,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]   
             })
 
-
         # better in edawax_theme?
         schema.update({
             'edawax_article_url': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_extras')
             ]
-
         })
 
+        
         return schema
 
 
@@ -342,7 +397,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
              ]
         })
 
+        
+
         return schema
+
+    
+
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -367,6 +427,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_level2_fields': dara_level2_fields,
                 'dara_level1_fields': dara_level1_fields,
                 'dara_resource_fields': dara_resource_fields,
+                'dara_auto_fields': dara_auto_fields,
+                'dara_first_author': dara_first_author,
+                'dara_doi': dara_doi,
+                
                 }
 
     def is_fallback(self):
@@ -388,4 +452,5 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(DaraMetadataPlugin, self).update_package_schema()
         schema = self._dara_package_schema(schema)
         return schema
-    
+ 
+

@@ -1,5 +1,7 @@
 #XXX This is only a first very rough schema implementation.
 
+from pylons import config
+
 #OrderedDict is not available in Python < 2.7
 try:
     from collections import OrderedDict   # 2.7
@@ -81,6 +83,7 @@ class DaraFields(object):
     """
     main class
     """
+
 
     def level_1(self):
 
@@ -627,6 +630,29 @@ class DaraFields(object):
         return schema
 
     
+
+    def auto_fields(self, pkg):
+        """
+        auto generated metadata without form fields. needs pkg
+        """
+        
+        auto = {}
+        
+        #XXX this needs to be adapted when we know how to submit Datasets vs.
+        #Resources to dara. For now everything is a Dataset. A Collection would
+        #be 1
+        resource_type = '2'
+        
+        site_url = config.get('ckan.site_url')
+        dara_URL = "%s/dataset/%s" %(site_url, pkg.name)
+
+        auto['URL'] = dara_URL
+        auto['ResourceType'] = resource_type
+
+        return auto
+
+
+    
     def level_all(self):
         """
         """
@@ -635,6 +661,7 @@ class DaraFields(object):
         dara_all.update(self.level_2())
         dara_all.update(self.level_3())
         dara_all.update(self.publication_fields())
+#        dara_all.update(self.auto())
         return dara_all
 
     

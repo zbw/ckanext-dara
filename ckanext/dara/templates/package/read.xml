@@ -1,0 +1,57 @@
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+-->
+
+{% set extras = h.package_extras() %}
+{% set dara = h.dara_extras() %}
+{% set pkg = h.dara_pkg() %}
+{% set auto = h.dara_auto_fields() %}
+{% set author = h.dara_first_author() %}
+{% set doi = h.dara_doi() %}
+
+
+<resource>
+
+  <resourceType>{{ auto['ResourceType'] }}</resourceType>
+  
+  <titles>
+    <title>
+      <titleName>{{ pkg.title }}</titleName>
+    </title>
+  </titles>
+  
+  <principalInvestigators>  <!--XXX this <creators> in 3.0-->
+      <principalInvestigator> <!-- creator in 3.0 -->
+        <person>
+          <firstName>{{ author.firstname }}</firstName>
+          <lastName>{{ author.lastname }}</lastName>
+        </person>
+      </principalInvestigator>
+  </principalInvestigators>
+
+  <dataURLs>
+    <dataURL>{{ auto.URL }}</dataURL>
+  </dataURLs>
+
+  <doiProposal>{{ doi }}</doiProposal>
+
+  <publicationDate>
+      <date>{{ dara.dara_PublicationDate }}</date>
+  </publicationDate>
+
+  <availability>
+      <availabilityControlled>{{ dara.dara_Availabilitycontrolled }}</availabilityControlled>
+  </availability>
+
+
+
+
+
+
+<!-- control -
+<auto> {{ auto }} </auto>
+<inhalt>{{ extras }}</inhalt>
+<pkg> {{ pkg  }} </pkg>
+-->
+
+</resource>

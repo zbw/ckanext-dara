@@ -642,8 +642,13 @@ class DaraFields(object):
         #Resources to dara. For now everything is a Dataset. A Collection would
         #be 1
         resource_type = '2'
-        
+           
         site_url = config.get('ckan.site_url')
+
+        #for development
+        if 'localhost' in site_url:
+            site_url = "http://edawax.de"
+        
         dara_URL = "%s/dataset/%s" %(site_url, pkg.name)
 
         auto['URL'] = dara_URL

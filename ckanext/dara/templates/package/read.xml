@@ -1,6 +1,4 @@
-<!--
-<?xml version="1.0" encoding="UTF-8"?>
--->
+<!-- <?xml version="1.0" encoding="UTF-8"?>-->
 
 {% set extras = h.package_extras() %}
 {% set dara = h.dara_extras() %}
@@ -9,25 +7,37 @@
 {% set author = h.dara_first_author() %}
 {% set doi = h.dara_doi() %}
 
+{# {% set debug = h.dara_debug() %} #}
 
-<resource>
+{#XXX from Jinja 2.8 on it would be possible to set the whole xml block as
+variable and use it inside the template
+(http://jinja.pocoo.org/docs/dev/templates/#block-assignments). That way we
+could validate directly with template call by giving the xml block as parameter
+to the validation function.  Unfortunately this CKAN version (2.2) requires
+only Jinja 2.6. It might be possible to replace that, haven't checked yet #}
+
+{% macro xml() -%}
+
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dara_schema_3.xsd">
+
 
   <resourceType>{{ auto['ResourceType'] }}</resourceType>
   
   <titles>
     <title>
       <titleName>{{ pkg.title }}</titleName>
+       <language>en</language>
     </title>
   </titles>
   
-  <principalInvestigators>  <!--XXX this <creators> in 3.0-->
-      <principalInvestigator> <!-- creator in 3.0 -->
+  <creators>  
+      <creator> 
         <person>
           <firstName>{{ author.firstname }}</firstName>
           <lastName>{{ author.lastname }}</lastName>
         </person>
-      </principalInvestigator>
-  </principalInvestigators>
+      </creator>
+  </creators>
 
   <dataURLs>
     <dataURL>{{ auto.URL }}</dataURL>
@@ -36,7 +46,7 @@
   <doiProposal>{{ doi }}</doiProposal>
 
   <publicationDate>
-      <date>{{ dara.dara_PublicationDate }}</date>
+      <year>{{ dara.dara_PublicationDate }}</year>
   </publicationDate>
 
   <availability>
@@ -44,14 +54,17 @@
   </availability>
 
 
+</resource>
 
+{%- endmacro  %}
 
+{{ xml() }}
 
-
+{#
 <!-- control -
 <auto> {{ auto }} </auto>
 <inhalt>{{ extras }}</inhalt>
 <pkg> {{ pkg  }} </pkg>
 -->
+#}
 
-</resource>

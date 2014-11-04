@@ -7,15 +7,19 @@
 #import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-from pylons import c
+#from pylons import c
+from ckan.common import c
 import ckan.model as model
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.schema import DaraFields
 from ckanext.dara import utils
+#from ckanext.dara.test_xml import xml
 from datetime import datetime
 from hashids import Hashids
 import random
+from StringIO import StringIO
+
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...
@@ -33,6 +37,13 @@ LEVEL_ALL = Fields.level_all()
 PUBLICATION = Fields.publication_fields()
 RESOURCE = Fields.resource_fields()
 PREFIX = 'dara_'
+
+
+
+def dara_validate(xml):
+    v = utils.DaraValidation()
+    val = v.validate(xml)
+    return val
 
 
 def _get_pkg():
@@ -196,7 +207,7 @@ def dara_doi():
     """
     
     prefix = u"10.2345" #XXX fake! change this. could be config
-    cpkg = c.pkg_dict
+    cpkg = tk.c.pkg_dict
     org = cpkg['organization']
     journal = org['name']
     hashids = Hashids()
@@ -216,6 +227,12 @@ def dara_doi():
     doi = prefix + '/' + journal + '.' + num
     return doi
     
+
+
+
+
+
+
 
 class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     """
@@ -237,6 +254,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
+    plugins.implements(plugins.IRoutes, inherit=True)
+
 
 
     #XXX debugging methods
@@ -430,6 +449,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_auto_fields': dara_auto_fields,
                 'dara_first_author': dara_first_author,
                 'dara_doi': dara_doi,
+                'dara_validate': dara_validate,
                 
                 }
 
@@ -453,4 +473,47 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = self._dara_package_schema(schema)
         return schema
  
+    
+    def before_map(self, map):
+        """
+        """
+        map.connect('/dataset/{id}/dara_xml', 
+                controller="ckanext.dara.controller:DaraController",
+                action='xml',
+                )
+        
+        map.connect('/dataset/{id}/dara_register',
+                controller="ckanext.dara.controller:DaraController",
+                action="register",
+                )
+
+        map.connect('dara_doi', '/dataset/edit/{id}/dara_doi',
+                controller="ckanext.dara.controller:DaraController",
+                action="doi",
+                ckan_icon="exchange"
+                )
+
+
+        return map
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

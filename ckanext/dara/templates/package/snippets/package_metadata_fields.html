@@ -20,7 +20,6 @@ won't work. #}
 
 
 {% block package_metadata_fields %}
-{% set dara = h.dara_extras() %}
 {% resource 'dara/dara.css' %}
 {% resource 'dara/dara.js' %}
 {% resource 'dara/jquery-ui.js' %}
@@ -38,13 +37,16 @@ amet, consetetu
 
 </p>
 
+<input type="hidden" value="{{ h.dara_doi() }}" name="dara_DOI_Proposal" />
+
+
 <div id="dara_2" style="margin-bottom:25px;">
-        {% snippet "package/snippets/dara_level2.html", form=form, dara=dara,
+        {% snippet "package/snippets/dara_level2.html", form=form,
             errors=errors %}  
     </div>
     
 <div id="dara_3" style="margin-bottom:25px;">
-        {% snippet "package/snippets/dara_level3.html", form=form, dara=dara,
+        {% snippet "package/snippets/dara_level3.html", form=form,
             errors=errors %}  
 </div>
 

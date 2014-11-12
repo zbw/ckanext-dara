@@ -62,14 +62,9 @@
 
   
       {% set dara_md = h.dara_md() %}
-      {% set dara_extras = h.dara_extras() %}
-      {% set dara_pkg = h.dara_pkg() %}
       {# {% set dara_debug = h.dara_debug() %} #}
-      
 
-      {% for k in dara_extras.keys() %}
-        {% set key = k %}
-        {% set value = dara_pkg.extras[k] %}
+      {% for key, value in pkg_dict.items() %} 
   
         {% if value %}
           {# this is just a temporary precaution, because we dont have all 

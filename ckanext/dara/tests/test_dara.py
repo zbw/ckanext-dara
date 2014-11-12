@@ -29,10 +29,6 @@ class TestDaraPlugin(TestCase):
     def teardown_class(cls):
         plugins.reset()
 
-    def test_dara_extras(self):
-        package = self.package
-        #import ipdb; ipdb.set_trace()
-        assert 'dara_PublicationDate' in package.extras
 
     def test_dara_helpers(self):
         url = h.url_for(controller='package', action='read', id=self.package.name)

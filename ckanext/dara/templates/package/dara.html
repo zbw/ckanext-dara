@@ -1,9 +1,16 @@
 {% extends 'package/edit_base.html' %}
+{% set pkg = h.dara_pkg() %} 
 
 
 {% block primary_content_inner %}
 {{ super() }}
 
     <h1>Hallo Welt</h1>
+
+    <p> Year: {{ pkg['dara_PublicationDate'] }} </p>
+    <p> DOIProposal: {{ pkg['dara_DOI_Proposal'] }} </p>
+    <p> DOI: {{ pkg['dara_DOI'] }} </p>
+    
+
 
 {% endblock %}

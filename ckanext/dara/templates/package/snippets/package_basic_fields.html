@@ -3,11 +3,13 @@
 #}
 
 {% import 'macros/form.html' as form %}
-{% set dara = h.dara_extras() %}
 {% set c = h.dara_c %}
 {% set dara_authors = h.dara_authors() %}
 {% set form_style = c.form_style or c.action %}
 {#{% set debug = h.dara_debug() %} #}
+
+
+
 
 {% resource 'dara/dara.css' %}
 {% resource 'dara/dara.js' %}
@@ -59,12 +61,12 @@
 
         <div class="dara_level">    
             {% snippet "package/snippets/dara_level1.html", form=form, 
-            dara=dara, errors=errors, dara_authors=dara_authors, data=data %}
+            errors=errors, dara_authors=dara_authors, data=data %}
         </div>
     </div> 
 
 {% else %}
-    {% snippet "package/snippets/dara_level1.html", form=form, dara=dara,
+    {% snippet "package/snippets/dara_level1.html", form=form,
                    errors=errors, dara_authors=dara_authors, data=data %}
 {% endif %}
 
@@ -73,12 +75,12 @@
 {# da|ra levels 2 and 3 are not shown at first dataset edit #}
    {% if form_style == 'edit' %}
         <div id="dara_2">
-            {% snippet "package/snippets/dara_level2.html", form=form, dara=dara,
+            {% snippet "package/snippets/dara_level2.html", form=form,
                 errors=errors %}  
         </div>
         
         <div id="dara_3">
-            {% snippet "package/snippets/dara_level3.html", form=form, dara=dara,
+            {% snippet "package/snippets/dara_level3.html", form=form,
                 errors=errors %}  
         </div>
     {% endif %}

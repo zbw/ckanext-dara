@@ -1,11 +1,8 @@
 <!-- <?xml version="1.0" encoding="UTF-8"?>-->
 
-{% set extras = h.package_extras() %}
-{% set dara = h.dara_extras() %}
 {% set pkg = h.dara_pkg() %}
 {% set auto = h.dara_auto_fields() %}
 {% set author = h.dara_first_author() %}
-{% set doi = h.dara_doi() %}
 
 {# {% set debug = h.dara_debug() %} #}
 
@@ -43,14 +40,14 @@ only Jinja 2.6. It might be possible to replace that, haven't checked yet #}
     <dataURL>{{ auto.URL }}</dataURL>
   </dataURLs>
 
-  <doiProposal>{{ doi }}</doiProposal>
+  <doiProposal>{{ pkg.dara_DOI_Proposal }}</doiProposal>
 
   <publicationDate>
-      <year>{{ dara.dara_PublicationDate }}</year>
+      <year>{{ pkg.dara_PublicationDate }}</year>
   </publicationDate>
 
   <availability>
-      <availabilityControlled>{{ dara.dara_Availabilitycontrolled }}</availabilityControlled>
+      <availabilityControlled>{{ pkg.dara_Availabilitycontrolled }}</availabilityControlled>
   </availability>
 
 

@@ -1,4 +1,4 @@
-#Dr. Hendrik Bunke
+#Hendrik Bunke
 #ZBW - Leibniz Information Centre for Economics
 #2013-04-11
 
@@ -14,7 +14,6 @@ import ckan.model as model
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara.schema import DaraFields
 from ckanext.dara import utils
-#from ckanext.dara.test_xml import xml
 from datetime import datetime
 from hashids import Hashids
 import random
@@ -26,10 +25,8 @@ from StringIO import StringIO
 #from collections import OrderedDict
 
 
-###TODO dara auto fields als helper methode uebergeben und fertig ;-)
-
-
 Fields = DaraFields()
+HIDDEN = Fields.hidden()
 LEVEL_1 = Fields.level_1()
 LEVEL_2 = Fields.level_2()
 LEVEL_3 = Fields.level_3()
@@ -39,74 +36,26 @@ RESOURCE = Fields.resource_fields()
 PREFIX = 'dara_'
 
 
-
-def dara_validate(xml):
-    v = utils.DaraValidation()
-    val = v.validate(xml)
-    return val
-
-
-def _get_pkg():
+def dara_pkg():
     """
+    get package for several helper functions
+    XXX DO WE REALLY NEED THIS?
     """
-    #this does not work with ckan 2.1?
-    #pkg = c.pkg_dict
     
-    #XXX from 2.2 on there's no pkg in c!
-    #this was new for 2.1
-    #pkg = c.pkg
-
-    #this is new for 2.2
-    #XXX can we import pkg without calling the model?
-
     pkg_id = tk.c.id
-    pkg = model.Package.by_name(pkg_id)
+    try:
+        pkg = tk.get_action('package_show')(None, {'id': pkg_id})
+    except:
+        pkg = model.Package.by_name(pkg_id)
+    
     return pkg
+
 
 
 def dara_debug():
     #pkg_dict = c.pkg_dict
 
-    import pdb; pdb.set_trace()
-
-
-def dara_extras():
-    """returns dara extra metadata as separate dictionary
-    """
-
-    pkg = _get_pkg()
-    #an empty package returns ''
-    if pkg:
-        extras = pkg.extras
-
-
-        #filtering dara extras
-        dara_extras = {}
-        for key, value in extras.items():
-            if key.startswith(PREFIX):
-                dara_extras[key] = value
-        #XXX sorting is still to be done. this is way it does not work exactly.
-        # we'll need the dara_md['name'] as key!
-        #ordered_dara_extras = OrderedDict(sorted(dara_extras.items()))
-        #return ordered_dara_extras
-        return dara_extras
-    return None
-
-
-def package_extras():
-    """
-    """
-    pkg = _get_pkg()
-    if pkg:
-        extras = pkg.extras
-        return extras
-    return None
-
-
-def dara_pkg():
-    """to avoid pkg changes by ckan
-    """
-    return _get_pkg()
+    import ipdb; ipdb.set_trace()
 
 
 def dara_md():
@@ -126,11 +75,11 @@ def dara_authors():
     """
     return all author fields
     """
-    extras = dara_extras()
+    pkg = dara_pkg()
     authors = []
     try:
-        for k in extras.keys():
-            if 'author' in k:
+        for k in pkg.keys():
+            if 'dara_author' in k:
                 authors.append(extras[k])
 
     #XXX this can only be a temporary workaround! XXX
@@ -145,8 +94,8 @@ def dara_first_author():
     """
     workaround until we have a proper authors implementation
     """
-    pkg = _get_pkg()
-    author = pkg.author
+    pkg = dara_pkg()
+    author = pkg['author']
     return utils.author_name_split(author)
 
 
@@ -154,9 +103,9 @@ def dara_publications():
     """
     checks for publications
     """
-    extras = dara_extras()
-    for k in extras.keys():
-        if 'dara_Publication_' in k and extras[k] is not u'':
+    pkg = dara_pkg()
+    for k in pkg.keys():
+        if 'dara_Publication_' in k and pkg[k] is not u'':
             return True
     return False
 
@@ -191,12 +140,12 @@ def dara_resource_fields():
 
 
 def dara_auto_fields():
-    pkg = _get_pkg()
+    pkg = dara_pkg()
     auto = Fields.auto_fields(pkg)
     return auto
 
 
-def dara_doi():
+def create_doi(pkg_dict):
     """
     this should go in a function directly after package is created. 
     DOI would than be stored in pkg_dict and not created here. That way we 
@@ -207,31 +156,43 @@ def dara_doi():
     """
     
     prefix = u"10.2345" #XXX fake! change this. could be config
-    cpkg = tk.c.pkg_dict
-    org = cpkg['organization']
+    org_id = pkg_dict['owner_org']
+    data_dict = {'id': org_id, 'include_datasets': False}
+    #we probably only have org id at this point
+    org = tk.get_action('organization_show')(None, data_dict)
+    
     journal = org['name']
     hashids = Hashids()
-    created = cpkg['metadata_created'] #date string
-    dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f") #object
-    datestring = dt.strftime("%Y%m%d%H%M%S")
     
+    now = datetime.now()
+       
+   #ckan won't store datetime.object, so we must build a stupid #string 
+    now_string = now.strftime("%Y%m%d%H%M%S")
+       
     ###XXX only use random int when doi is created and stored directly after
     #package creation
     #numrange = range(0,100) #twodigit
     #rd_num = random.choice(numrange)
     #date  = datestring + str(rd_num)
     
-    date = int(datestring)
+    date = int(now_string)
     num = hashids.encrypt(date)
 
     doi = prefix + '/' + journal + '.' + num
+
     return doi
-    
 
 
-
-
-
+def dara_doi():
+    """
+    used in package_metadata_fields 
+    """
+    pkg = dara_pkg()
+    key = 'dara_DOI_Proposal'
+    if key in pkg and pkg[key]:
+        return pkg[key]
+    doi = create_doi(pkg)
+    return doi
 
 
 class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -240,8 +201,8 @@ class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     """
     plugins.implements(plugins.IResourceController, inherit=False)
 
-    def before_show(self):
-        import pdb; pdb.set_trace()
+    #def before_show(self):
+    #    import pdb; pdb.set_trace()
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -258,28 +219,20 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
 
 
-    #XXX debugging methods
-
-    #def after_update(self,context, pkg_dict):
-    #     """
-    #     test
-    #     """
-    #     import ipdb; ipdb.set_trace()
-
-
-    # def before_view(self, pkg_dict):
-    #       import pdb; pdb.set_trace()
-    
-
-
-    #def before_show(self, resource_dict):
-    #    import pdb; pdb.set_trace()
-    #    return resource_dict
-
-
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
 
+
+        #hidden fields
+        for f in HIDDEN:
+            field_name = PREFIX + f
+            schema.update({
+                field_name: [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')
+                ]
+            })
+        
+        
         #mandatory fields
         for key in LEVEL_1:
             field_name = PREFIX + key
@@ -355,6 +308,18 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema = super(DaraMetadataPlugin, self).show_package_schema()
 
+        
+        #hidden fields
+        for f in HIDDEN:
+            field_name = PREFIX + f
+            schema.update({
+                field_name: [
+                    tk.get_converter('convert_from_extras'),
+                    tk.get_validator('ignore_missing'),
+                ]
+            })
+
+        
         for key in LEVEL_1:
             field_name = PREFIX + key
             schema.update({
@@ -433,13 +398,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
 
     def get_helpers(self):
-        return {'dara_extras': dara_extras,
+        return {
                 'dara_md': dara_md,
                 'dara_pkg': dara_pkg,
                 'dara_debug': dara_debug,
                 'dara_c': tk.c,
                 'dara_authors': dara_authors,
-                'package_extras': package_extras,
                 'dara_publication_fields': dara_publication_fields,
                 'dara_publications': dara_publications,
                 'dara_level3_fields': dara_level3_fields,
@@ -449,8 +413,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_auto_fields': dara_auto_fields,
                 'dara_first_author': dara_first_author,
                 'dara_doi': dara_doi,
-                'dara_validate': dara_validate,
-                
                 }
 
     def is_fallback(self):
@@ -493,6 +455,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ckan_icon="exchange"
                 )
 
+        map.connect('/dataset/{id}/doi_proposal',
+                controller="ckanext.dara.controller:DaraController",
+                action="doi_proposal"
+                )
 
         return map
 

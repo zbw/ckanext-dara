@@ -8,8 +8,8 @@
 {% macro md(fields, helpers, prefix='dara_') -%}
      
     {% set h = helpers %}
-    {% set dara = h.dara_extras() %}
-    {#{% set debug = h.dara_debug() %} #}
+    {% set dara = h.dara_pkg %}
+    {#    {% set debug = h.dara_debug() %} #}
 
     {% for key, values in fields.iteritems() %}
         {% set name = key  %}
@@ -60,8 +60,8 @@
         {% endif %}
 
         {% if values['form_type'] == 'select' %}
-        {% set selected = dara[id] %}
             {% set options = values['options'] %}
+            {% set selected = dara[id] or options[0] %}
             {% do classes.append('select-auto')  %}
             {% do classes.append('control-select') %}
             {{ form.select(id, 

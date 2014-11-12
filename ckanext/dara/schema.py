@@ -1,6 +1,6 @@
-#XXX This is only a first very rough schema implementation.
-
 from pylons import config
+import ckan.plugins.toolkit as tk
+
 
 #OrderedDict is not available in Python < 2.7
 try:
@@ -83,6 +83,18 @@ class DaraFields(object):
     """
     main class
     """
+    
+    def hidden(self):
+        """
+        hidden fields, not mutable by user
+        """
+        #TODO: add fields for:
+        #-  dara registered (date)
+        #-  dara update (date)
+        #-   
+
+        fields = ['DOI', 'DOI_Proposal', 'created']
+        return fields
 
 
     def level_1(self):
@@ -649,9 +661,10 @@ class DaraFields(object):
         if 'localhost' in site_url:
             site_url = "http://edawax.de"
         
-        dara_URL = "%s/dataset/%s" %(site_url, pkg.name)
+        ckan_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+        dara_url = site_url + ckan_url
 
-        auto['URL'] = dara_URL
+        auto['URL'] = dara_url
         auto['ResourceType'] = resource_type
 
         return auto

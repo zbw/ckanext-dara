@@ -23,9 +23,6 @@ class DaraController(PackageController):
     it at da|ra
     """
     
-    #TODO:
-    #   -   method for writing doi proposal in pkg_dict after creation. Hidden
-    #       field in template? Or rather an after_create method in plugin?
 
     def __init__(self):
         self.schema = schema
@@ -37,18 +34,6 @@ class DaraController(PackageController):
         """
         
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
-
-        pkg = tk.get_action('package_show')(None, {'id': id})
-        
-        ### creating missing fields.
-        # testing for DOI is only temporarily necessary for old datasets. newly
-        # created datasets will get it automatically
-        
-       #if not pkg.has_key('dara_DOI_Proposal'): 
-       #    doi = self._create_doi(pkg)
-       #    pkg['dara_DOI_Proposal'] = doi
-       #    tk.get_action('package_update')(None, pkg)
-            
         template = "package/read.xml"
         xml_string = tk.render(template)
 
@@ -64,12 +49,29 @@ class DaraController(PackageController):
         """
         register at da|ra
         """
-        #XXX darapi is so small, it should be integrated into ckanext-dara
+        #XXX darapi is too small, should it be integrated here?
+        
         xml = self.xml(id)
         
-        dara = DaraClient('demo', 'testdemo', xml, test=True, register=False)
-        dara = dara.calldara()
+                
+        #TODO: test for combo testserver=true and DOI=true, which is not
+        #possible. Should be helper in template
+        test = True
+        register = False
+        req = tk.request
+        p = req.params
+        if not 'testserver' in p:
+            test = False
+        if 'DOI' in p:
+            register = True
 
+        dara = DaraClient('demo', 'testdemo', xml, test=test, register=register)
+        dara = dara.calldara()
+    
+        #TODO 
+        #    -   redirect to DOI manager page including message
+        #    -   catch http codes 
+        
         return dara
         
     

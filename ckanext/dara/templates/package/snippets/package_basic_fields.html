@@ -49,6 +49,10 @@
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
 
+
+<input type="hidden" value="{{ h.dara_doi(data) }}" name="dara_DOI_Proposal" />
+<input type="hidden" value="" name="dara_DOI" />
+
 {% if form_style == 'edit' %}
     <div id="dara_1">
         <h4 class="dara_level_head"

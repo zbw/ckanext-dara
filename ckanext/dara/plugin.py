@@ -156,13 +156,16 @@ def create_doi(pkg_dict):
     """
     
     prefix = u"10.2345" #XXX fake! change this. could be config
-    org_id = pkg_dict['owner_org']
-    data_dict = {'id': org_id, 'include_datasets': False}
-    #we probably only have org id at this point
-    org = tk.get_action('organization_show')(None, data_dict)
-    
-    journal = org['name']
     hashids = Hashids()
+    
+    #make sure we ALWAYS get the org id
+    try:
+        group = pkg_dict['group_id']
+        data_dict = {'id': group, 'include_datasets': False}
+        org = tk.get_action('organization_show')(None, data_dict)
+        journal = org['name']
+    except:
+        journal = 'edawax'  #fallback
     
     now = datetime.now()
        
@@ -183,11 +186,12 @@ def create_doi(pkg_dict):
     return doi
 
 
-def dara_doi():
+def dara_doi(pkg):
     """
-    used in package_metadata_fields 
+    used in snippets/package_metadata_fields 
     """
-    pkg = dara_pkg()
+    #pkg = dara_pkg()
+
     key = 'dara_DOI_Proposal'
     if key in pkg and pkg[key]:
         return pkg[key]
@@ -216,7 +220,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
-
 
 
     def _dara_package_schema(self, schema):

@@ -1,16 +1,54 @@
 {% extends 'package/edit_base.html' %}
-{% set pkg = h.dara_pkg() %} 
+{#{% set pkg = h.dara_pkg() %} #}
+{#{% set debug = h.dara_debug() %}#}
+{% set pkg = c.pkg_dict %}
+
+{% set DOI = pkg['dara_DOI'] %} 
+{#{% set DOI = h.dara_doi(pkg) %} #}
 
 
 {% block primary_content_inner %}
 {{ super() }}
 
-    <h1>Hallo Welt</h1>
+    <h1>DOI Information and Registration</h1>
+    <div id="doi_info">
+ <div id="register" 
+    style="float:right; text-align:center; background-color: lightyellow;
+        border:1px solid grey; min-width:200px; margin-bottom:25px;">
 
-    <p> Year: {{ pkg['dara_PublicationDate'] }} </p>
-    <p> DOIProposal: {{ pkg['dara_DOI_Proposal'] }} </p>
-    <p> DOI: {{ pkg['dara_DOI'] }} </p>
+    
+     <p style="background-color:#2d2d2d; width:100%; font-size:125%;
+     font-weight:normal; color:white; ">Register at da|ra</p>
+     <div id="doi_form" style=" padding:10px 10px 10px 10px;">
+    <form action="/dataset/{{pkg['id']}}/dara_register" method='post'>
+        <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
+        />Test
+         
+        <input type="checkbox" name="DOI" value="true"
+        style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI <br /><br />
+        
+        <input class="btn btn-primary" type="submit" value="Register"/>
+    </form>
+    </div>
+    </div>
+
+    <p>DOI: 
+    {% if DOI %}
+      {{ DOI }}
+      {% else %}<span style="color:darkred">No DOI yet</span>
+    {% endif %}
+    </p>
+       
+
+    
+    <p> DOI Proposal:<span style="color:darkred"> {{ pkg['dara_DOI_Proposal'] }}
+        </style></p>
+
+    <p><a href="/dataset/{{pkg['id']}}/dara_xml">View da|ra metadata
+        XML</a></p>
+       
     
 
+       </div>
 
 {% endblock %}

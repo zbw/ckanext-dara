@@ -8,8 +8,9 @@
 {% macro md(fields, helpers, prefix='dara_') -%}
      
     {% set h = helpers %}
-    {% set dara = h.dara_pkg %}
+    {% set dara = h.dara_pkg() %}
     {#    {% set debug = h.dara_debug() %} #}
+
 
     {% for key, values in fields.iteritems() %}
         {% set name = key  %}

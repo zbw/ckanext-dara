@@ -6,6 +6,7 @@ from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request, response
 from ckan import model
+import ckan.lib.helpers as h
 from StringIO import StringIO
 from ckanext.dara.dara_schema_3 import schema
 from lxml import etree
@@ -14,6 +15,8 @@ from datetime import datetime
 from hashids import Hashids
 import random
 
+
+NotAuthorized = tk.NotAuthorized
 
 
 
@@ -51,8 +54,20 @@ class DaraController(PackageController):
         """
         #XXX darapi is too small, should it be integrated here?
         
-        xml = self.xml(id)
+        ## using tk.c as context does not work here
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+        data_dict = {'id': id}
+
+        try:
+            tk.check_access('package_update', context, data_dict)
+        except NotAuthorized:
+            tk.abort(401, 'Unauthorized to manage DOI.')
+
         
+        xml = self.xml(id)
+        c.pkg_dict = tk.get_action('package_show')(context, data_dict)
                 
         #TODO: test for combo testserver=true and DOI=true, which is not
         #possible. Should be helper in template
@@ -68,11 +83,25 @@ class DaraController(PackageController):
         dara = DaraClient('demo', 'testdemo', xml, test=test, register=register)
         dara = dara.calldara()
     
-        #TODO 
-        #    -   redirect to DOI manager page including message
-        #    -   catch http codes 
         
-        return dara
+        date = datetime.now()
+        datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
+
+        if dara == 201:
+            c.pkg_dict['dara_registered'] = datestring
+            tk.get_action('package_update')(context, c.pkg_dict)
+            h.flash_success("Dataset successfully registered.")
+        elif dara == 200:
+            c.pkg_dict['dara_updated'] = datestring
+            tk.get_action('package_update')(context, c.pkg_dict)
+            h.flash_success("Dataset successfully updated.")
+        else:
+            h.flash_error("ERROR! Sorry, dataset has not been registered or "
+                    "updated. Please consult the logs. (%s) " %dara)
+
+        tk.redirect_to('dara_doi', id=id)
+
+        #return dara
         
     
     def doi(self, id):
@@ -87,6 +116,15 @@ class DaraController(PackageController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
         data_dict = {'id': id}
+
+        # Package needs to have a organization group in the call to
+        # check_access and also to save it
+        
+        try:
+            tk.check_access('package_update', context, data_dict)
+        except NotAuthorized:
+            tk.abort(401, 'Unauthorized to manage DOI.')
+
 
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
         c.pkg = context['package']
@@ -146,6 +184,12 @@ class DaraController(PackageController):
     #for old datasets or such where doi proposals are not saved for whatever
     #reason
     def doi_proposal(self, id):
+        
+        try:
+            tk.check_access('package_create', context)
+        except NotAuthorized:
+            tk.abort(401, 'Unauthorized to manage DOI')
+
         pkg = tk.get_action('package_show')(None, {'id': id})
         key = 'dara_DOI_Proposal'
         if key in pkg and pkg[key]:

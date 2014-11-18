@@ -7,6 +7,8 @@
 {% set dara_authors = h.dara_authors() %}
 {% set form_style = c.form_style or c.action %}
 {#{% set debug = h.dara_debug() %} #}
+{% set pkg = c.pkg_dict %}
+
 
 
 
@@ -51,7 +53,11 @@
 
 
 <input type="hidden" value="{{ h.dara_doi(data) }}" name="dara_DOI_Proposal" />
-<input type="hidden" value="" name="dara_DOI" />
+<input type="hidden" value="{{ pkg['dara_DOI'] }}"  name="dara_DOI" />
+<input type="hidden" value="{{ pkg['dara_registered'] }}"
+                     name="dara_registered" />
+<input type="hidden" value="{{ pkg['dara_updated'] }}"
+                     name="dara_updated" />
 
 {% if form_style == 'edit' %}
     <div id="dara_1">

@@ -7,6 +7,13 @@
 {#{% set DOI = h.dara_doi(pkg) %} #}
 
 
+{% if not pkg['dara_registered'] %}
+    {% set submit = 'Register' %}
+{% else %}
+    {% set submit = 'Update' %}
+{% endif %}
+
+
 {% block primary_content_inner %}
 {{ super() }}
 
@@ -27,24 +34,40 @@
         <input type="checkbox" name="DOI" value="true"
         style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI <br /><br />
         
-        <input class="btn btn-primary" type="submit" value="Register"/>
+        <input class="btn btn-primary" type="submit" value="{{ submit }}" />
     </form>
     </div>
     </div>
 
-    <p>DOI: 
-    {% if DOI %}
-      {{ DOI }}
+    <table>
+        <tr>
+        <td>DOI: </td>
+
+        <td>{% if DOI %}
+            {{ DOI }}
       {% else %}<span style="color:darkred">No DOI yet</span>
     {% endif %}
-    </p>
-       
+        </td>
+        </tr>
+        <tr>
+            <td>Registered: </td>
+            <td>{{ pkg['dara_registered'] }}</td>
+        </tr>
+        <tr>
+            <td>Updated: </td>
+            <td>{{ pkg['dara_updated'] }}</td>
+        </tr>
 
-    
-    <p> DOI Proposal:<span style="color:darkred"> {{ pkg['dara_DOI_Proposal'] }}
-        </style></p>
+        <tr>
 
-    <p><a href="/dataset/{{pkg['id']}}/dara_xml">View da|ra metadata
+            <td>DOI Proposal: </td>
+            <td><span style="color:darkred"> {{ pkg['dara_DOI_Proposal']
+                    }}</span></td>
+        </tr>
+    </table>
+        
+
+    <p style="margin-top:24px;"><a href="/dataset/{{pkg['id']}}/dara_xml">View da|ra metadata
         XML</a></p>
        
     

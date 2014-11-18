@@ -93,7 +93,7 @@ class DaraFields(object):
         #-  dara update (date)
         #-   
 
-        fields = ['DOI', 'DOI_Proposal', 'created']
+        fields = ['DOI', 'DOI_Proposal', 'created', 'registered', 'updated']
         return fields
 
 

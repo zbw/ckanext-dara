@@ -18,7 +18,12 @@ only Jinja 2.6. It might be possible to replace that, haven't checked yet #}
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dara_schema_3.xsd">
 
 
-  <resourceType>{{ auto['ResourceType'] }}</resourceType>
+    <resourceType>{{ auto['ResourceType'] }}</resourceType>
+    
+    <resourceIdentifier>
+        <identifier>{{ pkg['id'] }}</identifier>
+        <currentVersion>1</currentVersion>
+    </resourceIdentifier>
   
   <titles>
     <title>

@@ -18,7 +18,7 @@ from datetime import datetime
 from hashids import Hashids
 import random
 from StringIO import StringIO
-
+from datetime import datetime
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...
@@ -80,7 +80,7 @@ def dara_authors():
     try:
         for k in pkg.keys():
             if 'dara_author' in k:
-                authors.append(extras[k])
+                authors.append(pkg[k])
 
     #XXX this can only be a temporary workaround! XXX
     #when deleting a field in the form, the author extras is not removed, but
@@ -97,6 +97,17 @@ def dara_first_author():
     pkg = dara_pkg()
     author = pkg['author']
     return utils.author_name_split(author)
+
+def dara_additional_authors():
+    """
+    workaround
+    """
+    authors = dara_authors()
+    dalist = []
+    for author in authors:
+        da = utils.author_name_split(author)
+        dalist.append(da)
+    return dalist
 
 
 def dara_publications():
@@ -172,7 +183,7 @@ def create_doi(pkg_dict):
    #ckan won't store datetime.object, so we must build a stupid #string 
     now_string = now.strftime("%Y%m%d%H%M%S")
        
-    ###XXX only use random int when doi is created and stored directly after
+    #XXX only use random int when doi is created and stored directly after
     #package creation
     #numrange = range(0,100) #twodigit
     #rd_num = random.choice(numrange)
@@ -220,7 +231,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
-
+    
+   #def after_update(self, context, id):
+   #    pkg = dara_pkg()
+   #    import pdb; pdb.set_trace()
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
@@ -415,6 +429,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_resource_fields': dara_resource_fields,
                 'dara_auto_fields': dara_auto_fields,
                 'dara_first_author': dara_first_author,
+                'dara_additional_authors': dara_additional_authors,
                 'dara_doi': dara_doi,
                 }
 
@@ -437,7 +452,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(DaraMetadataPlugin, self).update_package_schema()
         schema = self._dara_package_schema(schema)
         return schema
- 
+    
     
     def before_map(self, map):
         """

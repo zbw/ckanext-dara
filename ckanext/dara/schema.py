@@ -88,10 +88,6 @@ class DaraFields(object):
         """
         hidden fields, not mutable by user
         """
-        #TODO: add fields for:
-        #-  dara registered (date)
-        #-  dara update (date)
-        #-   
 
         fields = ['DOI', 'DOI_Proposal', 'created', 'registered', 'updated']
         return fields
@@ -167,6 +163,7 @@ class DaraFields(object):
                     )
             ),
 
+            
             DaraField('currentVersion',
                     Input(
                     placeholder = 'eg. 1.1',
@@ -239,7 +236,7 @@ class DaraFields(object):
                     )
             ),
 
-            DaraField('Universe_areaControlled',
+            DaraField('geographicCoverage',
                     Select(
                     classes = ['todo'],
                     name = 'Geographic Coverage (controlled)',
@@ -247,15 +244,23 @@ class DaraFields(object):
                     )
             ),
 
-            DaraField('Universe_areaFree',
+            DaraField('geographicCoverageFree',
                     Input(
                     placeholder = 'eg. West-Germany',
                     name = 'Geographic Coverage (free)',
                     size = 'medium',
                     )
             ),
+            
+            DaraField('sampling',
+                    Input(
+                        placeholder= 'test',
+                        name='test universe',
+                        size = 'medium'
+                        )
+                    ),
 
-            DaraField('Universe_sampled',
+            DaraField('universeSampled',
                     Input(
                     placeholder = 'eg. adults in Eastern and Western Germany',
                     name = 'Sampled Universe',
@@ -263,7 +268,7 @@ class DaraFields(object):
                     )
             ),
 
-            DaraField('SelectionMethod',
+            DaraField('Sampling',
                     Text(
                     placeholder = 'Describe your selection method',
                     name = 'Sampling',

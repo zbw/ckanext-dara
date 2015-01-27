@@ -3,26 +3,27 @@
 {% set pkg = h.dara_pkg() %}
 {% set auto = h.dara_auto_fields() %}
 {% set author = h.dara_first_author() %}
+{% set dara_authors = h.dara_additional_authors() %}
 
 {# {% set debug = h.dara_debug() %} #}
 
-{#XXX from Jinja 2.8 on it would be possible to set the whole xml block as
-variable and use it inside the template
-(http://jinja.pocoo.org/docs/dev/templates/#block-assignments). That way we
-could validate directly with template call by giving the xml block as parameter
-to the validation function.  Unfortunately this CKAN version (2.2) requires
-only Jinja 2.6. It might be possible to replace that, haven't checked yet #}
+{# XXX 
+all schemaLocations to the *used* schema (url, doi) do not work, da|ra
+ignores them and uses the most uptodate version; 
 
-{% macro xml() -%}
+the current given URI just gives the DOI for the schema (which leads to the
+portal page, not the actual XSD file) to know which schema version is used 
+#}
 
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="dara_schema_3.xsd">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="doi:10.4232/10.mdsxsd.3.0">
 
-
-    <resourceType>{{ auto['ResourceType'] }}</resourceType>
-    
-    <resourceIdentifier>
+{# simple types #}
+  <resourceType>{{ auto['ResourceType'] }}</resourceType>
+  
+      <resourceIdentifier>
         <identifier>{{ pkg['id'] }}</identifier>
-        <currentVersion>1</currentVersion>
+        <currentVersion>{{ pkg.dara_currentVersion or '1' }}</currentVersion>
     </resourceIdentifier>
   
   <titles>
@@ -31,42 +32,191 @@ only Jinja 2.6. It might be possible to replace that, haven't checked yet #}
        <language>en</language>
     </title>
   </titles>
-  
+
+{# XXX do we need more than one 'othertitle' here? #}
+
+{% if pkg.dara_OtherTitle %}
+  <otherTitles>
+      <otherTitle>
+          <language>en</language> {#XXX not implemented yet #}
+          <titleName>{{ pkg.dara_OtherTitle }}</titleName>
+          <titleType>{{ pkg.dara_OtherTitleType }}</titleType>
+      </otherTitle>
+  </otherTitles>
+{%endif %}
+
+      
+{# 4. creators 
+TODO: institution #}
   <creators>  
       <creator> 
         <person>
           <firstName>{{ author.firstname }}</firstName>
           <lastName>{{ author.lastname }}</lastName>
         </person>
-      </creator>
+    </creator>
+        {% for dara_author in dara_authors %}
+        <creator>
+            <person>
+                <firstName>{{ dara_author.firstname }}</firstName>
+                <lastName>{{ dara_author.lastname }}</lastName>
+            </person>
+            </creator>
+        {% endfor %}
   </creators>
+
+
+  {# DOI and URL #}
 
   <dataURLs>
     <dataURL>{{ auto.URL }}</dataURL>
   </dataURLs>
-
+  
   <doiProposal>{{ pkg.dara_DOI_Proposal }}</doiProposal>
 
   <publicationDate>
       <year>{{ pkg.dara_PublicationDate }}</year>
   </publicationDate>
 
-  <availability>
+
+    <availability>
       <availabilityControlled>{{ pkg.dara_Availabilitycontrolled }}</availabilityControlled>
-  </availability>
+       <availabilityFree>
+      <language>en</language>
+      <availabilityText></availabilityText>
+    </availabilityFree>
+    </availability>
+
+
+
+{% if pkg.dara_language %}
+    <resourceLanguage>{{ pkg.dara_language }}</resourceLanguage>
+{% endif %}
+
+{#
+  <language>en</language> {# metadata language, should always be english #}
+
+
+  
+  {% if pkg.dara_AlternativeIdentifier_ID %}
+  <alternativeIDs>
+    <alternativeID>
+        <identifier>{{ pkg.dara_AlternativeIdentifier_ID }}</identifier>
+        <type>{{ pkg.dara_AlternativeIdentifier_Type }}</type>
+    </alternativeID>
+  </alternativeIDs>
+  {% endif %}
+
+  
+  {# XXX not implemented #}
+  {#
+  <classifications>
+    <classification>
+      <classificationExternal>
+        <language>en</language>
+        <schema>OECD</schema>
+        <terms>
+          <term>Economics;</term>
+        </terms>
+      </classificationExternal>
+    </classification>
+    <classification>
+      <classificationExternal>
+        <language>de</language>
+        <schema>OECD</schema>
+        <terms>
+          <term>Ökonomie</term>
+        </terms>
+      </classificationExternal>
+    </classification>
+  </classifications>
+    #}
+
+<descriptions>
+
+    <description>
+        <language>en</language> {# TODO: offer choices? #}
+        <freetext>{{ pkg.notes }}</freetext>
+        <type>1</type> {# 1 = 'Abstract'. for now we assume type is alway Abstract
+                        TODO: offer choice #}
+
+    </description>
+</descriptions>
+
+
+{# XXX controlled not implemented yet; can have multiple entries #}  
+{% if pkg.dara_geographicCoverage or pkg.dara_geographicCoverageFree %}
+<geographicCoverages>
+     
+    <geographicCoverage>
+    {# XXX     <language></language> language not implemented #}
+      {% if pkg.dara_geographicCoverage %}
+        <geographicCoverageControlled>{{ pkg.dara_geographicCoverage }}</geographicCoverageControlled>
+      {% endif %}
+      <freetext>{{ pkg.dara_geographicCoverageFree }}</freetext>
+      {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
+      {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
+    </geographicCoverage>
+
+</geographicCoverages>
+{% endif %}
+
+
+<!-- does validate here but not at dara. field 'sampled' must not be empty
+     da|ra now uses schema 3.1! 
+     http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/dara_v3.1_de_en_18112014.xsd
+<universes>
+    <universe>
+        <language>en</language> {# XXX not implemented #}
+        <sampled>{{ pkg.dara_universeSampled }}</sampled>
+    </universe>
+</universes>
+-->
+
+
+<samplings>
+    {# 1 or 2 samplings allowed #}
+    <sampling>
+        <language>en</language> {# XXX not implemented;  #}
+        <method>{{ pkg.dara_Sampling }}</method>
+    </sampling>
+</samplings>
+
+
+{#
+
+  <temporalCoverages>
+      
+    <temporalCoverage>
+      <language>en</language>
+      <temporalCoverageFormal>
+        <startDate>
+          <year>2012</year>
+        </startDate>
+      </temporalCoverageFormal>
+    </temporalCoverage>
+    
+    <temporalCoverage>
+      <language>de</language>
+      <temporalCoverageFormal>
+        <startDate>
+          <year>2012</year>
+        </startDate>
+      </temporalCoverageFormal>
+    </temporalCoverage>
+  </temporalCoverages>
+  <relations>
+    <relation>
+      <identifier>10.1787/hsinc-table-2012-1-fr</identifier>
+      <identifierType>DOI</identifierType>
+      <relationType>17</relationType>
+    </relation>
+  </relations>
+
+#}
+
 
 
 </resource>
 
-{%- endmacro  %}
-
-{{ xml() }}
-
-{#
-<!-- control -
-<auto> {{ auto }} </auto>
-<inhalt>{{ extras }}</inhalt>
-<pkg> {{ pkg  }} </pkg>
--->
-#}
 

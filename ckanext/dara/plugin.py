@@ -8,7 +8,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 #from pylons import c
-from ckan.common import c
+from ckan.common import c, request, response
 import ckan.model as model
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
@@ -36,6 +36,13 @@ RESOURCE = Fields.resource_fields()
 PREFIX = 'dara_'
 
 
+
+def dara_debug():
+    pkg_dict = dara_pkg()
+
+    import ipdb; ipdb.set_trace()
+
+
 def dara_pkg():
     """
     get package for several helper functions
@@ -51,11 +58,18 @@ def dara_pkg():
     return pkg
 
 
-
-def dara_debug():
-    #pkg_dict = c.pkg_dict
-
-    import ipdb; ipdb.set_trace()
+def dara_resource():
+    """
+    somehow hack. c.resource doesnt return a resource when calling .../dara_xml
+    """
+    #XXX improve this. we should somehow be able to get the type of the context
+    #(resource or package)
+    if 'resource' in request.path:
+        resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
+    else:
+        resource = c.resource
+    return resource
+    
 
 
 def dara_md():
@@ -418,6 +432,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {
                 'dara_md': dara_md,
                 'dara_pkg': dara_pkg,
+                'dara_resource': dara_resource,
                 'dara_debug': dara_debug,
                 'dara_c': tk.c,
                 'dara_authors': dara_authors,
@@ -461,7 +476,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 controller="ckanext.dara.controller:DaraController",
                 action='xml',
                 )
+
+        map.connect('/dataset/{id}/resource/{resource_id}/dara_xml',
+                controller="ckanext.dara.controller:DaraController",
+                action='xml',
+                )
         
+
         map.connect('/dataset/{id}/dara_register',
                 controller="ckanext.dara.controller:DaraController",
                 action="register",

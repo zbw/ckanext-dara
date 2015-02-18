@@ -5,6 +5,14 @@
 {% set author = h.dara_first_author() %}
 {% set dara_authors = h.dara_additional_authors() %}
 
+{#
+this does not work with {id}/dara_xml 
+{% set res = c.resource %} 
+#}
+{# helper method from plugin #}
+{% set res = h.dara_resource() %}
+
+
 {# {% set debug = h.dara_debug() %} #}
 
 {# XXX 
@@ -13,15 +21,25 @@ ignores them and uses the most uptodate version;
 
 the current given URI just gives the DOI for the schema (which leads to the
 portal page, not the actual XSD file) to know which schema version is used 
+
+schema and example files: 
+http://www.da-ra.de/en/technical-information/doi-registration/
+
 #}
 
+
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:noNamespaceSchemaLocation="doi:10.4232/10.mdsxsd.3.0">
+    xsi:noNamespaceSchemaLocation="doi:10.4232/10.mdsxsd.3.1">
+
+{% if res %}
+    <test>{{ res }}</test>
+{% endif %}
+
 
 {# simple types #}
-  <resourceType>{{ auto['ResourceType'] }}</resourceType>
+<resourceType>{{ auto['ResourceType'] }}</resourceType> 
   
-      <resourceIdentifier>
+    <resourceIdentifier>
         <identifier>{{ pkg['id'] }}</identifier>
         <currentVersion>{{ pkg.dara_currentVersion or '1' }}</currentVersion>
     </resourceIdentifier>
@@ -162,16 +180,12 @@ TODO: institution #}
 {% endif %}
 
 
-<!-- does validate here but not at dara. field 'sampled' must not be empty
-     da|ra now uses schema 3.1! 
-     http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/dara_v3.1_de_en_18112014.xsd
 <universes>
     <universe>
         <language>en</language> {# XXX not implemented #}
         <sampled>{{ pkg.dara_universeSampled }}</sampled>
     </universe>
 </universes>
--->
 
 
 <samplings>

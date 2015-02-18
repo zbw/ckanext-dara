@@ -8,13 +8,12 @@ from ckan.common import c, request, response
 from ckan import model
 import ckan.lib.helpers as h
 from StringIO import StringIO
-from ckanext.dara.dara_schema_3 import schema
 from lxml import etree
 from darapi import DaraClient
 from datetime import datetime
 from hashids import Hashids
 import random
-
+from ckanext.dara.dara_schema_3_1 import schema
 
 NotAuthorized = tk.NotAuthorized
 
@@ -35,7 +34,6 @@ class DaraController(PackageController):
         """
         returning dara xml
         """
-        
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
         template = "package/read.xml"
         xml_string = tk.render(template)
@@ -43,7 +41,7 @@ class DaraController(PackageController):
         #validate before show. Errors are caught by lxml
         #XXX perhaps it makes more sense to validate later in the process (before
         #submitting to dara, for example)
-        self._validate(xml_string)
+        #self._validate(xml_string)
 
         return xml_string
     

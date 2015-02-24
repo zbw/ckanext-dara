@@ -1,7 +1,7 @@
 {% extends 'package/edit_base.html' %}
-{#{% set pkg = h.dara_pkg() %} #}
-{#{% set debug = h.dara_debug() %}#}
-{% set pkg = c.pkg_dict %}
+{% set pkg = h.dara_pkg() %} 
+{# {% set debug = h.dara_debug() %} #}
+{# {% set pkg = c.pkg_dict %} #}
 
 {% set DOI = pkg['dara_DOI'] %} 
 {#{% set DOI = h.dara_doi(pkg) %} #}
@@ -17,17 +17,20 @@
 {% block primary_content_inner %}
 {{ super() }}
 
-    <h1>DOI Information and Registration</h1>
-    <div id="doi_info">
- <div id="register" 
+
+<h1>DOI Information and Registration</h1>
+    
+<form action="/dataset/{{pkg['id']}}/dara_register" method='post'>
+
+<div id="register" 
     style="float:right; text-align:center; background-color: lightyellow;
-        border:1px solid grey; min-width:200px; margin-bottom:25px;">
+        border:1px solid grey; margin:10px 0px 0px 10px;">
 
     
      <p style="background-color:#2d2d2d; width:100%; font-size:125%;
      font-weight:normal; color:white; ">Register at da|ra</p>
      <div id="doi_form" style=" padding:10px 10px 10px 10px;">
-    <form action="/dataset/{{pkg['id']}}/dara_register" method='post'>
+    
         <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
         />Test
          
@@ -35,10 +38,13 @@
         style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI <br /><br />
         
         <input class="btn btn-primary" type="submit" value="{{ submit }}" />
-    </form>
-    </div>
-    </div>
+    
 
+    </div>
+</div>
+
+<div id="dataset">
+<h2>Dataset</h2>
     <table>
         <tr>
         <td>DOI: </td>
@@ -70,8 +76,80 @@
     <p style="margin-top:24px;"><a href="/dataset/{{pkg['id']}}/dara_xml">View da|ra metadata
         XML</a></p>
        
+</div>
+    
+<div id="resources">  
+  <h2>Resources</h2>
+    {% set resources = pkg['resources'] %}
+    
+    {% if resources %}
+      <ul class="resource-list">
+          {% for res in resources %}
+            
+{# originally from resource_item.html ##############################}
+
+{% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
+{% set url_action = 'resource_edit' if url_is_edit and can_edit else 'resource_read' %}
+{% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
+{% set xml = "/dataset/{{ pkg['id'] }}/resource/{{ res['id'] }}/dara_xml" %}
+
+
+<li class="resource-item" data-id="{{ res.id }}">
+  
+  <div style="float:right; margin-left:20px; text-align:right;" >
+      {#TODO make this conditional: don't show if resource has already a DOI #}
+      <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}" value="true" /> DOI 
+      
+      {#XXX use this span to make XML conditional for admin user #}
+      <span style="margin-left:12px;">
+          <a href="{{ xml }}">XML</a></span>
+      
+      <p class="description">
+        DOI: 10.2344/edawax.jRZxvw335P.1
+      </p>
+
+  </div>
     
 
-       </div>
+  <a class="heading" href="{{ url }}" 
+      title="{{ res.name or res.description }}">
+    {{ h.resource_display_name(res) | truncate(50) }}
+    <span class="format-label" 
+        property="dc:format" 
+        data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
+    </span>
+    {{ h.popular('views', res.tracking_summary.total, min=10) }}
+  </a>
+
+  <p class="description">
+    {% if res.description %}
+      {{ h.markdown_extract(res.description, extract_length=80) }}
+    {% endif %}
+  </p>
+ 
+</li>
+{# end resource item ############################################ #}
+
+
+         {% endfor %}
+      </ul>
+    {% else %}
+      {% if h.check_access('resource_create', pkg) %}
+          {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
+            <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
+          {% endtrans %}
+      {% else %}
+          <p class="empty">{{ _('This dataset has no data') }}</p>
+      {% endif %}
+    {% endif %}
+<!-- end resources -->
+</div>
+
+
+
+
+
+</form>
+
 
 {% endblock %}

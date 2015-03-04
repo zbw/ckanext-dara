@@ -30,23 +30,20 @@ class DaraController(PackageController):
         self.schema = schema
         
         
-    def xml(self, id):
+    def xml(self, id, template):
         """
         returning dara xml
         """
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
-        template = "package/read.xml"
         xml_string = tk.render(template)
 
         #validate before show. Errors are caught by lxml
-        #XXX perhaps it makes more sense to validate later in the process (before
-        #submitting to dara, for example)
-        #self._validate(xml_string)
+        self._validate(xml_string)
 
         return xml_string
     
     
-    def register(self, id):
+    def register(self, id, template):
         """
         register at da|ra
         """
@@ -64,7 +61,7 @@ class DaraController(PackageController):
             tk.abort(401, 'Unauthorized to manage DOI.')
 
         
-        xml = self.xml(id)
+        xml = self.xml(id, template)
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
                 
         #TODO: test for combo testserver=true and DOI=true, which is not
@@ -80,7 +77,6 @@ class DaraController(PackageController):
 
         dara = DaraClient('demo', 'testdemo', xml, test=test, register=register)
         dara = dara.calldara()
-    
         
         date = datetime.now()
         datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
@@ -132,7 +128,7 @@ class DaraController(PackageController):
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
         c.pkg = context['package']
             
-        template = "package/dara.html"
+        template = "package/doi.html"
         page = tk.render(template)
 
         return page
@@ -176,7 +172,6 @@ class DaraController(PackageController):
         """
         validate against dara schema. errors are thrown by lxml
         """
-        
         xml = StringIO(xmlstring)
         xsd = StringIO(self.schema)
         xmlschema_doc = etree.parse(xsd)

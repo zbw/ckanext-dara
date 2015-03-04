@@ -1,9 +1,15 @@
 <!-- <?xml version="1.0" encoding="UTF-8"?>-->
 
-{% set pkg = h.dara_pkg() %}
+{#XXX old version that only covered package/collection metadata. Now splitted into
+    2 files (collection.xml, resource.xml) #}
+
+
 {% set auto = h.dara_auto_fields() %}
+{% set pkg = h.dara_pkg() %}
 {% set author = h.dara_first_author() %}
 {% set dara_authors = h.dara_additional_authors() %}
+
+
 
 {#
 this does not work with {id}/dara_xml 
@@ -28,12 +34,17 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 #}
 
 
+{% if res %}
+        
+
+{% endif %}
+
+
+
+
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="doi:10.4232/10.mdsxsd.3.1">
 
-{% if res %}
-    <test>{{ res }}</test>
-{% endif %}
 
 
 {# simple types #}
@@ -183,7 +194,11 @@ TODO: institution #}
 <universes>
     <universe>
         <language>en</language> {# XXX not implemented #}
-        <sampled>{{ pkg.dara_universeSampled }}</sampled>
+
+        {# we are using 'None' as fallback since 
+        the schema is not correct here. dara expects content, but schema 
+         does not force it #}
+        <sampled>{{ pkg.dara_universeSampled or None}}</sampled>
     </universe>
 </universes>
 
@@ -192,7 +207,8 @@ TODO: institution #}
     {# 1 or 2 samplings allowed #}
     <sampling>
         <language>en</language> {# XXX not implemented;  #}
-        <method>{{ pkg.dara_Sampling }}</method>
+
+                <method>{{ pkg.dara_Sampling }}</method>
     </sampling>
 </samplings>
 

@@ -472,20 +472,26 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def before_map(self, map):
         """
         """
+        #XXX Note: map.connect() accepts arbitrary **kw and *args. That's why
+        #we can add the template for the calls of the controller here
+
         map.connect('/dataset/{id}/dara_xml', 
                 controller="ckanext.dara.controller:DaraController",
                 action='xml',
+                template='package/collection.xml',
                 )
 
         map.connect('/dataset/{id}/resource/{resource_id}/dara_xml',
                 controller="ckanext.dara.controller:DaraController",
                 action='xml',
+                template='package/resource.xml'
                 )
         
 
         map.connect('/dataset/{id}/dara_register',
                 controller="ckanext.dara.controller:DaraController",
                 action="register",
+                template="package/collection.xml",
                 )
 
         map.connect('dara_doi', '/dataset/edit/{id}/dara_doi',

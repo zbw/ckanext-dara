@@ -1,0 +1,107 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>-->
+
+{% import 'macros/dara_metadata.xml' as macros %}
+
+
+{% set auto = h.dara_auto_fields() %}
+{% set pkg = h.dara_pkg() %}
+{% set author = h.dara_first_author() %}
+{% set dara_authors = h.dara_additional_authors() %}
+
+{# {% set debug = h.dara_debug() %} #}
+
+{#
+schema and example files: 
+http://www.da-ra.de/en/technical-information/doi-registration/
+#}
+
+
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="doi:10.4232/10.mdsxsd.3.1">
+
+<!-- this is a Collection -->
+<resourceType>1</resourceType> 
+{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion)}} 
+
+{# 1. title #}
+{{ macros.titles(pkg.title, 'en') }}  
+
+{# 2. other titles #}
+{{ macros.otherTitles('en', pkg.dara_OtherTitle or None, pkg.dara_OtherTitleType or None) }} 
+
+{# TODO 3. collective title  #}
+      
+{# 4. creators  TODO: 4.2 institution #}
+<creators>  
+{{ macros.creator(author.firstname, author.lastname) }}
+{% for dara_author in dara_authors %}
+    {{ macros.creator( dara_author.firstname, dara_author.lastname) }}
+{% endfor %}
+</creators>
+
+{# 8. URL, 9. DOI proposal #}
+{{ macros.doi(auto.UTL, pkg.dara_DOI_Proposal) }}
+
+{# *12.publication date #}
+{{ macros.publicationDate(pkg.dara_PublicationDate) }}
+
+{# *28/29 availability controlled/free #}
+{{ macros.availability(pkg.dara_Availabilitycontrolled, 'en', pkg.dara_Availabilityfree) }}
+
+{# 11. resource language #}
+{{ macros.resourceLanguage(pkg.dara_language or None) }}
+
+{# 13. alternative identifier #}
+{{ macros.alternativeIDs(pkg.dara_AlternativeIdentifier_ID or None, pkg.dara_AlternativeIdentifier_Type or None) }}
+
+{# 17. description #}
+{{ macros.description(pkg.notes) }}
+
+
+
+
+{# XXX controlled not implemented yet; can have multiple entries #}  
+{% if pkg.dara_geographicCoverage or pkg.dara_geographicCoverageFree %}
+<geographicCoverages>
+     
+    <geographicCoverage>
+    {# XXX     <language></language> language not implemented #}
+      {% if pkg.dara_geographicCoverage %}
+        <geographicCoverageControlled>{{ pkg.dara_geographicCoverage }}</geographicCoverageControlled>
+      {% endif %}
+      <freetext>{{ pkg.dara_geographicCoverageFree }}</freetext>
+      {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
+      {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
+    </geographicCoverage>
+
+</geographicCoverages>
+{% endif %}
+
+
+<universes>
+    <universe>
+        <language>en</language> {# XXX not implemented #}
+
+        {# we are using 'None' as fallback since 
+        the schema is not correct here. dara expects content, but schema 
+         does not force it #}
+        <sampled>{{ pkg.dara_universeSampled or None}}</sampled>
+    </universe>
+</universes>
+
+
+<samplings>
+    {# 1 or 2 samplings allowed #}
+    <sampling>
+        <language>en</language> {# XXX not implemented;  #}
+
+                <method>{{ pkg.dara_Sampling }}</method>
+    </sampling>
+</samplings>
+
+
+
+
+</resource>
+
+

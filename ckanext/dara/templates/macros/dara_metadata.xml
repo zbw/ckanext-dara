@@ -1,0 +1,116 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>-->
+
+{# macros for dara metadata XML templates. necessary since collections and
+resources have different variables #}
+
+
+{% macro resourceIdentifier(id, currentVersion) -%}
+<resourceIdentifier>
+    <identifier>{{ id }}</identifier>
+    <currentVersion>{{ currentVersion or '1' }}</currentVersion>
+</resourceIdentifier>
+{%- endmacro %}
+
+
+{# 1. title #}
+{% macro titles(title, language) -%}
+<titles>
+    <title>
+      <titleName>{{ title }}</titleName>
+       <language>{{ language }}</language>
+    </title>
+</titles>
+{%- endmacro %}
+
+{# 2. other titles #}
+{% macro otherTitles(language, otherTitle, otherTitleType) -%}
+{% if otherTitle %}
+<otherTitles>
+    <otherTitle>
+        <language>{{ language }}</language>
+        <titleName>{{ otherTitle }}</titleName>
+        <titleType>{{ otherTitleType }}</titleType>
+    </otherTitle>
+</otherTitles>
+{% endif %}
+{%- endmacro %}
+
+
+{# 3. collective title 
+TODO
+#}
+
+{# 4. creators #}
+{% macro creator(firstname, lastname) -%}
+<creator> 
+    <person>
+        <firstName>{{ firstname }}</firstName>
+        <lastName>{{ lastname }}</lastName>
+    </person>
+</creator>
+{%- endmacro %}
+
+
+{# 8. URL, 9. DOI proposal #}
+{% macro doi(url, doi_proposal) -%}
+<dataURLs>
+    <dataURL>{{ url }}</dataURL>
+</dataURLs>
+<doiProposal>{{ doi_proposal }}</doiProposal>
+{%- endmacro %}
+
+
+{# for now pub date has only year #}
+{% macro publicationDate(year) -%}
+<publicationDate>
+    <year>{{ year }}</year>
+</publicationDate>
+{%- endmacro %}
+
+
+{# *28/29 availability controlled/free #}
+{% macro availability(controlled, lang, free) -%}
+<availability>
+    <availabilityControlled>{{ controlled }}</availabilityControlled>
+    <availabilityFree>
+        <language>{{ lang }}</language>
+        <availabilityText>{{ free }}</availabilityText>
+    </availabilityFree>
+</availability>
+{%- endmacro %}
+
+{# 11. resource language #}
+{% macro resourceLanguage(lang) -%}
+{% if lang %}
+<resourceLanguage>{{ lang }}</resourceLanguage>
+{% endif %}
+{%- endmacro %}
+
+
+{# 13. alternative identifier #}
+{% macro alternativeIDs(id, type) -%}
+{% if id %}
+<alternativeIDs>
+    <alternativeID>
+        <identifier>{{ id }}</identifier>
+        <type>{{ type }}</type>
+    </alternativeID>
+</alternativeIDs>
+{% endif %}
+{%- endmacro %}
+
+{# 17. description #}
+{% macro description(text) -%}
+<descriptions>
+    <description>
+        <language>en</language> {# TODO: offer choices? #}
+        <freetext>{{ text }}</freetext>
+        <type>1</type> {# 1 = 'Abstract'. for now we assume type is alway Abstract
+                        TODO: offer choice #}
+    </description>
+</descriptions>
+{%- endmacro %}
+
+
+
+

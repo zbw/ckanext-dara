@@ -1,5 +1,7 @@
 <!-- <?xml version="1.0" encoding="UTF-8"?>-->
 
+{# dara XML for Datasets (Collections) #}
+
 {% import 'macros/dara_metadata.xml' as macros %}
 
 
@@ -35,12 +37,12 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 <creators>  
 {{ macros.creator(author.firstname, author.lastname) }}
 {% for dara_author in dara_authors %}
-    {{ macros.creator( dara_author.firstname, dara_author.lastname) }}
+    {{ macros.creator(dara_author.firstname, dara_author.lastname) }}
 {% endfor %}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}
-{{ macros.doi(auto.UTL, pkg.dara_DOI_Proposal) }}
+{{ macros.doi(auto.URL, pkg.dara_DOI_Proposal) }}
 
 {# *12.publication date #}
 {{ macros.publicationDate(pkg.dara_PublicationDate) }}
@@ -57,47 +59,26 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# 17. description #}
 {{ macros.description(pkg.notes) }}
 
-
-
-
 {# XXX controlled not implemented yet; can have multiple entries #}  
-{% if pkg.dara_geographicCoverage or pkg.dara_geographicCoverageFree %}
-<geographicCoverages>
-     
-    <geographicCoverage>
-    {# XXX     <language></language> language not implemented #}
-      {% if pkg.dara_geographicCoverage %}
-        <geographicCoverageControlled>{{ pkg.dara_geographicCoverage }}</geographicCoverageControlled>
-      {% endif %}
-      <freetext>{{ pkg.dara_geographicCoverageFree }}</freetext>
-      {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
-      {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
-    </geographicCoverage>
+{#  18. geographic coverage controlled/free #}
+{{ macros.geographicCoverages('en', pkg.dara_geographicCoverage or None, pkg.dara_geographicCoverageFree or None) }}
 
-</geographicCoverages>
-{% endif %}
+{# 19. sampled universe #}
+{#XXX we are using 'None' as fallback since the schema is not correct here.
+dara expects content, but schema does not force it #}
+{{ macros.universes('en', pkg.dara_universeSampled or None) }}
 
+{# 20. sampling #}
+{{ macros.samplings('en', pkg.dara_Sampling or None) }} {#XXX lang not implemented #}
 
-<universes>
-    <universe>
-        <language>en</language> {# XXX not implemented #}
-
-        {# we are using 'None' as fallback since 
-        the schema is not correct here. dara expects content, but schema 
-         does not force it #}
-        <sampled>{{ pkg.dara_universeSampled or None}}</sampled>
-    </universe>
-</universes>
-
-
-<samplings>
-    {# 1 or 2 samplings allowed #}
-    <sampling>
-        <language>en</language> {# XXX not implemented;  #}
-
-                <method>{{ pkg.dara_Sampling }}</method>
-    </sampling>
-</samplings>
+{# 31. relation #}
+{# rel type '10' indicates 'HasPartOf' and references the resource (in our case) #}
+<relations>
+{% for res in pkg.resources %}
+    {% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doi_num %}
+    {{ macros.relation(doi, 10) }}
+{% endfor %}
+</relations>
 
 
 

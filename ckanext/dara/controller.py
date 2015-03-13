@@ -54,6 +54,9 @@ class DaraController(PackageController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
         data_dict = {'id': id}
+    
+        date = datetime.now()
+        datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
 
         try:
             tk.check_access('package_update', context, data_dict)
@@ -61,7 +64,6 @@ class DaraController(PackageController):
             tk.abort(401, 'Unauthorized to manage DOI.')
 
         
-        xml = self.xml(id, template)
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
                 
         #TODO: test for combo testserver=true and DOI=true, which is not
@@ -69,18 +71,47 @@ class DaraController(PackageController):
         test = True
         register = False
         req = tk.request
-        p = req.params
-        if not 'testserver' in p:
+        param = req.params
+        if not 'testserver' in param:
             test = False
-        if 'DOI' in p:
+        if 'DOI' in param:
             register = True
+        
+        #XXX################################################################XXX
+        resources = c.pkg_dict['resources']
+        for res in resources:
+            resource_id = res['id']
+            if resource_id in param:
+                c.resource = tk.get_action('resource_show')(context, {'id':resource_id})
+                xml = self.xml(id, 'package/resource.xml')
+                dara = DaraClient('demo', 'testdemo', xml, test=test,
+                        register=register)
+                dara = dara.calldara()
+                if dara == 201 or 200:
+                    doi  = u'%s.%s' %(c.pkg_dict['dara_DOI_Proposal'], res['dara_doi_num']) 
+                    c.resource['dara_DOI'] = doi
+                    
+                    #import pdb; pdb.set_trace()
+                    #XXX this removes the new key and (sometimes) even removes
+                    #the resource bzw. all resources! 
+                    #BUT only when later also pkg_dict is updated
+                    tk.get_action('resource_update')(context, c.resource)
+                    #pass
 
+                else:
+                    h.flash_error("ERROR! Resource %s could not be registered\
+                        (%s). Dataset has not been registered" %(res['dara_doi_num'], dara))
+                    
+                    tk.redirect_to('dara_doi', id=id)
+        #XXX################################################################XXX
+
+        #resources might have been updated so we must get the new collection package here
+        c.pkg_dict = tk.get_action('package_show')(context, data_dict)
+
+        xml = self.xml(id, template)
         dara = DaraClient('demo', 'testdemo', xml, test=test, register=register)
         dara = dara.calldara()
         
-        date = datetime.now()
-        datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
-
         if dara == 201:
             c.pkg_dict['dara_registered'] = datestring
             
@@ -101,7 +132,8 @@ class DaraController(PackageController):
 
         tk.redirect_to('dara_doi', id=id)
 
-        
+    
+
     
     def doi(self, id):
         """

@@ -70,6 +70,14 @@ def dara_resource():
         resource = c.resource
     return resource
     
+def dara_resource_url(url):
+    """
+    """
+    if 'localhost' in url:
+        url = url.replace('localhost', 'edawax.de')
+    return url
+
+
 
 
 def dara_md():
@@ -161,6 +169,7 @@ def dara_level1_fields():
     return LEVEL_1
 
 def dara_resource_fields():
+    
     return RESOURCE
 
 
@@ -222,6 +231,26 @@ def dara_doi(pkg):
         return pkg[key]
     doi = create_doi(pkg)
     return doi
+
+
+def resource_number():
+    """
+    Creates consecutive number for
+    resource. called when form for resource is edited first time
+    """
+    #XXX better do this with enumerate(resources)?
+    #XXX better don't do any numbers, but create a unique id.
+    #XXX that could have only 4 bits
+    pkg = dara_pkg()
+    resource = c.resource
+    resources = pkg['resources']
+    res_nums = [u'0']
+    for res in resources:
+        res_nums.append(res['dara_doi_num'])
+    res_nums.sort()
+    max_num = int(res_nums[-1])
+    num = unicode(max_num + 1)
+    return num
 
 
 class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -446,6 +475,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_first_author': dara_first_author,
                 'dara_additional_authors': dara_additional_authors,
                 'dara_doi': dara_doi,
+                'dara_resource_number' : resource_number,
+                'dara_resource_url' : dara_resource_url,
                 }
 
     def is_fallback(self):
@@ -506,24 +537,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 )
 
         return map
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

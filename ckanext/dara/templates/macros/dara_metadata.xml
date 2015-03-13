@@ -112,5 +112,51 @@ TODO
 {%- endmacro %}
 
 
+{# 18. geographic coverage controlled/free #}
+{# XXX controlled not implemented yet; can have multiple entries #}  
+{% macro geographicCoverages(language, geocoverage, geocoverage_free) %}
+<geographicCoverages>
+    <geographicCoverage>
+        <language>{{ language }}</language> {#XXX language not implemented yet #}
+      {% if geocoverage %}
+        <geographicCoverageControlled>{{ geocoverage }}</geographicCoverageControlled>
+      {% endif %}
+      <freetext>{{ geocoverage_free }}</freetext>
+      {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
+      {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
+    </geographicCoverage>
+</geographicCoverages>
+{% endmacro %}
 
+{# 19. sampled universe #}
+{% macro universes(lang, sampled) %}
+<universes>
+    <universe>
+        <language>{{ lang }}</language> {# XXX not implemented #}
+        {# we are using 'None' as fallback since 
+        the schema is not correct here. dara expects content, but schema 
+         does not force it #}
+        <sampled>{{ sampled }}</sampled>
+    </universe>
+</universes>
+{% endmacro %}
 
+{# 20. sampling #}
+{% macro samplings(lang, method) %}
+<samplings>
+    {# 1 or 2 samplings allowed #}
+    <sampling>
+        <language>{{ lang }}</language>
+        <method>{{ method }}</method>
+    </sampling>
+</samplings>
+{% endmacro %}
+
+{# 31. relation #}
+{% macro relation(identifier, relation_type) %}
+<relation>
+    <identifier>{{ identifier }}</identifier>
+    <identifierType>DOI</identifierType> {# always DOI #}
+    <relationType>{{ relation_type }}</relationType>
+</relation>
+{% endmacro %}

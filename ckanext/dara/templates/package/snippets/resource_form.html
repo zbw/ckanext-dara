@@ -7,6 +7,9 @@
     {% resource 'dara/jquery-ui.js' %}
 
     {% set fields = h.dara_resource_fields() %}
+    {% set res = h.dara_resource() %}
+
+
     <div id="dara_Resource">
     
              <h4 class="dara_form_header dara_form_collapse">Additional Info
@@ -16,6 +19,9 @@
 <div class="todo">
             not clear if we'll need more fields here</div>
         </p>
+        <input type="hidden" value="{{ res.dara_doi_num or
+        h.dara_resource_number() }}" name="dara_doi_num" />
+        <input type="hidden" value="{{ res.dara_DOI }}" name="dara_DOI" />
 
             {{ dara_form.md(fields, h) }}
         </div>

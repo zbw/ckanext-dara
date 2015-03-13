@@ -580,6 +580,12 @@ class DaraFields(object):
            #    )
            #),
             
+            DaraField('currentVersion',
+                Input(
+                    name="Version",
+                    placeholder="eg. '1' or '2.2'"
+                    )
+                ),
                         
             DaraField('DataSet_unitType',
                 Input(
@@ -638,6 +644,8 @@ class DaraFields(object):
                 placeholder='eg. MD5'
                 )
             ),
+
+            
             
         ]
 
@@ -666,8 +674,9 @@ class DaraFields(object):
         if 'localhost' in site_url:
             site_url = "http://edawax.de"
         
-        ckan_url = tk.url_for(controller='package', action='read', id=pkg['name'])
-        dara_url = site_url + ckan_url
+        pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+        dara_url = site_url + pkg_url
+        
 
         auto['URL'] = dara_url
         auto['ResourceType'] = resource_type

@@ -29,7 +29,11 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {{ macros.titles(pkg.title, 'en') }}  
 
 {# 2. other titles #}
-{{ macros.otherTitles('en', pkg.dara_OtherTitle or None, pkg.dara_OtherTitleType or None) }} 
+{{ macros.otherTitles(
+    'en', 
+    pkg.dara_OtherTitle or None, 
+    pkg.dara_OtherTitleType or None) 
+}} 
 
 {# TODO 3. collective title  #}
       
@@ -47,21 +51,34 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# *12.publication date #}
 {{ macros.publicationDate(pkg.dara_PublicationDate) }}
 
-{# *28/29 availability controlled/free #}
-{{ macros.availability(pkg.dara_Availabilitycontrolled, 'en', pkg.dara_Availabilityfree) }}
+{# *28/29 availability controlled/free 
+default is '1' (Download)
+#}
+{{ macros.availability(
+    pkg.dara_Availabilitycontrolled or '1', 
+    'en', 
+    pkg.dara_Availabilityfree) 
+}}
 
 {# 11. resource language #}
 {{ macros.resourceLanguage(pkg.dara_language or None) }}
 
 {# 13. alternative identifier #}
-{{ macros.alternativeIDs(pkg.dara_AlternativeIdentifier_ID or None, pkg.dara_AlternativeIdentifier_Type or None) }}
+{{ macros.alternativeIDs(
+    pkg.dara_AlternativeIdentifier_ID or None, 
+    pkg.dara_AlternativeIdentifier_Type or None) 
+}}
 
 {# 17. description #}
 {{ macros.description(pkg.notes) }}
 
 {# XXX controlled not implemented yet; can have multiple entries #}  
 {#  18. geographic coverage controlled/free #}
-{{ macros.geographicCoverages('en', pkg.dara_geographicCoverage or None, pkg.dara_geographicCoverageFree or None) }}
+{{ macros.geographicCoverages(
+    'en', 
+    pkg.dara_geographicCoverage or None, 
+    pkg.dara_geographicCoverageFree or None) 
+}}
 
 {# 19. sampled universe #}
 {#XXX we are using 'None' as fallback since the schema is not correct here.
@@ -72,11 +89,24 @@ dara expects content, but schema does not force it #}
 {{ macros.samplings('en', pkg.dara_Sampling or None) }} {#XXX lang not implemented #}
 
 {# 31. relation #}
-{# rel type '10' indicates 'HasPartOf' and references the resource (in our case) #}
+{# rel type '10' indicates 'HasPartOf' and references the resource (in our
+case) #}
 <relations>
 {% for res in pkg.resources %}
-    {% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doi_num %}
-    {{ macros.relation(doi, 10) }}
+{#    {% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doi_num %} #}
+    
+    {# this is possible since ressources are registered before the
+    collection. So if we have already a DOI we can use it here, otherwise we
+    use the resource url. Either way, the relation is *always* registered #}
+    {% if res.dara_DOI %}
+        {%set identifier_type = 'DOI' %}
+    {% else %}
+        {% set identifier_type = 'URL' %}
+    {% endif %}
+    {% set identifier = res.dara_DOI or h.dara_resource_url(res.url) %}
+
+    {# '10' indicates 'HasPart' #}
+    {{ macros.relation(identifier_type, identifier, 10) }}
 {% endfor %}
 </relations>
 

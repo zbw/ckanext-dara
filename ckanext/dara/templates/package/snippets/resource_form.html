@@ -19,9 +19,11 @@
 <div class="todo">
             not clear if we'll need more fields here</div>
         </p>
-        <input type="hidden" value="{{ res.dara_doi_num or
-        h.dara_resource_number() }}" name="dara_doi_num" />
-        <input type="hidden" value="{{ res.dara_DOI }}" name="dara_DOI" />
+       <input type="hidden" value="{{ res.dara_doiid or
+                            h.dara_resource_doiid() }}"
+                    name="dara_doiid" />
+        <input type="hidden" value="{{ res.dara_DOI }}" 
+                    name="dara_DOI" />
 
             {{ dara_form.md(fields, h) }}
         </div>

@@ -3,14 +3,31 @@
 {#{% set debug = h.dara_debug() %} #}
 {# {% set pkg = c.pkg_dict %} #}
 
+{% set isSysadmin = h.check_access('sysadmin', context) %}
 {% set DOI = pkg['dara_DOI'] %} 
-{#{% set DOI = h.dara_doi(pkg) %} #}
+{% set registered = pkg['dara_registered'] %}
+{% set updated = pkg['dara_updated'] %}
 
+{# defaults = nothing registered #}
+{% set submit = 'Register' %}
+{% set register_title = "Register at da|ra" %}
+{% set register_background = "darkred" %}
+{% set register_text = "This dataset has not been registered and has no DOI." %}
 
-{% if not pkg['dara_registered'] %}
-    {% set submit = 'Register' %}
-{% else %}
+{# registered #}
+{% if registered %}
     {% set submit = 'Update' %}
+    {% set register_title = "Registered at da|ra" %}
+    {% set register_background = "darkgreen" %}
+    {% set register_text = "This dataset has been registered, but has not
+    recieved a DOI yet. You can either check to recieve a DOI, just update the
+    metadata or register further resources below." %}
+{% endif %}
+
+{% if DOI %}
+    {% set register_text = "This dataset has already been registered and
+    recieved a DOI. You can, however, update the metadata at da|ra or register
+    further resources below." %}
 {% endif %}
 
 
@@ -18,26 +35,35 @@
 {{ super() }}
 
 
-<h1>DOI Information and Registration</h1>
+<h1>DOI Registration</h1>
     
 <form action="/dataset/{{pkg['id']}}/dara_register" method='post'>
 
 <div id="register" 
-    style="float:right; text-align:center; background-color: lightyellow;
-        border:1px solid grey; margin:10px 0px 0px 10px;">
+    style="float:right; text-align:center; width:200px;
+        margin:10px 0px 0px 10px; margin-top:-60px;">
 
     
-     <p style="background-color:#2d2d2d; width:100%; font-size:125%;
-     font-weight:normal; color:white; ">Register at da|ra</p>
-     <div id="doi_form" style=" padding:10px 10px 10px 10px;">
-    
+    <p style="background-color:{{ register_background }}; width:100%; font-size:125%;
+    font-weight:normal; color:white; ">{{ register_title }}</p>
+     
+    <div id="doi_form" style=" padding:0px 10px 10px 10px;">
+        
+        <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>  
+        
+        {% if isSysadmin %} 
         <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
         />Test
+        {% endif %}
          
+        {% if not DOI %}
         <input type="checkbox" name="DOI" value="true"
-        style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI <br /><br />
+        style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
+        {% endif %}
         
+        <p style="margin-top:12px;">
         <input class="btn btn-primary" type="submit" value="{{ submit }}" />
+        </p>
     
 
     </div>
@@ -46,40 +72,49 @@
 <div id="dataset">
 <h2>Dataset</h2>
     <table>
+    {% if DOI %}
         <tr>
-        <td>DOI: </td>
-
-        <td>{% if DOI %}
-            {{ DOI }}
-      {% else %}<span style="color:darkred">No DOI yet</span>
-    {% endif %}
-        </td>
+            <td>DOI: </td>
+            <td><span style="font-size:125%; color: darkgreen">{{ DOI }}</span</td>
         </tr>
+    {% else %}
         <tr>
-            <td>Registered: </td>
-            <td>{{ pkg['dara_registered'] }}</td>
-        </tr>
-        <tr>
-            <td>Updated: </td>
-            <td>{{ pkg['dara_updated'] }}</td>
-        </tr>
-
-        <tr>
-
             <td>DOI Proposal: </td>
             <td><span style="color:darkred"> {{ pkg['dara_DOI_Proposal']
                     }}</span></td>
         </tr>
-    </table>
+    {% endif %}
+ 
+    {% if registered %} 
+    <tr>
+        <td>Registered: </td>
+        <td>{{ registered}}</td>
+    </tr>
+    {% endif %}
+
+    {% if updated %}
+    <tr>
+        <td>Updated: </td>
+        <td>{{ updated }}</td>
+    </tr>
+    {% endif %}
+    
+        </table>
         
 
-    <p style="margin-top:24px;"><a href="/dataset/{{pkg['id']}}/dara_xml">View da|ra metadata
-        XML</a></p>
+    {% if isSysadmin %}
+        <p style="margin-top:12px;"><a href="/dataset/{{pkg['id']}}/dara_xml">XML</a></p>
+    {% endif %}
        
 </div>
     
-<div id="resources">  
+<div id="resources" style="margin-top:36px;">  
   <h2>Resources</h2>
+  <p class="description">By default, single resources do not get a DOI, only the dataset as a
+  collection. Here you can, however, select resources that you would like to
+  get their own DOI. Please avoid to assign DOIs to non-essential files, like
+  Readme.txt or similar.</p>
+
     {% set resources = pkg['resources'] %}
     
     {% if resources %}
@@ -95,23 +130,27 @@
 #}
 
 
-
 <li class="resource-item" data-id="{{ res.id }}">
   
   <div style="float:right; margin-left:20px; text-align:right;" >
-      {#TODO make this conditional: don't show if resource has already a DOI #}
       <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
-      value="register" /> DOI 
+      value="register" /> 
+      {% if not res['dara_DOI'] %}
+      Get DOI 
+      {% else %}
+      Update
+      {% endif %}
       
-      {#XXX use this span to make XML conditional for admin user #}
+      {% if isSysadmin %}
       <span style="margin-left:12px;">
           <a href="{{ url }}/dara_xml">XML</a></span>
+      {% endif %}
       
       <p class="description">
       {% if res['dara_DOI'] %}
-      <span style="color:darkgreen">DOI: {{ res['dara_DOI'] }}</span>
-      {% else %}
-      DOI Proposal: {{ pkg.dara_DOI_Proposal }}.{{ res['dara_doi_num'] }}
+      DOI: <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
+      {% elif isSysadmin %}
+      DOI Proposal: {{ pkg.dara_DOI_Proposal }}.{{ res['dara_doiid'] }}
       {% endif %}
       </p>
 

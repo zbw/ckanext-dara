@@ -19,6 +19,7 @@ from hashids import Hashids
 import random
 from StringIO import StringIO
 from datetime import datetime
+import string
 
 #XXX OrderedDict is not available in 2.6, which is the Python Version on
 #CentOS...
@@ -68,16 +69,17 @@ def dara_resource():
         resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
     else:
         resource = c.resource
+    #import pdb; pdb.set_trace()
     return resource
-    
+ 
+
 def dara_resource_url(url):
     """
+    for development. dara does not accept localhost urls
     """
     if 'localhost' in url:
         url = url.replace('localhost', 'edawax.de')
     return url
-
-
 
 
 def dara_md():
@@ -190,8 +192,7 @@ def create_doi(pkg_dict):
     """
     
     prefix = u"10.2345" #XXX fake! change this. could be config
-    hashids = Hashids()
-    
+        
     #make sure we ALWAYS get the org id
     try:
         group = pkg_dict['group_id']
@@ -201,19 +202,12 @@ def create_doi(pkg_dict):
     except:
         journal = 'edawax'  #fallback
     
+    #building a unique DOI id
     now = datetime.now()
-       
-   #ckan won't store datetime.object, so we must build a stupid #string 
-    now_string = now.strftime("%Y%m%d%H%M%S")
-       
-    #XXX only use random int when doi is created and stored directly after
-    #package creation
-    #numrange = range(0,100) #twodigit
-    #rd_num = random.choice(numrange)
-    #date  = datestring + str(rd_num)
-    
-    date = int(now_string)
-    num = hashids.encrypt(date)
+    salt = now.strftime("%Y.%m.%d - %H:%M:%S:%f")    
+    now_string = now.strftime("%y%j%H%M")
+    hashids = Hashids(salt=salt)
+    num = hashids.encode(int(now_string))
 
     doi = prefix + '/' + journal + '.' + num
 
@@ -233,25 +227,16 @@ def dara_doi(pkg):
     return doi
 
 
-def resource_number():
+def dara_resource_doiid():
     """
-    Creates consecutive number for
-    resource. called when form for resource is edited first time
+    Called when form for resource is edited first time
     """
-    #XXX better do this with enumerate(resources)?
-    #XXX better don't do any numbers, but create a unique id.
-    #XXX that could have only 4 bits
-    pkg = dara_pkg()
-    resource = c.resource
-    resources = pkg['resources']
-    res_nums = [u'0']
-    for res in resources:
-        res_nums.append(res['dara_doi_num'])
-    res_nums.sort()
-    max_num = int(res_nums[-1])
-    num = unicode(max_num + 1)
+    now = datetime.now()
+    now_string = now.strftime("%y%j")
+    salt = now.strftime("%Y.%m.%d - %H:%M:%S:%f")
+    hashids = Hashids(salt=salt)
+    num = hashids.encode(int(now_string))
     return num
-
 
 class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     """
@@ -475,7 +460,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_first_author': dara_first_author,
                 'dara_additional_authors': dara_additional_authors,
                 'dara_doi': dara_doi,
-                'dara_resource_number' : resource_number,
+                'dara_resource_doiid' : dara_resource_doiid,
                 'dara_resource_url' : dara_resource_url,
                 }
 
@@ -531,10 +516,11 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ckan_icon="exchange"
                 )
 
-        map.connect('/dataset/{id}/doi_proposal',
-                controller="ckanext.dara.controller:DaraController",
-                action="doi_proposal"
-                )
+        #XXX obsolete 
+       #map.connect('/dataset/{id}/doi_proposal',
+       #        controller="ckanext.dara.controller:DaraController",
+       #        action="doi_proposal"
+       #        )
 
         return map
 

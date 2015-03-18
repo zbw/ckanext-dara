@@ -104,7 +104,7 @@ TODO
 <descriptions>
     <description>
         <language>en</language> {# TODO: offer choices? #}
-        <freetext>{{ text }}</freetext>
+        <freetext>{{ text or None }}</freetext>
         <type>1</type> {# 1 = 'Abstract'. for now we assume type is alway Abstract
                         TODO: offer choice #}
     </description>
@@ -153,10 +153,10 @@ TODO
 {% endmacro %}
 
 {# 31. relation #}
-{% macro relation(identifier, relation_type) %}
+{% macro relation(identifier_type, identifier, relation_type) %}
 <relation>
     <identifier>{{ identifier }}</identifier>
-    <identifierType>DOI</identifierType> {# always DOI #}
+    <identifierType>{{ identifier_type }}</identifierType>
     <relationType>{{ relation_type }}</relationType>
 </relation>
 {% endmacro %}

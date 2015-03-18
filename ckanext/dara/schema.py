@@ -89,7 +89,13 @@ class DaraFields(object):
         hidden fields, not mutable by user
         """
 
-        fields = ['DOI', 'DOI_Proposal', 'created', 'registered', 'updated']
+        fields = [
+                'DOI', 
+                'DOI_Proposal', 
+                'created', 
+                'registered', 
+                'updated',
+                ]
         return fields
 
 
@@ -680,6 +686,7 @@ class DaraFields(object):
 
         auto['URL'] = dara_url
         auto['ResourceType'] = resource_type
+        auto['dara_number_resources'] = 0
 
         return auto
 

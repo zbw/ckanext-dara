@@ -91,6 +91,7 @@ dara expects content, but schema does not force it #}
 {# 31. relation #}
 {# rel type '10' indicates 'HasPartOf' and references the resource (in our
 case) #}
+{% if pkg.resources %}
 <relations>
 {% for res in pkg.resources %}
 {#    {% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doi_num %} #}
@@ -109,6 +110,7 @@ case) #}
     {{ macros.relation(identifier_type, identifier, 10) }}
 {% endfor %}
 </relations>
+{% endif %}
 
 
 

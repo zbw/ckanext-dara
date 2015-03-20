@@ -686,7 +686,6 @@ class DaraFields(object):
 
         auto['URL'] = dara_url
         auto['ResourceType'] = resource_type
-        auto['dara_number_resources'] = 0
 
         return auto
 

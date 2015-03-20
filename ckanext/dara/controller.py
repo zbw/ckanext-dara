@@ -68,7 +68,6 @@ class DaraController(PackageController):
                 
         # test for parameters. For testserver DOI registration is not possible,
         # so we fake it (test_register)
-        
         # defaults: register at 'real' server and get a DOI
         test = False
         register = True

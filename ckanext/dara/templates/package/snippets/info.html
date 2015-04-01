@@ -20,11 +20,11 @@
   
    {% elif DOI and can_edit %}
   <a style="color:darkgreen"
-      href="{{ url }}">doi:{{ DOI }}</a>
+     href="{{ url }}">doi:<br />{{ DOI }}</a>
    {% elif DOI and not can_edit %}
    <span style="color:darkgreen; border-bottom:1px dotted darkgreen;
        border-top:1px dotted darkgreen; padding:6px 0px 6px 0px;"
-       ">doi:{{ DOI }}</span>
+       ">doi:<br />{{ DOI }}</span>
   {% endif %}
 </div>
 {# for now noone uses follow function in dara context 

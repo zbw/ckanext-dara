@@ -11,7 +11,7 @@
         
     <div class="nums" style="border:none;">
 <div id="DOI" style="
-    text-align:center;">
+    text-align:center; font-size:0.75em;">
     {% set url = h.url_for(controller='ckanext.dara.controller:DaraController', action='doi',id=pkg.name) %}
       
   {% if not DOI and can_edit %}
@@ -20,11 +20,11 @@
   
    {% elif DOI and can_edit %}
   <a style="color:darkgreen"
-     href="{{ url }}">doi:<br />{{ DOI }}</a>
+     href="{{ url }}">doi:{{ DOI }}</a>
    {% elif DOI and not can_edit %}
    <span style="color:darkgreen; border-bottom:1px dotted darkgreen;
        border-top:1px dotted darkgreen; padding:6px 0px 6px 0px;"
-       ">doi:<br />{{ DOI }}</span>
+       ">doi:{{ DOI }}</span>
   {% endif %}
 </div>
 {# for now noone uses follow function in dara context 

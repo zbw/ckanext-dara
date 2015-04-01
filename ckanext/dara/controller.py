@@ -28,17 +28,61 @@ class DaraController(PackageController):
 
     def __init__(self):
         self.schema = schema
+        ## using tk.c as context does not work here
+    
+    
+    def __context(self):
+        return {'model': model, 'session': model.Session,
+            'user': c.user or c.author, 'for_view': True,
+            'auth_user_obj': c.userobj}
+    
+    def __check_access(self, id):
+        context = self.__context()
+        try:
+            tk.check_access('package_update', context, {'id': id})
+        except NotAuthorized:
+            tk.abort(401, 'Unauthorized to manage DOI.')
+    
+    def __params(self):
+        """
+        test for parameters. For testserver DOI registration is not possible,
+        so we fake it (test_register)
+        defaults: register at 'real' server and get a DOI
+        """
+
+        params = tk.request.params
         
+        #default
+        test = False
+        register = True
+        test_register = False
         
+        if 'testserver' in params:
+            test = True
+        if not 'DOI' in params:
+            register = False
+        if test and register:
+            register = False
+            test_register = True
+
+        return {'test':test, 'register':register,
+                'test_register':test_register}
+
+
     def xml(self, id, template):
         """
-        returning dara xml
+        returning valid dara XML
         """
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
         xml_string = tk.render(template)
 
         #validate before show. Errors are caught by lxml
-        self._validate(xml_string)
+        xml = StringIO(xml_string)
+        xsd = StringIO(self.schema)
+        xmlschema_doc = etree.parse(xsd)
+        xmlschema = etree.XMLSchema(xmlschema_doc)
+        doc = etree.parse(xml)
+        xmlschema.assertValid(doc)
 
         return xml_string
     
@@ -49,85 +93,44 @@ class DaraController(PackageController):
         """
         #XXX darapi is too small, should it be integrated here?
         
-        ## using tk.c as context does not work here
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+        self.__check_access(id)
+        context = self.__context()
         data_dict = {'id': id}
-    
+                
         date = datetime.now()
         datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
-
-        try:
-            tk.check_access('package_update', context, data_dict)
-        except NotAuthorized:
-            tk.abort(401, 'Unauthorized to manage DOI.')
-
-        
+                
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
                 
-        # test for parameters. For testserver DOI registration is not possible,
-        # so we fake it (test_register)
-        # defaults: register at 'real' server and get a DOI
-        test = False
-        register = True
-        test_register = False
-        
-        req = tk.request
-        param = req.params
-        
-        if 'testserver' in param:
-            test = True
-        if not 'DOI' in param:
-            register = False
-        if test and register:
-            register = False
-            test_register = True
-        
-
-        #XXX################################################################XXX
+        # first register resources
         resources = c.pkg_dict['resources']
-        for res in resources:
-            resource_id = res['id']
-            if resource_id in param:
-                c.resource = tk.get_action('resource_show')(context, {'id':resource_id})
-                xml = self.xml(id, 'package/resource.xml')
-                dara = DaraClient('demo', 'testdemo', xml, test=test,
-                        register=register)
-                dara = dara.calldara()
-                if dara == 201 or 200:
-                    doi  = u'%s.%s' %(c.pkg_dict['dara_DOI_Proposal'], res['dara_doiid']) 
-                    c.resource['dara_DOI'] = doi
-                    tk.get_action('resource_update')(context, c.resource)
-                else:
-                    h.flash_error("ERROR! Resource could not be registered\
-                        (%s). Dataset has not been registered" %dara)
-                    
-                    tk.redirect_to('dara_doi', id=id)
-        #XXX################################################################XXX
+        resources_to_be_registered = filter(lambda res: res['id'] in tk.request.params,
+                resources)
+        for res in resources_to_be_registered:
+            self.register_resource(id, res)
 
-        #resources might have been updated so we must get a new collection package here
+        #resources might have been updated so we must get the new package
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
         
         xml = self.xml(id, template)
-        dara = DaraClient('demo', 'testdemo', xml, test=test, register=register)
+        params = self.__params()
+        dara = DaraClient('demo', 'testdemo', xml, test=params['test'],
+                register=params['register'])
         dara = dara.calldara()
         
-        if dara == 201:
-            c.pkg_dict['dara_registered'] = datestring
-            
-            #Copy proposal to DOI
-            #XXX we should eventually test if this is really true. Could perhaps be
-            #done with getting and parsing the XML file generated by da|ra
-            if register or test_register:
+        def store():
+            if params['register'] or params['test_register']:
+                #XXX in case of update we might not need to store the doi...?
                 c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
             tk.get_action('package_update')(context, c.pkg_dict)
+
+        if dara == 201:
+            c.pkg_dict['dara_registered'] = datestring
+            store()
             h.flash_success("Dataset successfully registered.")
         elif dara == 200:
             c.pkg_dict['dara_updated'] = datestring
-            if register or test_register:
-                c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
-            tk.get_action('package_update')(context, c.pkg_dict)
+            store()
             h.flash_success("Dataset successfully updated.")
         else:
             h.flash_error("ERROR! Sorry, dataset has not been registered or "
@@ -135,30 +138,38 @@ class DaraController(PackageController):
 
         tk.redirect_to('dara_doi', id=id)
 
-    
-    
+
+    def register_resource(self, id, resource):
+        """
+        separate resource registration
+        """
+        self.__check_access(id)
+        context = self.__context()
+        resource_id = resource['id']
+        params = self.__params()
+        c.resource = tk.get_action('resource_show')(context, {'id':resource_id})
+        xml = self.xml(id, 'package/resource.xml')
+        dara = DaraClient('demo', 'testdemo', xml, test=params['test'],
+                register=params['register'])
+        dara = dara.calldara()
+        if dara == 201 or 200:
+            doi  = u'%s.%s' %(c.pkg_dict['dara_DOI_Proposal'], resource['dara_doiid']) 
+            c.resource['dara_DOI'] = doi
+            tk.get_action('resource_update')(context, c.resource)
+        else:
+            h.flash_error("ERROR! Resource %s could not be registered\
+                (%s). Dataset has not been registered" %(resource_id, dara))
+            tk.redirect_to('dara_doi', id=id)
+
+
     def doi(self, id):
         """
         DOI manager page
         """
-
-        #XXX docs say that context is inherent. However, we do get wrong
-        #breadcrumbs when not getting context here explicitly. Getting it with
-        #toolkit.c throws error 'str is not callable'
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+        self.__check_access(id)
+        context = self.__context()
         data_dict = {'id': id}
-
-        # Package needs to have a organization group in the call to
-        # check_access and also to save it
         
-        try:
-            tk.check_access('package_update', context, data_dict)
-        except NotAuthorized:
-            tk.abort(401, 'Unauthorized to manage DOI.')
-
-
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
         c.pkg = context['package']
             
@@ -167,67 +178,6 @@ class DaraController(PackageController):
 
         return page
     
-    
-    #XXX obsolete
-   #def _create_doi(self, pkg_dict):
-   #    """
-   #    this should go in a function directly after package is created. 
-   #    DOI would than be stored in pkg_dict and not created here. That way we 
-   #    could use random ints. For now it only takes the pkg creation date and
-   #    creates a unique hash of it. If there are more than one uploads in one second
-   #    and for the same journal/organization we'd have a collision. This case
-   #    might be rare ;-)
-   #    """
-   #    #XXX to be removed! deprecated. DOIs should be in pkg_dict
-
-   #    prefix = u"10.2345" #XXX fake! change this. could be config
-   #    
-   #    org = pkg_dict['organization']
-   #    journal = org['name']
-   #    hashids = Hashids()
-   #    created = pkg_dict['metadata_created'] #date string
-   #    dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f") #object
-   #    datestring = dt.strftime("%Y%m%d%H%M%S")
-   #    
-   #    date = int(datestring)
-   #    num = hashids.encrypt(date)
-
-   #    doi = prefix + '/' + journal + '.' + num
-
-   #    return doi
-   #
-    
-    #for old datasets or such where doi proposals are not saved for whatever
-    #reason
-    #XXX obsolete!!
-   #def doi_proposal(self, id):
-   #    
-   #    try:
-   #        tk.check_access('package_create', context)
-   #    except NotAuthorized:
-   #        tk.abort(401, 'Unauthorized to manage DOI')
-
-   #    pkg = tk.get_action('package_show')(None, {'id': id})
-   #    key = 'dara_DOI_Proposal'
-   #    if key in pkg and pkg[key]:
-   #        return "Has already DOI: %s" %pkg[key]
-   #    doi = self._create_doi(pkg)
-   #    tk.get_action('package_update')(None, {'id': id, 'dara_DOI_Proposal': doi})
-   #    return 'Done!'
-        
-    
-    def _validate(self, xmlstring):
-        """
-        validate against dara schema. errors are thrown by lxml
-        """
-        xml = StringIO(xmlstring)
-        xsd = StringIO(self.schema)
-        xmlschema_doc = etree.parse(xsd)
-        xmlschema = etree.XMLSchema(xmlschema_doc)
-        doc = etree.parse(xml)
-        xmlschema.assertValid(doc)
-    
-       
 
 
 

@@ -708,12 +708,9 @@ class DaraFields(object):
     def __transform(self, fields):
         """
         """
-        f = []
-        for field in fields:
-            widget = field.widget
-            id = field.id
-            ft = (id, widget.__dict__)
-            f.append(ft)
+        
+        f = map(lambda field: (field.id, field.widget.__dict__), fields)
+
         return f
 
     

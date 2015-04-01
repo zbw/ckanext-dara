@@ -100,16 +100,13 @@ def dara_authors():
     return all author fields
     """
     pkg = dara_pkg()
-    authors = []
     try:
-        for k in pkg.keys():
-            if 'dara_author' in k:
-                authors.append(pkg[k])
-
-    #XXX this can only be a temporary workaround! XXX
-    #when deleting a field in the form, the author extras is not removed, but
-    #just empty. So we have to filter those empty strings out of here
-    #return filter(None, authors)
+        ## list comprehension. one-liner  but with statements
+        #authors = [pkg[k] for k in pkg.keys() if 'dara_author' in k]
+        
+        #more functional
+        author_keys = filter(lambda k: 'dara_author' in k, pkg.keys())
+        authors = map(lambda key: pkg[key], author_keys)
         return authors
     except:
         return None
@@ -127,10 +124,7 @@ def dara_additional_authors():
     workaround
     """
     authors = dara_authors()
-    dalist = []
-    for author in authors:
-        da = utils.author_name_split(author)
-        dalist.append(da)
+    dalist = map(lambda author: utils.author_name_split(author), authors)
     return dalist
 
 
@@ -149,29 +143,20 @@ def dara_publication_fields():
     """
     returns fields for related publications forms
     """
-    
-    fields = PUBLICATION
 
-    return fields
+    return PUBLICATION
 
 
 def dara_level3_fields():
-    """
-    """
-    fields = LEVEL_3
-    return fields
+    return LEVEL_3
 
 def dara_level2_fields():
-    """
-    """
-    fields = LEVEL_2
-    return fields
+    return LEVEL_2
 
 def dara_level1_fields():
     return LEVEL_1
 
 def dara_resource_fields():
-    
     return RESOURCE
 
 

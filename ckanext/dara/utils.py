@@ -1,4 +1,15 @@
-#XXX add header here
+from functools import wraps
+
+
+def memoize(func):
+    cache = {}
+    @wraps(func)
+    def wrap(*args):
+        if args not in cache:
+            cache[args] = func(*args)
+        return cache[args]
+    return wrap
+
 
 def author_name_split(name):
     """
@@ -7,7 +18,6 @@ def author_name_split(name):
     we simply assume (for now) that name is given as FirstName (Middlename)
     LastName. It's ugly...
     """
-
 
     #XXX leaving middlename out for now
     all = name.split()
@@ -20,8 +30,5 @@ def author_name_split(name):
             firstname = firstname,
             lastname = lastname
             )
-
-
-
 
 

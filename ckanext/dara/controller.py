@@ -14,9 +14,17 @@ from datetime import datetime
 from hashids import Hashids
 import random
 from ckanext.dara.dara_schema_3_1 import schema
+from pylons import config
+from ckanext.dara.utils import memoize
+
 
 NotAuthorized = tk.NotAuthorized
 
+class DaraError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return repr(self.msg)
 
 
 class DaraController(PackageController):
@@ -25,37 +33,40 @@ class DaraController(PackageController):
     it at da|ra
     """
     
+    #XXX darapi is too small, should it be integrated here?
 
     def __init__(self):
         self.schema = schema
-        ## using tk.c as context does not work here
+        self.demo_user = config.get('ckanext.dara.demo.user', False)
+        self.demo_password = config.get('ckanext.dara.demo.password', False)
+        self.user = config.get('ckanext.dara.user', False)
+        self.password = config.get('ckanext.dara.password', False)
     
-    
-    def __context(self):
+    def _context(self):
         return {'model': model, 'session': model.Session,
             'user': c.user or c.author, 'for_view': True,
             'auth_user_obj': c.userobj}
     
-    def __check_access(self, id):
-        context = self.__context()
+    def _check_access(self, id):
+        context = self._context()
         try:
             tk.check_access('package_update', context, {'id': id})
         except NotAuthorized:
             tk.abort(401, 'Unauthorized to manage DOI.')
     
-    def __params(self):
+    @memoize
+    def _params(self):
         """
         test for parameters. For testserver DOI registration is not possible,
-        so we fake it (test_register)
+        so we fake it (test_register).
         defaults: register at 'real' server and get a DOI
         """
-
-        params = tk.request.params
-        
         #default
         test = False
         register = True
         test_register = False
+        
+        params = tk.request.params
         
         if 'testserver' in params:
             test = True
@@ -67,8 +78,34 @@ class DaraController(PackageController):
 
         return {'test':test, 'register':register,
                 'test_register':test_register}
+    
+    
+    def _check_credentials(self):
+        params = self._params()
+        if params['test']:
+            if not (self.demo_user and self.demo_password):
+                raise DaraError("User and/or password for da|ra demo server not set in\
+                        CKAN config")
+        else:                
+            if not (self.user and self.password):
+                raise DaraError("User and/or password for da|ra server not set\
+                        in CKAN config")
 
+    def _user(self):
+        params = self._params()
+        user = self.user
+        if params['test']:
+            user = self.demo_user
+        return user
+    
+    def _password(self):
+        params = self._params()
+        password = self.password
+        if params['test']:
+            password = self.demo_password
+        return password
 
+    
     def xml(self, id, template):
         """
         returning valid dara XML
@@ -85,38 +122,42 @@ class DaraController(PackageController):
         xmlschema.assertValid(doc)
 
         return xml_string
-    
-    
+   
     def register(self, id, template):
         """
         register at da|ra
         """
-        #XXX darapi is too small, should it be integrated here?
-        
-        self.__check_access(id)
-        context = self.__context()
+               
+        params = self._params()
+        self._check_access(id)
+        self._check_credentials()
+        context = self._context()
         data_dict = {'id': id}
-                
         date = datetime.now()
         datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
-                
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
                 
         # first register resources
         resources = c.pkg_dict['resources']
         resources_to_be_registered = filter(lambda res: res['id'] in tk.request.params,
-                resources)
+                                        resources)
         for res in resources_to_be_registered:
             self.register_resource(id, res)
 
         #resources might have been updated so we must get the new package
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
         
+        #getting valid XML
         xml = self.xml(id, template)
-        params = self.__params()
-        dara = DaraClient('demo', 'testdemo', xml, test=params['test'],
+
+        #call dara
+        client = DaraClient(
+                self._user(), 
+                self._password(), 
+                xml,
+                test=params['test'],
                 register=params['register'])
-        dara = dara.calldara()
+        dara = client.call()
         
         def store():
             if params['register'] or params['test_register']:
@@ -143,15 +184,15 @@ class DaraController(PackageController):
         """
         separate resource registration
         """
-        self.__check_access(id)
-        context = self.__context()
+        self._check_access(id)
+        context = self._context()
         resource_id = resource['id']
-        params = self.__params()
+        params = self._params()
         c.resource = tk.get_action('resource_show')(context, {'id':resource_id})
         xml = self.xml(id, 'package/resource.xml')
-        dara = DaraClient('demo', 'testdemo', xml, test=params['test'],
+        client = DaraClient(self._user, self._password, xml, test=params['test'],
                 register=params['register'])
-        dara = dara.calldara()
+        dara = client.call()
         if dara == 201 or 200:
             doi  = u'%s.%s' %(c.pkg_dict['dara_DOI_Proposal'], resource['dara_doiid']) 
             c.resource['dara_DOI'] = doi
@@ -166,8 +207,8 @@ class DaraController(PackageController):
         """
         DOI manager page
         """
-        self.__check_access(id)
-        context = self.__context()
+        self._check_access(id)
+        context = self._context()
         data_dict = {'id': id}
         
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
@@ -178,6 +219,5 @@ class DaraController(PackageController):
 
         return page
     
-
 
 

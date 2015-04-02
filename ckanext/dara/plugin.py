@@ -239,6 +239,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
 
     plugins.implements(plugins.IConfigurer, inherit=False)
+    #plugins.implements(plugins.IConfigurable, inherit=True)
     plugins.implements(plugins.IDatasetForm, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
@@ -248,6 +249,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
    #def after_update(self, context, id):
    #    pkg = dara_pkg()
    #    import pdb; pdb.set_trace()
+
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.

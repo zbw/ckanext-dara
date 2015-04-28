@@ -61,17 +61,11 @@ class DaraController(PackageController):
         so we fake it (test_register).
         defaults: register at 'real' server and get a DOI
         """
-        #default
-        test = False
-        register = True
         test_register = False
+        ptest = lambda p: p in tk.request.params
+        test = ptest('testserver')
+        register = ptest('DOI')
         
-        params = tk.request.params
-        
-        if 'testserver' in params:
-            test = True
-        if not 'DOI' in params:
-            register = False
         if test and register:
             register = False
             test_register = True
@@ -133,8 +127,9 @@ class DaraController(PackageController):
         self._check_credentials()
         context = self._context()
         data_dict = {'id': id}
-        date = datetime.now()
-        datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
+        #date = datetime.now()
+        #datestring = date.strftime("%Y-%m-%d-%H:%M:%S")
+        date = '{:%Y-%m-%d-%H:%M:%S}'.format(datetime.now())
         c.pkg_dict = tk.get_action('package_show')(context, data_dict)
                 
         # first register resources
@@ -166,11 +161,11 @@ class DaraController(PackageController):
             tk.get_action('package_update')(context, c.pkg_dict)
 
         if dara == 201:
-            c.pkg_dict['dara_registered'] = datestring
+            c.pkg_dict['dara_registered'] = date
             store()
             h.flash_success("Dataset successfully registered.")
         elif dara == 200:
-            c.pkg_dict['dara_updated'] = datestring
+            c.pkg_dict['dara_updated'] = date
             store()
             h.flash_success("Dataset successfully updated.")
         else:

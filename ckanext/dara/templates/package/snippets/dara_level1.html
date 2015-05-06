@@ -56,7 +56,33 @@
                     {'value': '1', 'text' :'Abstract'}, 
                     {'value': '2', 'text' : 'Series Information'}, 
                     {'value': '3', 'text' :'Table of Contents'},
-                    {'value' : '4', 'text' : 'Other'},
+                    {'value' : '4', 'te#XXX optimise!
+        for key in HIDDEN:
+            field = PREFIX + key
+            schema_update(field)
+        for key in LEVEL_1:
+            field = PREFIX + key
+            schema_update(field)
+        for key in LEVEL_2:
+            field = PREFIX + key
+            schema_update(field)
+        for key in PUBLICATION:
+            field = PREFIX + key
+            schema_update(field)
+                
+        #resources (NEW! in 2.3)
+        #XXX optimise
+        for key in RESOURCE_1:
+            field = PREFIX + key
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+                })
+        for key in RESOURCE_2:
+            field = PREFIX + key
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+                })
+xt' : 'Other'},
                 ],
                 error=errors.dara_DescriptionType,
                 selected=selected
@@ -105,7 +131,7 @@
         
         {# fields generated from schema #}
         <div id="dara_level_1">
-            {{ dara_form.md(h.dara_level1_fields(), h) }}
+            {{ dara_form.md(h.dara_level1_fields, "dataset", h) }}
         </div>
        
 

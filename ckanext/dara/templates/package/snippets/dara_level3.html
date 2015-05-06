@@ -24,7 +24,7 @@
 
     {# TODO add possiblity to add more than one publication  #}
     {# TODO add unstructured publication #}
-        {% set fields = h.dara_publication_fields() %}
+        {% set fields = h.dara_publication_fields %}
         {% set publications = h.dara_publications() %}
         {% set class = 'hidden' if dara_publications else '' %}
 
@@ -50,19 +50,21 @@
                     <span class="icon-minus-sign"/></a>
             #}
             
-                {{ dara_form.md(fields, h) }}
+                {{ dara_form.md(fields, "dataset", h) }}
 
             </div>
 
 
         </div>
                 
+        {#
         <div id="dara_level_3" style="margin-top:25px;">
          <p class="dara_form_header"></p>
             {{ dara_form.md(h.dara_level3_fields(), h) }}
         
 
         </div>
+        #}
 
 
 {# dara_level end #}

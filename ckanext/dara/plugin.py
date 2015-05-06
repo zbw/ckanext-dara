@@ -1,6 +1,5 @@
 #Hendrik Bunke
 #ZBW - Leibniz Information Centre for Economics
-#2013-04-11
 
 """CKAN plugin for da|ra schema based metadata"""
 
@@ -12,7 +11,7 @@ from ckan.common import c, request, response
 import ckan.model as model
 #from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
-from ckanext.dara.schema import DaraFields
+from ckanext.dara import schema as dara_schema
 from ckanext.dara import utils
 from datetime import datetime
 from hashids import Hashids
@@ -21,27 +20,44 @@ from StringIO import StringIO
 from datetime import datetime
 import string
 
-#XXX OrderedDict is not available in 2.6, which is the Python Version on
-#CentOS...
-#from collections import OrderedDict
+from collections import OrderedDict
 
 
-Fields = DaraFields()
-HIDDEN = Fields.hidden()
-LEVEL_1 = Fields.level_1()
-LEVEL_2 = Fields.level_2()
-LEVEL_3 = Fields.level_3()
-LEVEL_ALL = Fields.level_all()
-PUBLICATION = Fields.publication_fields()
-RESOURCE = Fields.resource_fields()
+def level(le, fields):
+    level = lambda key: fields[key].level == le
+    f = [(key,value) for key,value in fields.iteritems() if level(key)]
+    return OrderedDict(f)
+
+def adaptable(typ, fields):
+    is_adaptable = lambda key: typ in fields[key].adapt
+    f = [(key,value) for key,value in fields.iteritems() if is_adaptable(key)]
+    return OrderedDict(f)
+
+FIELDS = dara_schema.fields()
+HIDDEN = dara_schema.hidden_fields()
+LEVEL_1 = adaptable('dataset', level(1, FIELDS))
+LEVEL_2 = adaptable('dataset', level(2, FIELDS))
+RESOURCE = adaptable('resource', FIELDS)
+RESOURCE_1 = level(1, RESOURCE)
+RESOURCE_2 = level(2, RESOURCE)
+PUBLICATION = dara_schema.publication_fields()
+test = dara_schema.testfields()
 PREFIX = 'dara_'
+#import pdb; pdb.set_trace()
 
+#TODO adapting dara_form for resources
 
 
 def dara_debug():
     pkg_dict = dara_pkg()
 
     import ipdb; ipdb.set_trace()
+
+
+def dara_auto_fields():
+    pkg = dara_pkg()
+    auto = dara_schema.auto_fields(pkg)
+    return auto
 
 
 def dara_pkg():
@@ -87,11 +103,11 @@ def dara_md():
     returns dara keys with dara names
     """
     named_levels = {}
-    all_levels = LEVEL_ALL
+    all_levels = dara_schema.all_fields()
 
     for key in all_levels.keys():
         d = PREFIX + key
-        named_levels[d] = {'name': all_levels[key]['name']}
+        named_levels[d] = {'name': all_levels[key].widget['name']}
     return named_levels
 
 
@@ -116,16 +132,14 @@ def dara_first_author():
     workaround until we have a proper authors implementation
     """
     pkg = dara_pkg()
-    author = pkg['author']
-    return utils.author_name_split(author)
+    return utils.author_name_split(pkg['author'])
+
 
 def dara_additional_authors():
     """
     workaround
     """
-    authors = dara_authors()
-    dalist = map(lambda author: utils.author_name_split(author), authors)
-    return dalist
+    return map(lambda author: utils.author_name_split(author), dara_authors())
 
 
 def dara_publications():
@@ -139,31 +153,6 @@ def dara_publications():
     return False
 
 
-def dara_publication_fields():
-    """
-    returns fields for related publications forms
-    """
-
-    return PUBLICATION
-
-
-def dara_level3_fields():
-    return LEVEL_3
-
-def dara_level2_fields():
-    return LEVEL_2
-
-def dara_level1_fields():
-    return LEVEL_1
-
-def dara_resource_fields():
-    return RESOURCE
-
-
-def dara_auto_fields():
-    pkg = dara_pkg()
-    auto = Fields.auto_fields(pkg)
-    return auto
 
 
 def create_doi(pkg_dict):
@@ -223,15 +212,6 @@ def dara_resource_doiid():
     num = hashids.encode(int(now_string))
     return num
 
-class DaraResourcesPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
-    """
-    testing resource manipulation
-    """
-    plugins.implements(plugins.IResourceController, inherit=False)
-
-    #def before_show(self):
-    #    import pdb; pdb.set_trace()
-
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
@@ -253,85 +233,56 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
+        
 
-
-        #hidden fields
-        for f in HIDDEN:
-            field_name = PREFIX + f
+        def schema_update(field):
             schema.update({
-                field_name: [tk.get_validator('ignore_missing'),
-                    tk.get_converter('convert_to_extras')
+                field: [tk.get_validator('ignore_missing'),
+                        tk.get_converter('convert_to_extras'),
                 ]
             })
         
         
-        #mandatory fields
+        #XXX optimise!
+        for key in HIDDEN:
+            field = PREFIX + key
+            schema_update(field)
         for key in LEVEL_1:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_converter('convert_to_extras')
-                ]
-            })
-
-        ## optional fields ###
-        #XXX very basic here. what about validation???
+            field = PREFIX + key
+            schema_update(field)
         for key in LEVEL_2:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_converter('convert_to_extras')
-                ]
-            })
-
-        for key in LEVEL_3:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_converter('convert_to_extras')
-                ]
-            })
-
-        # schema.update({
-        #     'Counter': [
-        #         tk.get_validator('ignore_missing'),
-        #         tk.get_converter('convert_to_extras')
-        #         ]
-        #     })
-
-        for n in range(2, 21):
-            field_name = PREFIX + 'author_' + str(n)
-            schema.update({
-                field_name: [
-                    tk.get_validator('ignore_missing'),
-                    tk.get_converter('convert_to_extras')
-                ]
-            })
-
-        #publications
-        # for now we support only ONE publication per dataset. Again, the flat
-        # structure of CKANs extras is a pain in the ass here
-        #for n in range(1,11):
+            field = PREFIX + key
+            schema_update(field)
         for key in PUBLICATION:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_to_extras')
-                ]   
-            })
+            field = PREFIX + key
+            schema_update(field)
+                
+        #resources (NEW! in 2.3)
+        #XXX optimise
+        for key in RESOURCE_1:
+            field = PREFIX + key
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+                })
+        for key in RESOURCE_2:
+            field = PREFIX + key
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+                })
 
-        # better in edawax_theme?
+        
+        for n in range(2, 21):
+            field = PREFIX + 'author_' + str(n)
+            schema_update(field)
+        
+   
+        # better in edawax_theme  ?
         schema.update({
             'edawax_article_url': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_extras')
             ]
         })
-
         
         return schema
 
@@ -341,70 +292,46 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(DaraMetadataPlugin, self).show_package_schema()
 
         
-        #hidden fields
-        for f in HIDDEN:
-            field_name = PREFIX + f
+        def schema_update(field):
             schema.update({
-                field_name: [
+                field: [
                     tk.get_converter('convert_from_extras'),
                     tk.get_validator('ignore_missing'),
                 ]
             })
 
-        
+        #XXX optimise!
+        for key in HIDDEN:
+            field = PREFIX + key
+            schema_update(field)
         for key in LEVEL_1:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                    tk.get_converter('convert_from_extras'),
-                    tk.get_validator('ignore_missing'),
-                ]
-            })
-
+            field = PREFIX + key
+            schema_update(field)
         for key in LEVEL_2:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                    tk.get_converter('convert_from_extras'),
-                    tk.get_validator('ignore_missing'),
-                ]
-            })
+            field = PREFIX + key
+            schema_update(field)
+        for key in PUBLICATION:
+            field = PREFIX + key
+            schema_update(field)
+                
+        #resources (NEW! in 2.3)
+        #XXX optimise
+        for key in RESOURCE_1:
+            field = PREFIX + key
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+                })
+        for key in RESOURCE_2:
+            field = PREFIX + key
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+                })
 
-
-        for key in LEVEL_3:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                    tk.get_converter('convert_from_extras'),
-                    tk.get_validator('ignore_missing'),
-                ]
-            })
-
+       
         #authors
         for n in range(2,21):
-            field_name = PREFIX + 'author_' + str(n)
-            schema.update({
-                field_name: [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')
-                ]
-            })
-        
-        #publications
-        #publications
-        # for now we support only ONE publication per dataset. Again, the flat
-        # structure of CKANs extras is a pain in the ass here
-        #for n in range(1,11):
-        for key in PUBLICATION:
-            field_name = PREFIX + key
-            schema.update({
-                field_name: [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')
-                ]   
-            })
-
-
+            field = PREFIX + 'author_' + str(n)
+            schema_update(field)
 
         schema.update({
              'edawax_article_url' : [
@@ -412,12 +339,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing'),
              ]
         })
-
         
-
         return schema
 
-    
 
 
     def update_config(self, config):
@@ -437,12 +361,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_debug': dara_debug,
                 'dara_c': tk.c,
                 'dara_authors': dara_authors,
-                'dara_publication_fields': dara_publication_fields,
+                'dara_publication_fields': PUBLICATION,
                 'dara_publications': dara_publications,
-                'dara_level3_fields': dara_level3_fields,
-                'dara_level2_fields': dara_level2_fields,
-                'dara_level1_fields': dara_level1_fields,
-                'dara_resource_fields': dara_resource_fields,
+                #'dara_level3_fields': dara_level3_fields,
+                'dara_level2_fields': LEVEL_2,
+                'dara_level1_fields': LEVEL_1,
+                'dara_resource_fields': RESOURCE,
                 'dara_auto_fields': dara_auto_fields,
                 'dara_first_author': dara_first_author,
                 'dara_additional_authors': dara_additional_authors,

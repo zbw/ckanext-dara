@@ -6,7 +6,7 @@
     {% resource 'dara/dara.js' %}
     {% resource 'dara/jquery-ui.js' %}
 
-    {% set fields = h.dara_resource_fields() %}
+    {% set fields = h.dara_resource_fields %}
     {% set res = h.dara_resource() %}
 
 
@@ -25,7 +25,7 @@
         <input type="hidden" value="{{ res.dara_DOI }}" 
                     name="dara_DOI" />
 
-            {{ dara_form.md(fields, h) }}
+            {{ dara_form.md(fields, type='resource', h) }}
         </div>
 
 

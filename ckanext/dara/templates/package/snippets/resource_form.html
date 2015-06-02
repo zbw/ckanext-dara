@@ -1,36 +1,43 @@
 {% ckan_extends %}
 {% import 'macros/dara_form.html' as dara_form %}
 
+
+{% block basic_fields %}
+
+    {% block basic_fields_format %}{% endblock %}
+    {{ super() }} 
+{% endblock basic_fields %}
+
+
+
 {% block metadata_fields %}
     {% resource 'dara/dara.css' %}
     {% resource 'dara/dara.js' %}
     {% resource 'dara/jquery-ui.js' %}
-
-    {% set fields = h.dara_resource_fields %}
-    {% set res = h.dara_resource() %}
-
-
-    <div id="dara_Resource">
     
-             <h4 class="dara_form_header dara_form_collapse">Additional Info
-            (da|ra)</h4> 
-        
-        <div>
-<div class="todo">
-            not clear if we'll need more fields here</div>
-        </p>
-       <input type="hidden" value="{{ res.dara_doiid or
+    {% set res = h.dara_resource() %}
+    
+    <input type="hidden" value="{{ res.dara_doiid or
                             h.dara_resource_doiid() }}"
                     name="dara_doiid" />
-        <input type="hidden" value="{{ res.dara_DOI }}" 
+    <input type="hidden" value="{{ res.dara_DOI }}" 
                     name="dara_DOI" />
 
-            {{ dara_form.md(fields, type='resource', h) }}
-        </div>
+    
 
-
+    {{ dara_form.md(1, 'resource', h) }}
+    
+    <div id="dara_2">
+            {% snippet "package/snippets/dara_level2.html", form=form,
+                errors=errors, dara_type='resource' %}  
     </div>
-            
+    <div id="dara_3">
+         {% snippet "package/snippets/dara_level3.html", form=form,
+                errors=errors, dara_type='resource' %}  
+    </div>
+
+
+
     {{ super() }}
 {% endblock %}
 

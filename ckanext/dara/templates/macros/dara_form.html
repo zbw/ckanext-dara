@@ -3,32 +3,34 @@
 {% import 'macros/form.html' as form %}
 
 
-{#XXX for some reason helpers (h) are not in here automatically, so we need it as
+{#XXX for whatever reason helpers (h) are not in here automatically, so we need it as
     a parameter here #}
-{% macro md(fields, type, h) -%}
+{% macro md(level, type, h) -%}
      
+    
+{% set fields = h.dara_fields(level, type) %}
     {% set dara = h.dara_pkg() %}
-    {#    {% set debug = h.dara_debug() %} #}
-
-    {% for key, values in fields.iteritems() %}
-        {% set values = values %}
-        {% set widget = values.widget %}
-        {% set id = 'dara_' ~ key %}
+    {#            {% set debug = h.dara_debug() %}  #}
+    
+    {% for field in fields %}
+        {% set widget = field.widget %}
+        {% set id = 'dara_' ~ field.id %}
         
+        {# for now we don't inherit resource values from dataset #}
         {% if type == 'resource' %}
             {% set res = h.dara_resource() %}
-            {% set value = res[id] or dara[id] %}
+            {% set value = res[id] %}
         {% else %}
             {% set value = dara[id] %}
         {% endif %}
         
         {% set field_id = 'field-' ~id %}
-        {% set label = widget['name'] %}
-        {% set additional_classes = widget['classes'] %}
+        {% set label = widget.name %}
+        {% set additional_classes = widget.classes %}
         {% set classes = [] %}
         
-        {% if widget['placeholder'] %}
-           {% set placeholder = widget['placeholder'] %}
+        {% if widget.placeholder %}
+           {% set placeholder = widget.placeholder %}
         {% else %}
            {% set placeholder = '' %}
         {% endif %}
@@ -38,24 +40,24 @@
         {% endfor %}
     
         {# this relies on the correct sort order in fields dict! #}
-        {% if widget['role'] == 'master' %}
+        {% if widget.role == 'master' %}
             {% do classes.append('dara_master') %} 
             <fieldset class="dara_master_slave">
         {% endif %}
         
-        {% if widget['role'] == 'slave' %}
+        {% if widget.role == 'slave' %}
             {% do classes.append('dara_slave') %}
         {% endif %}
 
-        {% if widget['size'] == 'medium' %}
+        {% if widget.size == 'medium' %}
             {% do classes.append('control-medium') %}
         {% endif %}
 
-        {% if widget['size'] == 'small' %}
+        {% if widget.size == 'small' %}
             {% do classes.append('control-small') %}
         {% endif %}
         
-        {% if widget['form_type'] == 'input' %}
+        {% if widget.form_type == 'input' %}
             {{ form.input(id, label=label,
                     id= field_id,
                     placeholder=placeholder, 
@@ -66,8 +68,8 @@
         {% endif %}
 
 
-        {% if widget['form_type'] == 'select' %}
-            {% set options = widget['options'] %}
+        {% if widget.form_type == 'select' %}
+            {% set options = widget.options %}
             
             {% if type == 'resource' %}
                 {% set selected = res[id] or options[0] %}
@@ -89,7 +91,7 @@
             }}
         {% endif %}
 
-        {% if widget['form_type'] == 'text' %}
+        {% if widget.form_type == 'text' %}
             {% do classes.append('control-full') %}
             {{ form.markdown(id, label=label,
                     id= field_id,
@@ -101,7 +103,7 @@
         {% endif %}
         
 
-        {% if widget['form_type'] == 'date' %}
+        {% if widget.form_type == 'date' %}
              {{ form.input(id, label=label,
                     id= field_id,
                     placeholder='', 
@@ -115,7 +117,7 @@
         
     
         {#XXX this works only when there's only one slave! #}
-        {% if widget['role'] == 'slave' %}
+        {% if widget.role == 'slave' %}
             </fieldset>
         {% endif %}
 

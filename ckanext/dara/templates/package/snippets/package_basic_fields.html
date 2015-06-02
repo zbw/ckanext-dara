@@ -50,6 +50,9 @@
 
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
+{% set dara_type = 'dataset' %}
+
+
 
 <input type="hidden" value="{{ h.dara_doi(data) }}" name="dara_DOI_Proposal" />
 <input type="hidden" value="{{ pkg['dara_DOI'] }}"  name="dara_DOI" />
@@ -69,13 +72,13 @@
         </h4>    
 
         <div class="dara_level">    
-            {% snippet "package/snippets/dara_level1.html", form=form, 
-            errors=errors, dara_authors=dara_authors, data=data %}
+            {% snippet "package/snippets/dara_level1.html", dara_type=dara_type, form=form, 
+                errors=errors, dara_authors=dara_authors, data=data %}
         </div>
     </div> 
 
 {% else %}
-    {% snippet "package/snippets/dara_level1.html", form=form,
+    {% snippet "package/snippets/dara_level1.html", form=form, dara_type=dara_type,
                    errors=errors, dara_authors=dara_authors, data=data %}
 {% endif %}
 
@@ -85,12 +88,12 @@
    {% if form_style == 'edit' %}
         <div id="dara_2">
             {% snippet "package/snippets/dara_level2.html", form=form,
-                errors=errors %}  
+                errors=errors, dara_type=dara_type %}  
         </div>
         
         <div id="dara_3">
             {% snippet "package/snippets/dara_level3.html", form=form,
-                errors=errors %}  
+            dara_type=dara_type, errors=errors %}  
         </div>
     {% endif %}
 

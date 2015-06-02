@@ -1,37 +1,15 @@
-from pylons import config
-import ckan.plugins.toolkit as tk
-
-#OrderedDict is not available in Python < 2.7
-try:
-    from collections import OrderedDict   # 2.7
-except ImportError:
-    from sqlalchemy.util import OrderedDict
+#Hendrik Bunke
+#ZBW - Leibniz Information Centre for Economics
 
 from collections import namedtuple
 
-
-
-
-#XXX this functional (in this case: immutable) approach is for now a bit
-#inconsistent, since we'll mix it with mutable classes/objects. We should,
-#however, return all schema objects as immutable objects
+#DaraFields are namedtuples, we want them to be immutable (and KISS)
 DaraField = namedtuple('DaraField', 'id level adapt widget')
 
-
-#class DaraField(object):
-#   """
-#   """
-
-#   def __init__(self, id, level, adapt, widget):
-
-#       self.id = id
-#       self.level = level
-#       self.adapt = adapt
-#       self.widget = widget
-
-
+##widgets are designed as subclasses of DaraWidget
 class DaraWidget(object):
     """
+    base class for all dara form widgets
     """
 
     def __init__(self, form_type='input', name=u'', role=None, classes=[]):
@@ -46,10 +24,9 @@ class DaraWidget(object):
 
 class Input(DaraWidget):
     """
+    DaraWidget for input fields
     """
     def __init__(self, size='', placeholder='', **kw):
-        """
-        """
         super(Input, self).__init__(**kw)
         self.size = size
         self.placeholder = placeholder
@@ -57,12 +34,9 @@ class Input(DaraWidget):
 
 class Select(DaraWidget):
     """
+    DaraWidget for select fields
     """
-
     def __init__(self, options, **kw):
-        """
-        """
-
         super(Select, self).__init__(**kw)
         self.form_type = 'select'
         self.options = options
@@ -70,79 +44,79 @@ class Select(DaraWidget):
 
 class Text(DaraWidget):
     """
+    DaraWidget for textfields
     """
-
     def __init__(self, placeholder='', **kw):
-        """
-        """
         super(Text, self).__init__(**kw)
         self.form_type = 'text'
 
 
 class Date(DaraWidget):
     """
+    DaraWidget for date fields
+    """
+    def __init__(self, **kw):
+        super(Date, self).__init__(**kw)
+        self.form_type = "date"
+
+
+class DaraWidget(object):
+    """
+    base class for all dara form widgets
     """
 
+    def __init__(self, form_type='input', name=u'', role=None, classes=[]):
+        """
+        """
+
+        self.form_type = form_type
+        self.name = name
+        self.role = role
+        self.classes = classes
+
+
+class Input(DaraWidget):
+    """
+    DaraWidget for input fields
+    """
+    def __init__(self, size='', placeholder='', **kw):
+        super(Input, self).__init__(**kw)
+        self.size = size
+        self.placeholder = placeholder
+
+
+class Select(DaraWidget):
+    """
+    DaraWidget for select fields
+    """
+    def __init__(self, options, **kw):
+        super(Select, self).__init__(**kw)
+        self.form_type = 'select'
+        self.options = options
+
+
+class Text(DaraWidget):
+    """
+    DaraWidget for textfields
+    """
+    def __init__(self, placeholder='', **kw):
+        super(Text, self).__init__(**kw)
+        self.form_type = 'text'
+
+
+class Date(DaraWidget):
+    """
+    DaraWidget for date fields
+    """
     def __init__(self, **kw):
-        """
-        """
         super(Date, self).__init__(**kw)
         self.form_type = "date"
 
 
 
-def __transform(fields):
-    """
-    """
-    FieldProperties = namedtuple('FieldProperties', 'level adapt widget')
-    f = map(lambda field: (field.id, FieldProperties(field.level, field.adapt, 
-        field.widget.__dict__)), fields)
-    
-    #import pdb; pdb.set_trace()
-    return OrderedDict(f)
-
-
-def testfields():
-    """
-    for developing purposes
-    """
-    
-    fields = (
-        
-        DaraField(
-            'PublicationDate',
-            1, 
-            ('dataset', 'resource'),
-            Input(
-                placeholder="eg. 2011",
-                name="Publication Year",
-                size='small',
-                classes=['dara_required']
-                )
-            ),
-
-        DaraField('Availabilitycontrolled',
-            1, ('dataset', 'resource'),
-            Select(
-                options=[
-                    {'value': '1', 'text': 'Free Download'},
-                    {'value': '2', 'text': 'Delivery on demand'},
-                    {'value': '3', 'text': 'Onsite only'},
-                    {'value': '4', 'text': 'Not available'},
-                    {'value': '5', 'text': 'Unknown'},
-                    ],
-                name = 'Availability (controlled)',
-                classes = ['dara_required']
-                ),
-            ),
-
-    )
-    return __transform(fields)
-    
-
 def fields():
     """
-    main function that generates most of da|ra metadata fields
+    main function that returns most of da|ra metadata fields
     """
 
     fields = (
@@ -178,8 +152,7 @@ def fields():
             Input(
                 name = 'Availability (free)',
                 size = 'medium',
-                placeholder = 'eg. Die Datennutzung unterliegt \
-                        schriftlichen Datenschutzvereinbarungen',
+                placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
                 )
             ),
     
@@ -470,15 +443,6 @@ def fields():
         ),
 
 
-        DaraField('currentVersion',
-            2, ('resource'),
-
-            Input(
-                name="Version",
-                placeholder="eg. '1' or '2.2'"
-                )
-            ),
-                    
         DaraField('DataSet_unitType',
             2, ('resource'),    
             Input(
@@ -544,18 +508,10 @@ def fields():
             )
         ),
 
-    )
-    return __transform(fields)
-
-
-
-def publication_fields():
-    """
-    """
-    fields = (
-
+        
+        # publication fields start here, not separated anymore #
         DaraField('Publication_Author',
-                3, ('dataset', 'resource'),
+                3, ('dataset', 'resource', 'publication'),
                 Input(
                 name = 'Author of Publication',
                 size = 'medium',
@@ -563,7 +519,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Editor',
-                3, ('dataset', 'resource'),
+                3, ('dataset', 'resource', 'publication'),
                 Input(
                 name = 'Editor',
                 size = 'medium',
@@ -571,7 +527,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Title',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
             Input(
                 name = 'Title of Publication',
@@ -580,7 +536,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Year',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
             Input(
                 name = 'Year of Publication',
@@ -588,7 +544,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Publisher',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
             Input(
                 name = 'Publisher',
@@ -597,7 +553,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_PID',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
             Input(
                 role = 'master',
@@ -606,7 +562,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_PIDType',
-                3, ('dataset', 'resource'),
+                3, ('dataset', 'resource', 'publication'),
 
                 Select(
                 role = 'slave',
@@ -631,7 +587,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Place',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'Place',
@@ -639,7 +595,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Journal',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'Journal',
@@ -648,7 +604,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Volume',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'Volume',
@@ -657,7 +613,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Issue',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'Issue',
@@ -666,7 +622,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Anthology',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'Anthology',
@@ -675,7 +631,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_Pages',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'Pages',
@@ -684,7 +640,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_ISBN',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'ISBN',
@@ -693,7 +649,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_ISSN',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Input(
                 name = 'ISSN',
@@ -702,7 +658,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_RelationType',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Text(
                 name = 'Relation Type',
@@ -710,7 +666,7 @@ def publication_fields():
         ),
 
         DaraField('Publication_DocType',
-            3, ('dataset', 'resource'),
+            3, ('dataset', 'resource', 'publication'),
 
                 Select(
                 name = 'Document Type',
@@ -729,39 +685,9 @@ def publication_fields():
                 )
         ),
 
-    
     )
-    return __transform(fields)
-
-
-
-def auto_fields(pkg):
-    """
-    auto generated metadata without form fields. needs pkg
-    """
     
-    auto = {}
-    
-    #XXX this needs to be adapted when we know how to submit Datasets vs.
-    #Resources to dara. For now everything is a Dataset. A Collection would
-    #be 1
-    resource_type = '2'
-        
-    site_url = config.get('ckan.site_url')
-
-    #for development
-    if 'localhost' in site_url:
-        site_url = "http://edawax.de"
-    
-    pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
-    dara_url = site_url + pkg_url
-    
-
-    auto['URL'] = dara_url
-    auto['ResourceType'] = resource_type
-
-    return auto
-
+    return fields
 
 
 def hidden_fields():
@@ -779,14 +705,44 @@ def hidden_fields():
     return fields
 
 
-def all_fields():
+def testfields():
     """
+    for developing purposes
     """
-    dara_all = fields().copy()
-    dara_all.update(publication_fields())
-    return dara_all
+    
+    fields = (
+        
+        DaraField(
+            'PublicationDate',
+            1, 
+            ('dataset', 'resource'),
+            Input(
+                placeholder="eg. 2011",
+                name="Publication Year",
+                size='small',
+                classes=['dara_required']
+                )
+            ),
 
+        DaraField('Availabilitycontrolled',
+            1, ('dataset', 'resource'),
+            Select(
+                options=[
+                    {'value': '1', 'text': 'Free Download'},
+                    {'value': '2', 'text': 'Delivery on demand'},
+                    {'value': '3', 'text': 'Onsite only'},
+                    {'value': '4', 'text': 'Not available'},
+                    {'value': '5', 'text': 'Unknown'},
+                    ],
+                name = 'Availability (controlled)',
+                classes = ['dara_required']
+                ),
+            ),
 
+    )
+    #import pdb; pdb.set_trace()
+    return fields
+ 
 
 
 

@@ -15,7 +15,7 @@
     <p class="dara_info_text">By submitting even more information, the
     author's datasets will be interlinked to his or her other scientific
     resources - for example to related publications, or the author's
-    affiliation.  To fill in the required information, some information
+    affiliation. To fill in the required information, some information
     provided by library authority files may be useful.</p>
 
     {#
@@ -24,7 +24,6 @@
 
     {# TODO add possiblity to add more than one publication  #}
     {# TODO add unstructured publication #}
-        {% set fields = h.dara_publication_fields %}
         {% set publications = h.dara_publications() %}
         {% set class = 'hidden' if dara_publications else '' %}
 
@@ -50,7 +49,7 @@
                     <span class="icon-minus-sign"/></a>
             #}
             
-                {{ dara_form.md(fields, "dataset", h) }}
+                {{ dara_form.md(3, dara_type, h) }}
 
             </div>
 

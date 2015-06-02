@@ -13,7 +13,7 @@ from darapi import DaraClient
 from datetime import datetime
 from hashids import Hashids
 import random
-from ckanext.dara.dara_schema_3_1 import schema
+from ckanext.dara.dara_schema.v3_1 import schema
 from pylons import config
 from ckanext.dara.utils import memoize
 

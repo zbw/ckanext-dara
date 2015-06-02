@@ -26,6 +26,8 @@ won't work. #}
 {# {% resource 'dara/jquery-migrate.js' %} #}
 {# {% resource 'dara/jquery-ui.css' %} #}
 
+
+
 <p class="introtext">
     some additional information about metadata, da|ra and so on.
 
@@ -40,12 +42,12 @@ amet, consetetu
 
 <div id="dara_2" style="margin-bottom:25px;">
         {% snippet "package/snippets/dara_level2.html", form=form,
-            errors=errors %}  
+            errors=errors, dara_type='dataset'%}  
     </div>
     
 <div id="dara_3" style="margin-bottom:25px;">
         {% snippet "package/snippets/dara_level3.html", form=form,
-            errors=errors %}  
+            errors=errors, dara_type='dataset' %}  
 </div>
 
 

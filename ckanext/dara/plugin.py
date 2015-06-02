@@ -6,211 +6,18 @@
 #import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-#from pylons import c
-from ckan.common import c, request, response
-import ckan.model as model
-#from pylons import h
 #from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara import schema as dara_schema
-from ckanext.dara import utils
-from datetime import datetime
-from hashids import Hashids
-import random
-from StringIO import StringIO
-from datetime import datetime
-import string
-
-from collections import OrderedDict
+#from itertools import chain
+#from collections import OrderedDict
+from ckanext.dara import helpers
 
 
-def level(le, fields):
-    level = lambda key: fields[key].level == le
-    f = [(key,value) for key,value in fields.iteritems() if level(key)]
-    return OrderedDict(f)
-
-def adaptable(typ, fields):
-    is_adaptable = lambda key: typ in fields[key].adapt
-    f = [(key,value) for key,value in fields.iteritems() if is_adaptable(key)]
-    return OrderedDict(f)
-
-FIELDS = dara_schema.fields()
-HIDDEN = dara_schema.hidden_fields()
-LEVEL_1 = adaptable('dataset', level(1, FIELDS))
-LEVEL_2 = adaptable('dataset', level(2, FIELDS))
-RESOURCE = adaptable('resource', FIELDS)
-RESOURCE_1 = level(1, RESOURCE)
-RESOURCE_2 = level(2, RESOURCE)
-PUBLICATION = dara_schema.publication_fields()
-test = dara_schema.testfields()
 PREFIX = 'dara_'
-#import pdb; pdb.set_trace()
 
-#TODO adapting dara_form for resources
-
-
-def dara_debug():
-    pkg_dict = dara_pkg()
-
-    import ipdb; ipdb.set_trace()
-
-
-def dara_auto_fields():
-    pkg = dara_pkg()
-    auto = dara_schema.auto_fields(pkg)
-    return auto
-
-
-def dara_pkg():
-    """
-    get package for several helper functions
-    XXX DO WE REALLY NEED THIS?
-    """
-    
-    pkg_id = tk.c.id
-    try:
-        pkg = tk.get_action('package_show')(None, {'id': pkg_id})
-    except:
-        pkg = model.Package.by_name(pkg_id)
-    
-    return pkg
-
-
-def dara_resource():
-    """
-    somehow hack. c.resource doesnt return a resource when calling .../dara_xml
-    """
-    #XXX improve this. we should somehow be able to get the type of the context
-    #(resource or package)
-    if 'resource' in request.path:
-        resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
-    else:
-        resource = c.resource
-    #import pdb; pdb.set_trace()
-    return resource
- 
-
-def dara_resource_url(url):
-    """
-    for development. dara does not accept localhost urls
-    """
-    if 'localhost' in url:
-        url = url.replace('localhost', 'edawax.de')
-    return url
-
-
-def dara_md():
-    """
-    returns dara keys with dara names
-    """
-    named_levels = {}
-    all_levels = dara_schema.all_fields()
-
-    for key in all_levels.keys():
-        d = PREFIX + key
-        named_levels[d] = {'name': all_levels[key].widget['name']}
-    return named_levels
-
-
-def dara_authors():
-    """
-    return all author fields
-    """
-    pkg = dara_pkg()
-    try:
-        ## list comprehension. one-liner  but with statements
-        #authors = [pkg[k] for k in pkg.keys() if 'dara_author' in k]
-        
-        #more functional
-        author_keys = filter(lambda k: 'dara_author' in k, pkg.keys())
-        authors = map(lambda key: pkg[key], author_keys)
-        return authors
-    except:
-        return None
-
-def dara_first_author():
-    """
-    workaround until we have a proper authors implementation
-    """
-    pkg = dara_pkg()
-    return utils.author_name_split(pkg['author'])
-
-
-def dara_additional_authors():
-    """
-    workaround
-    """
-    return map(lambda author: utils.author_name_split(author), dara_authors())
-
-
-def dara_publications():
-    """
-    checks for publications
-    """
-    pkg = dara_pkg()
-    for k in pkg.keys():
-        if 'dara_Publication_' in k and pkg[k] is not u'':
-            return True
-    return False
-
-
-
-
-def create_doi(pkg_dict):
-    """
-    this should go in a function directly after package is created. 
-    DOI would than be stored in pkg_dict and not created here. That way we 
-    could use random ints. For now it only takes the pkg creation date and
-    creates a unique hash of it. If there are than one uploads in one second
-    and for the same journal/organization we'd have a collision. This case
-    might be rare ;-)
-    """
-    
-    prefix = u"10.2345" #XXX fake! change this. could be config
-        
-    #make sure we ALWAYS get the org id
-    try:
-        group = pkg_dict['group_id']
-        data_dict = {'id': group, 'include_datasets': False}
-        org = tk.get_action('organization_show')(None, data_dict)
-        journal = org['name']
-    except:
-        journal = 'edawax'  #fallback
-    
-    #building a unique DOI id
-    now = datetime.now()
-    salt = now.strftime("%Y.%m.%d - %H:%M:%S:%f")    
-    now_string = now.strftime("%y%j%H%M")
-    hashids = Hashids(salt=salt)
-    num = hashids.encode(int(now_string))
-
-    doi = prefix + '/' + journal + '.' + num
-
-    return doi
-
-
-def dara_doi(pkg):
-    """
-    used in snippets/package_metadata_fields 
-    """
-    #pkg = dara_pkg()
-
-    key = 'dara_DOI_Proposal'
-    if key in pkg and pkg[key]:
-        return pkg[key]
-    doi = create_doi(pkg)
-    return doi
-
-
-def dara_resource_doiid():
-    """
-    Called when form for resource is edited first time
-    """
-    now = datetime.now()
-    now_string = now.strftime("%y%j")
-    salt = now.strftime("%Y.%m.%d - %H:%M:%S:%f")
-    hashids = Hashids(salt=salt)
-    num = hashids.encode(int(now_string))
-    return num
+def dara_fields(level, dara_type):
+    return filter(lambda field: field.level == level and dara_type in field.adapt,
+            dara_schema.fields())
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -229,13 +36,22 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
    #def after_update(self, context, id):
    #    pkg = dara_pkg()
    #    import pdb; pdb.set_trace()
+    
+
+    def _resource_schema_update(self, schema):
+        for i in dara_fields(1, 'resource') + dara_fields(2, 'resource'):
+            field = PREFIX + i.id
+            schema['resources'].update({
+                field: [ tk.get_validator('ignore_missing') ]
+        })
 
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
         
 
-        def schema_update(field):
+        def schema_update(key):
+            field = PREFIX + key
             schema.update({
                 field: [tk.get_validator('ignore_missing'),
                         tk.get_converter('convert_to_extras'),
@@ -243,40 +59,23 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             })
         
         
-        #XXX optimise!
-        for key in HIDDEN:
-            field = PREFIX + key
-            schema_update(field)
-        for key in LEVEL_1:
-            field = PREFIX + key
-            schema_update(field)
-        for key in LEVEL_2:
-            field = PREFIX + key
-            schema_update(field)
-        for key in PUBLICATION:
-            field = PREFIX + key
-            schema_update(field)
-                
-        #resources (NEW! in 2.3)
-        #XXX optimise
-        for key in RESOURCE_1:
-            field = PREFIX + key
-            schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
-                })
-        for key in RESOURCE_2:
-            field = PREFIX + key
-            schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
-                })
-
+        #dataset schema, level1, level2, publications
+        for i in dara_schema.fields():
+            schema_update(i.id)
+                       
+        #resources schema (new in CKAN 2.3)
+        self._resource_schema_update(schema)
         
+        #authors
         for n in range(2, 21):
             field = PREFIX + 'author_' + str(n)
             schema_update(field)
         
+        #hidden fields
+        for i in dara_schema.hidden_fields():
+            schema_update(i)
    
-        # better in edawax_theme  ?
+        #XXX this should be removed when we have dara metadata link to article
         schema.update({
             'edawax_article_url': [
                 tk.get_validator('ignore_missing'),
@@ -291,43 +90,26 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema = super(DaraMetadataPlugin, self).show_package_schema()
 
-        
-        def schema_update(field):
+        def schema_update(key):
+            field = PREFIX + key
             schema.update({
                 field: [
                     tk.get_converter('convert_from_extras'),
-                    tk.get_validator('ignore_missing'),
-                ]
+                    tk.get_validator('ignore_missing')]
             })
+         
 
-        #XXX optimise!
-        for key in HIDDEN:
-            field = PREFIX + key
-            schema_update(field)
-        for key in LEVEL_1:
-            field = PREFIX + key
-            schema_update(field)
-        for key in LEVEL_2:
-            field = PREFIX + key
-            schema_update(field)
-        for key in PUBLICATION:
-            field = PREFIX + key
-            schema_update(field)
+        #dataset
+        for i in dara_schema.fields():
+            schema_update(i.id)
                 
-        #resources (NEW! in 2.3)
-        #XXX optimise
-        for key in RESOURCE_1:
-            field = PREFIX + key
-            schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
-                })
-        for key in RESOURCE_2:
-            field = PREFIX + key
-            schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
-                })
+        #resources schema (NEW! in 2.3)
+        self._resource_schema_update(schema)
+        
+        #hidden fields
+        for i in dara_schema.hidden_fields():
+            schema_update(i)
 
-       
         #authors
         for n in range(2,21):
             field = PREFIX + 'author_' + str(n)
@@ -355,24 +137,27 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def get_helpers(self):
         return {
-                'dara_md': dara_md,
-                'dara_pkg': dara_pkg,
-                'dara_resource': dara_resource,
-                'dara_debug': dara_debug,
+                'dara_md': helpers.dara_md,
+                'dara_pkg': helpers.dara_pkg,
+                'dara_resource': helpers.dara_resource,
+                'dara_debug': helpers.dara_debug,
                 'dara_c': tk.c,
-                'dara_authors': dara_authors,
-                'dara_publication_fields': PUBLICATION,
-                'dara_publications': dara_publications,
+                'dara_authors': helpers.dara_authors,
+                #'dara_publication_fields': dara_schema.publication_fields(),
+                'dara_publications': helpers.dara_publications,
+                'dara_fields': dara_fields,
                 #'dara_level3_fields': dara_level3_fields,
-                'dara_level2_fields': LEVEL_2,
-                'dara_level1_fields': LEVEL_1,
-                'dara_resource_fields': RESOURCE,
-                'dara_auto_fields': dara_auto_fields,
-                'dara_first_author': dara_first_author,
-                'dara_additional_authors': dara_additional_authors,
-                'dara_doi': dara_doi,
-                'dara_resource_doiid' : dara_resource_doiid,
-                'dara_resource_url' : dara_resource_url,
+                #'dara_level2_fields': LEVEL_2,
+                #'dara_level1_fields': LEVEL_1,
+                #'dara_resource_fields': RESOURCE,
+                #'dara_resource_fields_1': RESOURCE_1,
+                #'dara_resource_fields_2': RESOURCE_2,
+                'dara_auto_fields': helpers.dara_auto_fields,
+                'dara_first_author': helpers.dara_first_author,
+                'dara_additional_authors': helpers.dara_additional_authors,
+                'dara_doi': helpers.dara_doi,
+                'dara_resource_doiid' : helpers.dara_resource_doiid,
+                'dara_resource_url' : helpers.dara_resource_url,
                 }
 
     def is_fallback(self):
@@ -431,7 +216,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
        #map.connect('/dataset/{id}/doi_proposal',
        #        controller="ckanext.dara.controller:DaraController",
        #        action="doi_proposal"
-       #        )
+       #        )nse
 
         return map
 

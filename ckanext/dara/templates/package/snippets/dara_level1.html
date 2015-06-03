@@ -8,7 +8,7 @@
     #}
     
    {% set dara_authors = h.dara_authors() %}
-    
+
 
     {{ form.input('title', id='field-title', 
             label=_('Title'), 
@@ -36,7 +36,6 @@
             error=errors.name, 
             attrs=attrs) }}
 
-          
         {{ form.markdown('notes', id='field-notes', 
             label=_('Description'), 
             placeholder=_('eg. Some useful notes about the data'), 
@@ -59,46 +58,19 @@
                     {'value': '2', 'text' : 'Series Information'}, 
                     {'value': '3', 'text' :'Table of Contents'},
                     {'value' : '4', 'te#XXX optimise!
-        for key in HIDDEN:
-            field = PREFIX + key
-            schema_update(field)
-        for key in LEVEL_1:
-            field = PREFIX + key
-            schema_update(field)
-        for key in LEVEL_2:
-            field = PREFIX + key
-            schema_update(field)
-        for key in PUBLICATION:
-            field = PREFIX + key
-            schema_update(field)
-                
-        #resources (NEW! in 2.3)
-        #XXX optimise
-        for key in RESOURCE_1:
-            field = PREFIX + key
-            schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
-                })
-        for key in RESOURCE_2:
-            field = PREFIX + key
-            schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
-                })
-xt' : 'Other'},
                 ],
                 error=errors.dara_DescriptionType,
                 selected=selected
                 ) 
             }} 
         #}   
-
+        
         {{ form.input('author', label=_('Author'), 
         id='field-author', 
         placeholder=_('eg. Olaf Siegert'), 
         value=data.author, 
         error=errors.author, 
         classes=['control-medium', 'dara_required']) }}
-        
 
         {{ authors.author_fields(dara_authors) }}
         
@@ -107,7 +79,7 @@ xt' : 'Other'},
         <div id="dara_level_1">
             {{ dara_form.md(1, 'dataset', h) }}
         </div>
-       
+        
 
         {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}

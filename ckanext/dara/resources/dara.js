@@ -36,7 +36,7 @@ $(function add_authors() {
   var addAuthorDiv = $('#additional_authors');
   var current_authors = $('#current_number_of_authors').text();
   var i = parseInt(current_authors) + 2;
-  
+
   //add author field
   $('#add_author').on('click', function() {
     $('<div class="control-group dara_author">\
@@ -45,13 +45,13 @@ $(function add_authors() {
         <div class="controls ">\
           <input id="field-dara_author_'+ i +'" type="text" name="dara_author_' + i +'" \
             value="" placeholder="Author Name" /> \
-                <a href="#" class="dara_red remove_author">Remove</a>\
+            <a href="#" class="dara_red remove_author">Remove</a>\
          </div>\
        </div>').appendTo(addAuthorDiv);
     i++;
     return false;
   });
-   
+  
   //remove author field
   $(addAuthorDiv).on('click', '.remove_author', function() { 
       if( i > 1 ) {

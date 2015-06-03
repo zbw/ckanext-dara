@@ -7,10 +7,9 @@
             <div id="current_number_of_authors" style="display:none">
                 {{ dara_authors|count if dara_authors else 0 }}</div>
             {% set counter = 1 %}
-            
             {% if dara_authors %}
                 {% for author in dara_authors %}
-                    {% set counter = counter+1 %}
+                   {% set counter = counter+1 %} 
                     {% set name = "dara_author_" ~ counter %}
                     {% set label = 'Author ' ~ counter %}
                     {% set value = author %}
@@ -22,8 +21,8 @@
                     <div class="controls ">
                         <input id="{{ field }}" type="text" name="{{ name }}" 
                         value="{{ author }}" placeholder="Joe Bloggs" />
-                        <a href="#" class="dara_red" id="remove_author">Remove</a>
-                    </div>
+                        <a href="#" class="dara_red remove_author">Remove</a>
+                  </div>
                 </div>
                 {% endfor %}
             {% endif %}

@@ -1,6 +1,7 @@
 #Hendrik Bunke
 #ZBW - Leibniz Information Centre for Economics
 
+#XXX refactor in a more functional way XXX
 
 from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk

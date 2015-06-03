@@ -68,7 +68,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         
         #authors
         for n in range(2, 21):
-            field = PREFIX + 'author_' + str(n)
+            field = 'author_' + str(n)
             schema_update(field)
         
         #hidden fields
@@ -112,7 +112,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         #authors
         for n in range(2,21):
-            field = PREFIX + 'author_' + str(n)
+            field = 'author_' + str(n)
             schema_update(field)
 
         schema.update({
@@ -132,6 +132,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'public')
         tk.add_resource('resources', 'dara')
+        tk.add_resource('fanstatic', 'fanstatic')
 
 
 

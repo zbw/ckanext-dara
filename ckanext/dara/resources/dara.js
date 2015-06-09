@@ -35,9 +35,11 @@ $(function add_authors() {
   
   var addAuthorDiv = $('#additional_authors');
   var current_authors = $('#current_number_of_authors').text();
-  var i = parseInt(current_authors) + 2;
+  var i = parseInt(current_authors);
+  //var i = 1;
 
-  //add author field
+  //add author field, numbering
+  /*
   $('#add_author').on('click', function() {
     $('<div class="control-group dara_author">\
         <label class="control-label" for="field-dara_author_' + i +'">\
@@ -51,13 +53,37 @@ $(function add_authors() {
     i++;
     return false;
   });
+  */
   
+  //add author, no numbering
+  $('#add_author').on('click', function() {
+    /*
+    $('<div class="control-group dara_author">\
+        <label class="control-label" for="field-dara_authors">\
+            Author '+ i +'</label>\
+        <div class="controls ">\
+          <input id="field-dara_authors_'+ i +'" type="text" name="dara_authors" \
+            value="" placeholder="Author Name" /> \
+            <a href="#" class="dara_red remove_author">Remove</a>\
+         </div>\
+       </div>').appendTo(addAuthorDiv);
+    i++;
+    */
+    $('.hidden_authorfield').clone().prop('class', 'control-group dara_author').appendTo(addAuthorDiv);
+    i++;
+    console.log(i);
+    return false;
+  });
+
+
   //remove author field
   $(addAuthorDiv).on('click', '.remove_author', function() { 
+      console.log($(this).parents('div.dara_author'));
+      console.log(i);
       if( i > 1 ) {
           $(this).parents('div.dara_author').remove();
-          i--;
-      }
+      };
+      i--;
       return false;
   });
     

@@ -6,6 +6,10 @@ from collections import namedtuple
 #DaraFields are namedtuples, we want them to be immutable (and KISS)
 DaraField = namedtuple('DaraField', 'id level adapt widget')
 
+#Author Fields are separated
+#XXX do we need an id?
+AuthorField = namedtuple('AuthorField', 'id widget')
+
 ##widgets are designed as subclasses of DaraWidget
 class DaraWidget(object):
     """
@@ -688,6 +692,41 @@ def fields():
     )
     
     return fields
+
+
+def author_fields():
+
+    fields = (
+
+        AuthorField('lastname', 
+            Input(
+                placeholder = '',
+                name = 'Lastname',
+                size = 'medium',
+                )
+            ),
+
+        AuthorField('firstname',
+            Input(
+                placeholder = '',
+                name = 'Firstname',
+                size = 'medium',
+                ),
+            ),
+
+        AuthorField('affil',
+            Input(
+                placeholder = 'Your institution',
+                name = 'Affiliation',
+                size = 'Medium',
+                ),
+            ),
+
+        )
+
+    return fields
+
+        
 
 
 def hidden_fields():

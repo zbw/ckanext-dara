@@ -9,7 +9,7 @@ from datetime import datetime
 from hashids import Hashids
 import ckan.model as model
 from pylons import config
-
+import json
 
 def dara_pkg():
     """
@@ -23,6 +23,7 @@ def dara_pkg():
     except:
         pkg = model.Package.by_name(pkg_id)
     
+    #params = request.params
     return pkg
 
 def dara_debug():
@@ -89,9 +90,12 @@ def dara_authors():
     return all author fields
     """
     pkg = dara_pkg()
+    
     try:
-        author_keys = filter(lambda k: 'dara_author' in k, pkg.keys())
-        authors = map(lambda key: pkg[key], author_keys)
+        authors = json.loads(pkg['dara_authors'][0])
+        #author_keys = filter(lambda k: 'dara_author' in k, pkg.keys())
+        #authors = map(lambda key: pkg[key], author_keys)
+        ##import pdb; pdb.set_trace()
         return authors
     except:
         return None

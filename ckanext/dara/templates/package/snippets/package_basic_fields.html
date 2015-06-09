@@ -6,11 +6,8 @@
 {% set c = h.dara_c %}
 {% set dara_authors = h.dara_authors() %}
 {% set form_style = c.form_style or c.action %}
-{#{% set debug = h.dara_debug() %} #}
+{# {% set debug = h.dara_debug() %} #}
 {% set pkg = c.pkg_dict %}
-
-
-
 
 
 {% resource 'dara/dara.css' %}
@@ -21,7 +18,6 @@
 {#{% resource 'dara/jquery-ui.css' %}#}
 
 {% block package_basic_fields_license %}
-    
 {% endblock %}
 
 {% block package_basic_fields_title %}
@@ -47,12 +43,11 @@
 {% block package_basic_fields_tags %}
 {% endblock %}
 
-
-
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
-{% set dara_type = 'dataset' %}
 
+{# XXX this can't be true anymore! #}
+{% set dara_type = 'dataset' %}
 
 
 <input type="hidden" value="{{ h.dara_doi(data) }}" name="dara_DOI_Proposal" />

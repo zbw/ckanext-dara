@@ -6,7 +6,8 @@
         We believe that you should cite data in just the same way that you can cite other sources of information, such as articles and books. Data citation can help by enabling easy reuse and verification of data, allowing the impact of data to be tracked, and creating a scholarly structure that recognises and rewards data producers.
     </p>
     #}
-    
+    {% resource 'dara/dara.js' %}
+   
    {% set dara_authors = h.dara_authors() %}
 
 
@@ -65,15 +66,20 @@
             }} 
         #}   
         
+        {# XXX now only dara_authors 
         {{ form.input('author', label=_('Author'), 
         id='field-author', 
         placeholder=_('eg. Olaf Siegert'), 
         value=data.author, 
         error=errors.author, 
         classes=['control-medium', 'dara_required']) }}
+        #}
 
-        {{ authors.author_fields(dara_authors) }}
+
+        {#{{ authors.author_fields(dara_authors) }}#}
+        {{ authors.author_fieldset(h) }}
         
+        {{ authors.author_fieldset(h) }}
 
         {# fields generated from schema #}
         <div id="dara_level_1">

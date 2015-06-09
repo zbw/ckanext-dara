@@ -1,0 +1,44 @@
+{% set dara_authors = h.dara_authors() %}
+{% set journal = pkg_dict['organization']['title'] or pkg_dict['organization']['name'] %}
+
+{% set DOI = pkg_dict['dara_DOI'] %}
+
+<section class="package-citation">
+
+<h3>Citation</h3>
+
+{% if dara_authors %}
+    {% for author in dara_authors %}
+        {% if author == dara_authors[-1] %}
+            {{ author }}
+        {% else %}
+            {{ author }}, 
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+{# this is just for demo. PublicationDate will be the final key! #}
+{% if pkg_dict.dara_PublicationDate %}
+    ({{ pkg_dict.dara_PublicationDate }}):
+{% else %}
+    ({{ pkg_dict.dara_year }}):
+{% endif %}
+
+{{ pkg_dict.title }}. 
+{% if pkg_dict.dara_currentVersion %}
+Version {{ pkg_dict.dara_currentVersion }}. 
+{% endif %}
+
+<em>{{journal}}</em>.
+
+
+{% if DOI %}
+doi:{{ DOI }}.
+<a href="http://dx.doi.org/{{ DOI }}">http://dx.doi.org/{{ DOI }}</a>
+{% else %}
+<span style="color:darkred">No DOI yet</span>
+{% endif %}
+
+
+</section>

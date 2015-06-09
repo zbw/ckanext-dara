@@ -11,6 +11,7 @@ from ckanext.dara import schema as dara_schema
 #from itertools import chain
 #from collections import OrderedDict
 from ckanext.dara import helpers
+from ckanext.dara import validators
 
 
 PREFIX = 'dara_'
@@ -32,11 +33,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IValidators)
     
    #def after_update(self, context, id):
-   #    pkg = dara_pkg()
+   #    pkg = helpers.dara_pkg()
    #    import pdb; pdb.set_trace()
-    
+   #
 
     def _resource_schema_update(self, schema):
         for i in dara_fields(1, 'resource') + dara_fields(2, 'resource'):
@@ -66,10 +68,17 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #resources schema (new in CKAN 2.3)
         self._resource_schema_update(schema)
         
-        #authors
-        for n in range(2, 21):
-            field = 'author_' + str(n)
-            schema_update(field)
+        #XXX author list with validator
+        field = PREFIX + 'authors'
+        schema.update({
+                field: [tk.get_validator('ignore_missing'),
+                        #tk.get_validator('repeating_text'),
+                        tk.get_validator('authors'),
+                        #tk.get_validator('repeating_text_output'),
+                        tk.get_converter('convert_to_extras'),
+                        ]
+                })
+
         
         #hidden fields
         for i in dara_schema.hidden_fields():
@@ -110,10 +119,17 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         for i in dara_schema.hidden_fields():
             schema_update(i)
 
-        #authors
-        for n in range(2,21):
-            field = 'author_' + str(n)
-            schema_update(field)
+        #author list with validator
+        field = PREFIX + 'authors'
+        schema.update({
+                field: [tk.get_converter('convert_from_extras'),
+                        tk.get_validator('ignore_missing'),
+                        #tk.get_validator('repeating_text'),
+                        tk.get_validator('authors'),
+                        tk.get_validator('repeating_text_output'),
+                        ]
+                })
+
 
         schema.update({
              'edawax_article_url' : [
@@ -134,8 +150,16 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_resource('resources', 'dara')
         tk.add_resource('fanstatic', 'fanstatic')
 
+    
+    def get_validators(self):
+        return {
+            'repeating_text': validators.repeating_text,
+            'repeating_text_output':
+                validators.repeating_text_output,
+            'authors': validators.authors,
+            }
 
-
+    
     def get_helpers(self):
         return {
                 'dara_md': helpers.dara_md,

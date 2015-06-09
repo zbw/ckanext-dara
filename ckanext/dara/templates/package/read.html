@@ -1,0 +1,56 @@
+{% ckan_extends %}
+{% set pkg = h.dara_pkg() %}
+{% set article_url = pkg['edawax_article_url'] %}
+{% set DOI = pkg['dara_DOI'] %}
+
+{#
+{% set dara_debug = h.dara_debug() %}
+#}
+
+{% block primary_content_inner %}
+
+
+  {% block package_description %}
+  {# better in info column 
+  <div id="DOI" style=" margin-top:17px; float:right">
+  {% set url = h.url_for(controller='ckanext.dara.controller:DaraController', action='doi',id=pkg.name) %}
+  {% if DOI %}
+  <a style="color:darkgreen"
+      href="{{ url }}">doi:{{ DOI }}</a>
+  
+  {% else %}
+         <a class="btn btn-success" style="width:80px;" href="{{ url }}">
+         + Get DOI</a>
+ 
+  
+  {% endif %}
+    
+    
+  </div>
+   #}
+
+  {{ super() }}
+  {% endblock %}
+
+  {% block package_resources %}
+    {{ super () }}
+  {% endblock %}
+   
+  {% snippet "package/snippets/citation.html", pkg_dict=pkg %}
+  
+  
+  {% if article_url %}
+    {% snippet "package/snippets/related_publication.html", pkg_dict=pkg %}
+  {% endif %}
+
+
+{% block package_tags %}
+    {{ super() }}
+  {% endblock %}
+   
+  {% block package_additional_info %}
+    {{ super() }}
+  {% endblock %}
+
+
+{% endblock %}

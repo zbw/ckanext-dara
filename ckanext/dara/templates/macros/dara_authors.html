@@ -1,36 +1,90 @@
 {# used in level 1 of datasets and resources #}
 
+{% resource 'dara/dara.js' %}
+
+{% macro author_fieldset(h) -%}
+{% resource 'dara/dara.js' %}
+{#{% set debug = h.dara_debug() %}#}
+
+<div class="control-group dara_author">
+    <label class="control-label" for="field-dara_author_lastname">Name</label>
+    <div class="controls ">
+             <input id="field-dara_author_name" type="text"
+                                                name="dara_authors" 
+                value="" placeholder="Siegert" />
+    </div>
+</div>
+<div class="control-group dara_author">
+    <label class="control-label" for="field-dara_author_lastname">Firstname</label>
+    <div class="controls ">
+             <input id="field-dara_author_name" type="text"
+                                                name="dara_authors" 
+                value="" placeholder="Olaf" />
+    </div>
+</div>
+
+
+<div class="control-group dara_author">
+    <label class="control-label" for="field-dara_author_lastname">Afilliation</label>
+    <div class="controls ">
+             <input id="field-dara_author_affiliation" type="text"
+                                                name="dara_authors" 
+                value="" placeholder="ZBW" />
+    </div>
+</div>
+
+{%- endmacro %}
+
+
+{% macro author_input(value='') -%}
+{% resource 'dara/dara.js' %}
+
+<div class="control-group control-medium dara_author hidden_authorfield">
+    <label class="control-label" for="field-dara_author">Author</label>
+    <div class="controls ">
+             <input id="field-dara_author" type="text" name="dara_authors" 
+                value="" placeholder="Joe Blank" />
+                <a href="#" class="dara_red remove_author">Remove</a>
+            </div>
+</div>
+{%- endmacro %}
+
+
 {% macro author_fields(dara_authors) -%}
+{% resource 'dara/dara.js' %}
+
+<div id="current_number_of_authors" style="display:none">
+{{ dara_authors|count if dara_authors else 1 }}
+</div>
 
 
-<div id="dara_additional_authors" style="margin-left:50px;">
-            <div id="current_number_of_authors" style="display:none">
-                {{ dara_authors|count if dara_authors else 0 }}</div>
-            {% set counter = 1 %}
+{# hidden element to copy with jquery #}
+{{ author_input() }}
+
+<div id="dara_additional_authors">
             {% if dara_authors %}
                 {% for author in dara_authors %}
-                   {% set counter = counter+1 %} 
-                    {% set name = "dara_author_" ~ counter %}
-                    {% set label = 'Author ' ~ counter %}
-                    {% set value = author %}
-                    {% set field = 'field-' ~ name %}
-                   
-                {# XXX this way no validation is possible! XXX #}    
-                <div class="control-group dara_author">
-                    <label class="control-label" for="{{ field }}">{{ label }}</label>
-                    <div class="controls ">
-                        <input id="{{ field }}" type="text" name="{{ name }}" 
-                        value="{{ author }}" placeholder="Joe Bloggs" />
-                        <a href="#" class="dara_red remove_author">Remove</a>
-                  </div>
-                </div>
+                    
+            <div class="control-group control-medium dara_author">
+            
+            <label class="control-label" for="field-dara_author">Author</label>
+            <div class="controls ">
+             <input id="field-dara_author" type="text" name="dara_authors" 
+                value="{{ author }}" placeholder="Joe Existent" />
+            
+             {% if not loop.index == 1 %}
+                 <a href="#" class="dara_red remove_author">Remove</a>
+             {% endif %}
+            
+            </div>
+            </div>
                 {% endfor %}
             {% endif %}
                   
             <div id="additional_authors">  
                 <!-- add author -->
             </div>
-            <p style="margin-bottom:25px"><a href="#" class="btn" id="add_author">
+            <p style="margin-bottom:25px; margin-left:-8px;"><a href="#" class="btn" id="add_author">
                 Add Author</a> </p>
 </div>
 

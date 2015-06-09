@@ -81,12 +81,12 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 #add_author {
-  margin-left:80px;
+    margin-left:80px; 
 }
 
 #dara_additional_authors p {
 
-  margin-left:-20px;
+/*  margin-left:-20px;*/
 }
 
 .dara_master_slave {
@@ -161,9 +161,13 @@ font-size:14px !important;
     float:right;
 }
 
-.hidden {
+.hidden  {
 /*    display:none; */
     visibility:hidden;
+}
+
+.hidden_authorfield {
+    display: none;
 }
 
 .yellow {

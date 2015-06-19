@@ -1,93 +1,146 @@
 {# used in level 1 of datasets and resources #}
+{% import 'macros/form.html' as form %}
 
 {% resource 'dara/dara.js' %}
 
-{% macro author_fieldset(h) -%}
-{% resource 'dara/dara.js' %}
-{#{% set debug = h.dara_debug() %}#}
+{% macro authors(dara_type, h) -%}
+    {% resource 'dara/dara.js' %}
+    {# {% set debug = h.dara_debug() %}#}
 
-<div class="control-group dara_author">
-    <label class="control-label" for="field-dara_author_lastname">Name</label>
-    <div class="controls ">
-             <input id="field-dara_author_name" type="text"
-                                                name="dara_authors" 
-                value="" placeholder="Siegert" />
+    {% set pkg = h.dara_pkg() %}
+    {% set res = h.dara_resource() %}
+    {% set aut = h.dara_authors %}
+    
+    <div id="authors_wrapper">
+    <fieldset id="authors">
+        <legend>Authors</legend>
+
+    {% if dara_type == 'dataset' %}
+        {% set authors = aut('dataset') %} 
+        {% set name = 'dara_authors' %}
+    {% endif %}
+    
+    {#XXX resource authors are not used at the moment. needs debugging (not
+    stored) #}
+    {% if dara_type == 'resource' %}
+        {% set authors = aut('resource') or aut('dataset') %}
+        {% set name = 'dara_resource_authors' %}
+    {% endif %}
+     
+    
+    {# hide an empty authorfield that can be cloned by jQuery #}
+    {{ authorfields(None, name, h, index=2, hide=True) }} 
+    
+    {# if we have at least one author, display fields with values. Otherwise
+    return an empty fieldset #}
+    {% if not authors %}
+        {{ authorfields(None, name, h) }}
+    {% else %}
+        {% for author in authors %}
+            {{ authorfields(author, name, h, loop.index) }}
+        {% endfor %}
+    {% endif %}
+
+    </fieldset>
+
+    <p style="margin-bottom:25px; margin-left:-25px;"><a href="#" class="btn" id="add_author">
+    Add Author</a> </p>
+
     </div>
-</div>
-<div class="control-group dara_author">
-    <label class="control-label" for="field-dara_author_lastname">Firstname</label>
-    <div class="controls ">
-             <input id="field-dara_author_name" type="text"
-                                                name="dara_authors" 
-                value="" placeholder="Olaf" />
-    </div>
-</div>
-
-
-<div class="control-group dara_author">
-    <label class="control-label" for="field-dara_author_lastname">Afilliation</label>
-    <div class="controls ">
-             <input id="field-dara_author_affiliation" type="text"
-                                                name="dara_authors" 
-                value="" placeholder="ZBW" />
-    </div>
-</div>
-
 {%- endmacro %}
 
 
-{% macro author_input(value='') -%}
-{% resource 'dara/dara.js' %}
+{% macro authorfields(author, name, h, index=1, hide=False) -%}
+    {% resource 'dara/dara.js' %}
+    {% set fields = h.dara_author_fields() %}
+    {% set classes = [] %}
+    {% if hide %}
+        {% do classes.append('hidden_authorfield') %}
+    {% endif %}
+    <fieldset class="author{{ " " ~ classes|join(' ') }}">
+        {% if index > 1 %}
+            <div><a href="#" class="dara_red remove_author" title="Remove
+            Author">[x]</a></div>
+        {% endif %}
+        <label>Author </label>
 
-<div class="control-group control-medium dara_author hidden_authorfield">
-    <label class="control-label" for="field-dara_author">Author</label>
-    <div class="controls ">
-             <input id="field-dara_author" type="text" name="dara_authors" 
-                value="" placeholder="Joe Blank" />
-                <a href="#" class="dara_red remove_author">Remove</a>
-            </div>
-</div>
-{%- endmacro %}
+    {% for field in fields %}
+        {% set key = field.id %}
+        {% set widget = field.widget %}
+        {% set value = author[key] %}
+        {% set label = widget.name %}
+        {% set classes = ['inline'] %}
+        {% set additional_classes = widget.classes %}
 
-
-{% macro author_fields(dara_authors) -%}
-{% resource 'dara/dara.js' %}
-
-<div id="current_number_of_authors" style="display:none">
-{{ dara_authors|count if dara_authors else 1 }}
-</div>
-
-
-{# hidden element to copy with jquery #}
-{{ author_input() }}
-
-<div id="dara_additional_authors">
-            {% if dara_authors %}
-                {% for author in dara_authors %}
-                    
-            <div class="control-group control-medium dara_author">
-            
-            <label class="control-label" for="field-dara_author">Author</label>
-            <div class="controls ">
-             <input id="field-dara_author" type="text" name="dara_authors" 
-                value="{{ author }}" placeholder="Joe Existent" />
-            
-             {% if not loop.index == 1 %}
-                 <a href="#" class="dara_red remove_author">Remove</a>
-             {% endif %}
-            
-            </div>
-            </div>
-                {% endfor %}
-            {% endif %}
-                  
-            <div id="additional_authors">  
-                <!-- add author -->
-            </div>
-            <p style="margin-bottom:25px; margin-left:-8px;"><a href="#" class="btn" id="add_author">
-                Add Author</a> </p>
-</div>
-
-{%- endmacro %}
+        {% for c in additional_classes %}
+           {% do classes.append(c) %}
+        {% endfor %}
         
+        {% if widget.placeholder %}
+           {% set placeholder = widget.placeholder %}
+        {% else %}
+           {% set placeholder = '' %}
+        {% endif %}
+
+        {# this relies on the correct sort order in fields dict! #}
+        {% if widget.role == 'master' %}
+            {% do classes.append('dara_master') %} 
+            <fieldset class="dara_master_slave">
+        {% endif %}
+        
+        {% if widget.role == 'slave' %}
+            {% do classes.append('dara_slave') %}
+        {% endif %}
+
+
+        {% if widget.form_type == 'input' %}
+            {{ form.input(name, label=label,
+                    placeholder=placeholder, 
+                    value=value,
+                    error=errors,
+                    classes=classes) 
+            }}
+        {% endif %}
+
+        {% if widget.form_type == 'select' %}
+            {% set options = widget.options %}
+            {% set selected = author['authorID_Type'] or options[0] %}
+
+            {% do classes.append('select-auto')  %}
+            {% do classes.append('control-select') %}
+            {% do classes.append('ui-widget') %}
+            {% do classes.append('select') %}
+            {{ form.select(name, 
+                label = label,
+                options = options,
+                error=errors,
+                selected=selected,
+                classes=classes
+                )
+                        
+            }}
+        {% endif %}
+
+
+        {% if widget.size == 'medium' %}
+            {% do classes.append('control-medium') %}
+        {% endif %}
+
+        {% if widget.size == 'small' %}
+            {% do classes.append('control-small') %}
+        {% endif %}
+    
+        
+       {#XXX this works only when there's only one slave! #}
+        {% if widget.role == 'slave' %}
+            </fieldset>
+        {% endif %}
+
+        
+     {% endfor %}
+    
+
+ </fieldset>
+ {% endmacro %}
+
 

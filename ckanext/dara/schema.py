@@ -698,30 +698,60 @@ def author_fields():
 
     fields = (
 
-        AuthorField('lastname', 
-            Input(
-                placeholder = '',
-                name = 'Lastname',
-                size = 'medium',
-                )
-            ),
-
+       
         AuthorField('firstname',
             Input(
                 placeholder = '',
                 name = 'Firstname',
-                size = 'medium',
+                size = '',
+                classes = []
                 ),
             ),
 
+        
+        AuthorField('lastname', 
+            Input(
+                placeholder = '',
+                name = 'Lastname',
+                size = '',
+                classes = []
+                )
+            ),
+        
+        
         AuthorField('affil',
             Input(
                 placeholder = 'Your institution',
                 name = 'Affiliation',
-                size = 'Medium',
+                size = 'medium',
                 ),
             ),
 
+
+        AuthorField('authorID',
+            Input(
+                name = 'Personal ID',
+                placeholder = 'ORCID, Scopus, GND or Web of Science ID',
+                size = 'small',
+                classes = [],
+                role = 'master',
+                ),
+        ),
+
+        AuthorField('authorID_Type',
+                Select(
+                name = 'Type',
+                options = [
+                    {'text': '', 'value': ''},
+                    {'text': 'ORCID', 'value': 'ORCID'}, 
+                    {'text': 'GND', 'value': 'GND'},
+                    {'text': 'Scopus', 'value': 'Scopus'},
+                    {'text': 'Web of Science', 'value': 'WoS'}
+                ],
+                role = 'slave',
+                ),
+        ),
+                
         )
 
     return fields

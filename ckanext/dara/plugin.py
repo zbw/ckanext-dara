@@ -44,7 +44,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         for i in dara_fields(1, 'resource') + dara_fields(2, 'resource'):
             field = PREFIX + i.id
             schema['resources'].update({
-                field: [ tk.get_validator('ignore_missing') ]
+                field: [ tk.get_validator('ignore_missing'),
+                    ]
         })
 
 
@@ -67,18 +68,30 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                        
         #resources schema (new in CKAN 2.3)
         self._resource_schema_update(schema)
+       
+       # XXX resource authors do not work for now
+       #schema['resources'].update({
+       #    'dara_resource_authors': [tk.get_validator('ignore_missing'),
+       #                    tk.get_validator('authors'),
+       #                    tk.get_converter('convert_to_extras'),
+       #                    ]
+       #    })
+
         
         #XXX author list with validator
         field = PREFIX + 'authors'
         schema.update({
-                field: [tk.get_validator('ignore_missing'),
+                field: [
                         #tk.get_validator('repeating_text'),
+                        tk.get_validator('ignore_missing'),
                         tk.get_validator('authors'),
                         #tk.get_validator('repeating_text_output'),
                         tk.get_converter('convert_to_extras'),
                         ]
                 })
-
+        
+        
+       
         
         #hidden fields
         for i in dara_schema.hidden_fields():
@@ -115,6 +128,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #resources schema (NEW! in 2.3)
         self._resource_schema_update(schema)
         
+        #XXX resource authors not functional at the moment. debug!
+        #schema['resources'].update({
+        #    'dara_resource_authors': [tk.get_converter('convert_from_extras'),
+        #                    tk.get_validator('ignore_missing'),
+        #            ]
+        #})
+
         #hidden fields
         for i in dara_schema.hidden_fields():
             schema_update(i)
@@ -123,13 +143,14 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         field = PREFIX + 'authors'
         schema.update({
                 field: [tk.get_converter('convert_from_extras'),
-                        tk.get_validator('ignore_missing'),
-                        #tk.get_validator('repeating_text'),
-                        tk.get_validator('authors'),
-                        tk.get_validator('repeating_text_output'),
-                        ]
+                    tk.get_validator('ignore_missing'),
+                    #tk.get_validator('repeating_text_output'),
+                    #tk.get_validator('authors'),
+                    #tk.get_validator('repeating_text'),
+                ]
                 })
-
+        
+        
 
         schema.update({
              'edawax_article_url' : [
@@ -137,6 +158,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing'),
              ]
         })
+
         
         return schema
 
@@ -157,6 +179,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'repeating_text_output':
                 validators.repeating_text_output,
             'authors': validators.authors,
+            'resource_authors': validators.resource_authors
             }
 
     
@@ -171,18 +194,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 #'dara_publication_fields': dara_schema.publication_fields(),
                 'dara_publications': helpers.dara_publications,
                 'dara_fields': dara_fields,
-                #'dara_level3_fields': dara_level3_fields,
-                #'dara_level2_fields': LEVEL_2,
-                #'dara_level1_fields': LEVEL_1,
-                #'dara_resource_fields': RESOURCE,
-                #'dara_resource_fields_1': RESOURCE_1,
-                #'dara_resource_fields_2': RESOURCE_2,
                 'dara_auto_fields': helpers.dara_auto_fields,
                 'dara_first_author': helpers.dara_first_author,
                 'dara_additional_authors': helpers.dara_additional_authors,
                 'dara_doi': helpers.dara_doi,
                 'dara_resource_doiid' : helpers.dara_resource_doiid,
                 'dara_resource_url' : helpers.dara_resource_url,
+                'dara_author_fields' : helpers.dara_author_fields,
                 }
 
     def is_fallback(self):

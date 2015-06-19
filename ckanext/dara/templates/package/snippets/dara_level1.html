@@ -8,7 +8,7 @@
     #}
     {% resource 'dara/dara.js' %}
    
-   {% set dara_authors = h.dara_authors() %}
+   {% set dara_authors = h.dara_authors('dataset') %}
 
 
     {{ form.input('title', id='field-title', 
@@ -66,20 +66,8 @@
             }} 
         #}   
         
-        {# XXX now only dara_authors 
-        {{ form.input('author', label=_('Author'), 
-        id='field-author', 
-        placeholder=_('eg. Olaf Siegert'), 
-        value=data.author, 
-        error=errors.author, 
-        classes=['control-medium', 'dara_required']) }}
-        #}
-
-
-        {#{{ authors.author_fields(dara_authors) }}#}
-        {{ authors.author_fieldset(h) }}
         
-        {{ authors.author_fieldset(h) }}
+        {{ authors.authors('dataset', h) }}
 
         {# fields generated from schema #}
         <div id="dara_level_1">

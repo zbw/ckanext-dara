@@ -1,13 +1,12 @@
 import json
 from ckan.plugins.toolkit import missing, _
-from itertools import islice, imap, starmap, izip_longest
+from itertools import izip_longest
 from ckanext.dara.schema import author_fields
 
 
-
 def _grouper(seq, size):
-    args = [iter(seq)] * size
-    return izip_longest(*args)
+    bargs = [iter(seq)] * size
+    return izip_longest(*bargs)
 
 def _dicter(seq, ids):
     return map(lambda t: dict(zip(ids, t)), seq)
@@ -17,14 +16,56 @@ def authors(key, data, errors, context):
     transform author fields to JSON string and store it
     """
     
+    if errors[key]:
+        return
+    
+    value = data[key]
+    fields = author_fields()
+    
+    #XXX test. must be more elaborated
+    # check if value is already string (=JSON)
+
+    #import ipdb; ipdb.set_trace()
+    if isinstance(value, basestring):
+        return
+
     #TODO make sure there's at least one author given AND that each Author has
     #at least lastname
-    
     #XXX Shouldn't the converter part be in converters, not in validators...?!
 
-    fields = author_fields()
-    dl = _dicter(_grouper(data[key][:], len(fields)), [i.id for i in fields])
+    
+    #XXX deleting first entry, which is empty because of the hidden jquery
+    #field. Not a nice solution, and we certainly should come up with something
+    #better
+    del value[:len(fields)]
+    
+    dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
     data[key] = json.dumps(dl)
+
+
+def resource_authors(value):
+    fields = author_fields()
+    import pdb; pdb.set_trace()
+    del value[:len(fields)]
+    dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
+    return dl
+
+
+def repeating_text_output(value):
+    """
+    Return stored json representation as a list, if
+    value is already a list just pass it through.
+    """
+    
+    import pdb; pdb.set_trace()
+    if isinstance(value, list):
+        return value
+    if value is None:
+        return []
+    try:
+        return json.loads(value)
+    except ValueError:
+        return [value]
 
 
 def repeating_text(key, data, errors, context):
@@ -50,7 +91,6 @@ def repeating_text(key, data, errors, context):
     # bail out here because our errors won't be useful
     if errors[key]:
         return
-
     value = data[key]
     # 1. list of strings or 2. single string
     if value is not missing:
@@ -105,17 +145,4 @@ def repeating_text(key, data, errors, context):
     data[key] = json.dumps(out)
 
 
-def repeating_text_output(value):
-    """
-    Return stored json representation as a list, if
-    value is already a list just pass it through.
-    """
-    #import pdb; pdb.set_trace()
-    if isinstance(value, list):
-        return value
-    if value is None:
-        return []
-    try:
-        return json.loads(value)
-    except ValueError:
-        return [value]
+

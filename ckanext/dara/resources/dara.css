@@ -94,7 +94,9 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 
 .dara_slave {
-  margin-left:100px;
+/*  margin-left:100px ! important; */
+    float:right;
+    margin-right:200px;
 }
 
 .dara_slave label {
@@ -143,9 +145,6 @@ font-size:14px !important;
   font-weight:bold;
 }
 
-.dara_inline {
-  
-}
 
 .highlighted {
   background-color: yellow;
@@ -176,4 +175,30 @@ font-size:14px !important;
 
 .control-small input {
     width:104px;
+}
+
+.inline {
+    display: inline;
+}
+
+fieldset.author {
+    margin-bottom: 30px;
+    margin-left: 50px;
+}
+
+.remove_author {
+    display:inline;
+    float:left;
+    margin-right:0px;
+    margin-left: -20px;
+    font-weight:bold;
+    font-family:FontAwesome;
+    font-size:0.85em;
+    
+}
+
+.dara_slave select {
+    width:auto;
+    font-size:0.75em !important;
+
 }

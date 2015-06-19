@@ -4,7 +4,7 @@
 
 {% import 'macros/form.html' as form %}
 {% set c = h.dara_c %}
-{% set dara_authors = h.dara_authors() %}
+{#{% set dara_authors = h.dara_authors() %}#}
 {% set form_style = c.form_style or c.action %}
 {# {% set debug = h.dara_debug() %} #}
 {% set pkg = c.pkg_dict %}
@@ -46,9 +46,6 @@
 {# dara level 1 (mandatory) fields #}
 {% block package_basic_fields_custom %}
 
-{# XXX this can't be true anymore! #}
-{% set dara_type = 'dataset' %}
-
 
 <input type="hidden" value="{{ h.dara_doi(data) }}" name="dara_DOI_Proposal" />
 <input type="hidden" value="{{ pkg['dara_DOI'] }}"  name="dara_DOI" />
@@ -68,14 +65,14 @@
         </h4>    
 
         <div class="dara_level">    
-            {% snippet "package/snippets/dara_level1.html", dara_type=dara_type, form=form, 
-                errors=errors, dara_authors=dara_authors, data=data %}
+            {% snippet "package/snippets/dara_level1.html", form=form, 
+                errors=errors, data=data, dara_type="dataset" %}
         </div>
     </div> 
 
 {% else %}
-    {% snippet "package/snippets/dara_level1.html", form=form, dara_type=dara_type,
-                   errors=errors, dara_authors=dara_authors, data=data %}
+    {% snippet "package/snippets/dara_level1.html", form=form,
+    dara_type='dataset', errors=errors, data=data %}
 {% endif %}
 
 
@@ -84,12 +81,12 @@
    {% if form_style == 'edit' %}
         <div id="dara_2">
             {% snippet "package/snippets/dara_level2.html", form=form,
-                errors=errors, dara_type=dara_type %}  
+                errors=errors, dara_type="dataset" %}  
         </div>
         
         <div id="dara_3">
             {% snippet "package/snippets/dara_level3.html", form=form,
-            dara_type=dara_type, errors=errors %}  
+            dara_type="dataset", errors=errors %}  
         </div>
     {% endif %}
 

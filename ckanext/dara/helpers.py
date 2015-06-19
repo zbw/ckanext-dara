@@ -24,6 +24,7 @@ def dara_pkg():
         pkg = model.Package.by_name(pkg_id)
     
     #params = request.params
+    
     return pkg
 
 def dara_debug():
@@ -43,6 +44,12 @@ def dara_auto_fields():
     dara_url = site_url + pkg_url
     
     return {'URL': dara_url}
+
+
+
+def dara_author_fields():
+    return dara_schema.author_fields()
+
 
 
 def dara_resource():
@@ -85,17 +92,19 @@ def dara_md():
     return named_levels
 
 
-def dara_authors():
+def dara_authors(dara_type):
     """
     return all author fields
     """
-    pkg = dara_pkg()
+    if dara_type == 'dataset':
+        pkg = dara_pkg()
+        key = 'dara_authors'
+    if dara_type == 'res':
+        pkg = dara_resource()
+        key = 'dara_resource_authors'
     
     try:
-        authors = json.loads(pkg['dara_authors'][0])
-        #author_keys = filter(lambda k: 'dara_author' in k, pkg.keys())
-        #authors = map(lambda key: pkg[key], author_keys)
-        ##import pdb; pdb.set_trace()
+        authors = json.loads(pkg[key])
         return authors
     except:
         return None

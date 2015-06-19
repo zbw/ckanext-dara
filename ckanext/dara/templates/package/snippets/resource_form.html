@@ -1,5 +1,7 @@
 {% ckan_extends %}
 {% import 'macros/dara_form.html' as dara_form %}
+{% import 'macros/dara_authors.html' as authors %}
+
 
 
 {% block basic_fields %}
@@ -24,7 +26,13 @@
                     name="dara_DOI" />
 
     
-
+    {#XXX DEBUG: dataset authors are overwritten by resource authors; off for 
+    now 
+    {{ authors.authors('resource', h) }}
+    #}
+    
+    
+      
     {{ dara_form.md(1, 'resource', h) }}
     
     <div id="dara_2">

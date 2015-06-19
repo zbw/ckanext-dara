@@ -41,11 +41,30 @@ TODO
 #}
 
 {# 4. creators #}
-{% macro creator(firstname, lastname) -%}
+{% macro creator(author) -%}
 <creator> 
     <person>
-        <firstName>{{ firstname }}</firstName>
-        <lastName>{{ lastname }}</lastName>
+        <firstName>{{ author['firstname'] or None }}</firstName>
+        <lastName>{{ author['lastname'] or None }}</lastName>
+        
+        {#TODO schemaURI is mandatory, but we don't have a field/value for it now.
+        Should be done automatically, depending on on identifierSchema
+        {% if author['authorID'] %}
+            <personIDs>
+                <personID>
+                    <identifier>{{ author['authorID'] }}</identifier>
+                    <identifierSchema>{{ author['authorID_Type'] }}</identifierSchema>
+                </personID>
+            </personIDs>
+        {% endif %}
+        #}
+        {#TODO condition einbauen, statt None #}
+        <affiliation>
+            <affiliationName>
+                <language>en</language>
+                <name>{{ author['affil'] or None }}</name>
+            </affiliationName>
+        </affiliation>
     </person>
 </creator>
 {%- endmacro %}

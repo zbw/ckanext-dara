@@ -7,8 +7,7 @@
 
 {% set auto = h.dara_auto_fields() %}
 {% set pkg = h.dara_pkg() %}
-{% set author = h.dara_first_author() %}
-{% set dara_authors = h.dara_additional_authors() %}
+{% set dara_authors = h.dara_authors('dataset') %}
 
 {# {% set debug = h.dara_debug() %} #}
 
@@ -39,9 +38,8 @@ http://www.da-ra.de/en/technical-information/doi-registration/
       
 {# 4. creators  TODO: 4.2 institution #}
 <creators>  
-{{ macros.creator(author.firstname, author.lastname) }}
-{% for dara_author in dara_authors %}
-    {{ macros.creator(dara_author.firstname, dara_author.lastname) }}
+{% for author in dara_authors %}
+    {{ macros.creator(author) }}
 {% endfor %}
 </creators>
 
@@ -111,8 +109,6 @@ case) #}
 {% endfor %}
 </relations>
 {% endif %}
-
-
 
 
 </resource>

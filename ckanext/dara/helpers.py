@@ -96,13 +96,20 @@ def dara_authors(dara_type):
     """
     return all author fields
     """
-    if dara_type == 'dataset':
-        pkg = dara_pkg()
-        key = 'dara_authors'
-    if dara_type == 'res':
-        pkg = dara_resource()
-        key = 'dara_resource_authors'
+    #import pdb; pdb.set_trace()
     
+
+   #XXX we don't have resource authors at the moment
+   #if dara_type == 'dataset':
+   #    pkg = dara_pkg()
+   #    key = 'dara_authors'
+   #if dara_type == 'res':
+   #    pkg = dara_resource()
+   #    key = 'dara_resource_authors'
+    
+    pkg = dara_pkg()
+    key = 'dara_authors'
+
     try:
         authors = json.loads(pkg[key])
         return authors

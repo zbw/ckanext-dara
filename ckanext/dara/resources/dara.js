@@ -6,7 +6,8 @@ adds some usability to dara metadata forms
 
 */
 
-
+/* obsolete for now
+ *
 $(function metadata_level() {
 
     $( "#dara_1" ).accordion({
@@ -29,7 +30,7 @@ $(function metadata_level() {
     });
 
 });
-
+*/
 
 $(function add_authors() {
   
@@ -38,6 +39,7 @@ $(function add_authors() {
   $('#add_author').on('click', function() {
     
     $('.hidden_authorfield').clone().prop('class', 'author').appendTo(authorContainer);
+    $(master_slave_input());
     return false;
   });
 
@@ -48,37 +50,6 @@ $(function add_authors() {
   });
     
 });
-
-
-
-/* XXX if not using jquery-ui.accordion use this one
-$(function publications() {
-  
-  var publication = $('#dara_Publication');
-  var pubs = $('#pubs').text();
-  $(publication).hide();
-  if( pubs ) {
-     $(publication).show();
-     $('#add_publication').hide();
-  }; 
-
-
-  $('#add_publication').on('click', function() {
-    $(publication).show();
-    master_slave_input();
-    $('#add_publication').hide();
-    return false;
-  });
-
-  $('#remove_publication').on('click', function() { 
-        $(this).parent().hide();
-        $('#add_publication').show();
-        return false;
-  });
-    
-
-});
-*/
 
 
 $(function publication() {
@@ -142,49 +113,29 @@ function master_slave_input() {
 
 // call for first time
 $(res_preselection());
-
 function res_preselection() {
-//XXX optimize!
-//
 // conditional field based on input 
+
     var master = $('#dara_res_preselection');
-    var dara_data = $('#dara_data');
-    var dara_text = $('#dara_text');
-    var dara_code = $('#dara_code');
-    var dara_other = $('#dara_other');
     var value = master.val();
-    
-    dara_data.hide();
-    dara_text.hide();
-    dara_code.hide();
-    dara_other.hide();
+    var blocks = [
+        [$('#dara_data'), 'data'],
+        [$('#dara_text'), 'text'],
+        [$('#dara_code'), 'code'],
+        [$('#dara_other'), 'other']
+    ];
 
-    dara_data.prop("disabled", true );
-    dara_text.prop("disabled", true );
-    dara_code.prop("disabled", true );
-    dara_other.prop("disabled", true );
-
-
-    if(value == 'data') {
-        dara_data.show();
-        dara_data.prop("disabled", false);
+    for(var i = 0; i < blocks.length; i++) {
+        var block = blocks[i][0];
+        var text = blocks[i][1];
+        block.hide();
+        block.prop("disabled", true);
+        if(value == text) {
+            block.show();
+            block.prop("disabled", false);
         }
-    
-    if(value == 'text') {
-        dara_text.show();
-        dara_text.prop("disabled", false);
     }
-    if(value == 'code') {
-        dara_code.show();
-        dara_code.prop("disabled", false);
-    }
-    
-    if(value == 'other') {
-        dara_other.show();
-        dara_other.prop("disabled", false);
-    }
-
-
+       
     master.on('change keyup', function ()
             {   //recursion, fuck yeah ;-)
                 res_preselection(); }

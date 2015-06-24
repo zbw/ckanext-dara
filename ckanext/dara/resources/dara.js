@@ -139,3 +139,73 @@ function master_slave_input() {
 
 }
 
+
+// call for first time
+$(res_preselection());
+
+function res_preselection() {
+//XXX optimize!
+//
+// conditional field based on input 
+    var master = $('#dara_res_preselection');
+    var dara_data = $('#dara_data');
+    var dara_text = $('#dara_text');
+    var dara_code = $('#dara_code');
+    var dara_other = $('#dara_other');
+    var value = master.val();
+    
+    dara_data.hide();
+    dara_text.hide();
+    dara_code.hide();
+    dara_other.hide();
+
+    dara_data.prop("disabled", true );
+    dara_text.prop("disabled", true );
+    dara_code.prop("disabled", true );
+    dara_other.prop("disabled", true );
+
+
+    if(value == 'data') {
+        dara_data.show();
+        dara_data.prop("disabled", false);
+        }
+    
+    if(value == 'text') {
+        dara_text.show();
+        dara_text.prop("disabled", false);
+    }
+    if(value == 'code') {
+        dara_code.show();
+        dara_code.prop("disabled", false);
+    }
+    
+    if(value == 'other') {
+        dara_other.show();
+        dara_other.prop("disabled", false);
+    }
+
+
+    master.on('change keyup', function ()
+            {   //recursion, fuck yeah ;-)
+                res_preselection(); }
+            );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

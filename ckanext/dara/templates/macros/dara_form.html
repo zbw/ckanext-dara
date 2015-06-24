@@ -18,7 +18,7 @@
         {% set id = 'dara_' ~ field.id %}
         
         {# for now we don't inherit resource values from dataset #}
-        {% if type == 'resource' %}
+        {% if type in ('data', 'text', 'code', 'other') %}
             {% set res = h.dara_resource() %}
             {% set value = res[id] %}
         {% else %}
@@ -73,7 +73,7 @@
         {% if widget.form_type == 'select' %}
             {% set options = widget.options %}
             
-            {% if type == 'resource' %}
+            {% if type in  ('data', 'text', 'code', 'other') %}
                 {% set selected = res[id] or options[0] %}
             {% else %}
                 {% set selected = dara[id] or options[0] %}

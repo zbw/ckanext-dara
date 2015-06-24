@@ -17,8 +17,10 @@ from ckanext.dara import validators
 PREFIX = 'dara_'
 
 def dara_fields(level, dara_type):
+    fields = dara_schema.fields()
+    #fields = dara_schema.testfields()
     return filter(lambda field: field.level == level and dara_type in field.adapt,
-            dara_schema.fields())
+            fields)
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -201,6 +203,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_resource_doiid' : helpers.dara_resource_doiid,
                 'dara_resource_url' : helpers.dara_resource_url,
                 'dara_author_fields' : helpers.dara_author_fields,
+                #'get_request_params': helpers.get_request_params,
                 }
 
     def is_fallback(self):

@@ -1,13 +1,38 @@
 {% ckan_extends %}
 {% import 'macros/dara_form.html' as dara_form %}
 {% import 'macros/dara_authors.html' as authors %}
-
+{% import 'macros/form.html' as form %}
+{% set res = h.dara_resource() %}
 
 
 {% block basic_fields %}
 
-    {% block basic_fields_format %}{% endblock %}
-    {{ super() }} 
+{% set options = [
+{'text': 'Data', 'value': 'data'},
+{'text': 'Text/Documentation/PDF', 'value': 'text'},
+{'text': 'Code', 'value': 'code'},
+{'text': 'Other', 'value': 'other'}
+]
+%}
+ 
+<div id="pres" title="Select a category for the resource you'd like to add. This will influence the number of metadata fields. In general, 'Data' has more fields than 'Code' or 'Text'.">
+    
+{% set selected = res['dara_res_preselection'] or 'data' %}
+{{ form.select('dara_res_preselection', 
+                id = 'dara_res_preselection',
+                label = "This Resource is",
+                options = options,
+                error=errors,
+                selected=selected,
+                classes=['select-auto', 'control-select'],
+                )
+}}
+
+</div>
+
+
+{% block basic_fields_format %}{% endblock %}
+{{ super() }} 
 {% endblock basic_fields %}
 
 
@@ -17,7 +42,8 @@
     {% resource 'dara/dara.js' %}
     {% resource 'dara/jquery-ui.js' %}
     
-    {% set res = h.dara_resource() %}
+        {% set res_type = res.dara_type or
+        h.get_request_param('dara_res_preselection'), 'resource' %}
     
     <input type="hidden" value="{{ res.dara_doiid or
                             h.dara_resource_doiid() }}"
@@ -30,20 +56,47 @@
     now 
     {{ authors.authors('resource', h) }}
     #}
-    
-    
-      
+       
+    {#
     {{ dara_form.md(1, 'resource', h) }}
+    #}
     
+
+    <fieldset id="dara_data">
+        {{ dara_form.md(1, 'data', h) }}
+        {{ dara_form.md(2, 'data', h) }}
+    </fieldset>
+
+    <fieldset id="dara_text">
+        {{ dara_form.md(1, 'text', h) }}
+        {{ dara_form.md(2, 'text', h) }}
+    </fieldset>
+
+    <fieldset id="dara_code">
+        {{ dara_form.md(1, 'code', h) }}
+        {{ dara_form.md(2, 'code', h) }}
+    </fieldset>
+
+    <fieldset id="dara_other">
+        {{ dara_form.md(1, 'other', h) }}
+        {{ dara_form.md(2, 'other', h) }}
+    </fieldset>
+
+
+
+
+    {#
     <div id="dara_2">
             {% snippet "package/snippets/dara_level2.html", form=form,
-                errors=errors, dara_type='resource' %}  
+                errors=errors, dara_type=res_type %}  
     </div>
+    
+
     <div id="dara_3">
          {% snippet "package/snippets/dara_level3.html", form=form,
-                errors=errors, dara_type='resource' %}  
+                errors=errors, dara_type=res_type %}  
     </div>
-
+    #}
 
 
     {{ super() }}

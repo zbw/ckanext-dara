@@ -3,6 +3,8 @@
 #}
 
 {% import 'macros/form.html' as form %}
+{% import 'macros/dara_form.html' as dara_form %}
+
 {% set c = h.dara_c %}
 {#{% set dara_authors = h.dara_authors() %}#}
 {% set form_style = c.form_style or c.action %}
@@ -54,6 +56,7 @@
 <input type="hidden" value="{{ pkg['dara_updated'] }}"
                      name="dara_updated" />
 
+{#
 {% if form_style == 'edit' %}
     <div id="dara_1">
         <h4 class="dara_level_head"
@@ -74,10 +77,18 @@
     {% snippet "package/snippets/dara_level1.html", form=form,
     dara_type='dataset', errors=errors, data=data %}
 {% endif %}
+#}
+
+{% snippet "package/snippets/dara_level1.html", form=form,
+    dara_type='dataset', errors=errors, data=data %}
+
+<div id="dara_level_2">
+            {{ dara_form.md(2, 'dataset', h) }}
+</div>
 
 
 
-{# da|ra levels 2 and 3 are not shown at first dataset edit #}
+{# da|ra levels 2 and 3 are not shown at first dataset edit 
    {% if form_style == 'edit' %}
         <div id="dara_2">
             {% snippet "package/snippets/dara_level2.html", form=form,
@@ -89,7 +100,7 @@
             dara_type="dataset", errors=errors %}  
         </div>
     {% endif %}
-
+#}
 {% endblock %}
 
 

@@ -2,7 +2,7 @@
 #ZBW - Leibniz Information Centre for Economics
 
 import ckan.plugins.toolkit as tk
-from ckan.common import c, request
+from ckan.common import c
 from ckanext.dara import schema as dara_schema
 from ckanext.dara import utils
 from datetime import datetime
@@ -10,6 +10,8 @@ from hashids import Hashids
 import ckan.model as model
 from pylons import config
 import json
+import ckan.plugins.toolkit as tk
+
 
 def dara_pkg():
     """
@@ -58,17 +60,20 @@ def dara_resource():
     """
     #XXX improve this. we should somehow be able to get the type of the context
     #(resource or package)
-    #import pdb; pdb.set_trace()
-    
     try:
-        if 'resource' in request.path:
-            resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
-        else:
-            resource = c.resource
+       #if 'resource_edit' in request.path:
+       #    resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
+        #else:
+        resource = c.resource
         return resource
     except:
         return False
- 
+
+
+#def get_request_params():
+#    import ipdb; ipdb.set_trace()
+#    return tk.request.params
+
 
 def dara_resource_url(url):
     """

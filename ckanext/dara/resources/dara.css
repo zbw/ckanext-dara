@@ -97,6 +97,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 /*  margin-left:100px ! important; */
     float:right;
     margin-right:200px;
+    margin-top:-15px;
 }
 
 .dara_slave label {
@@ -204,5 +205,26 @@ fieldset.author {
 }
 
 #dara_res_preselection {
-    width:auto;
+    width:100%;
+    height:auto;
+    font-size: 36px;
+    border:none;
+    color:darkred;
+    background:#ebebeb;
+    /*-webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;*/
+    margin-top:-10px;
+    margin-bottom:25px;
+  
+}
+
+#dara_res_preselection option {
+    color:darkgrey;
+}
+
+label[for="dara_res_preselection"] {
+    font-size:normal;
+    margin-left:-20px;
+    text-align:left;
 }

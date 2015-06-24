@@ -71,9 +71,27 @@
 
         {# fields generated from schema #}
         <div id="dara_level_1">
+            <fieldset>
+                <legend>Additional Metadata</legend>
             {{ dara_form.md(1, 'dataset', h) }}
+            </fieldset>
         </div>
         
+ {# old block package_basic_fields_tags #}
+    {% set tag_attrs = {
+            'data-module-tags': '', 
+            'data-module': 'autocomplete', 
+            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
+            } 
+        %}
+        {{ form.input('tag_string', id='field-tags', 
+            label=_('Keywords'), 
+            placeholder=_('eg. economy, mental health, government'), 
+            value=data.tag_string, error=errors.tags, 
+            classes=['control-medium'], 
+            attrs=tag_attrs) }}
+
+
 
         {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}
@@ -123,19 +141,6 @@
         classes=['control-medium']) }}
 
 
-    {# old block package_basic_fields_tags #}
-    {% set tag_attrs = {
-            'data-module-tags': '', 
-            'data-module': 'autocomplete', 
-            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
-            } 
-        %}
-        {{ form.input('tag_string', id='field-tags', 
-            label=_('Keywords'), 
-            placeholder=_('eg. economy, mental health, government'), 
-            value=data.tag_string, error=errors.tags, 
-            classes=['control-medium'], 
-            attrs=tag_attrs) }}
-
+   
 
    

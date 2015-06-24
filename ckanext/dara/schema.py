@@ -126,7 +126,7 @@ def fields():
     fields = (
 
         DaraField('PublicationDate',
-            1, ('dataset', 'resource'),
+            1, ('dataset', 'data', 'text', 'code'),
             Input(
                 placeholder="eg. 2011",
                 name="Publication Year",
@@ -136,7 +136,7 @@ def fields():
             ),
 
         DaraField('Availabilitycontrolled',
-            1, ('dataset', 'resource'),
+            1, ('dataset', 'data', 'text', 'code', 'other'),
             Select(
                 options=[
                     {'value': '1', 'text': 'Free Download'},
@@ -145,13 +145,13 @@ def fields():
                     {'value': '4', 'text': 'Not available'},
                     {'value': '5', 'text': 'Unknown'},
                     ],
-                name = 'Availability (controlled)',
+                name = 'Availability',
                 classes = ['dara_required']
                 ),
             ),
         
         DaraField('Availabilityfree',
-            1, ('dataset', 'resource'),
+            1, ('dataset'),
 
             Input(
                 name = 'Availability (free)',
@@ -161,32 +161,32 @@ def fields():
             ),
     
         
-        DaraField('OtherTitle',
-            2, ('dataset', 'resource'),
-            Input(
-            placeholder = 'eg. Subtitle, alternative title',
-            role = 'master',
-            name = 'Other Title',
-            size = 'medium',
-            )
-        ),
+       #DaraField('OtherTitle',
+       #    2, ('dataset', 'data', 'text', 'code'),
+       #    Input(
+       #    placeholder = 'eg. Subtitle, alternative title',
+       #    role = 'master',
+       #    name = 'Other Title',
+       #    size = 'medium',
+       #    )
+       #),
 
-        DaraField('OtherTitleType',
-            2, ('dataset', 'resource'),
-            Select(
-            role = 'slave',
-            name = 'Type of other Title',
-            options = [
-                {'text': 'Alternative Title', 'value': '1'}, 
-                {'text': 'Translated Title', 'value': '2'}, 
-                {'text': 'Subtitle', 'value': '3'}, 
-                {'text': 'Original Title', 'value': '4'}],
-            )
-        ),
+       #DaraField('OtherTitleType',
+       #    2, ('dataset', 'data', 'text', 'code'),
+       #    Select(
+       #    role = 'slave',
+       #    name = 'Type of other Title',
+       #    options = [
+       #        {'text': 'Alternative Title', 'value': '1'}, 
+       #        {'text': 'Translated Title', 'value': '2'}, 
+       #        {'text': 'Subtitle', 'value': '3'}, 
+       #        {'text': 'Original Title', 'value': '4'}],
+       #    )
+       #),
 
         
         DaraField('currentVersion',
-                2, ('dataset', 'resource'),
+                2, ('dataset', 'data', 'code'),
                 Input(
                 placeholder = 'eg. 1.1',
                 name = 'Version',
@@ -194,88 +194,89 @@ def fields():
                 )
         ),
 
-        DaraField('language',
-                    2, ('dataset', 'resource'),
+        # language is ALWAYS supposed to be "English"
+       #DaraField('language',
+       #            2, ('dataset', 'data', 'text', 'code'),
+       #        Select(
+       #        name = 'Language',
+       #        options = [
+       #            {'text': 'English', 'value': 'eng'},
+       #            {'text': 'Belarusian', 'value': 'bel'}, 
+       #            {'text': 'Bosnian', 'value': 'bos'}, 
+       #            {'text': 'Czech', 'value': 'cze'}, 
+       #            {'text': 'Dutch', 'value': 'dut'}, 
+       #            {'text': 'Estonian', 'value': 'est'}, 
+       #            {'text': 'Finnish', 'value': 'fin'}, 
+       #            {'text': 'French', 'value': 'fre'}, 
+       #            {'text': 'German', 'value': 'ger'}, 
+       #            {'text': 'Greek', 'value': 'gre'}, 
+       #            {'text': 'Croatian', 'value': 'hrv'}, 
+       #            {'text': 'Hungarian', 'value': 'hun'}, 
+       #            {'text': 'Italian', 'value': 'ita'}, 
+       #            {'text': 'Latvian', 'value': 'lav'}, 
+       #            {'text': 'Lithuanian', 'value': 'lit'}, 
+       #            {'text': 'Norwegian', 'value': 'nor'}, 
+       #            {'text': 'Polish', 'value': 'pol'}, 
+       #            {'text': 'Romanian', 'value': 'rum'}, 
+       #            {'text': 'Russian', 'value': 'rus'}, 
+       #            {'text': 'Slovak', 'value': 'slo'}, 
+       #            {'text': 'Slovenian', 'value': 'slv'}, 
+       #            {'text': 'Spanish', 'value': 'spa'}, 
+       #            {'text': 'Serbian', 'value': 'srp'}, 
+       #            {'text': 'Swedish', 'value': 'swe'}, 
+       #            {'text': 'Ukrainian', 'value': 'ukr'}],
+       #        )
+       #),
 
-                Select(
-                name = 'Language',
-                options = [
-                    {'text': '', 'value': ''}, 
-                    {'text': 'Belarusian', 'value': 'bel'}, 
-                    {'text': 'Bosnian', 'value': 'bos'}, 
-                    {'text': 'Czech', 'value': 'cze'}, 
-                    {'text': 'Dutch', 'value': 'dut'}, 
-                    {'text': 'English', 'value': 'eng'}, 
-                    {'text': 'Estonian', 'value': 'est'}, 
-                    {'text': 'Finnish', 'value': 'fin'}, 
-                    {'text': 'French', 'value': 'fre'}, 
-                    {'text': 'German', 'value': 'ger'}, 
-                    {'text': 'Greek', 'value': 'gre'}, 
-                    {'text': 'Croatian', 'value': 'hrv'}, 
-                    {'text': 'Hungarian', 'value': 'hun'}, 
-                    {'text': 'Italian', 'value': 'ita'}, 
-                    {'text': 'Latvian', 'value': 'lav'}, 
-                    {'text': 'Lithuanian', 'value': 'lit'}, 
-                    {'text': 'Norwegian', 'value': 'nor'}, 
-                    {'text': 'Polish', 'value': 'pol'}, 
-                    {'text': 'Romanian', 'value': 'rum'}, 
-                    {'text': 'Russian', 'value': 'rus'}, 
-                    {'text': 'Slovak', 'value': 'slo'}, 
-                    {'text': 'Slovenian', 'value': 'slv'}, 
-                    {'text': 'Spanish', 'value': 'spa'}, 
-                    {'text': 'Serbian', 'value': 'srp'}, 
-                    {'text': 'Swedish', 'value': 'swe'}, 
-                    {'text': 'Ukrainian', 'value': 'ukr'}],
-                )
-        ),
+        #XXX deselected
+       #DaraField('AlternativeIdentifier_ID',
+       #        2, ('dataset', 'data', 'text', 'code'),
 
-        DaraField('AlternativeIdentifier_ID',
-                2, ('dataset', 'resource'),
+       #        Input(
+       #        placeholder = 'eg. ISBN, Handle, DOI',
+       #        role = 'master',
+       #        name = 'Alternative Identifier',
+       #        )
+       #),
+       #DaraField('AlternativeIdentifier_Type',
+       #        2, ('dataset', 'data', 'text', 'code'),
 
-                Input(
-                placeholder = 'eg. ISBN, Handle, DOI',
-                role = 'master',
-                name = 'Alternative Identifier',
-                )
-        ),
+       #        Select(
+       #        role = 'slave',
+       #        name = 'Type of Alternative Identifier',
+       #        options = [
+       #            {'text': ''}, 
+       #            {'text': 'DOI', 'value': 'DOI'}, 
+       #            {'text': 'ARK', 'value': 'ARK'}, 
+       #            {'text': 'EAN13', 'value': 'EAN13'}, 
+       #            {'text': 'EISSN', 'value': 'EISSN'}, 
+       #            {'text': 'Handle', 'value': 'Handle'}, 
+       #            {'text': 'ISBN', 'value': 'ISBN'}, 
+       #            {'text': 'ISSN', 'value': 'ISSN'}, 
+       #            {'text': 'ISTC', 'value': 'ISTC'}, 
+       #            {'text': 'LISSN', 'value': 'LISSN'}, 
+       #            {'text': 'LSID', 'value': 'LSID'}, 
+       #            {'text': 'PURL', 'value': 'PURL'}, 
+       #            {'text': 'UPC', 'value': 'UPC'}, 
+       #            {'text': 'URL', 'value': 'URL'}, 
+       #            {'text': 'URN', 'value': 'URN'}],
+       #        )
+       #),
 
-        DaraField('AlternativeIdentifier_Type',
-                2, ('dataset', 'resource'),
+        
+        #TODO erstmal raus wegen fehlendem Vokabular
+       #DaraField('geographicCoverage',
+       #        2, ('dataset', 'data'),
 
-                Select(
-                role = 'slave',
-                name = 'Type of Alternative Identifier',
-                options = [
-                    {'text': ''}, 
-                    {'text': 'DOI', 'value': 'DOI'}, 
-                    {'text': 'ARK', 'value': 'ARK'}, 
-                    {'text': 'EAN13', 'value': 'EAN13'}, 
-                    {'text': 'EISSN', 'value': 'EISSN'}, 
-                    {'text': 'Handle', 'value': 'Handle'}, 
-                    {'text': 'ISBN', 'value': 'ISBN'}, 
-                    {'text': 'ISSN', 'value': 'ISSN'}, 
-                    {'text': 'ISTC', 'value': 'ISTC'}, 
-                    {'text': 'LISSN', 'value': 'LISSN'}, 
-                    {'text': 'LSID', 'value': 'LSID'}, 
-                    {'text': 'PURL', 'value': 'PURL'}, 
-                    {'text': 'UPC', 'value': 'UPC'}, 
-                    {'text': 'URL', 'value': 'URL'}, 
-                    {'text': 'URN', 'value': 'URN'}],
-                )
-        ),
-
-        DaraField('geographicCoverage',
-                2, ('dataset', 'resource'),
-
-                Select(
-                classes = ['todo'],
-                name = 'Geographic Coverage (controlled)',
-                options = [{'text': ''}],
-                )
-        ),
+       #        Select(
+       #        classes = ['todo'],
+       #        name = 'Geographic Coverage (controlled)',
+       #        options = [{'text': ''}],
+       #        )
+       #),
 
         DaraField('geographicCoverageFree',
-                2, ('dataset', 'resource'),
+                2, ('dataset', 'data'),
 
                 Input(
                 placeholder = 'eg. West-Germany',
@@ -284,18 +285,9 @@ def fields():
                 )
         ),
         
-        DaraField('sampling',
-                2, ('dataset', 'resource'),
-
-                Input(
-                    placeholder= 'test',
-                    name='test universe',
-                    size = 'medium'
-                    )
-                ),
 
         DaraField('universeSampled',
-                2, ('dataset', 'resource'),
+                2, ('data'),
 
                 Input(
                 placeholder = 'eg. adults in Eastern and Western Germany',
@@ -304,131 +296,147 @@ def fields():
                 )
         ),
 
-        DaraField('Sampling',
-                2, ('dataset', 'resource'),
+        
+       #DaraField('Sampling',
+       #        2, ('dataset', 'data', 'text', 'code'),
 
-                Text(
-                placeholder = 'Describe your selection method',
-                name = 'Sampling',
-                )
-        ),
+       #        Text(
+       #        placeholder = 'Describe your selection method',
+       #        name = 'Sampling',
+       #        )
+       #),
 
-        DaraField('CollectionDate_controlled',
-                2, ('dataset', 'resource'),
-
-                Date(
-                classes = ['todo'],
-                name = 'Collection Date (controlled)',
-                )
-        ),
-
-        DaraField('CollectionDate_free',
-                2, ('dataset', 'resource'),
-
+        
+        #TODO
+       #DaraField('temporalCoverageFormal',
+       #        2, ('data'),
+       #        Date(
+       #            classes= ['todo'],
+       #            name = "Temporal Coverage (controlled)",
+       #            )
+       #),
+        
+        DaraField('temporalCoverageFree',
+                2, ('data'),
                 Input(
-                placeholder = 'eg. Spring 1999',
-                name = 'Collection Date (free)',
-                size = 'medium',
-                )
-        ),
-
-        DaraField('CollectionMode_controlled',
-                2, ('dataset', 'resource'),
-
-                Select(
-                name = 'Collection Mode (controlled)',
-                options = [
-                    {'text': '', 'value': ''}, 
-                    {'text': 'Interview', 'value': '1'}, 
-                    {'text': 'Interview: Face-to-Face', 'value': '2'}, 
-                    {'text': 'Interview: Telephone', 'value': '3'}, 
-                    {'text': 'Interview: E-Mail', 'value': '4'}, 
-                    {'text': 'Interview: CATI', 'value': '5'}, 
-                    {'text': 'Interview: CAPI', 'value': '6'}, 
-                    {'text': 'Self-completed questionnaire', 'value': '7'}, 
-                    {'text': 'Self-completed questionnaire: Paper/Pencil', 'value': '8'}, 
-                    {'text': 'Self-completed questionnaire: Web-based', 'value': '9'}, 
-                    {'text': 'Self-completed questionnaire: CASI', 'value': '10'}, 
-                    {'text': 'Self-completed questionnaire: ACASI', 'value': '11'}, 
-                    {'text': 'Coding', 'value': '12'}, {'text': 'Transcription', 'value': '13'}, 
-                    {'text': 'Compilation', 'value': '14'}, 
-                    {'text': 'Synthesis', 'value': '15'}, 
-                    {'text': 'Recording', 'value': '16'}, 
-                    {'text': 'Simulation', 'value': '17'}, 
-                    {'text': 'Observation', 'value': '18'}, 
-                    {'text': 'Observation: Field', 'value': '19'}, 
-                    {'text': 'Observation: Laboratory', 'value': '20'}, 
-                    {'text': 'Observation: Participant', 'value': '21'}, 
-                    {'text': 'Experiments', 'value': '22'}, 
-                    {'text': 'Focus Group', 'value': '23'}, 
-                    {'text': 'Other', 'value': '24'}],
-                )
-        ),
-
-        DaraField('CollectionMode_free',
-                2, ('dataset', 'resource'),
-
-                Input(
-                placeholder = 'eg. Interview',
-                name = 'Collection Mode (free)',
-                size = 'medium',
-                )
-        ),
-
-        DaraField('TimeDimension_controlled',
-                2, ('dataset', 'resource'),
-
-                Select(
-                name = 'Time Dimension (controlled)',
-                options = [
-                    {'text': '', 'value': ''}, 
-                    {'text': 'Longitudinal ', 'value': '1'}, 
-                    {'text': 'Longitudinal.CohortEventBased ', 'value': '2'}, 
-                    {'text': 'Longitudinal.TrendRepeatedCrossSection ', 'value': '3'}, 
-                    {'text': 'Longitudinal.Panel ', 'value': '4'}, 
-                    {'text': 'Longitudinal.Panel.Continuous', 'value': '5'}, 
-                    {'text': 'Longitudinal: Panel: Interval', 'value': '6'}, 
-                    {'text': 'Time Series', 'value': '7'}, 
-                    {'text': 'TimeSeries: Continuous', 'value': '8'}, 
-                    {'text': 'TimeSeries: Discrete', 'value': '9'}, 
-                    {'text': 'Cross-section', 'value': '10'}, 
-                    {'text': 'Cross-section ad-hoc follow-up', 'value': '11'}, 
-                    {'text': 'Other', 'value': '12'}],
-                )
-        ),
-
-        DaraField('TimeDimension_free',
-                2, ('dataset', 'resource'),
-
-                Input(
-                placeholder = 'eg. Zeitreihe',
-                name = 'Time Dimension (free)',
-                size = 'medium',
-                )
-        ),
-
-        DaraField('Frequency',
-                2, ('dataset', 'resource'),
-
-                Input(
-                    name='Frequency',
-                    placeholder="eg. weekly, monthly",
+                    placeholder="",
+                    name="Temporal Coverage (free)",
+                    size='medium',
                     )
         ),
 
+        #TODO erstmal raus wegen; JS Date Widget finden
+       #DaraField('CollectionDate_controlled',
+       #        2, ('dataset', 'data', 'text', 'code'),
 
-        DaraField('DataCollector_name',
-                2, ('dataset', 'resource'),
+       #        Date(
+       #        classes = ['todo'],
+       #        name = 'Collection Date (controlled)',
+       #        )
+       #),
 
-                Input(
-                classes = ['todo'],
-                placeholder = 'eg. EMNID',
-                name = 'Data Collector',
-                )
-        ),
+       #XXX obsolete
+       #DaraField('CollectionDate_free',
+       #        2, ('dataset', 'data', 'text', 'code'),
+
+       #        Input(
+       #        placeholder = 'eg. Spring 1999',
+       #        name = 'Collection Date (free)',
+       #        size = 'medium',
+       #        )
+       #),
+
+        
+       #XXX Collection Mode not selected
+       #DaraField('CollectionMode_controlled',
+       #        2, ('dataset', 'data', 'text', 'code'),
+
+       #        Select(
+       #        name = 'Collection Mode (controlled)',
+       #        options = [
+       #            {'text': '', 'value': ''}, 
+       #            {'text': 'Interview', 'value': '1'}, 
+       #            {'text': 'Interview: Face-to-Face', 'value': '2'}, 
+       #            {'text': 'Interview: Telephone', 'value': '3'}, 
+       #            {'text': 'Interview: E-Mail', 'value': '4'}, 
+       #            {'text': 'Interview: CATI', 'value': '5'}, 
+       #            {'text': 'Interview: CAPI', 'value': '6'}, 
+       #            {'text': 'Self-completed questionnaire', 'value': '7'}, 
+       #            {'text': 'Self-completed questionnaire: Paper/Pencil', 'value': '8'}, 
+       #            {'text': 'Self-completed questionnaire: Web-based', 'value': '9'}, 
+       #            {'text': 'Self-completed questionnaire: CASI', 'value': '10'}, 
+       #            {'text': 'Self-completed questionnaire: ACASI', 'value': '11'}, 
+       #            {'text': 'Coding', 'value': '12'}, {'text': 'Transcription', 'value': '13'}, 
+       #            {'text': 'Compilation', 'value': '14'}, 
+       #            {'text': 'Synthesis', 'value': '15'}, 
+       #            {'text': 'Recording', 'value': '16'}, 
+       #            {'text': 'Simulation', 'value': '17'}, 
+       #            {'text': 'Observation', 'value': '18'}, 
+       #            {'text': 'Observation: Field', 'value': '19'}, 
+       #            {'text': 'Observation: Laboratory', 'value': '20'}, 
+       #            {'text': 'Observation: Participant', 'value': '21'}, 
+       #            {'text': 'Experiments', 'value': '22'}, 
+       #            {'text': 'Focus Group', 'value': '23'}, 
+       #            {'text': 'Other', 'value': '24'}],
+       #        )
+       #),
+
+       #DaraField('CollectionMode_free',
+       #        2, ('dataset', 'data', 'text', 'code'),
+
+       #        Input(
+       #        placeholder = 'eg. Interview',
+       #        name = 'Collection Mode (free)',
+       #        size = 'medium',
+       #        )
+       #),
+        
+        #XXX timedimension fields not selected
+       #DaraField('TimeDimension_controlled',
+       #        2, ('dataset', 'data', 'text', 'code'),
+
+       #        Select(
+       #        name = 'Time Dimension (controlled)',
+       #        options = [
+       #            {'text': '', 'value': ''}, 
+       #            {'text': 'Longitudinal ', 'value': '1'}, 
+       #            {'text': 'Longitudinal.CohortEventBased ', 'value': '2'}, 
+       #            {'text': 'Longitudinal.TrendRepeatedCrossSection ', 'value': '3'}, 
+       #            {'text': 'Longitudinal.Panel ', 'value': '4'}, 
+       #            {'text': 'Longitudinal.Panel.Continuous', 'value': '5'}, 
+       #            {'text': 'Longitudinal: Panel: Interval', 'value': '6'}, 
+       #            {'text': 'Time Series', 'value': '7'}, 
+       #            {'text': 'TimeSeries: Continuous', 'value': '8'}, 
+       #            {'text': 'TimeSeries: Discrete', 'value': '9'}, 
+       #            {'text': 'Cross-section', 'value': '10'}, 
+       #            {'text': 'Cross-section ad-hoc follow-up', 'value': '11'}, 
+       #            {'text': 'Other', 'value': '12'}],
+       #        )
+       #),
+
+       #DaraField('TimeDimension_free',
+       #        2, ('dataset', 'data', 'text', 'code'),
+
+       #        Input(
+       #        placeholder = 'eg. Zeitreihe',
+       #        name = 'Time Dimension (free)',
+       #        size = 'medium',
+       #        )
+       #),
+
+      # DaraField('Frequency',
+      #         2, ('dataset', 'data', 'text', 'code'),
+
+      #         Input(
+      #             name='Frequency',
+      #             placeholder="eg. weekly, monthly",
+      #             )
+      # ),
+
+
 
         DaraField('Rights',
-                2, ('dataset', 'resource'),
+                2, ('dataset'),
 
                 Input(
                 placeholder = 'eg. Copyright Joe Biggs',
@@ -437,35 +445,46 @@ def fields():
                 )
         ),
 
-        DaraField('Note_text',
-                2, ('dataset', 'resource'),
+        
 
-                Text(
-                placeholder = 'any additional notes',
-                name = 'Notes',
-                )
-        ),
-
-
-        DaraField('DataSet_unitType',
-            2, ('resource'),    
-            Input(
-            name = 'Type of Units',
-            placeholder='eg. persons, households, firms'
-            )
-        ),
-
-        DaraField('DataSet_numberUnits',
-            2, ('resource'),
+        
+        DaraField('numberUnits',
+           2, ('data'),
             Input(
             name = 'Number of Units',
             placeholder='eg 3456',
             size = 'small',
+            role='master'
             )
         ),
 
-        DaraField('DataSet_numberVariables',
-            2, ('resource'),
+        DaraField('unitType',
+            2, ('data'),    
+            Select(
+            name = 'Type of Units',
+            role = 'slave',
+            options = [
+                {'text': '', 'value': ''},
+                {'text': 'Individual', 'value': '1'},
+                {'text': 'Organization', 'value' : '2'},
+                {'text': 'Family', 'value': '3'},
+                {'text': 'Family: Household family', 'value': '4'},
+                {'text': 'Household', 'value': '5'},
+                {'text': 'Housing Unit', 'value': '6'},
+                {'text': 'Event/Process', 'value': '7'},
+                {'text': 'Geographic Unit', 'value': '8'},
+                {'text': 'Time Unit', 'value': '9'},
+                {'text': 'Text Unit', 'value': '10'},
+                {'text': 'Group', 'value': '11'},
+                {'text': 'Object', 'value': '12'},
+                {'text': 'Other', 'value': '13'}
+                ]
+            )
+        ),
+
+        
+        DaraField('numberVariables',
+            2, ('data'),
             Input(
             name= 'Number of Variables',
             placeholder= 'eg. 210',
@@ -473,49 +492,57 @@ def fields():
             )
         ),
 
-        DaraField('DataSet_dataType',
-            2, ('resource'),
+        DaraField('dataType',
+            2, ('data'),
             Input(
             name = 'Type of Data',
             placeholder= ''
             )
         ),
-
-
-        #TODO get automatically 
-        DaraField('File_size',
-            2, ('resource'),
-            Input(
-            name = 'File Size (MB)',
-            size = 'small',
-            classes=['todo'],
-            placeholder='will be calculated automatically',
-            )
-        ),
-
-        DaraField('File_fingerprint',
-            2, ('resource'),
-            Input(
-            role = 'master',
-            name = 'Data Fingerprint',
-            placeholder='eg. 00994e0caa89bc6bf394c12d9a2e72e6',
-            )
-        ),
-
-        DaraField('File_fingerprintMethod',
-            2, ('resource'),
-            Input(
-            role = 'slave',
-            name = 'Method Fingerprint',
-            size = 'small',
-            placeholder='eg. MD5'
-            )
-        ),
-
         
-        # publication fields start here, not separated anymore #
+        # technical file data; format is retrieved from CKAN
+        #TODO get automatically 
+       #DaraField('file_size',
+       #    2, ('data', 'text', 'code'),
+       #    Input(
+       #    name = 'File Size (MB)',
+       #    size = 'small',
+       #    classes=['todo'],
+       #    placeholder='will be calculated automatically',
+       #    )
+       #),
+
+      #DaraField('file_fingerprint',
+      #     2, ('data', 'text', 'code'),
+      #     Input(
+      #     role = 'master',
+      #     name = 'Data Fingerprint',
+      #     placeholder='eg. 00994e0caa89bc6bf394c12d9a2e72e6',
+      #     )
+      # ),
+
+      # DaraField('file_fingerprintMethod',
+      #     2, ('data', 'text', 'code'),
+      #     Input(
+      #     role = 'slave',
+      #     name = 'Method Fingerprint',
+      #     size = 'small',
+      #     placeholder='eg. MD5'
+      #     )
+      # ),
+
+        DaraField('note',
+                2, ('data', 'code'),
+
+                Text(
+                placeholder = 'any additional notes',
+                name = 'Additional Notes',
+                )
+        ),
+
+###### publication fields start here, not separated anymore #############
         DaraField('Publication_Author',
-                3, ('dataset', 'resource', 'publication'),
+                3, ('dataset', 'data', 'text', 'code', 'publication'),
                 Input(
                 name = 'Author of Publication',
                 size = 'medium',
@@ -523,7 +550,7 @@ def fields():
         ),
 
         DaraField('Publication_Editor',
-                3, ('dataset', 'resource', 'publication'),
+                3, ('dataset', 'data', 'text', 'code', 'publication'),
                 Input(
                 name = 'Editor',
                 size = 'medium',
@@ -531,7 +558,7 @@ def fields():
         ),
 
         DaraField('Publication_Title',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
             Input(
                 name = 'Title of Publication',
@@ -540,7 +567,7 @@ def fields():
         ),
 
         DaraField('Publication_Year',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
             Input(
                 name = 'Year of Publication',
@@ -548,7 +575,7 @@ def fields():
         ),
 
         DaraField('Publication_Publisher',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
             Input(
                 name = 'Publisher',
@@ -557,7 +584,7 @@ def fields():
         ),
 
         DaraField('Publication_PID',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
             Input(
                 role = 'master',
@@ -566,7 +593,7 @@ def fields():
         ),
 
         DaraField('Publication_PIDType',
-                3, ('dataset', 'resource', 'publication'),
+                3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Select(
                 role = 'slave',
@@ -591,7 +618,7 @@ def fields():
         ),
 
         DaraField('Publication_Place',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'Place',
@@ -599,7 +626,7 @@ def fields():
         ),
 
         DaraField('Publication_Journal',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'Journal',
@@ -608,7 +635,7 @@ def fields():
         ),
 
         DaraField('Publication_Volume',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'Volume',
@@ -617,7 +644,7 @@ def fields():
         ),
 
         DaraField('Publication_Issue',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'Issue',
@@ -626,7 +653,7 @@ def fields():
         ),
 
         DaraField('Publication_Anthology',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'Anthology',
@@ -635,7 +662,7 @@ def fields():
         ),
 
         DaraField('Publication_Pages',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'Pages',
@@ -644,7 +671,7 @@ def fields():
         ),
 
         DaraField('Publication_ISBN',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'ISBN',
@@ -653,7 +680,7 @@ def fields():
         ),
 
         DaraField('Publication_ISSN',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Input(
                 name = 'ISSN',
@@ -662,7 +689,7 @@ def fields():
         ),
 
         DaraField('Publication_RelationType',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Text(
                 name = 'Relation Type',
@@ -670,7 +697,7 @@ def fields():
         ),
 
         DaraField('Publication_DocType',
-            3, ('dataset', 'resource', 'publication'),
+            3, ('dataset', 'data', 'text', 'code', 'publication'),
 
                 Select(
                 name = 'Document Type',
@@ -770,6 +797,7 @@ def hidden_fields():
             'created', 
             'registered', 
             'updated',
+            'type'
             )
     return fields
 
@@ -784,7 +812,7 @@ def testfields():
         DaraField(
             'PublicationDate',
             1, 
-            ('dataset', 'resource'),
+            ('dataset', 'data', 'text', 'code'),
             Input(
                 placeholder="eg. 2011",
                 name="Publication Year",
@@ -794,7 +822,7 @@ def testfields():
             ),
 
         DaraField('Availabilitycontrolled',
-            1, ('dataset', 'resource'),
+            1, ('dataset', 'data', 'code'),
             Select(
                 options=[
                     {'value': '1', 'text': 'Free Download'},
@@ -807,6 +835,42 @@ def testfields():
                 classes = ['dara_required']
                 ),
             ),
+
+        
+        DaraField('Availabilityfree',
+            1, ('dataset', 'data', 'code'),
+
+            Input(
+                name = 'Availability (free)',
+                size = 'medium',
+                placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
+                )
+            ),
+    
+        
+        DaraField('OtherTitle',
+            2, ('dataset', 'data', 'text'),
+            Input(
+            placeholder = 'eg. Subtitle, alternative title',
+            role = 'master',
+            name = 'Other Title',
+            size = 'medium',
+            )
+        ),
+
+        DaraField('OtherTitleType',
+            2, ('dataset', 'data', 'text'),
+            Select(
+            role = 'slave',
+            name = 'Type of other Title',
+            options = [
+                {'text': 'Alternative Title', 'value': '1'}, 
+                {'text': 'Translated Title', 'value': '2'}, 
+                {'text': 'Subtitle', 'value': '3'}, 
+                {'text': 'Original Title', 'value': '4'}],
+            )
+        ),
+
 
     )
     #import pdb; pdb.set_trace()

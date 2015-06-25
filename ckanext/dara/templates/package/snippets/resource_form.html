@@ -2,6 +2,8 @@
 {% import 'macros/dara_form.html' as dara_form %}
 {% import 'macros/dara_authors.html' as authors %}
 {% import 'macros/form.html' as form %}
+
+
 {% set res = h.dara_resource() %}
 
 
@@ -38,12 +40,14 @@
 
 {% block metadata_fields %}
     {% resource 'dara/dara.css' %}
-    {% resource 'dara/dara.js' %}
+    {% resource 'dara/underscore.js' %}
     {% resource 'dara/jquery-ui.js' %}
-    
-        {% set res_type = res.dara_type or
+    {% resource 'dara/dara.js' %}
+
+        
+    {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}
-    
+
     <input type="hidden" value="{{ res.dara_doiid or
                             h.dara_resource_doiid() }}"
                     name="dara_doiid" />

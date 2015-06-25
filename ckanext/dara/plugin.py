@@ -172,7 +172,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'public')
         tk.add_resource('resources', 'dara')
-        tk.add_resource('fanstatic', 'fanstatic')
+        #tk.add_resource('fanstatic', 'dara')
 
     
     def get_validators(self):

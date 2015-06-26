@@ -41,7 +41,9 @@
 {% block metadata_fields %}
     {% resource 'dara/dara.css' %}
     {% resource 'dara/underscore.js' %}
-    {% resource 'dara/jquery-ui.js' %}
+    {#XXX do we need this?
+    {% resource 'dara/jquery-ui.js' %} 
+    #}
     {% resource 'dara/dara.js' %}
 
         
@@ -104,4 +106,12 @@
 
     {{ super() }}
 {% endblock %}
+
+{#XXX Previous does delete all data from the dataset ??? Until we have
+the reason for this remove Previous button here #}
+{% block previous_button %}
+{#        <button class="btn" name="save" value="go-dataset" type="submit">{{
+    _('Previous') }}</button> #}
+{% endblock %}
+
 

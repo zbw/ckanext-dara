@@ -52,7 +52,7 @@ $(function res_preselection() {
     ];
 
 
-   //XXX using underscore.js
+   //XXX using Underscore.js
     _.each(blocks, function(b) {
         var block = b[0];
         var text = b[1];

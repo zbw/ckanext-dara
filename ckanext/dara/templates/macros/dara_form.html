@@ -17,10 +17,10 @@
         {% set widget = field.widget %}
         {% set id = 'dara_' ~ field.id %}
         
-        {# for now we don't inherit resource values from dataset #}
+        {# for now we inherit resource values from dataset #}
         {% if type in ('data', 'text', 'code', 'other') %}
             {% set res = h.dara_resource() %}
-            {% set value = res[id] %}
+            {% set value = res[id]  or dara[id] %}
         {% else %}
             {% set value = dara[id] %}
         {% endif %}
@@ -74,7 +74,7 @@
             {% set options = widget.options %}
             
             {% if type in  ('data', 'text', 'code', 'other') %}
-                {% set selected = res[id] or options[0] %}
+            {% set selected = res[id] or dara[id] or options[0] %}
             {% else %}
                 {% set selected = dara[id] or options[0] %}
             {% endif %}

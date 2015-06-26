@@ -150,15 +150,16 @@ def fields():
                 ),
             ),
         
-        DaraField('Availabilityfree',
-            1, ('dataset'),
+        
+      # DaraField('Availabilityfree',
+      #     1, ('dataset'),
 
-            Input(
-                name = 'Availability (free)',
-                size = 'medium',
-                placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
-                )
-            ),
+      #     Input(
+      #         name = 'Availability (free)',
+      #         size = 'medium',
+      #         placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
+      #         )
+      #     ),
     
         
        #DaraField('OtherTitle',
@@ -275,8 +276,9 @@ def fields():
        #        )
        #),
 
+        
         DaraField('geographicCoverageFree',
-                2, ('dataset', 'data'),
+                2, ('data'),
 
                 Input(
                 placeholder = 'eg. West-Germany',

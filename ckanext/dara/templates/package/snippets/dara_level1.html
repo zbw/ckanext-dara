@@ -39,7 +39,7 @@
 
         {{ form.markdown('notes', id='field-notes', 
             label=_('Description'), 
-            placeholder=_('eg. Some useful notes about the data'), 
+            placeholder=_('Abstract or similiar'), 
             value=data.notes, 
             error=errors.notes,
             )
@@ -72,7 +72,7 @@
         {# fields generated from schema #}
         <div id="dara_level_1">
             <fieldset>
-                <legend>Additional Metadata</legend>
+                <legend>Basic Metadata</legend>
             {{ dara_form.md(1, 'dataset', h) }}
             </fieldset>
         </div>

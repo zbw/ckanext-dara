@@ -7,11 +7,11 @@
 
 //calling functions for the first time, if we dont want those functions bind
 //to $()
-//$(master_slave_input());
+$(master_slave_input());
 //$(res_preselection());
 
 
-$(function master_slave_input() {
+function master_slave_input() {
 
   // conditional field based on input 
     $('.dara_master_slave').each(function () {
@@ -34,13 +34,14 @@ $(function master_slave_input() {
       });
     });
 
-});
+};
 
 
-// need to bind this to jquery $ because for some reason otherwise underscore's
+// need to bind this to jquery $ because otherwise underscore's
 // _ won't be in scope
+//TODO might be optimized as standalone function?
 $(function res_preselection() {
-// conditional fields based on input 
+// fields based on preselection
 
     var master = $('#dara_res_preselection');
     var value = master.val();

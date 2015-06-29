@@ -18,7 +18,7 @@
             value=data.title, 
             error=errors.title, 
             classes=['control-full', 'control-large', 'dara_required'], 
-            attrs={'data-module': 'slug-preview-target'}) }}
+            attrs={'data-module': 'slug-preview-target', 'required': 'required'}) }}
         
         {% set prefix = h.url_for(controller='package', action='read', id='') %}
         {% set domain = h.url_for(controller='package', action='read', 

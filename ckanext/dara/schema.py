@@ -436,16 +436,16 @@ def fields():
       # ),
 
 
+        #XXX taken out
+      # DaraField('Rights',
+      #         2, ('dataset'),
 
-        DaraField('Rights',
-                2, ('dataset'),
-
-                Input(
-                placeholder = 'eg. Copyright Joe Biggs',
-                name = 'Rights',
-                size = 'medium',
-                )
-        ),
+      #         Input(
+      #         placeholder = 'eg. Copyright Joe Biggs',
+      #         name = 'Rights',
+      #         size = 'medium',
+      #         )
+      # ),
 
         
 
@@ -542,99 +542,106 @@ def fields():
                 )
         ),
 
+
 ###### publication fields start here, not separated anymore #############
-        DaraField('Publication_Author',
-                3, ('dataset', 'data', 'text', 'code', 'publication'),
-                Input(
-                name = 'Author of Publication',
-                size = 'medium',
-                )
-        ),
+        
+        
+      # DaraField('Publication_Author',
+      #         3, ('dataset', 'data', 'text', 'code', 'publication'),
+      #         Input(
+      #         name = 'Author of Publication',
+      #         size = 'medium',
+      #         )
+      # ),
 
-        DaraField('Publication_Editor',
-                3, ('dataset', 'data', 'text', 'code', 'publication'),
-                Input(
-                name = 'Editor',
-                size = 'medium',
-                )
-        ),
+      # DaraField('Publication_Editor',
+      #         3, ('dataset', 'data', 'text', 'code', 'publication'),
+      #         Input(
+      #         name = 'Editor',
+      #         size = 'medium',
+      #         )
+      # ),
 
-        DaraField('Publication_Title',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_Title',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-            Input(
-                name = 'Title of Publication',
-                size = 'medium',
-                )
-        ),
+      #     Input(
+      #         name = 'Title of Publication',
+      #         size = 'medium',
+      #         )
+      # ),
 
-        DaraField('Publication_Year',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_Year',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-            Input(
-                name = 'Year of Publication',
-                )
-        ),
+      #     Input(
+      #         name = 'Year of Publication',
+      #         )
+      # ),
 
-        DaraField('Publication_Publisher',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_Publisher',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-            Input(
-                name = 'Publisher',
-                size = 'medium',
-                )
-        ),
+      #     Input(
+      #         name = 'Publisher',
+      #         size = 'medium',
+      #         )
+      # ),
 
-        DaraField('Publication_PID',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+        # XXX out as long we have edawax_url. we need a mechanism for transferring
+        # the old url value to this field
+       #DaraField('Publication_PID',
+       #    3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-            Input(
-                role = 'master',
-                name = 'Persistent Identifier of Publication',
-                )
-        ),
+       #    Input(
+       #        role = 'master',
+       #        name = 'Identifier of Publication',
+       #        placeholder = 'DOI, URL, or other identifier',
+       #        size = 'medium',
+       #        )
+       #),
 
-        DaraField('Publication_PIDType',
-                3, ('dataset', 'data', 'text', 'code', 'publication'),
+       #DaraField('Publication_PIDType',
+       #        3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Select(
-                role = 'slave',
-                name = 'Type of Persistent Identifier',
-                options = [
-                    {'text': '', 'value': ''}, 
-                    {'text': 'DOI', 'value': 'DOI'}, 
-                    {'text': 'ARK', 'value': 'ARK'}, 
-                    {'text': 'EAN13', 'value': 'EAN13'}, 
-                    {'text': 'EISSN', 'value': 'EISSN'}, 
-                    {'text': 'Handle', 'value': 'Handle'}, 
-                    {'text': 'ISBN', 'value': 'ISBN'}, 
-                    {'text': 'ISSN', 'value': 'ISSN'}, 
-                    {'text': 'ISTC', 'value': 'ISTC'}, 
-                    {'text': 'LISSN', 'value': 'LISSN'}, 
-                    {'text': 'LSID', 'value': 'LSID'}, 
-                    {'text': 'PURL', 'value': 'PURL'}, 
-                    {'text': 'UPC', 'value': 'UPC'}, 
-                    {'text': 'URL', 'value': 'URL'}, 
-                    {'text': 'URN', 'value': 'URN'}],
-                )
-        ),
+       #        Select(
+       #        role = 'slave',
+       #        name = 'Type of Identifier',
+       #        options = [
+       #            {'text': '', 'value': ''}, 
+       #            {'text': 'DOI', 'value': 'DOI'}, 
+       #            {'text': 'ARK', 'value': 'ARK'}, 
+       #            {'text': 'EAN13', 'value': 'EAN13'}, 
+       #            {'text': 'EISSN', 'value': 'EISSN'}, 
+       #            {'text': 'Handle', 'value': 'Handle'}, 
+       #            {'text': 'ISBN', 'value': 'ISBN'}, 
+       #            {'text': 'ISSN', 'value': 'ISSN'}, 
+       #            {'text': 'ISTC', 'value': 'ISTC'}, 
+       #            {'text': 'LISSN', 'value': 'LISSN'}, 
+       #            {'text': 'LSID', 'value': 'LSID'}, 
+       #            {'text': 'PURL', 'value': 'PURL'}, 
+       #            {'text': 'UPC', 'value': 'UPC'}, 
+       #            {'text': 'URL', 'value': 'URL'}, 
+       #            {'text': 'URN', 'value': 'URN'}],
+       #        )
+       #),
 
-        DaraField('Publication_Place',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_Place',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Input(
-                name = 'Place',
-                )
-        ),
+      #         Input(
+      #         name = 'Place',
+      #         )
+      # ),
 
-        DaraField('Publication_Journal',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_Journal',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Input(
-                name = 'Journal',
-                size = 'medium',
-                )
-        ),
+      #         Input(
+      #         name = 'Journal',
+      #         size = 'medium',
+      #         )
+      # ),
 
         DaraField('Publication_Volume',
             3, ('dataset', 'data', 'text', 'code', 'publication'),
@@ -654,14 +661,14 @@ def fields():
                 )
         ),
 
-        DaraField('Publication_Anthology',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_Anthology',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Input(
-                name = 'Anthology',
-                size = 'medium',
-                )
-        ),
+      #         Input(
+      #         name = 'Anthology',
+      #         size = 'medium',
+      #         )
+      # ),
 
         DaraField('Publication_Pages',
             3, ('dataset', 'data', 'text', 'code', 'publication'),
@@ -672,51 +679,51 @@ def fields():
                 )
         ),
 
-        DaraField('Publication_ISBN',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_ISBN',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Input(
-                name = 'ISBN',
-                size = 'small',
-                )
-        ),
+      #         Input(
+      #         name = 'ISBN',
+      #         size = 'small',
+      #         )
+      # ),
 
-        DaraField('Publication_ISSN',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_ISSN',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Input(
-                name = 'ISSN',
-                size = 'small',
-                )
-        ),
+      #         Input(
+      #         name = 'ISSN',
+      #         size = 'small',
+      #         )
+      # ),
 
-        DaraField('Publication_RelationType',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_RelationType',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Text(
-                name = 'Relation Type',
-                )
-        ),
+      #         Text(
+      #         name = 'Relation Type',
+      #         )
+      # ),
 
-        DaraField('Publication_DocType',
-            3, ('dataset', 'data', 'text', 'code', 'publication'),
+      # DaraField('Publication_DocType',
+      #     3, ('dataset', 'data', 'text', 'code', 'publication'),
 
-                Select(
-                name = 'Document Type',
-                options = [
-                    {'text': '', 'value': ''}, 
-                    {'text': 'Working Paper', 'value': '1'}, 
-                    {'text': 'Article', 'value': '2'}, 
-                    {'text': 'Report', 'value': '3'}, 
-                    {'text': 'Book/Monograph', 'value': '4'}, 
-                    {'text': 'Manuscript', 'value': '5'}, 
-                    {'text': 'Reference Book', 'value': '6'}, 
-                    {'text': 'Review', 'value': '7'}, 
-                    {'text': 'Series', 'value': '8'}, 
-                    {'text': 'Journal', 'value': '9'}, 
-                    {'text': 'Magazine', 'value': '10'}],
-                )
-        ),
+      #         Select(
+      #         name = 'Document Type',
+      #         options = [
+      #             {'text': '', 'value': ''}, 
+      #             {'text': 'Working Paper', 'value': '1'}, 
+      #             {'text': 'Article', 'value': '2'}, 
+      #             {'text': 'Report', 'value': '3'}, 
+      #             {'text': 'Book/Monograph', 'value': '4'}, 
+      #             {'text': 'Manuscript', 'value': '5'}, 
+      #             {'text': 'Reference Book', 'value': '6'}, 
+      #             {'text': 'Review', 'value': '7'}, 
+      #             {'text': 'Series', 'value': '8'}, 
+      #             {'text': 'Journal', 'value': '9'}, 
+      #             {'text': 'Magazine', 'value': '10'}],
+      #         )
+      # ),
 
     )
     

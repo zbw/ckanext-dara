@@ -64,7 +64,17 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ]
             })
         
+         #XXX this should be removed when we have dara metadata link to article
+        schema.update({
+            'edawax_article_url': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_extras')
+            ]
+        })
+
         
+
+
         #dataset schema, level1, level2, publications
         for i in dara_schema.fields():
             schema_update(i.id)
@@ -100,14 +110,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         for i in dara_schema.hidden_fields():
             schema_update(i)
    
-        #XXX this should be removed when we have dara metadata link to article
-        schema.update({
-            'edawax_article_url': [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_to_extras')
-            ]
-        })
-        
+               
         return schema
 
 
@@ -124,6 +127,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing')]
             })
          
+        
+        schema.update({
+             'edawax_article_url' : [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing'),
+             ]
+        })
+        
+
 
         #dataset
         for i in dara_schema.fields():
@@ -156,13 +168,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         
         
 
-        schema.update({
-             'edawax_article_url' : [
-                tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing'),
-             ]
-        })
-
+       
         
         return schema
 

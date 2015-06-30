@@ -73,7 +73,7 @@
         {# fields generated from schema #}
         <div id="dara_level_1">
             <fieldset>
-                <legend>Basic Metadata</legend>
+                <legend>Basic Package Metadata</legend>
             {{ dara_form.md(1, 'dataset', h) }}
             </fieldset>
         </div>
@@ -94,7 +94,12 @@
 
 
 
-        {# old block_package_basic_fields #}
+
+    <div id="publication">
+        <fieldset>
+                <legend>Related Publication</legend>
+
+         {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}
         {% if data.group_id %}
       <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
@@ -110,7 +115,7 @@
           <label for="field-organizations" class="control-label">{{ _('Journal') }}
           </label>
           <div class="controls">
-            <select id="field-organizations" name="owner_org" 
+            <select id="field-organizations" name="owner_org"
                 data-module="autocomplete">
               <option value="" 
                 {% if not selected_org and data.id %}
@@ -131,17 +136,20 @@
     {% endif %}
 
 
-    {# this is temporary. We will later 'dock' the article url with 
-    dara_metadata for publications in level 2
-    #}
+     {# this is temporary. We will later 'dock' the article url with 
+     dara_metadata for publications in level 2 #}
+     
     {{ form.input('edawax_article_url', label="URL of related article", 
         id='field-edawax_article_url', 
         placeholder='http://yourjournal.org/article-1234', 
         value=data.edawax_article_url, 
         error=errors.edawax_article_url, 
         classes=['control-medium']) }}
+        
 
-
-   
+          {{ dara_form.md(3, 'publication', h) }}
+        </fieldset>
+    </div>
+        
 
    

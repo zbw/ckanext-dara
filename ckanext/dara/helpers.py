@@ -4,7 +4,8 @@
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request, response
 from ckanext.dara import schema as dara_schema
-from ckanext.dara import utils
+from ckanext.dara.schema import author_fields
+from ckanext.dara.utils import dicter, grouper
 from datetime import datetime
 from hashids import Hashids
 import ckan.model as model
@@ -29,7 +30,7 @@ def dara_pkg():
     
     return pkg
 
-def dara_debug():
+def dara_debug(obj):
     pkg_dict = dara_pkg()
 
     import pdb; pdb.set_trace()
@@ -97,11 +98,10 @@ def dara_md():
     return named_levels
 
 
-def dara_authors(dara_type):
+def dara_authors(dara_type, data):
     """
     return all author fields
     """
-    #import pdb; pdb.set_trace()
     
 
    #XXX we don't have resource authors at the moment
@@ -112,28 +112,36 @@ def dara_authors(dara_type):
    #    pkg = dara_resource()
    #    key = 'dara_resource_authors'
     
-    pkg = dara_pkg()
-    key = 'dara_authors'
-
     try:
-        authors = json.loads(pkg[key])
-        return authors
-    except:
+        if data:
+            pack = data
+        else:
+            pack = dara_pkg()
+        v = pack['dara_authors']
+        fields = author_fields()
+        if isinstance(v, list):
+            dl = dicter(grouper(v[:], len(fields)), [i.id for i in fields])
+            return dl
+        if isinstance(v, basestring):
+            return json.loads(v)
+    
+    except KeyError:
         return None
 
-def dara_first_author():
-    """
-    workaround until we have a proper authors implementation
-    """
-    pkg = dara_pkg()
-    return utils.author_name_split(pkg['author'])
+
+#def dara_first_author():
+#   """
+#   workaround until we have a proper authors implementation
+#   """
+#   pkg = dara_pkg()
+#   return utils.author_name_split(pkg['author'])
 
 
-def dara_additional_authors():
-    """
-    workaround
-    """
-    return map(lambda author: utils.author_name_split(author), dara_authors())
+#def dara_additional_authors():
+#   """
+#   workaround
+#   """
+#   return map(lambda author: utils.author_name_split(author), dara_authors())
 
 
 def dara_publications():

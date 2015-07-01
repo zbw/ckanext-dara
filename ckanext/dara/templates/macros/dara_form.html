@@ -6,23 +6,26 @@
 
 {#XXX for whatever reason helpers (h) are not in here automatically, so we need it as
     a parameter here #}
-{% macro md(level, type, h) -%}
+{% macro md(level, type, h, data) -%}
      
-    
 {% set fields = h.dara_fields(level, type) %}
     {% set dara = h.dara_pkg() %}
-    {#            {% set debug = h.dara_debug() %}  #}
+    
+    {#    {% set debug = h.dara_debug(data) %} #}
+    
     
     {% for field in fields %}
         {% set widget = field.widget %}
         {% set id = 'dara_' ~ field.id %}
+        {#      {% set dara_errors = errors[field.id] %} #}
+
         
         {# for now we inherit resource values from dataset #}
         {% if type in ('data', 'text', 'code', 'other') %}
             {% set res = h.dara_resource() %}
-            {% set value = res[id]  or dara[id] %}
+            {% set value = res[id] or dara[id] %}
         {% else %}
-            {% set value = dara[id] %}
+            {% set value = data[id] %}
         {% endif %}
         
         {% set field_id = 'field-' ~id %}
@@ -64,7 +67,7 @@
                     id= field_id,
                     placeholder=placeholder, 
                     value=value,
-                    error=errors,
+                    error = errors,
                     classes=classes) 
             }}
         {% endif %}
@@ -74,9 +77,10 @@
             {% set options = widget.options %}
             
             {% if type in  ('data', 'text', 'code', 'other') %}
+            {% set res = h.dara_resource() %}
             {% set selected = res[id] or dara[id] or options[0] %}
             {% else %}
-                {% set selected = dara[id] or options[0] %}
+                {% set selected = data[id] or options[0] %}
             {% endif %}
 
             {% do classes.append('select-auto')  %}

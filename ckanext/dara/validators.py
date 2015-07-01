@@ -31,6 +31,7 @@ def authors(key, data, errors, context):
 
     #TODO make sure there's at least one author given AND that each Author has
     #at least lastname
+    
     #XXX Shouldn't the converter part be in converters, not in validators...?!
 
     
@@ -40,6 +41,7 @@ def authors(key, data, errors, context):
     del value[:len(fields)]
     
     dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
+    
     data[key] = json.dumps(dl)
 
 

@@ -9,8 +9,6 @@
     {% resource 'dara/dara.js' %}
     {% resource 'dara/underscore.js' %}
    
-   {% set dara_authors = h.dara_authors('dataset') %}
-
 
     {{ form.input('title', id='field-title', 
             label=_('Title'), 
@@ -68,13 +66,15 @@
         #}   
         
         
-        {{ authors.authors('dataset', h) }}
+        {# Authors #}
+        {{ authors.authors('dataset', h, data) }}
+
 
         {# fields generated from schema #}
         <div id="dara_level_1">
             <fieldset>
                 <legend>Basic Package Metadata</legend>
-            {{ dara_form.md(1, 'dataset', h) }}
+            {{ dara_form.md(1, 'dataset', h, data) }}
             </fieldset>
         </div>
         
@@ -145,9 +145,19 @@
         value=data.edawax_article_url, 
         error=errors.edawax_article_url, 
         classes=['control-medium']) }}
+
+        {#     
+    {{ form.input('dara_PublicationDate', label="Publication Date Test", 
+        id='field-dara_PublicationDate', 
+        placeholder='eg. date test', 
+        value=data.dara_PublicationDate, 
+        error=errors.dara_PublicationDate, 
+        classes=[]
+        ) }}
+        #}
         
 
-          {{ dara_form.md(3, 'publication', h) }}
+          {{ dara_form.md(3, 'publication', h, data) }}
         </fieldset>
     </div>
         

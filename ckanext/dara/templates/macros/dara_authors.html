@@ -4,12 +4,10 @@
 {% resource 'dara/dara.js' %}
 {% resource 'dara/underscore.js' %}
 
-{% macro authors(dara_type, h) -%}
+{% macro authors(dara_type, h, data) -%}
     {% resource 'dara/dara.js' %}
     {# {% set debug = h.dara_debug() %}#}
 
-    {% set pkg = h.dara_pkg() %}
-    {% set res = h.dara_resource() %}
     {% set aut = h.dara_authors %}
     
     <div id="authors_wrapper">
@@ -17,14 +15,14 @@
         <legend>Authors</legend>
 
     {% if dara_type == 'dataset' %}
-        {% set authors = aut('dataset') %} 
+        {% set authors = aut('dataset', data) %} 
         {% set name = 'dara_authors' %}
     {% endif %}
     
     {#XXX resource authors are not used at the moment. needs debugging (not
     stored) #}
     {% if dara_type == 'resource' %}
-        {% set authors = aut('resource') or aut('dataset') %}
+        {% set authors = aut('resource', data) or aut('dataset', data) %}
         {% set name = 'dara_resource_authors' %}
     {% endif %}
      

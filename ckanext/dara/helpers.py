@@ -5,7 +5,7 @@ import ckan.plugins.toolkit as tk
 from ckan.common import c, request, response
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields
-from ckanext.dara.utils import dicter, grouper
+from ckanext.dara.utils import list_dicter
 from datetime import datetime
 from hashids import Hashids
 import ckan.model as model
@@ -100,48 +100,21 @@ def dara_md():
 
 def dara_authors(dara_type, data):
     """
-    return all author fields
+    return authors as dict
     """
-    
-
-   #XXX we don't have resource authors at the moment
-   #if dara_type == 'dataset':
-   #    pkg = dara_pkg()
-   #    key = 'dara_authors'
-   #if dara_type == 'res':
-   #    pkg = dara_resource()
-   #    key = 'dara_resource_authors'
-    
+    if data:
+        pack = data
+    else:
+        pack = dara_pkg()
     try:
-        if data:
-            pack = data
-        else:
-            pack = dara_pkg()
         v = pack['dara_authors']
         fields = author_fields()
         if isinstance(v, list):
-            dl = dicter(grouper(v[:], len(fields)), [i.id for i in fields])
-            return dl
+            return list_dicter(v[:], fields, [i.id for id in fields])
         if isinstance(v, basestring):
             return json.loads(v)
-    
     except KeyError:
         return None
-
-
-#def dara_first_author():
-#   """
-#   workaround until we have a proper authors implementation
-#   """
-#   pkg = dara_pkg()
-#   return utils.author_name_split(pkg['author'])
-
-
-#def dara_additional_authors():
-#   """
-#   workaround
-#   """
-#   return map(lambda author: utils.author_name_split(author), dara_authors())
 
 
 def dara_publications():

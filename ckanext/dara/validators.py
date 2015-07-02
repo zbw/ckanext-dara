@@ -2,7 +2,7 @@ import json
 from ckan.plugins.toolkit import missing, _
 from itertools import izip_longest
 from ckanext.dara.schema import author_fields
-
+from ckanext.dara.utils import list_dicter
 
 def _grouper(seq, size):
     bargs = [iter(seq)] * size
@@ -15,33 +15,26 @@ def authors(key, data, errors, context):
     """
     transform author fields to JSON string and store it
     """
-    
     if errors[key]:
         return
     
     value = data[key]
     fields = author_fields()
     
-    #XXX test. must be more elaborated
-    # check if value is already string (=JSON)
-
-    #import ipdb; ipdb.set_trace()
     if isinstance(value, basestring):
         return
 
     #TODO make sure there's at least one author given AND that each Author has
     #at least lastname
-    
     #XXX Shouldn't the converter part be in converters, not in validators...?!
-
     
     #XXX deleting first entry, which is empty because of the hidden jquery
     #field. Not a nice solution, and we certainly should come up with something
     #better
     del value[:len(fields)]
     
-    dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
-    
+    #dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
+    dl = list_dicter(value[:], fields, [i.id for i in fields]) 
     data[key] = json.dumps(dl)
 
 

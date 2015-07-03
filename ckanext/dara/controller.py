@@ -64,7 +64,11 @@ class DaraController(PackageController):
         """
         test_register = False
         ptest = lambda p: p in tk.request.params
-        test = ptest('testserver')
+        
+        #XXX change this for production
+        #test = ptest('testserver')
+        test = True
+        
         register = ptest('DOI')
         
         if test and register:

@@ -72,8 +72,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             ]
         })
 
-        
-
 
         #dataset schema, level1, level2, publications
         for i in dara_schema.fields():
@@ -185,11 +183,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     
     def get_validators(self):
         return {
-            'repeating_text': validators.repeating_text,
-            'repeating_text_output':
-                validators.repeating_text_output,
+            #'repeating_text': validators.repeating_text,
+            #'repeating_text_output':
+            #    validators.repeating_text_output,
             'authors': validators.authors,
-            'resource_authors': validators.resource_authors
             }
 
     

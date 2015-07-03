@@ -54,9 +54,11 @@
     {% set fields = h.dara_author_fields() %}
     {% set classes = [] %}
     {% if hide %}
+        {% set disabled = 'disabled = disabled' %}
         {% do classes.append('hidden_authorfield') %}
     {% endif %}
-    <fieldset class="author{{ " " ~ classes|join(' ') }}">
+    <fieldset class="author{{ " " ~ classes|join(' ') }}" {{ disabled }}>
+
         {% if index > 1 %}
             <div><a href="#" class="dara_red remove_author" title="Remove
             Author">[x]</a></div>

@@ -22,8 +22,8 @@ def _dicter(seq, ids):
     return map(lambda t: dict(zip(ids, t)), seq)
 
 
-def list_dicter(seq, fields, ids):
-    return _dicter(_grouper(seq, len(fields)), ids)
+def list_dicter(seq, ids):
+    return _dicter(_grouper(seq, len(ids)), ids)
 
 
 

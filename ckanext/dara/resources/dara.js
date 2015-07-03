@@ -33,8 +33,7 @@ function master_slave_input() {
         }
       });
     });
-
-};
+}
 
 
 // need to bind this to jquery $ because otherwise underscore's
@@ -67,7 +66,7 @@ $(function res_preselection() {
 
 
     master.on('change keyup', function ()
-            {   //recursion, fuck yeah ;-)
+            {   //recursion, f*** yeah ;-)
                 $(res_preselection()); }
             );
 });
@@ -79,7 +78,11 @@ $(function add_authors() {
    
   $('#add_author').on('click', function() {
     
-    $('.hidden_authorfield').clone().prop('class', 'author').appendTo(authorContainer);
+    $('.hidden_authorfield')
+        .clone()
+        .prop('class', 'author')
+        .removeProp('disabled')
+        .appendTo(authorContainer);
     $(master_slave_input());
     return false;
   });
@@ -87,7 +90,7 @@ $(function add_authors() {
   //remove author fieldset
   $(authorContainer).on('click', '.remove_author', function() { 
       $(this).parents('fieldset.author').remove();
-      return false;
+    return false;
   });
     
 });

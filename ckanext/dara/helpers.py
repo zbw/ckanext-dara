@@ -110,7 +110,7 @@ def dara_authors(dara_type, data):
         v = pack['dara_authors']
         fields = author_fields()
         if isinstance(v, list):
-            return list_dicter(v[:], fields, [i.id for id in fields])
+            return list_dicter(v[:], [i.id for i in fields])
         if isinstance(v, basestring):
             return json.loads(v)
     except KeyError:

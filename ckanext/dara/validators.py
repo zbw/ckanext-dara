@@ -1,20 +1,20 @@
 import json
 from ckan.plugins.toolkit import missing, _
-from itertools import izip_longest
 from ckanext.dara.schema import author_fields
 from ckanext.dara.utils import list_dicter
 
-def _grouper(seq, size):
-    bargs = [iter(seq)] * size
-    return izip_longest(*bargs)
 
-def _dicter(seq, ids):
-    return map(lambda t: dict(zip(ids, t)), seq)
 
 def authors(key, data, errors, context):
     """
     transform author fields to JSON string and store it
     """
+    
+    #TODO make sure there's at least one author given AND each Author has
+    #at least lastname
+    
+    #XXX Shouldn't the converter part be in converters, not in validators...?!
+    
     if errors[key]:
         return
     
@@ -24,28 +24,13 @@ def authors(key, data, errors, context):
     if isinstance(value, basestring):
         return
 
-    #TODO make sure there's at least one author given AND that each Author has
-    #at least lastname
-    #XXX Shouldn't the converter part be in converters, not in validators...?!
-    
-    #XXX deleting first entry, which is empty because of the hidden jquery
-    #field. Not a nice solution, and we certainly should come up with something
-    #better
-    del value[:len(fields)]
-    
-    #dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
-    dl = list_dicter(value[:], fields, [i.id for i in fields]) 
+    dl = list_dicter(value[:], [field.id for field in fields]) 
     data[key] = json.dumps(dl)
 
 
-def resource_authors(value):
-    fields = author_fields()
-    import pdb; pdb.set_trace()
-    del value[:len(fields)]
-    dl = _dicter(_grouper(value[:], len(fields)), [i.id for i in fields])
-    return dl
 
 
+#XXX just an example from some other code ######################################
 def repeating_text_output(value):
     """
     Return stored json representation as a list, if

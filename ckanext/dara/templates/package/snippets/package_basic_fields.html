@@ -41,8 +41,13 @@ that we should integrate somehow here #}
 {% block package_metadata_author %}
 {% endblock %}
 
+
+{#
+
 {% block package_basic_fields_org %}
 {% endblock %}
+#}
+
 
 {% block package_basic_fields_tags %}
 {% endblock %}
@@ -67,13 +72,13 @@ that we should integrate somehow here #}
            Ensure citability
         </span>
         <span class="dara_level_number">1</span>
-        </h4>    
+        </h4>
 
-        <div class="dara_level">    
-            {% snippet "package/snippets/dara_level1.html", form=form, 
+        <div class="dara_level">
+            {% snippet "package/snippets/dara_level1.html", form=form,
                 errors=errors, data=data, dara_type="dataset" %}
         </div>
-    </div> 
+    </div>
 
 {% else %}
     {% snippet "package/snippets/dara_level1.html", form=form,
@@ -85,16 +90,16 @@ that we should integrate somehow here #}
     dara_type='dataset', errors=errors, data=data %}
 
 
-{# da|ra levels 2 and 3 are not shown at first dataset edit 
+{# da|ra levels 2 and 3 are not shown at first dataset edit
    {% if form_style == 'edit' %}
         <div id="dara_2">
             {% snippet "package/snippets/dara_level2.html", form=form,
-                errors=errors, dara_type="dataset" %}  
+                errors=errors, dara_type="dataset" %}
         </div>
-        
+
         <div id="dara_3">
             {% snippet "package/snippets/dara_level3.html", form=form,
-            dara_type="dataset", errors=errors %}  
+            dara_type="dataset", errors=errors %}
         </div>
     {% endif %}
 #}
@@ -102,6 +107,72 @@ that we should integrate somehow here #}
 
 
 
+{% block package_basic_fields_org %}
+  {# if we have a default group then this wants remembering #}
+  {% if data.group_id %}
+    <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
+  {% endif %}
+
+  {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
+  {% set dataset_has_organization = data.owner_org or data.group_id %}
+  {% set organizations_available = h.organizations_available('read') %}
+  {% set user_is_sysadmin = h.check_access('sysadmin') %}
+
+  {% set show_organizations_selector = organizations_available %}
+
+  {% set show_visibility_selector = dataset_has_organization or (organizations_available and (user_is_sysadmin or dataset_is_draft)) %}
+
+  {% if show_organizations_selector and show_visibility_selector %}
+    <div data-module="dataset-visibility">
+  {% endif %}
+
+{# XXX organization selector in dara_level1.html #}
+
+  {% if show_visibility_selector %}
+    {% block package_metadata_fields_visibility %}
+
+      {# we need to set this as hidden but with a value for members. Otherwise
+        default will be 'Public'
+        TODO: optimize. Perhaps overwrite the JS module?
+        #}
+        {% if h.check_journal_role(data, 'member') %}
+          <div style="visibility: hidden">
+        {% endif %}
+
+      <div class="control-group">
+        <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
+        <div class="controls">
+          <select id="field-private" name="private">
+            {% for option in [('True', _('Private')), ('False', _('Public'))] %}
+            <option value="{{ option[0] }}" {% if option[0] == data.private|trim %}selected="selected"{% endif %}>
+                {{ option[1] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      {% if h.is_journal_member(data, 'member') %}
+        </div>
+      {% endif %}
+
+    {% endblock %}
+  {% endif %}
+
+  {% if show_organizations_selector and show_visibility_selector %}
+    </div>
+  {% endif %}
 
 
+  {% if data.id and h.check_access('package_delete', {'id': data.id}) and data.state != 'active' %}
+    <div class="control-group">
+      <label for="field-state" class="control-label">{{ _('State') }}</label>
+      <div class="controls">
+        <select id="field-state" name="state">
+          <option value="active" {% if data.get('state', 'none') == 'active' %} selected="selected" {% endif %}>{{ _('Active') }}</option>
+          <option value="deleted" {% if data.get('state', 'none') == 'deleted' %} selected="selected" {% endif %}>{{ _('Deleted') }}</option>
+        </select>
+      </div>
+    </div>
+  {% endif %}
 
+{% endblock %}

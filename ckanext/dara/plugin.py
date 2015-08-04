@@ -36,7 +36,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IValidators)
-    
+
    #def after_update(self, context, id):
    #    pkg = helpers.dara_pkg()
    #    import pdb; pdb.set_trace()
@@ -53,7 +53,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
-        
+
 
         def schema_update(key):
             field = PREFIX + key
@@ -63,7 +63,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                         tk.get_converter('convert_to_extras'),
                 ]
             })
-        
+
          #XXX this should be removed when we have dara metadata link to article
         schema.update({
             'edawax_article_url': [
@@ -76,10 +76,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         #dataset schema, level1, level2, publications
         for i in dara_schema.fields():
             schema_update(i.id)
-                       
+
         #resources schema (new in CKAN 2.3)
         self._resource_schema_update(schema)
-       
+
        # XXX resource authors do not work for now
        #schema['resources'].update({
        #    'dara_resource_authors': [tk.get_validator('ignore_missing'),
@@ -88,7 +88,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
        #                    ]
        #    })
 
-        
+
         #XXX author list with validator
         field = PREFIX + 'authors'
         schema.update({
@@ -100,15 +100,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                         tk.get_converter('convert_to_extras'),
                         ]
                 })
-        
-        
-       
-        
+
+
+
+
         #hidden fields
         for i in dara_schema.hidden_fields():
             schema_update(i)
-   
-               
+
+
         return schema
 
 
@@ -124,24 +124,24 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_converter('convert_from_extras'),
                     tk.get_validator('ignore_missing')]
             })
-         
-        
+
+
         schema.update({
              'edawax_article_url' : [
                 tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing'),
              ]
         })
-        
+
 
 
         #dataset
         for i in dara_schema.fields():
             schema_update(i.id)
-                
+
         #resources schema (NEW! in 2.3)
         self._resource_schema_update(schema)
-        
+
         #XXX resource authors not functional at the moment. debug!
         #schema['resources'].update({
         #    'dara_resource_authors': [tk.get_converter('convert_from_extras'),
@@ -163,11 +163,11 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     #tk.get_validator('repeating_text'),
                 ]
                 })
-        
-        
 
-       
-        
+
+
+
+
         return schema
 
 
@@ -180,7 +180,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_resource('resources', 'dara')
         #tk.add_resource('fanstatic', 'dara')
 
-    
+
     def get_validators(self):
         return {
             #'repeating_text': validators.repeating_text,
@@ -189,7 +189,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'authors': validators.authors,
             }
 
-    
+
     def get_helpers(self):
         return {
                 'dara_md': helpers.dara_md,
@@ -209,6 +209,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_resource_url' : helpers.dara_resource_url,
                 'dara_author_fields' : helpers.dara_author_fields,
                 #'get_request_params': helpers.get_request_params,
+                'check_journal_role': helpers.check_journal_role,
+                'get_user_id': helpers.get_user_id
                 }
 
     def is_fallback(self):
@@ -230,15 +232,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(DaraMetadataPlugin, self).update_package_schema()
         schema = self._dara_package_schema(schema)
         return schema
-    
-    
+
+
     def before_map(self, map):
         """
         """
         #XXX Note: map.connect() accepts arbitrary **kw and *args. That's why
         #we can add the template for the calls of the controller here
 
-        map.connect('/dataset/{id}/dara_xml', 
+        map.connect('/dataset/{id}/dara_xml',
                 controller="ckanext.dara.controller:DaraController",
                 action='xml',
                 template='package/collection.xml',
@@ -249,7 +251,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 action='xml',
                 template='package/resource.xml'
                 )
-        
+
 
         map.connect('/dataset/{id}/dara_register',
                 controller="ckanext.dara.controller:DaraController",
@@ -263,14 +265,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ckan_icon="exchange"
                 )
 
-        #XXX obsolete 
+        #XXX obsolete
        #map.connect('/dataset/{id}/doi_proposal',
        #        controller="ckanext.dara.controller:DaraController",
        #        action="doi_proposal"
        #        )nse
 
         return map
-
-
-
-

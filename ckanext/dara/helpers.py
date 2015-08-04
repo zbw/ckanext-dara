@@ -1,8 +1,8 @@
-#Hendrik Bunke
-#ZBW - Leibniz Information Centre for Economics
+# Hendrik Bunke
+# ZBW - Leibniz Information Centre for Economics
 
 import ckan.plugins.toolkit as tk
-from ckan.common import c, request, response
+from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields
 from ckanext.dara.utils import list_dicter
@@ -11,56 +11,56 @@ from hashids import Hashids
 import ckan.model as model
 from pylons import config
 import json
-import ckan.plugins.toolkit as tk
-
+from ckan.new_authz import users_role_for_group_or_org
+from ckan import model
 
 def dara_pkg():
     """
     get package for several helper functions
     XXX DO WE REALLY NEED THIS?
     """
-    
+
     pkg_id = tk.c.id
     try:
         pkg = tk.get_action('package_show')(None, {'id': pkg_id})
     except:
         pkg = model.Package.by_name(pkg_id)
-    
-    #params = request.params
-    
+
+    # params = request.params
+    # import ipdb; ipdb.set_trace()
     return pkg
+
 
 def dara_debug(obj):
     pkg_dict = dara_pkg()
 
     import pdb; pdb.set_trace()
 
+
 def dara_auto_fields():
     pkg = dara_pkg()
     site_url = config.get('ckan.site_url')
-    
-    #fallback for development
+
+    # fallback for development
     if 'localhost' in site_url:
         site_url = "http://edawax.de"
-    
+
     pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
     dara_url = site_url + pkg_url
-    
-    return {'URL': dara_url}
 
+    return {'URL': dara_url}
 
 
 def dara_author_fields():
     return dara_schema.author_fields()
 
 
-
 def dara_resource():
     """
     somehow hack. c.resource doesnt return a resource when calling .../dara_xml
     """
-    #XXX improve this. we should somehow be able to get the type of the context
-    #(resource or package)
+    # XXX improve this. we should somehow be able to get the type of the
+    # context (resource or package)
     try:
         if 'resource' in request.path:
             resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
@@ -71,7 +71,7 @@ def dara_resource():
         return False
 
 
-#def get_request_params():
+# def get_request_params():
 #    import ipdb; ipdb.set_trace()
 #    return tk.request.params
 
@@ -128,7 +128,6 @@ def dara_publications():
     return False
 
 
-
 def dara_doi(pkg):
     """
     used in snippets/package_metadata_fields.  For now we only take the pkg
@@ -136,25 +135,25 @@ def dara_doi(pkg):
     upload in one second and for the same journal/organization we'd have a
     collision. This case might be rare.
     """
-    
-    #check if we have a DOI already
+
+    # check if we have a DOI already
     key = 'dara_DOI_Proposal'
     if key in pkg and pkg[key]:
         return pkg[key]
-    
+
     # DOI prefix must be set in CKAN config
     prefix = config.get('ckanext.dara.doi_prefix')
-        
-    #make sure we ALWAYS get an org id
+
+    # make sure we ALWAYS get an org id
     try:
         group = pkg['group_id']
         data_dict = {'id': group, 'include_datasets': False}
         org = tk.get_action('organization_show')(None, data_dict)
         journal = org['name']
     except:
-        journal = 'edawax'  #fallback
-    
-    #building a unique DOI id
+        journal = 'edawax'  # fallback
+
+    # building a unique DOI id
     uid = __make_uid()
     doi = '{}/{}.{}'.format(prefix, journal, uid)
     return doi
@@ -173,5 +172,29 @@ def __make_uid():
     hashids = Hashids(salt=salt)
     uid = hashids.encode(int(now))
     return uid
+
+
+def check_journal_role(pkg, role):
+    user = tk.c.user
+    if 'owner_org' in pkg:
+        group = pkg['owner_org']
+    elif 'group_id' in pkg:
+        group = pkg['group_id']
+    else:
+        return False
+    role_in_org = users_role_for_group_or_org(group, user)
+    if role_in_org == role:
+        return True
+    return False
+
+
+def get_user_id():
+    
+    def context():
+        return {'model': model, 'session': model.Session,
+                'user': c.user or c.author, 'for_view': True,
+                'auth_user_obj': c.userobj}
+    converter =  tk.get_converter('convert_user_name_or_id_to_id')
+    return converter(tk.c.user, context())
 
 

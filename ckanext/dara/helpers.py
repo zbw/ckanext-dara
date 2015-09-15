@@ -198,3 +198,9 @@ def get_user_id():
     return converter(tk.c.user, context())
 
 
+def resource_is_internal(res):
+    url = res['url']
+    site_url = config.get('ckan.site_url')
+    if url.startswith(site_url):
+        return True
+    return False

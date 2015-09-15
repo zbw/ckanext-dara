@@ -114,14 +114,17 @@
   <p class="description">By default, single resources do not get a DOI, only the dataset as a
   collection. Here you can, however, select resources that you would like to
   get their own DOI. Please avoid to assign DOIs to non-essential files, like
-  Readme.txt or similar.</p>
+  Readme.txt or similar. Note that you cannot assign DOIs to ressources with
+  external URLs.</p>
 
     {% set resources = pkg['resources'] %}
     
     {% if resources %}
       <ul class="resource-list">
           {% for res in resources %}
-            
+          
+         
+
 {# originally from resource_item.html ##############################}
 
 {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
@@ -133,7 +136,9 @@
 
 <li class="resource-item" data-id="{{ res.id }}">
   
+   
   <div style="float:right; margin-left:20px; text-align:right;" >
+    {% if h.resource_is_internal(res) %}
       <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
       value="register" /> 
       {% if not res['dara_DOI'] %}
@@ -154,9 +159,12 @@
       DOI Proposal: {{ pkg.dara_DOI_Proposal }}.{{ res['dara_doiid'] }}
       {% endif %}
       </p>
-
+  
+      {% else %}
+      No DOI assignable
+  {% endif %}
+  
   </div>
-    
 
   <a class="heading" href="{{ url }}" 
       title="{{ res.name or res.description }}">
@@ -177,7 +185,7 @@
 </li>
 {# end resource item ############################################ #}
 
-
+        
          {% endfor %}
       </ul>
     {% else %}

@@ -210,7 +210,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_author_fields' : helpers.dara_author_fields,
                 #'get_request_params': helpers.get_request_params,
                 'check_journal_role': helpers.check_journal_role,
-                'get_user_id': helpers.get_user_id
+                'get_user_id': helpers.get_user_id,
+                'resource_is_internal': helpers.resource_is_internal
                 }
 
     def is_fallback(self):

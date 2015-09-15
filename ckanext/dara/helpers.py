@@ -8,11 +8,11 @@ from ckanext.dara.schema import author_fields
 from ckanext.dara.utils import list_dicter
 from datetime import datetime
 from hashids import Hashids
-import ckan.model as model
 from pylons import config
 import json
 from ckan.new_authz import users_role_for_group_or_org
 from ckan import model
+
 
 def dara_pkg():
     """
@@ -189,12 +189,12 @@ def check_journal_role(pkg, role):
 
 
 def get_user_id():
-    
+
     def context():
         return {'model': model, 'session': model.Session,
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
-    converter =  tk.get_converter('convert_user_name_or_id_to_id')
+    converter = tk.get_converter('convert_user_name_or_id_to_id')
     return converter(tk.c.user, context())
 
 

@@ -136,7 +136,7 @@ def fields():
             ),
 
         DaraField('Availabilitycontrolled',
-            1, ('dataset', 'data', 'text', 'code', 'other'),
+            1, ('dataset', 'data'),
             Select(
                 options=[
                     {'value': '1', 'text': 'Free Download'},

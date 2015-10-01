@@ -211,5 +211,5 @@ class DaraController(PackageController):
 
         template = "package/doi.html"
         page = tk.render(template)
-
+        
         return page

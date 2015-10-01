@@ -41,6 +41,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
    #    pkg = helpers.dara_pkg()
    #    import pdb; pdb.set_trace()
    #
+   #def before_view(self, pkg_dict):
+   #    import ipdb; ipdb.set_trace()
 
     def _resource_schema_update(self, schema):
         for i in dara_fields(1, 'resource') + dara_fields(2, 'resource'):

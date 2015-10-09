@@ -173,7 +173,11 @@
         property="dc:format" 
         data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
     </span>
+    
+    {# XXX throws an error, off for now
     {{ h.popular('views', res.tracking_summary.total, min=10) }}
+    #}
+
   </a>
 
   <p class="description">

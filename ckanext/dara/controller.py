@@ -111,11 +111,9 @@ class DaraController(PackageController):
         xml_string = tk.render(template)
 
         # validate before show. Errors are caught by lxml
-        xml = StringIO(xml_string)
-        xsd = StringIO(self.schema)
-        xmlschema_doc = etree.parse(xsd)
+        xmlschema_doc = etree.parse(StringIO(self.schema))
         xmlschema = etree.XMLSchema(xmlschema_doc)
-        doc = etree.parse(xml)
+        doc = etree.parse(StringIO(xml_string))
         xmlschema.assertValid(doc)
 
         return xml_string

@@ -236,7 +236,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = self._dara_package_schema(schema)
         return schema
 
-
     def before_map(self, map):
         """
         """
@@ -265,6 +264,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('dara_doi', '/dataset/edit/{id}/dara_doi',
                 controller="ckanext.dara.controller:DaraController",
                 action="doi",
+                template="package/doi.html",
                 ckan_icon="exchange"
                 )
 

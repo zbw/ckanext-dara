@@ -4,16 +4,15 @@ from ckanext.dara.schema import author_fields
 from ckanext.dara.utils import list_dicter
 
 
-
 def authors(key, data, errors, context):
     """
     transform author fields to JSON string and store it
     """
     
-    #TODO make sure there's at least one author given AND each Author has
-    #at least lastname
+    # TODO make sure there's at least one author given AND each Author has
+    # at least lastname
     
-    #XXX Shouldn't the converter part be in converters, not in validators...?!
+    # XXX Shouldn't the converter part be in converters, not in validators...?!
     
     if errors[key]:
         return
@@ -25,6 +24,9 @@ def authors(key, data, errors, context):
         return
 
     dl = list_dicter(value[:], [field.id for field in fields]) 
+
+    # XXX plug in ORCID check here
+
     data[key] = json.dumps(dl)
 
 

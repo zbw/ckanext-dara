@@ -1,7 +1,6 @@
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
 
-# TODO refactor in a more functional way
 
 from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk
@@ -37,7 +36,6 @@ class DaraController(PackageController):
     # XXX darapi is too small, should it be integrated here?
 
     def __init__(self):
-        self.schema = schema
         self.demo_user = config.get('ckanext.dara.demo.user', False)
         self.demo_password = config.get('ckanext.dara.demo.password', False)
         self.user = config.get('ckanext.dara.user', False)
@@ -111,7 +109,7 @@ class DaraController(PackageController):
         xml_string = tk.render(template)
 
         # validate before show. Errors are caught by lxml
-        xmlschema_doc = etree.parse(StringIO(self.schema))
+        xmlschema_doc = etree.parse(StringIO(schema))
         xmlschema = etree.XMLSchema(xmlschema_doc)
         doc = etree.parse(StringIO(xml_string))
         xmlschema.assertValid(doc)
@@ -196,18 +194,12 @@ class DaraController(PackageController):
                 (%s). Dataset has not been registered" % (resource_id, dara))
             tk.redirect_to('dara_doi', id=id)
 
-    def doi(self, id):
+    def doi(self, id, template):
         """
         DOI manager page
         """
         self._check_access(id)
         context = self._context()
-        data_dict = {'id': id}
-
-        c.pkg_dict = tk.get_action('package_show')(context, data_dict)
+        c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
         c.pkg = context['package']
-
-        template = "package/doi.html"
-        page = tk.render(template)
-        
-        return page
+        return tk.render(template)

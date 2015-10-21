@@ -228,3 +228,7 @@ label[for="dara_res_preselection"] {
     margin-left:-20px;
     text-align:left;
 }
+
+.hide {
+    display:none;
+}

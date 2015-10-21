@@ -3,18 +3,18 @@ store it properly (without validation errors). So long we'll use helpers to
 convert the JSON String 
 {% set dara_authors = pkg_dict['dara_authors'] %}
 #}
-{% set dara_authors = h.dara_authors('dataset', data) %}
+    {% set dara_authors = h.dara_authors('dataset', data) %}
 
-{% set journal = pkg_dict['organization']['title'] or pkg_dict['organization']['name'] %}
-{% set DOI = pkg_dict['dara_DOI'] %}
-{# {% set debug = h.dara_debug() %}#}
-<section class="package-citation">
+    {% set journal = pkg_dict['organization']['title'] or pkg_dict['organization']['name'] %}
+    {% set DOI = pkg_dict['dara_DOI'] %}
+    {# {% set debug = h.dara_debug() %}#}
+    <section class="package-citation">
 
-<h3>Citation</h3>
+    <h3>Citation</h3>
 
-{% if dara_authors %}
+    {% if dara_authors %}
 
-    
+        
     {% for author in dara_authors %}
         {% if author == dara_authors[-1] %}
             {{ (author['lastname'], author['firstname']) | join(', ')}}

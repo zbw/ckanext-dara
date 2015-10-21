@@ -46,18 +46,15 @@ TODO
     <person>
         <firstName>{{ author['firstname'] or None }}</firstName>
         <lastName>{{ author['lastname'] or None }}</lastName>
-        
-        {#TODO schemaURI is mandatory, but we don't have a field/value for it now.
-        Should be done automatically, depending on on identifierSchema
         {% if author['authorID'] %}
             <personIDs>
                 <personID>
                     <identifier>{{ author['authorID'] }}</identifier>
                     <identifierSchema>{{ author['authorID_Type'] }}</identifierSchema>
+                    <schemaURI>{{ author['authorID_URI'] }}</schemaURI>
                 </personID>
             </personIDs>
         {% endif %}
-        #}
         {#TODO condition einbauen, statt None #}
         <affiliation>
             <affiliationName>

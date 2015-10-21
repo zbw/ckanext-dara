@@ -763,6 +763,14 @@ def author_fields():
                 ),
             ),
 
+        AuthorField('url',
+            Input(
+                placeholder = 'Personal URL of Author',
+                name = 'URL',
+                classes = []
+                ),
+            ),
+
 
         AuthorField('authorID',
             Input(
@@ -786,6 +794,13 @@ def author_fields():
                 ],
                 role = 'slave',
                 ),
+        ),
+
+        AuthorField('authorID_URI',
+                Input(
+                    name='Personal ID URI',
+                    classes = ['hide'],
+                    ),
         ),
                 
         )

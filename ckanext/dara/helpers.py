@@ -176,6 +176,8 @@ def __make_uid():
 
 def check_journal_role(pkg, role):
     user = tk.c.user
+    if not user:
+        return False
     if 'owner_org' in pkg:
         group = pkg['owner_org']
     elif 'group_id' in pkg:
@@ -194,6 +196,9 @@ def get_user_id():
         return {'model': model, 'session': model.Session,
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
+    user = tk.c.user
+    if not user:
+        return 
     converter = tk.get_converter('convert_user_name_or_id_to_id')
     return converter(tk.c.user, context())
 

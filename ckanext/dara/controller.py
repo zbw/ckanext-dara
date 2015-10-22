@@ -13,7 +13,7 @@ from darapi import DaraClient
 from datetime import datetime
 from ckanext.dara.dara_schema.v3_1 import schema
 from pylons import config
-from ckanext.dara.utils import memoize
+from ckanext.dara.ftools import memoize
 
 
 NotAuthorized = tk.NotAuthorized

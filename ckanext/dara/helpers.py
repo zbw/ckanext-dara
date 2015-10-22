@@ -5,7 +5,7 @@ import ckan.plugins.toolkit as tk
 from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields
-from ckanext.dara.utils import list_dicter
+from ckanext.dara.ftools import list_dicter
 from datetime import datetime
 from hashids import Hashids
 from pylons import config
@@ -95,6 +95,7 @@ def dara_md():
     for i in all_levels:
         d = 'dara_' + i.id
         named_levels[d] = {'name': i.widget.name}
+
     return named_levels
 
 

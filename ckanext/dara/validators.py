@@ -1,9 +1,11 @@
 import json
 import requests
+from toolz.dicttoolz import get_in
+from toolz.functoolz import pipe
 from copy import deepcopy
 # from ckan.plugins.toolkit import missing, _
 from ckanext.dara.schema import author_fields
-from ckanext.dara.utils import list_dicter
+from ckanext.dara.ftools import list_dicter
 
 
 error_key = '_error'
@@ -20,28 +22,25 @@ def authors(key, data, errors, context):
     if errors[key] or not isinstance(data[key], list):
         return
 
-    def error_check(d):
+    def error_check(author):
         """
         only this function appends errors
         """
-        if error_key in d:
-            errors[key].append(d[error_key])
-        return
+        if error_key in author:
+            errors[key].append(author[error_key])
+        return author
 
     def id_check(author):
-        """ 
+        """
         checks ID type and calls appropriate function
         """
         id_type = author['authorID_Type']
         id_value = author['authorID']
         if id_type and id_value:
-            func_map = {'ORCID': _orcid}
-            func = func_map[id_type]
-            call = func(author)
-            error_check(call)
-            return call
+            funcs = {'ORCID': _orcid}
+            return pipe(author, funcs[id_type], error_check)
         return author
-    
+ 
     authors = list_dicter(data[key][:], [field.id for field in author_fields()])
     data[key] = json.dumps(map(lambda author: id_check(author), authors))
 
@@ -71,12 +70,19 @@ def _orcid(author_orig):
     req = orcid_call(author['authorID'])
     if req.status_code == 200:
         content = req.json()
-        author['authorID_URI'] = _getkey(content, 'orcid-identifier', 'uri')
-        author['firstname'] = _getkey(content, 'given-names', 'value')
-        author['lastname'] = _getkey(content, 'family-name', 'value')
-        researcher_urls = _getkey(content, 'researcher-urls', 'researcher-url')
-        if researcher_urls:
-            author['url'] = researcher_urls[0]['url']['value']
+        profile = content['orcid-profile']  # convenience
+        
+        author['authorID_URI'] = get_in(['orcid-identifier', 'uri'], profile)
+        author['firstname'] = get_in(['orcid-bio', 'personal-details',
+                                      'given-names', 'value'], profile,
+                                     default=author_orig['firstname'])
+        author['lastname'] = get_in(['orcid-bio', 'personal-details',
+                                     'family-name', 'value'], profile,
+                                    default=author_orig['lastname'])
+        author['url'] = get_in(['orcid-bio', 'researcher-urls',
+                                'researcher-url', 0, 'url', 'value'], profile,
+                               default=author_orig['url'])
+        
         return author
     else:
         # TODO: more detailed error reasons
@@ -85,16 +91,4 @@ def _orcid(author_orig):
         return author
 
 
-def _getkey(dic, key, valkey):
-    """ 
-    iterates over a (nested) dict and returns value for given key. key has to
-    be unique. Recursion, yeah! ;-)
-    """
-    if key in dic:
-        if dic[key]:
-            return dic[key][valkey]
-        return u''
-    for k,v in dic.iteritems():
-        if isinstance(v, dict):
-            return _getkey(v, key, valkey)
-            
+

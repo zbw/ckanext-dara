@@ -35,8 +35,8 @@ def authors(key, data, errors, context):
         id_type = author['authorID_Type']
         id_value = author['authorID']
         if id_type and id_value:
-            func_d = {'ORCID': _orcid}
-            func = func_d[id_type]
+            func_map = {'ORCID': _orcid}
+            func = func_map[id_type]
             call = func(author)
             error_check(call)
             return call

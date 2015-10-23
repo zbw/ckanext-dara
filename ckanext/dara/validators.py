@@ -55,6 +55,12 @@ def _orcid(author_orig):
     # 0000-0003-1419-2405  # Martin Fenner, public
     # 0000-0002-1516-2382 # Hendrik Bunke, public
 
+    mapping = dict(
+        firstname=['orcid-bio', 'personal-details', 'given-names', 'value'],
+        lastname=['orcid-bio', 'personal-details', 'family-name', 'value'],
+        url=['orcid-bio', 'researcher-urls', 'researcher-url', 0, 'url', 'value'],
+        authorID_URI=['orcid-identifier', 'uri'])
+    
     def orcid_call(author_id):
         # sandbox only for development
         # orcid_base = 'http://pub.sandbox.orcid.org/v1.2'
@@ -62,33 +68,20 @@ def _orcid(author_orig):
         headers = {'Accept': 'application/orcid+json'}
         url = '{}/{}/orcid-profile'.format(orcid_base, author_id)
         return requests.get(url, headers=headers)
+
+    def orcid_map(k):
+        return (k, get_in(mapping[k], profile, default=author_orig[k]))
     
-    # we don't want to modify the original dict. This is a functional
-    # principle, but might also become handy for comparisons
     author = deepcopy(author_orig)
-    
     req = orcid_call(author['authorID'])
     if req.status_code == 200:
-        content = req.json()
-        profile = content['orcid-profile']  # convenience
-        
-        author['authorID_URI'] = get_in(['orcid-identifier', 'uri'], profile)
-        author['firstname'] = get_in(['orcid-bio', 'personal-details',
-                                      'given-names', 'value'], profile,
-                                     default=author_orig['firstname'])
-        author['lastname'] = get_in(['orcid-bio', 'personal-details',
-                                     'family-name', 'value'], profile,
-                                    default=author_orig['lastname'])
-        author['url'] = get_in(['orcid-bio', 'researcher-urls',
-                                'researcher-url', 0, 'url', 'value'], profile,
-                               default=author_orig['url'])
-        
+        profile = req.json()['orcid-profile']
+        author.update(map(orcid_map, mapping.iterkeys()))
         return author
-    else:
-        # TODO: more detailed error reasons
-        msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
-        author[error_key] = msg
-        return author
-
+    
+    # TODO: more detailed error reasons
+    msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
+    author[error_key] = msg
+    return author
 
 

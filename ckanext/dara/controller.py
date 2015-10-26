@@ -9,11 +9,11 @@ from ckan import model
 import ckan.lib.helpers as h
 from StringIO import StringIO
 from lxml import etree
-from darapi import DaraClient
 from datetime import datetime
 from ckanext.dara.dara_schema.v3_1 import schema
 from pylons import config
 from ckanext.dara.ftools import memoize
+import requests
 
 
 NotAuthorized = tk.NotAuthorized
@@ -32,14 +32,7 @@ class DaraController(PackageController):
     displays and validates dara XML for the dataset or resource, and registers
     it at da|ra
     """
-
-    # XXX darapi is too small, should it be integrated here?
-
-    def __init__(self):
-        self.demo_user = config.get('ckanext.dara.demo.user', False)
-        self.demo_password = config.get('ckanext.dara.demo.password', False)
-        self.user = config.get('ckanext.dara.user', False)
-        self.password = config.get('ckanext.dara.password', False)
+    
 
     def _context(self):
         return {'model': model, 'session': model.Session,
@@ -75,32 +68,29 @@ class DaraController(PackageController):
 
         return {'test': test, 'register': register,
                 'test_register': test_register}
-
-    def _check_credentials(self):
+    
+    @memoize
+    def _auth(self):
         params = self._params()
+        demo_user = config.get('ckanext.dara.demo.user', False)
+        demo_password = config.get('ckanext.dara.demo.password', False)
+        user = config.get('ckanext.dara.user', False)
+        password = config.get('ckanext.dara.password', False)
         if params['test']:
-            if not (self.demo_user and self.demo_password):
-                raise DaraError("User and/or password for da|ra demo server not set in\
-                        CKAN config")
-        else:
-            if not (self.user and self.password):
-                raise DaraError("User and/or password for da|ra server not set\
-                        in CKAN config")
-
-    def _user(self):
-        params = self._params()
-        user = self.user
-        if params['test']:
-            user = self.demo_user
-        return user
-
-    def _password(self):
-        params = self._params()
-        password = self.password
-        if params['test']:
-            password = self.demo_password
-        return password
-
+            if not (demo_user and demo_password):
+                h.flash_error(u"dara.demo.user and/or dara.demo.password not\
+                        set in CKAN config")
+                tk.redirect_to('dara_doi', id=id)
+            else:
+                return (demo_user, demo_password)
+        
+        if not (user and password):
+            h.flash_error(u"dara.user and/or dara.password not\
+                        set in CKAN config")
+            tk.redirect_to('dara_doi', id=id)
+        
+        return (user, password)
+    
     def xml(self, id, template):
         """
         returning valid dara XML
@@ -120,10 +110,15 @@ class DaraController(PackageController):
         """
         register at da|ra
         """
+        
+        def store():
+            if params['register'] or params['test_register']:
+                # XXX in case of update we might not need to store the doi...?
+                c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
+            tk.get_action('package_update')(context, c.pkg_dict)
 
         params = self._params()
         self._check_access(id)
-        self._check_credentials()
         context = self._context()
         data_dict = {'id': id}
         date = '{:%Y-%m-%d-%H:%M:%S}'.format(datetime.now())
@@ -141,21 +136,9 @@ class DaraController(PackageController):
 
         # getting valid XML
         xml = self.xml(id, template)
-
-        # call dara
-        client = DaraClient(
-            self._user(),
-            self._password(),
-            xml,
-            test=params['test'],
-            register=params['register'])
-        dara = client.call()
-
-        def store():
-            if params['register'] or params['test_register']:
-                # XXX in case of update we might not need to store the doi...?
-                c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
-            tk.get_action('package_update')(context, c.pkg_dict)
+        
+        dara = darapi(self._auth(), xml,
+                    test=params['test'], register=params['register'])
 
         if dara == 201:
             c.pkg_dict['dara_registered'] = date
@@ -181,10 +164,10 @@ class DaraController(PackageController):
         params = self._params()
         c.resource = tk.get_action('resource_show')(context, {'id': resource_id})
         xml = self.xml(id, 'package/resource.xml')
-        client = DaraClient(self._user, self._password, xml,
-                            test=params['test'],
-                            register=params['register'])
-        dara = client.call()
+        
+        dara = darapi((self._user(), self._password()), xml,
+                    test=params['test'], register=params['register'])
+
         if dara == 201 or 200:
             doi = u'%s.%s' % (c.pkg_dict['dara_DOI_Proposal'], resource['dara_doiid'])
             c.resource['dara_DOI'] = doi
@@ -203,3 +186,60 @@ class DaraController(PackageController):
         c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
         c.pkg = context['package']
         return tk.render(template)
+
+
+def darapi(auth, xml, test=False, register=False):
+    """
+    talking with da|ra API. See da|ra reference:
+    http://www.da-ra.de/fileadmin/media/da-ra.de/PDFs/dara_API_reference_v1.pdf
+
+    :param auth: tuple with username and password for the account at da|ra for
+                 the account at da|ra
+    :param xml: the XML string to post to da|ra, *without* the <?xml ... ?>
+                instruction. XML must validate against the dara XSD-Schema
+    :param test: if True connects to dara production server, otherwise it uses
+                the test-server (default: False)
+    :param register: register a DOI. Note that the test server cannot register
+                    DOI. If you try it will return an additional message
+                    (default: False)
+
+    da|ra response http codes:
+    
+        201 Created operation successful, returned if a new dataset created
+    
+        200 OK operation successful, returned if an existing dataset updated
+
+        400 Bad Request - request body must be valid xml
+    
+        401 Unauthorized - no or wrong login
+    
+        500 Internal Server Error - server internal error, try later and if
+        problem persists please contact da|ra
+
+    '500' usually means that there's an error in your request.
+    
+    Error 500 unfortunately also returns a huge chunk of html output. However,
+    it can be used for debugging.
+    """
+
+    if test:
+        URL = 'http://dara-test.gesis.org:8084/dara/study/importXML'
+    else:
+        URL = 'http://www.da-ra.de/dara/study/importXML'
+    
+    # socket does not take unicode, so we need to encode our unicode object
+    # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets
+    # XXX do we always get unicode object???
+    xml_encoded = xml.encode('utf-8')
+    
+    params = {}
+    if register:
+        params = {'registration': 'true'}
+    
+    headers = {'content-type': 'application/xml;charset=UTF-8'}
+    
+    req = requests.post(URL, auth=auth,
+            headers=headers, data=xml_encoded, params=params)
+    
+    return req.status_code
+

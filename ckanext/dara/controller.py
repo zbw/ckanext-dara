@@ -1,7 +1,6 @@
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
 
-
 from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk
 from ckan.common import c, response
@@ -14,9 +13,7 @@ from ckanext.dara.dara_schema.v3_1 import schema
 from pylons import config
 from ckanext.dara.ftools import memoize
 import requests
-
-
-NotAuthorized = tk.NotAuthorized
+from toolz.dicttoolz import keyfilter, get_in
 
 
 class DaraError(Exception):
@@ -30,153 +27,95 @@ class DaraError(Exception):
 class DaraController(PackageController):
     """
     displays and validates dara XML for the dataset or resource, and registers
-    it at da|ra
+    it at da|ra.
     """
-    
 
     def _context(self):
         return {'model': model, 'session': model.Session,
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
-
+    
     def _check_access(self, id):
         context = self._context()
         try:
             tk.check_access('package_update', context, {'id': id})
-        except NotAuthorized:
+        except tk.NotAuthorized:
             tk.abort(401, 'Unauthorized to manage DOI.')
-
-    @memoize
-    def _params(self):
-        """
-        test for parameters. For testserver DOI registration is not possible,
-        so we fake it (test_register).
-        defaults: register at 'real' server and get a DOI
-        """
-        test_register = False
-        ptest = lambda p: p in tk.request.params
-
-        # XXX change this for production
-        # test = ptest('testserver')
-        test = True
-
-        register = ptest('DOI')
-
-        if test and register:
-            register = False
-            test_register = True
-
-        return {'test': test, 'register': register,
-                'test_register': test_register}
     
-    @memoize
-    def _auth(self):
-        params = self._params()
-        demo_user = config.get('ckanext.dara.demo.user', False)
-        demo_password = config.get('ckanext.dara.demo.password', False)
-        user = config.get('ckanext.dara.user', False)
-        password = config.get('ckanext.dara.password', False)
-        if params['test']:
-            if not (demo_user and demo_password):
-                h.flash_error(u"dara.demo.user and/or dara.demo.password not\
-                        set in CKAN config")
-                tk.redirect_to('dara_doi', id=id)
+    def register(self, id, template):
+        """
+        register at da|ra
+        """
+        self._check_access(id)
+        context = self._context()
+
+        def store():
+            if params()['register'] or params()['test_register']:
+                # XXX in case of update we might not need to store the DOI
+                c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
+            tk.get_action('package_update')(context, c.pkg_dict)
+    
+        def response():
+            a = {201: ('dara_registered', 'Dataset registered'),
+                 200: ('dara_updated', 'Dataset updated')}
+            if dara in a.iterkeys():
+                date = '{:%Y-%m-%d-%H:%M:%S}'.format(datetime.now())
+                k = get_in([dara, 0], a)
+                c.pkg_dict[k] = date
+                store()
+                h.flash_success(get_in([dara, 1], a))
             else:
-                return (demo_user, demo_password)
-        
-        if not (user and password):
-            h.flash_error(u"dara.user and/or dara.password not\
-                        set in CKAN config")
+                h.flash_error("ERROR! Sorry, dataset has not been registered or\
+                          updated. Please contact your friendly sysadmin. ({})\
+                          ".format(dara))
             tk.redirect_to('dara_doi', id=id)
+
+        def register_resources():
+            def reg(resource):
+                resource_id = resource['id']
+                c.resource = tk.get_action('resource_show')(context, {'id': resource_id})
+                xml = self.xml(id, 'package/resource.xml')
+                dara = darapi(auth(), xml, test=params()['test'],
+                        register=params()['register'])
+                if dara in (200, 201):
+                    doi = u'{}.{}'.format(c.pkg_dict['dara_DOI_Proposal'],
+                            resource['dara_doiid'])
+                    c.resource['dara_DOI'] = doi
+                    tk.get_action('resource_update')(context, c.resource)
+                else:
+                    h.flash_error("ERROR! Resource {} could not be registered ({}).\
+                            Dataset has not been registered".format(resource_id, dara))
+                    tk.redirect_to('dara_doi', id=id)
         
-        return (user, password)
-    
+            c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
+            resources = filter(lambda res: res['id'] in tk.request.params,
+                    c.pkg_dict['resources'])
+            map(lambda resource: reg(resource), resources)
+
+        # first register resources
+        register_resources()
+                
+        # register package
+        c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
+        dara = darapi(auth(), self.xml(id, template),
+                    test=params()['test'], register=params()['register'])
+        response()
+
     def xml(self, id, template):
         """
         returning valid dara XML
         """
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
         xml_string = tk.render(template)
-
-        # validate before show. Errors are caught by lxml
+        
+        # validate
         xmlschema_doc = etree.parse(StringIO(schema))
         xmlschema = etree.XMLSchema(xmlschema_doc)
         doc = etree.parse(StringIO(xml_string))
         xmlschema.assertValid(doc)
 
         return xml_string
-
-    def register(self, id, template):
-        """
-        register at da|ra
-        """
-        
-        def store():
-            if params['register'] or params['test_register']:
-                # XXX in case of update we might not need to store the doi...?
-                c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
-            tk.get_action('package_update')(context, c.pkg_dict)
-
-        params = self._params()
-        self._check_access(id)
-        context = self._context()
-        data_dict = {'id': id}
-        date = '{:%Y-%m-%d-%H:%M:%S}'.format(datetime.now())
-        c.pkg_dict = tk.get_action('package_show')(context, data_dict)
-
-        # first register resources
-        resources = c.pkg_dict['resources']
-        resources_to_be_registered = filter(lambda res: res['id'] in tk.request.params,
-                                            resources)
-        for res in resources_to_be_registered:
-            self.register_resource(id, res)
-
-        # resources might have been updated so we must get the new package
-        c.pkg_dict = tk.get_action('package_show')(context, data_dict)
-
-        # getting valid XML
-        xml = self.xml(id, template)
-        
-        dara = darapi(self._auth(), xml,
-                    test=params['test'], register=params['register'])
-
-        if dara == 201:
-            c.pkg_dict['dara_registered'] = date
-            store()
-            h.flash_success("Dataset successfully registered.")
-        elif dara == 200:
-            c.pkg_dict['dara_updated'] = date
-            store()
-            h.flash_success("Dataset successfully updated.")
-        else:
-            h.flash_error("ERROR! Sorry, dataset has not been registered or "
-                          "updated. Please consult the logs. (%s) " % dara)
-
-        tk.redirect_to('dara_doi', id=id)
-
-    def register_resource(self, id, resource):
-        """
-        separate resource registration
-        """
-        self._check_access(id)
-        context = self._context()
-        resource_id = resource['id']
-        params = self._params()
-        c.resource = tk.get_action('resource_show')(context, {'id': resource_id})
-        xml = self.xml(id, 'package/resource.xml')
-        
-        dara = darapi((self._user(), self._password()), xml,
-                    test=params['test'], register=params['register'])
-
-        if dara == 201 or 200:
-            doi = u'%s.%s' % (c.pkg_dict['dara_DOI_Proposal'], resource['dara_doiid'])
-            c.resource['dara_DOI'] = doi
-            tk.get_action('resource_update')(context, c.resource)
-        else:
-            h.flash_error("ERROR! Resource %s could not be registered\
-                (%s). Dataset has not been registered" % (resource_id, dara))
-            tk.redirect_to('dara_doi', id=id)
-
+    
     def doi(self, id, template):
         """
         DOI manager page
@@ -186,7 +125,44 @@ class DaraController(PackageController):
         c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
         c.pkg = context['package']
         return tk.render(template)
+    
 
+@memoize
+def params():
+    """
+    test for parameters. For testserver DOI registration is not possible,
+    so we fake it (test_register).
+    defaults: register at 'real' server and get a DOI
+    """
+    ptest = lambda p: p in tk.request.params
+
+    # XXX change this for production
+    # test = ptest('testserver')
+    test = True
+    test_register = False
+    register = ptest('DOI')
+
+    if test and register:
+        register = False
+        test_register = True
+
+    return {'test': test, 'register': register,
+            'test_register': test_register}
+
+
+@memoize
+def auth():
+    def gc(kw):
+        auths = map(lambda t: config.get(t, False), kw)
+        if False in auths:  # if False...? hm...
+            raise DaraError("User and/or password ({}, {}) not \
+                   set in CKAN config".format(kw[0], kw[1]))
+        return tuple(auths)  # requests needs tuple
+
+    if params()['test']:
+        return gc(['ckanext.dara.demo.user', 'ckanext.dara.demo.password'])
+    return gc(['ckanext.dara.user', 'ckanext.dara.password'])
+    
 
 def darapi(auth, xml, test=False, register=False):
     """
@@ -204,42 +180,31 @@ def darapi(auth, xml, test=False, register=False):
                     (default: False)
 
     da|ra response http codes:
-    
         201 Created operation successful, returned if a new dataset created
-    
         200 OK operation successful, returned if an existing dataset updated
-
         400 Bad Request - request body must be valid xml
-    
         401 Unauthorized - no or wrong login
-    
         500 Internal Server Error - server internal error, try later and if
-        problem persists please contact da|ra
+            problem persists please contact da|ra
 
-    '500' usually means that there's an error in your request.
-    
-    Error 500 unfortunately also returns a huge chunk of html output. However,
-    it can be used for debugging.
+    '500' usually means that there's an error in your request. It unfortunately
+    also returns a huge chunk of html output. However, it can be used for
+    debugging.
     """
-
-    if test:
-        URL = 'http://dara-test.gesis.org:8084/dara/study/importXML'
-    else:
-        URL = 'http://www.da-ra.de/dara/study/importXML'
     
+    url = 'http://www.da-ra.de/dara/study/importXML'
+    if test:
+        url = 'http://dara-test.gesis.org:8084/dara/study/importXML'
+
     # socket does not take unicode, so we need to encode our unicode object
     # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets
     # XXX do we always get unicode object???
     xml_encoded = xml.encode('utf-8')
     
-    params = {}
-    if register:
-        params = {'registration': 'true'}
-    
+    params = keyfilter(lambda x: register, {'registration': 'true'})
     headers = {'content-type': 'application/xml;charset=UTF-8'}
-    
-    req = requests.post(URL, auth=auth,
-            headers=headers, data=xml_encoded, params=params)
-    
+    req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
+            params=params)
     return req.status_code
+
 

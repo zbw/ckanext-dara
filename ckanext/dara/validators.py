@@ -73,7 +73,8 @@ def _orcid(author_orig):
         return (k, get_in(mapping[k], profile, default=author_orig[k]))
     
     author = deepcopy(author_orig)
-    req = orcid_call(author['authorID'])
+    aid = author['authorID'].lstrip().rstrip()  # avoid whitespace
+    req = orcid_call(aid)
     if req.status_code == 200:
         profile = req.json()['orcid-profile']
         author.update(map(orcid_map, mapping.iterkeys()))

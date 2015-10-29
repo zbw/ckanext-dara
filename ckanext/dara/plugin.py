@@ -52,21 +52,34 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     ]
         })
 
-
     def _dara_package_schema(self, schema):
         # Add our custom metadata field to the schema.
-
 
         def schema_update(key):
             field = PREFIX + key
             schema.update({
-                field: [
-                        tk.get_validator('ignore_missing'),
-                        tk.get_converter('convert_to_extras'),
-                ]
+                field: [tk.get_validator('ignore_missing'),
+                        tk.get_converter('convert_to_extras')]
             })
 
-         #XXX this should be removed when we have dara metadata link to article
+        # dataset schema
+        map(lambda field: schema_update(field.id), dara_schema.fields())
+        # resources schema (new in CKAN 2.3)
+        self._resource_schema_update(schema)
+        # hidden fields
+        map(lambda field: schema_update(field), dara_schema.hidden_fields())
+        
+        # author list with validator
+        field = PREFIX + 'authors'
+        schema.update({
+                field: [
+                        tk.get_validator('ignore_missing'),
+                        tk.get_validator('authors'),
+                        tk.get_converter('convert_to_extras'),
+                       ]
+                     })
+        
+        # XXX this should be removed when we have dara metadata link to article
         schema.update({
             'edawax_article_url': [
                 tk.get_validator('ignore_missing'),
@@ -74,45 +87,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             ]
         })
 
-
-        #dataset schema, level1, level2, publications
-        for i in dara_schema.fields():
-            schema_update(i.id)
-
-        #resources schema (new in CKAN 2.3)
-        self._resource_schema_update(schema)
-
-       # XXX resource authors do not work for now
-       #schema['resources'].update({
-       #    'dara_resource_authors': [tk.get_validator('ignore_missing'),
-       #                    tk.get_validator('authors'),
-       #                    tk.get_converter('convert_to_extras'),
-       #                    ]
-       #    })
-
-
-        #XXX author list with validator
-        field = PREFIX + 'authors'
-        schema.update({
-                field: [
-                        #tk.get_validator('repeating_text'),
-                        tk.get_validator('ignore_missing'),
-                        tk.get_validator('authors'),
-                        #tk.get_validator('repeating_text_output'),
-                        tk.get_converter('convert_to_extras'),
-                        ]
-                })
-
-
-
-
-        #hidden fields
-        for i in dara_schema.hidden_fields():
-            schema_update(i)
-
-
         return schema
-
 
     def show_package_schema(self):
 
@@ -122,7 +97,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             field = PREFIX + key
             schema.update({
                 field: [
-                    #tk.get_validator('keep_extras'),
+                    # tk.get_validator('keep_extras'),
                     tk.get_converter('convert_from_extras'),
                     tk.get_validator('ignore_missing')]
             })

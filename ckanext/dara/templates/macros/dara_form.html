@@ -6,9 +6,10 @@
 
 {#XXX for whatever reason helpers (h) are not in here automatically, so we need it as
     a parameter here #}
-{% macro md(level, type, h, data) -%}
+{# level is obsolete but there are still many callers that submit them; #}
+{% macro md(type, h, data) -%}
      
-{% set fields = h.dara_fields(level, type) %}
+{% set fields = h.dara_fields(type) %}
     {% set dara = h.dara_pkg() %}
     
     {#    {% set debug = h.dara_debug(data) %} #}

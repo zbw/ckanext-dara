@@ -15,12 +15,9 @@ from collections import namedtuple
 
 
 PREFIX = 'dara_'
-single = namedtuple('single', 'id')
 
-# obsolete since levels are not used anymore; still used in templates
-def dara_fields(level, dara_type):
-    return filter(lambda field: field.level == level and dara_type in field.adapt,
-            ds.fields())
+def dara_fields(dara_type):
+    return filter(lambda field: dara_type in field.adapt, ds.fields())
 
 
 def vc(action, f_validators):
@@ -37,11 +34,10 @@ def schema_update(schema, action):
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
     resource_schema_update(schema)
 
-# level parameter is obsolete, dara_fields() as well!
+
 def resource_schema_update(schema):
-    fields = chain(dara_fields(1, 'resource'), dara_fields(2, 'resource'))
     v = [tk.get_validator('ignore_missing')]
-    map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
+    map(lambda f: schema['resources'].update({PREFIX + f.id: v}), dara_fields('resource'))
         
 
 def dara_package_schema(schema):
@@ -69,9 +65,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema_update(schema, 'show')
         return schema
 
+    def create_package_schema(self):
+        schema = super(DaraMetadataPlugin, self).create_package_schema()
+        return dara_package_schema(schema)
+
+    def update_package_schema(self):
+        schema = super(DaraMetadataPlugin, self).update_package_schema()
+        return dara_package_schema(schema)
+
     def update_config(self, config):
-        # Add this plugin's templates dir to CKAN's extra_template_paths, so
-        # that CKAN will use this plugin's custom templates.
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'public')
         tk.add_resource('resources', 'dara')
@@ -90,8 +92,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_publications': helpers.dara_publications,
                 'dara_fields': dara_fields,
                 'dara_auto_fields': helpers.dara_auto_fields,
-                # 'dara_first_author': helpers.dara_first_author,
-                # 'dara_additional_authors': helpers.dara_additional_authors,
                 'dara_doi': helpers.dara_doi,
                 'dara_resource_doiid' : helpers.dara_resource_doiid,
                 'dara_resource_url' : helpers.dara_resource_url,
@@ -112,20 +112,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # registers itself as the default (above).
         return []
 
-    def create_package_schema(self):
-        schema = super(DaraMetadataPlugin, self).create_package_schema()
-        return dara_package_schema(schema)
-
-    def update_package_schema(self):
-        schema = super(DaraMetadataPlugin, self).update_package_schema()
-        return dara_package_schema(schema)
-
+    
     def before_map(self, map):
         """
         """
         # map.connect() accepts arbitrary **kw and *args. That's why
         # we can add the template for the calls of the controller here
-
+        
         map.connect('/dataset/{id}/dara_xml',
                 controller="ckanext.dara.controller:DaraController",
                 action='xml',

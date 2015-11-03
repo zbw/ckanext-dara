@@ -74,7 +74,7 @@
         <div id="dara_level_1">
             <fieldset>
                 <legend>Basic Package Metadata</legend>
-            {{ dara_form.md(1, 'dataset', h, data) }}
+            {{ dara_form.md('dataset', h, data) }}
             </fieldset>
         </div>
         
@@ -135,19 +135,9 @@
       {% endif %}
     {% endif %}
 
-
-     {#  
-    {{ form.input('dara_PublicationDate', label="Publication Date Test", 
-        id='field-dara_PublicationDate', 
-        placeholder='eg. date test', 
-        value=data.dara_PublicationDate, 
-        error=errors.dara_PublicationDate, 
-        classes=[]
-        ) }}
-    #}
         
 
-          {{ dara_form.md(3, 'publication', h, data) }}
+          {{ dara_form.md('publication', h, data) }}
         </fieldset>
     </div>
         

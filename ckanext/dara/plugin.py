@@ -46,12 +46,6 @@ def resource_schema_update(schema):
 
 def dara_package_schema(schema):
     schema_update(schema, 'update')
-
-    # XXX this should be removed when we have dara metadata link to article
-    schema.update({'edawax_article_url':
-        [tk.get_validator('ignore_missing'),
-        tk.get_converter('convert_to_extras')]})
-    
     return schema
 
 
@@ -73,10 +67,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def show_package_schema(self):
         schema = super(DaraMetadataPlugin, self).show_package_schema()
         schema_update(schema, 'show')
-        schema.update({'edawax_article_url':
-            [tk.get_converter('convert_from_extras'),
-            tk.get_validator('ignore_missing')]})
-        
         return schema
 
     def update_config(self, config):

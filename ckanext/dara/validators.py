@@ -18,7 +18,7 @@ def authors(key, data, errors, context):
     # TODO make sure there's at least one author given AND each Author has
     # at least lastname or Personal ID
     # XXX Shouldn't the converter part be in converters, not in validators...?!
-
+    
     if errors[key] or not isinstance(data[key], list):
         return
 

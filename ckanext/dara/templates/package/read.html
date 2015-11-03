@@ -1,6 +1,6 @@
 {% ckan_extends %}
 {% set pkg = h.dara_pkg() %}
-{% set article_url = pkg['edawax_article_url'] %}
+{% set article_url = pkg['dara_Publication_PID'] %}
 {% set DOI = pkg['dara_DOI'] %}
 {% set dara_authors = h.dara_authors('dataset', data) %}
 {% resource 'dara/dara.css' %}
@@ -52,7 +52,8 @@
   
   
   {% if article_url %}
-    {% snippet "package/snippets/related_publication.html", pkg_dict=pkg %}
+    {% snippet "package/snippets/related_publication.html", pkg_dict=pkg,
+    article_url=article_url %}
   {% endif %}
 
 

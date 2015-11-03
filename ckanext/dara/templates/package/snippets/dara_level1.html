@@ -136,17 +136,7 @@
     {% endif %}
 
 
-     {# this is temporary. We will later 'dock' the article url with 
-     dara_metadata for publications in level 2 #}
-     
-    {{ form.input('edawax_article_url', label="URL of related article", 
-        id='field-edawax_article_url', 
-        placeholder='http://yourjournal.org/article-1234', 
-        value=data.edawax_article_url, 
-        error=errors.edawax_article_url, 
-        classes=['control-medium']) }}
-
-        {#     
+     {#  
     {{ form.input('dara_PublicationDate', label="Publication Date Test", 
         id='field-dara_PublicationDate', 
         placeholder='eg. date test', 
@@ -154,7 +144,7 @@
         error=errors.dara_PublicationDate, 
         classes=[]
         ) }}
-        #}
+    #}
         
 
           {{ dara_form.md(3, 'publication', h, data) }}

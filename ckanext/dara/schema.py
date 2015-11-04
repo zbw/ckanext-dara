@@ -598,7 +598,7 @@ def fields():
       # ),
 
         DaraField('Publication_Volume',
-            ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
+            ('publication',), ('ignore_missing',),
 
 
                 Input(
@@ -608,7 +608,7 @@ def fields():
         ),
 
         DaraField('Publication_Issue',
-            ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
+            ('publication',), ('ignore_missing',),
 
 
                 Input(
@@ -628,7 +628,7 @@ def fields():
       # ),
 
         DaraField('Publication_Pages',
-            ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
+            ('publication',), ('ignore_missing',),
 
 
                 Input(

@@ -118,17 +118,6 @@ def dara_authors(dara_type, data):
         return None
 
 
-def dara_publications():
-    """
-    checks for publications
-    """
-    pkg = dara_pkg()
-    for k in pkg.keys():
-        if 'dara_Publication_' in k and pkg[k] is not u'':
-            return True
-    return False
-
-
 def dara_doi(pkg):
     """
     used in snippets/package_metadata_fields.  For now we only take the pkg
@@ -190,18 +179,6 @@ def check_journal_role(pkg, role):
         return True
     return False
 
-
-def get_user_id():
-
-    def context():
-        return {'model': model, 'session': model.Session,
-                'user': c.user or c.author, 'for_view': True,
-                'auth_user_obj': c.userobj}
-    user = tk.c.user
-    if not user:
-        return 
-    converter = tk.get_converter('convert_user_name_or_id_to_id')
-    return converter(tk.c.user, context())
 
 
 def resource_is_internal(res):

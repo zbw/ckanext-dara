@@ -31,9 +31,8 @@ def dara_pkg():
     return pkg
 
 
-def dara_debug(obj):
+def dara_debug():
     pkg_dict = dara_pkg()
-
     import pdb; pdb.set_trace()
 
 

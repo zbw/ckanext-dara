@@ -46,7 +46,7 @@ def authors(key, data, errors, context):
         """
         id_type = author['authorID_Type']
         id_value = author['authorID']
-        funcs = {'ORCID': _orcid}
+        funcs = {'ORCID': _orcid, 'GND': _gnd}
         if id_type and id_value:
             return pipe(author, funcs[id_type], error_check)
         if id_value and not id_type:
@@ -57,6 +57,10 @@ def authors(key, data, errors, context):
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
     data[key] = json.dumps(map(lambda author: id_check(author), validate(authors)))
     
+
+def _gnd(author_orig):
+    return author_orig
+
 
 def _orcid(author_orig):
     """

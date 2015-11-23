@@ -1,10 +1,11 @@
 {# used in level 1 of datasets and resources #}
 {% import 'macros/form.html' as form %}
 
-{% resource 'dara/dara.js' %}
 {% resource 'dara/underscore.js' %}
+{% resource 'dara/dara.js' %}
 
 {% macro authors(dara_type, h, data) -%}
+    {% resource 'dara/underscore.js' %}
     {% resource 'dara/dara.js' %}
     {# {% set debug = h.dara_debug() %}#}
 
@@ -72,7 +73,17 @@
         {% set label = widget.name %}
         {% set classes = ['inline'] %}
         {% set additional_classes = widget.classes %}
+        {% set attrs = {} %}
+        
+        {% if 'econws' in widget.classes %}
+        
+            {% set attrs={'class': 'econws_input', 'autocomplete': 'off',
+                            'list': 'names'} %}
+        
 
+        {% endif %}
+
+                
         {% for c in additional_classes %}
            {% do classes.append(c) %}
         {% endfor %}
@@ -95,15 +106,19 @@
 
 
         {% if widget.form_type == 'input' %}
+        {% do attrs.update({'data-author': key}) %}
             {{ form.input(name, label=label,
                     placeholder=placeholder, 
                     value=value,
                     error=errors,
-                    classes=classes) 
+                    classes=classes,
+                    attrs=attrs) 
             }}
         {% endif %}
 
         {% if widget.form_type == 'select' %}
+            {% do attrs.update({'data-author': key}) %}
+
             {% set options = widget.options %}
             {% set selected = author['authorID_Type'] or options[0] %}
 
@@ -116,7 +131,8 @@
                 options = options,
                 error=errors,
                 selected=selected,
-                classes=classes
+                classes=classes,
+                attrs = attrs
                 )
                         
             }}
@@ -132,10 +148,14 @@
         {% endif %}
     
         
+        
+
        {#XXX this works only when there's only one slave! #}
         {% if widget.role == 'slave' %}
             </fieldset>
         {% endif %}
+        
+                            
 
         
      {% endfor %}

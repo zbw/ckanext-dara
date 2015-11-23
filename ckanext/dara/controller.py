@@ -125,7 +125,7 @@ class DaraController(PackageController):
         c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
         c.pkg = context['package']
         return tk.render(template)
-    
+
 
 @memoize
 def params():

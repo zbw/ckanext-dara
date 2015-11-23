@@ -696,7 +696,18 @@ def author_fields():
     
     AuthorField = namedtuple('AuthorField', 'id widget')
     fields = (
-       
+        
+        
+        AuthorField('lastname', 
+            Input(
+                placeholder = '',
+                name = 'Lastname',
+                size = '',
+                classes = ['econws'],
+                )
+            ),
+        
+        
         AuthorField('firstname',
             Input(
                 placeholder = '',
@@ -706,16 +717,6 @@ def author_fields():
                 ),
             ),
 
-        
-        AuthorField('lastname', 
-            Input(
-                placeholder = '',
-                name = 'Lastname',
-                size = '',
-                classes = []
-                )
-            ),
-        
         
         AuthorField('affil',
             Input(

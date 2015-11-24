@@ -5,9 +5,12 @@
 
 "use strict";
 
+
 //calling functions for the first time, if we dont want those functions bind
 //to $()
 $(master_slave_input());
+econws();
+//$(econws());
 //$(res_preselection());
 
 
@@ -23,7 +26,7 @@ function master_slave_input() {
         slave.hide();
         }
 
-      master.bind("change keyup paste", function () 
+      $(master).on("input change keyup paste", function () 
         {
           if(master.prop('value') !=="") {
             slave.fadeIn();
@@ -36,8 +39,76 @@ function master_slave_input() {
 }
 
 
-// need to bind this to jquery $ because otherwise underscore's
-// _ won't be in scope
+function econws() {
+   var objects = [];
+   var inputs = document.getElementsByClassName( 'econws_input' );
+   
+   _.each(inputs, function(inp) {
+        $(inp).on("input keypress paste mouseenter focus", function(e) {
+            var val = $(this).val();
+            if(val === "") return;
+            var par = inp.parentElement;
+            
+            var update_fields = function (val) {
+                var authorfields = $(par.parentElement.parentElement); // XXX optimize
+                var firstname = $(authorfields).find('[data-author="firstname"]');
+                var aid = $(authorfields).find('[data-author="authorID"]');
+                var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
+                var author = _.find(_.flatten(objects, true), function (ob) { 
+                    return ob.concept.value === val; 
+                });
+                var authorname = author.prefName.value.split(", ");
+                $(inp).val(authorname[0]);
+                $(firstname).val(authorname[1]);
+                $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
+                $(aid_type).val('GND');
+                
+                // not really necessary to fadeIn here
+                //$(authorfields).find('.dara_slave').fadeIn();
+            };
+            
+            var wscall = function () {
+                $.ajax({
+                    url: "http://zbw.eu/beta/econ-ws/suggest2",
+                    dataType: "json",
+                    async: true,
+                    data: {
+                        query: val,
+                        dataset: 'econ_pers'
+                    },
+                    success: function ( data ){
+                        $('datalist').remove();
+                        var current_objects = data.results.bindings;
+                        var datal = document.createElement('datalist');
+                        par.appendChild(datal);
+                        var datalist = par.getElementsByTagName('datalist')[0];
+                        datalist.setAttribute('id', 'names');
+
+                        _.each(current_objects, function(obj){
+                            var option = document.createElement('option');
+                            option.value = obj.concept.value;
+                            option.text = obj.prefLabel.value;
+                            datalist.appendChild(option);
+                        });
+                        objects.push(current_objects);
+                        
+                    },
+                });
+            };
+            
+            if(val.indexOf('http://d-nb.info/gnd/') != -1) {
+                update_fields(val);
+            }
+            
+            wscall();
+
+        });
+
+    });
+}
+
+
+
 //TODO might be optimized as standalone function?
 $(function res_preselection() {
 // fields based on preselection
@@ -79,11 +150,12 @@ $(function add_authors() {
   $('#add_author').on('click', function() {
     
     $('.hidden_authorfield')
-        .clone()
+        .clone(true, true)
         .prop('class', 'author')
         .removeProp('disabled')
-        .appendTo(authorContainer);
+        .appendTo(authorContainer)
     $(master_slave_input());
+    econws();
     return false;
   });
 
@@ -95,9 +167,7 @@ $(function add_authors() {
     
 });
 
-
-
-
+    
 
 /* obsolete for now
  *
@@ -152,12 +222,6 @@ $(function metadata_level() {
 //  });
 //
 //});
-
-
-
-
-
-
 
 
 

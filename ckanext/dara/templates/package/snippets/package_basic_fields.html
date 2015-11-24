@@ -15,9 +15,10 @@ that we should integrate somehow here #}
 {% set pkg = c.pkg_dict %}
 
 
+{% resource 'dara/jquery-ui.js' %}
 {% resource 'dara/dara.css' %}
 {% resource 'dara/dara.js' %}
-{% resource 'dara/jquery-ui.js' %}
+{# {% resource 'dara/econws.js' %} #}
 {# {% resource 'dara/jquery-migrate.js' %} #}
 {#{% resource 'dara/jquery-ui.css' %}#}
 
@@ -89,20 +90,6 @@ that we should integrate somehow here #}
 {% snippet "package/snippets/dara_level1.html", form=form,
     dara_type='dataset', errors=errors, data=data %}
 
-
-{# da|ra levels 2 and 3 are not shown at first dataset edit
-   {% if form_style == 'edit' %}
-        <div id="dara_2">
-            {% snippet "package/snippets/dara_level2.html", form=form,
-                errors=errors, dara_type="dataset" %}
-        </div>
-
-        <div id="dara_3">
-            {% snippet "package/snippets/dara_level3.html", form=form,
-            dara_type="dataset", errors=errors %}
-        </div>
-    {% endif %}
-#}
 {% endblock %}
 
 

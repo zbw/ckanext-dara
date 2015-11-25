@@ -74,7 +74,8 @@ function econws() {
                     async: true,
                     data: {
                         query: val,
-                        dataset: 'econ_pers'
+                        dataset: 'econ_pers',
+                        limit: 15
                     },
                     success: function ( data ){
                         $('datalist').remove();

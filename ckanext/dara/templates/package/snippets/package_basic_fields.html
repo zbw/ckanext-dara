@@ -57,12 +57,15 @@ that we should integrate somehow here #}
 {% block package_basic_fields_custom %}
 
 
+{# TODO: generate hidden inputs from schema.hidden_fields() #}
 <input type="hidden" value="{{ h.dara_doi(data) }}" name="dara_DOI_Proposal" />
 <input type="hidden" value="{{ pkg['dara_DOI'] }}"  name="dara_DOI" />
 <input type="hidden" value="{{ pkg['dara_registered'] }}"
                      name="dara_registered" />
 <input type="hidden" value="{{ pkg['dara_updated'] }}"
                      name="dara_updated" />
+<input type="hidden" value="{{ pkg['dara_edawax_status'] }}"
+       name="dara_edawax_status" />
 
 {#
 {% if form_style == 'edit' %}

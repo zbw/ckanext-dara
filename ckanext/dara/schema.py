@@ -783,6 +783,7 @@ def hidden_fields():
             HiddenField('registered', ('ignore_missing',)), 
             HiddenField('updated', ('ignore_missing',)),
             HiddenField('type', ('ignore_missing',)),
+            HiddenField('edawax_status', ('ignore_missing',)),  # XXX should be in edawax
             )
     return fields
 

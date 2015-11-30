@@ -22,6 +22,17 @@
 {% block primary_content_inner %}
 
   {% block package_description %}
+
+  {# TODO: reviewed status in dict 
+{% if pkg.private %}
+      <span class="dataset-private label pull-right">
+        <i class="icon-lock"></i>
+        {{ _('Reviewed') }}
+      </span>
+      <br />
+ {% endif %}
+ #}
+
   
   <div class="authors_title">
   {% if dara_authors %}

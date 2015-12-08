@@ -10,8 +10,12 @@
 //to $()
 $(master_slave_input());
 econws();
+
 //$(econws());
 //$(res_preselection());
+
+
+console.log('dara.js is here');
 
 
 function master_slave_input() {

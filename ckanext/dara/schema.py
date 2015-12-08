@@ -777,14 +777,17 @@ def hidden_fields():
     """
     HiddenField = namedtuple('HiddenField', 'id validators')
     fields = (
-            HiddenField('DOI', ('ignore_missing',)), 
-            HiddenField('DOI_Proposal', ('ignore_missing',)), 
-            HiddenField('created', ('ignore_missing',)), 
-            HiddenField('registered', ('ignore_missing',)), 
-            HiddenField('updated', ('ignore_missing',)),
-            HiddenField('type', ('ignore_missing',)),
-            HiddenField('edawax_status', ('ignore_missing',)),  # XXX should be in edawax
-            )
+                HiddenField('DOI', ('ignore_missing',)), 
+                HiddenField('DOI_Proposal', ('ignore_missing',)), 
+                HiddenField('created', ('ignore_missing',)), 
+                HiddenField('registered', ('ignore_missing',)), 
+                HiddenField('updated', ('ignore_missing',)),
+                HiddenField('type', ('ignore_missing',)),
+
+                # TODO this really should be in ckanext.edawax, but we had trouble
+                # with two IDatasetForm implements
+                HiddenField('edawax_review', ('ignore_missing',)),
+             )
     return fields
 
 

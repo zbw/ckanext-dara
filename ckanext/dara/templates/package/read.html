@@ -4,6 +4,8 @@
 {% set DOI = pkg['dara_DOI'] %}
 {% set dara_authors = h.dara_authors('dataset', data) %}
 {% resource 'dara/dara.css' %}
+{% resource 'edawax/edawax.js' %}
+{% resource 'dara/dara.js' %}
 
 
 {#
@@ -23,15 +25,13 @@
 
   {% block package_description %}
 
-  {# TODO: reviewed status in dict 
-{% if pkg.private %}
-      <span class="dataset-private label pull-right">
+{% if h.in_review(pkg) == 'true' %}
+      <span class="dataset-private label pull-right label-review">
         <i class="icon-lock"></i>
-        {{ _('Reviewed') }}
+        {{ 'Review' }}
       </span>
       <br />
  {% endif %}
- #}
 
   
   <div class="authors_title">

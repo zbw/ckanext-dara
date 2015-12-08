@@ -27,7 +27,6 @@ def dara_pkg():
         pkg = model.Package.by_name(pkg_id)
 
     # params = request.params
-    # import ipdb; ipdb.set_trace()
     return pkg
 
 
@@ -71,7 +70,6 @@ def dara_resource():
 
 
 # def get_request_params():
-#    import ipdb; ipdb.set_trace()
 #    return tk.request.params
 
 
@@ -177,7 +175,6 @@ def check_journal_role(pkg, role):
     if role_in_org == role:
         return True
     return False
-
 
 
 def resource_is_internal(res):

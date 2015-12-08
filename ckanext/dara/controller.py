@@ -14,6 +14,7 @@ from pylons import config
 from ckanext.dara.ftools import memoize
 import requests
 from toolz.dicttoolz import keyfilter, get_in
+from ckanext.dara.helpers import check_journal_role
 
 
 class DaraError(Exception):
@@ -35,13 +36,13 @@ class DaraController(PackageController):
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
     
+    # TODO do this as decorator, as in edawax.controller
     def _check_access(self, id):
         context = self._context()
-        try:
-            tk.check_access('package_update', context, {'id': id})
-        except tk.NotAuthorized:
-            tk.abort(401, 'Unauthorized to manage DOI.')
-    
+        pkg = tk.get_action('package_show')(context, {'id': id})
+        if not check_journal_role(pkg, 'admin') and not h.check_access('sysadmin'):
+            tk.abort(401, 'Unauthorized to manage DOIs')
+
     def register(self, id, template):
         """
         register at da|ra

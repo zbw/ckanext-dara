@@ -93,11 +93,14 @@
             attrs=tag_attrs) }}
 
 
-
-
     <div id="publication">
-        <fieldset>
+        {% set is_admin = h.check_access('sysadmin') or
+               h.check_journal_role(data, 'admin') %}
+        
+       <fieldset>
+           {% if is_admin %}
                 <legend>Related Publication</legend>
+           {% endif %}
 
          {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}
@@ -105,10 +108,12 @@
       <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
     {% endif %}
     {% set existing_org = data.owner_org or data.group_id %}
-    {% if h.check_access('sysadmin') 
-        or data.get('state', 'draft').startswith('draft') 
-        or data.get('state', 'none') ==  'none' 
+        
+    {# original org-selector:
+    or data.get('state', 'draft').startswith('draft') 
+    or data.get('state', 'none') ==  'none' 
     %}
+    #}
       {% set organizations_available = h.organizations_available('create_dataset') %}
       {% if organizations_available %}
         <div class="control-group">
@@ -133,14 +138,12 @@
           </div>
         </div>
       {% endif %}
-    {% endif %}
-
         
-
-          {{ dara_form.md('publication', h, data) }}
-        </fieldset>
+{% if is_admin %}
+       {{ dara_form.md('publication', h, data) }}
+{% endif %}
+      </fieldset>
     </div>
-        
 
 
 

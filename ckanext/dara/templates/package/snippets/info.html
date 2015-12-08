@@ -10,6 +10,8 @@
         
         
     <div class="nums" style="border:none;">
+        
+{# XXX do we need this here? DOI Button could get into content_actions 
 <div id="DOI" style="
     text-align:center; font-size:0.75em;">
     {% set url = h.url_for(controller='ckanext.dara.controller:DaraController', action='doi',id=pkg.name) %}
@@ -27,6 +29,7 @@
        ">doi:{{ DOI }}</span>
   {% endif %}
 </div>
+#}
 {# for now noone uses follow function in dara context 
           <dl>
             <dt>{{ _('Followers') }}</dt>

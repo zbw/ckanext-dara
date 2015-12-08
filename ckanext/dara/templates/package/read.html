@@ -4,6 +4,8 @@
 {% set DOI = pkg['dara_DOI'] %}
 {% set dara_authors = h.dara_authors('dataset', data) %}
 {% resource 'dara/dara.css' %}
+{% resource 'edawax/edawax.js' %}
+{% resource 'dara/dara.js' %}
 
 
 {#
@@ -22,6 +24,15 @@
 {% block primary_content_inner %}
 
   {% block package_description %}
+
+{% if h.in_review(pkg) == 'true' %}
+      <span class="dataset-private label pull-right label-review">
+        <i class="icon-lock"></i>
+        {{ 'Review' }}
+      </span>
+      <br />
+ {% endif %}
+
   
   <div class="authors_title">
   {% if dara_authors %}

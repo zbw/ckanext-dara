@@ -2,7 +2,11 @@
 
 {% block content_primary_nav %}
   {{ super() }}
-  {{ h.build_nav_icon('dara_doi', 'DOI Registration', id=pkg.name) }}
+  
+  {% if h.check_journal_role(pkg, 'admin') or h.check_access('sysadmin') %}  
+      {{ h.build_nav_icon('dara_doi', 'DOI Registration', id=pkg.name) }}
+  {% endif %}
+
 {% endblock %}
 
 

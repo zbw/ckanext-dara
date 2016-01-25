@@ -46,7 +46,8 @@ def authors(key, data, errors, context):
         """
         id_type = author['authorID_Type']
         id_value = author['authorID']
-        funcs = {'ORCID': _orcid, 'GND': _gnd}
+        funcs = {'ORCID': _orcid, 'GND': _ytc, 'Scopus': _ytc, 'WoS': _ytc,
+                'Repec': _ytc}
         if id_type and id_value:
             return pipe(author, funcs[id_type], error_check)
         if id_value and not id_type:
@@ -58,7 +59,8 @@ def authors(key, data, errors, context):
     data[key] = json.dumps(map(lambda author: id_check(author), validate(authors)))
     
 
-def _gnd(author_orig):
+def _ytc(author_orig):
+    """ yet to come """
     return author_orig
 
 

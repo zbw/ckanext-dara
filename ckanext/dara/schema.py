@@ -753,6 +753,7 @@ def author_fields():
                     {'text': 'ORCID', 'value': 'ORCID'}, 
                     {'text': 'GND', 'value': 'GND'},
                     {'text': 'Scopus', 'value': 'Scopus'},
+                    {'text': 'RePEc', 'value': 'Repec'},
                     {'text': 'Web of Science', 'value': 'WoS'}
                 ],
                 role = 'slave',

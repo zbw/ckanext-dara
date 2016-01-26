@@ -61,11 +61,13 @@ function econws() {
                 var author = _.find(_.flatten(objects, true), function (ob) { 
                     return ob.concept.value === val; 
                 });
+                var url = $(authorfields).find('[data-author="url"]');
                 var authorname = author.prefName.value.split(", ");
                 $(inp).val(authorname[0]);
                 $(firstname).val(authorname[1]);
                 $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
                 $(aid_type).val('GND');
+                $(url).val(author.concept.value);
                 
                 // not really necessary to fadeIn here
                 //$(authorfields).find('.dara_slave').fadeIn();

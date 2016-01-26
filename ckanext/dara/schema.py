@@ -701,7 +701,7 @@ def author_fields():
         AuthorField('lastname', 
             Input(
                 placeholder = '',
-                name = 'Lastname',
+                name = 'Last Name',
                 size = '',
                 classes = ['econws'],
                 )
@@ -711,7 +711,7 @@ def author_fields():
         AuthorField('firstname',
             Input(
                 placeholder = '',
-                name = 'Firstname',
+                name = 'First Name',
                 size = '',
                 classes = []
                 ),
@@ -753,6 +753,7 @@ def author_fields():
                     {'text': 'ORCID', 'value': 'ORCID'}, 
                     {'text': 'GND', 'value': 'GND'},
                     {'text': 'Scopus', 'value': 'Scopus'},
+                    {'text': 'RePEc', 'value': 'Repec'},
                     {'text': 'Web of Science', 'value': 'WoS'}
                 ],
                 role = 'slave',

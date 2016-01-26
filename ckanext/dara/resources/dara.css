@@ -140,7 +140,7 @@ font-size:14px !important;
   color:  rgb(129, 6, 6) !important;
 }
 
-.dara_required label:after {
+.dara_required label:after, .required:after {
   content:':*';
   color:rgb(129, 6, 6);
   font-weight:bold;

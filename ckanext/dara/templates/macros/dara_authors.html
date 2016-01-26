@@ -63,8 +63,10 @@
         {% if index > 1 %}
             <div><a href="#" class="dara_red remove_author" title="Remove
             Author">[x]</a></div>
+        <label>Author</label>
+        {% else %}
+        <label class="required">Author</label>
         {% endif %}
-        <label>Author </label>
 
     {% for field in fields %}
         {% set key = field.id %}

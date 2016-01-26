@@ -44,6 +44,28 @@
             )
         }}
 
+
+{# fields generated from schema #}
+        <div id="dara_level_1">
+            <fieldset>
+            {{ dara_form.md('dataset', h, data) }}
+            </fieldset>
+        </div>
+ {# old block package_basic_fields_tags #}
+    {% set tag_attrs = {
+            'data-module-tags': '', 
+            'data-module': 'autocomplete', 
+            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
+            } 
+        %}
+        {{ form.input('tag_string', id='field-tags', 
+            label=_('Keywords'), 
+            placeholder=_('eg. economy, mental health, government'), 
+            value=data.tag_string, error=errors.tags, 
+            classes=['control-medium'], 
+            attrs=tag_attrs) }}
+
+
         {# master_slave_input() does not work properly for markdown
         fields?  
         TODO try again when restructuring fields in md_schema
@@ -69,28 +91,6 @@
         {# Authors #}
         {{ authors.authors('dataset', h, data) }}
 
-
-        {# fields generated from schema #}
-        <div id="dara_level_1">
-            <fieldset>
-                <legend>Basic Package Metadata</legend>
-            {{ dara_form.md('dataset', h, data) }}
-            </fieldset>
-        </div>
-        
- {# old block package_basic_fields_tags #}
-    {% set tag_attrs = {
-            'data-module-tags': '', 
-            'data-module': 'autocomplete', 
-            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
-            } 
-        %}
-        {{ form.input('tag_string', id='field-tags', 
-            label=_('Keywords'), 
-            placeholder=_('eg. economy, mental health, government'), 
-            value=data.tag_string, error=errors.tags, 
-            classes=['control-medium'], 
-            attrs=tag_attrs) }}
 
 
     <div id="publication">

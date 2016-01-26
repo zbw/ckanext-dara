@@ -40,25 +40,36 @@ def authors(key, data, errors, context):
             errors[key].append(author[error_key])
         return author
 
+    def url_check(author):
+        """
+        sets missing http prefix for author url
+        """
+        if author['url']:
+            if not author['url'].startswith(('http://', 'https://')):
+                author['url'] = 'http://' + author['url']
+        return author
+
     def id_check(author):
         """
         checks ID type and calls appropriate function
         """
         id_type = author['authorID_Type']
         id_value = author['authorID']
-        funcs = {'ORCID': _orcid, 'GND': _gnd}
+        funcs = {'ORCID': _orcid, 'GND': _ytc, 'Scopus': _ytc, 'WoS': _ytc,
+                'Repec': _ytc}
         if id_type and id_value:
-            return pipe(author, funcs[id_type], error_check)
+            return pipe(author, funcs[id_type], url_check, error_check)
         if id_value and not id_type:
             author.update({error_key: u'Please provide type of author ID'})
         return error_check(author)
-    
+        
     dk = map(lambda a: a.strip(), data[key])
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
     data[key] = json.dumps(map(lambda author: id_check(author), validate(authors)))
     
 
-def _gnd(author_orig):
+def _ytc(author_orig):
+    """ yet to come """
     return author_orig
 
 

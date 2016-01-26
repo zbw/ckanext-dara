@@ -20,13 +20,18 @@
         {% set id = 'dara_' ~ field.id %}
         {#      {% set dara_errors = errors[field.id] %} #}
 
-        
         {# for now we inherit resource values from dataset #}
         {% if type in ('data', 'text', 'code', 'other') %}
             {% set res = h.dara_resource() %}
             {% set value = res[id] or dara[id] %}
         {% else %}
             {% set value = data[id] %}
+            
+            {#XXX temporary! We'll need a 'default' for all fields in schema #}
+            {% if id == 'dara_currentVersion' %}
+                {% set value = data[id] or '1' %}
+            {% endif %}
+        
         {% endif %}
         
         {% set field_id = 'field-' ~id %}

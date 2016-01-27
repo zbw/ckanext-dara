@@ -77,7 +77,7 @@ def fields():
         ),
 
         DaraField('Availabilitycontrolled',
-            ('dataset', 'data'), ('ignore_missing',),
+            ('data'), ('ignore_missing',),
             Select(
                 options=[
                     {'value': '1', 'text': 'Free Download'},

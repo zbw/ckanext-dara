@@ -15,9 +15,6 @@ econws();
 //$(res_preselection());
 
 
-console.log('dara.js is here');
-
-
 function master_slave_input() {
 
   // conditional field based on input 
@@ -174,7 +171,20 @@ $(function add_authors() {
     
 });
 
-    
+
+$(function fill_resource_name() {
+    $('#field-image-upload').on('change click keypress', function() {
+        var url = $('#field-image-url').val();
+        $('#field-name').val(url);
+        $('#field-name').focus();
+        
+        // needs to
+        // be called four times (or so) to actually get the correct url value
+        $(fill_resource_name()); 
+    });
+});
+
+
 
 /* obsolete for now
  *

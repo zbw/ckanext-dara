@@ -26,14 +26,15 @@ def vc(action, f_validators):
          'update': vals + [tk.get_converter('convert_to_extras')]}
     return m[action]
 
-
+# XXX filter ds_fields to only content dataset relevant fields (not resources)
 def schema_update(schema, action):
     fields = chain(ds.fields(), ds.hidden_fields(), ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
     
     # resource_schema_update(schema)
     
-    # XXX validating resource fields throws errors. See https://github.com/ckan/ckan/issues/2816
+    # XXX validating resource fields might throw errors.
+    # See https://github.com/ckan/ckan/issues/2816
     # and https://github.com/ckan/ckan/issues/2331
     # This is a long lasting CKAN Bug...
     map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:

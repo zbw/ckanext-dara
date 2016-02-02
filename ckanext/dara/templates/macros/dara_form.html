@@ -7,23 +7,21 @@
 {#XXX for whatever reason helpers (h) are not in here automatically, so we need it as
     a parameter here #}
 {# level is obsolete but there are still many callers that submit them; #}
-{% macro md(type, h, data) -%}
-     
+{% macro md(type, h, data, errors) -%}
+
 {% set fields = h.dara_fields(type) %}
     {% set dara = h.dara_pkg() %}
     
     {#    {% set debug = h.dara_debug(data) %} #}
     
-    
     {% for field in fields %}
         {% set widget = field.widget %}
         {% set id = 'dara_' ~ field.id %}
-        {#      {% set dara_errors = errors[field.id] %} #}
 
         {# for now we inherit resource values from dataset #}
         {% if type in ('data', 'text', 'code', 'other') %}
             {% set res = h.dara_resource() %}
-            {% set value = res[id] or dara[id] %}
+            {% set value = res[id] %}
         {% else %}
             {% set value = data[id] %}
             
@@ -38,6 +36,18 @@
         {% set label = widget.name %}
         {% set additional_classes = widget.classes %}
         {% set classes = [] %}
+        {% set attrs = {} %}
+
+        {#
+        {% if error %}
+            {% do classes.append('error') %}
+        {% endif %}
+        #}
+        
+        {#TODO optimize! #}
+        {% if 'dara_required' in additional_classes %}
+            {% do attrs.update({'required': 'required'}) %}
+        {% endif %}
         
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}
@@ -69,11 +79,13 @@
         
         
         {% if widget.form_type == 'input' %}
-            {{ form.input(id, label=label,
+            {{ form.input(id, 
+                    label=label,
                     id= field_id,
                     placeholder=placeholder, 
                     value=value,
-                    error = errors,
+                    error = errors[id],
+                    attrs = attrs,
                     classes=classes) 
             }}
         {% endif %}
@@ -95,7 +107,7 @@
                 id = field_id,
                 label = label,
                 options = options,
-                error=errors,
+                error=errors.id,
                 selected=selected,
                 classes=classes,
                 )

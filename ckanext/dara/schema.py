@@ -67,7 +67,7 @@ def fields():
     fields = (
 
         DaraField('PublicationDate',
-            ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
+            ('dataset', 'data', 'text', 'code'), ('not_empty', 'pubdate'),
             Input(
                 placeholder="eg. 2011",
                 name="Publication Year",
@@ -77,7 +77,7 @@ def fields():
         ),
 
         DaraField('Availabilitycontrolled',
-            ('data'), ('ignore_missing',),
+            ('data'), ('ignore_missing',), # no not_empty here since we have 1 as default in dara xml anyways
             Select(
                 options=[
                     {'value': '1', 'text': 'Free Download'},
@@ -128,11 +128,12 @@ def fields():
 
         
         DaraField('currentVersion',
-                ('dataset', 'data', 'code'), ('ignore_missing',),
+                ('dataset', 'data', 'code'), ('not_empty',),
                 Input(
                 placeholder = 'eg. 1.1',
                 name = 'Version',
                 size = 'small',
+                classes= ['dara_required'],
                 )
         ),
 
@@ -407,7 +408,8 @@ def fields():
             name = 'Type of Units',
             role = 'slave',
             options = [
-                {'text': '', 'value': ''},
+                # default ==> no validation
+               # {'text': '', 'value': ''},
                 {'text': 'Individual', 'value': '1'},
                 {'text': 'Organization', 'value' : '2'},
                 {'text': 'Family', 'value': '3'},
@@ -703,7 +705,7 @@ def author_fields():
                 placeholder = '',
                 name = 'Last Name',
                 size = '',
-                classes = ['econws'],
+                classes = ['econws', 'dara_required'],
                 )
             ),
         

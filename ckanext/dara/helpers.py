@@ -176,10 +176,14 @@ def check_journal_role(pkg, role):
         return True
     return False
 
-
 def resource_is_internal(res):
     url = res['url']
     site_url = config.get('ckan.site_url')
     if url.startswith(site_url):
         return True
     return False
+
+
+
+
+

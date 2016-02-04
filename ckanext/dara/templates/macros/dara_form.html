@@ -21,7 +21,7 @@
         {# for now we inherit resource values from dataset #}
         {% if type in ('data', 'text', 'code', 'other') %}
             {% set res = h.dara_resource() %}
-            {% set value = res[id] %}
+            {% set value = res[id] or dara[id]%}
         {% else %}
             {% set value = data[id] %}
             
@@ -48,6 +48,7 @@
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
         {% endif %}
+
         
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}
@@ -90,7 +91,6 @@
             }}
         {% endif %}
 
-
         {% if widget.form_type == 'select' %}
             {% set options = widget.options %}
             
@@ -110,6 +110,7 @@
                 error=errors.id,
                 selected=selected,
                 classes=classes,
+                attrs=attrs,
                 )
                         
             }}
@@ -137,6 +138,20 @@
                     classes=classes) 
             }}
         {% endif %}
+
+        {% if widget.form_type == 'number' %}
+        {% do attrs.update({'min': widget.min, 'max': widget.max}) %}
+             {{ form.input(id, label=label,
+                    id= field_id,
+                    placeholder=placeholder,
+                    value=value,
+                    error=errors[id],
+                    type="number",
+                    attrs = attrs,
+                    classes=classes) 
+            }}
+        {% endif %}
+
 
         
     

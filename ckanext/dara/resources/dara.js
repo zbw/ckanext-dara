@@ -19,21 +19,29 @@ function master_slave_input() {
 
   // conditional field based on input 
     $('.dara_master_slave').each(function () {
-      var master = $(this).find('.dara_master').find('input').first();
+      var master = $(this).find('.dara_master').find(':input').first();
       var slave = $(this).find('.dara_slave');
       var value = master.prop('value');
-
+      var slave_input = $(slave).find(':input').first();
+      console.log(slave_input);
       if(value === "") {
+        slave_input.prop('disabled', true);
+        slave_input.prop('required', false);
         slave.hide();
         }
 
       $(master).on("input change keyup paste", function () 
         {
           if(master.prop('value') !=="") {
+            slave_input.prop('disabled', false);
+            slave_input.prop('required', true);
             slave.fadeIn();
           }
           else {
            slave.fadeOut(); 
+           slave_input.prop('disabled', true);
+           slave_input.prop('required', false);
+
         }
       });
     });

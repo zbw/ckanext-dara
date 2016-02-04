@@ -1,10 +1,12 @@
-{# used in level 1 of datasets and resources #}
+{# used in level 1 of datasets #}
 {% import 'macros/form.html' as form %}
 
 {% resource 'dara/underscore.js' %}
 {% resource 'dara/dara.js' %}
 
-{% macro authors(dara_type, h, data) -%}
+{% macro authors(dara_type, h, data, errors) -%}
+
+
     {% resource 'dara/underscore.js' %}
     {% resource 'dara/dara.js' %}
     {# {% set debug = h.dara_debug() %}#}
@@ -29,7 +31,7 @@
      
     
     {# hide an empty authorfield that can be cloned by jQuery #}
-    {{ authorfields(None, name, h, index=2, hide=True) }} 
+    {{ authorfields(None, name, h, errors, index=2, hide=True) }} 
     
     {# if we have at least one author, display fields with values. Otherwise
     return an empty fieldset #}
@@ -37,7 +39,7 @@
         {{ authorfields(None, name, h) }}
     {% else %}
         {% for author in authors %}
-            {{ authorfields(author, name, h, loop.index) }}
+            {{ authorfields(author, name, h, errors, loop.index) }}
         {% endfor %}
     {% endif %}
 
@@ -50,7 +52,7 @@
 {%- endmacro %}
 
 
-{% macro authorfields(author, name, h, index=1, hide=False) -%}
+{% macro authorfields(author, name, h, errors, index=1, hide=False) -%}
     {% resource 'dara/dara.js' %}
     {% set fields = h.dara_author_fields() %}
     {% set classes = [] %}
@@ -89,6 +91,13 @@
         {% for c in additional_classes %}
            {% do classes.append(c) %}
         {% endfor %}
+
+        {#TODO optimize! collides with autofill via ORCID or GND
+        {% if 'dara_required' in additional_classes %}
+            {% do attrs.update({'required': 'required'}) %}
+        {% endif %}
+        #}
+
         
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}
@@ -112,7 +121,7 @@
             {{ form.input(name, label=label,
                     placeholder=placeholder, 
                     value=value,
-                    error=errors,
+                    error=errors[id],
                     classes=classes,
                     attrs=attrs) 
             }}
@@ -131,10 +140,10 @@
             {{ form.select(name, 
                 label = label,
                 options = options,
-                error=errors,
+                error=errors.id,
                 selected=selected,
                 classes=classes,
-                attrs = attrs
+                attrs=attrs,
                 )
                         
             }}

@@ -2,6 +2,7 @@
 # ZBW - Leibniz Information Centre for Economics
 
 from collections import namedtuple
+from datetime import datetime
 
 # TODO: make field selection/config runtime-editable (instead of commenting
 # them out)
@@ -57,6 +58,21 @@ class Date(DaraWidget):
         self.form_type = "date"
 
 
+class Number(DaraWidget):
+    """
+    DaraWidget for numeric fields
+    """
+    def __init__(self, placeholder='', size='', mi='', ma='', **kw):
+        super(Number,self).__init__(**kw)
+        self.size = size
+        self.placeholder = placeholder
+        self.form_type="number"
+        self.min = mi
+        self.max = ma
+        
+
+
+
 def fields():
     """
     main function that returns most of da|ra metadata fields
@@ -67,13 +83,16 @@ def fields():
     fields = (
 
         DaraField('PublicationDate',
-            ('dataset', 'data', 'text', 'code'), ('not_empty', 'pubdate'),
-            Input(
+            ('dataset', 'data', 'text', 'code'), ('not_empty',),
+            Number(
                 placeholder="eg. 2011",
                 name="Publication Year",
                 size='small',
-                classes=['dara_required']
-                 )
+                mi = 1000,
+                ma = datetime.now().year,
+                classes=['dara_required'],
+                
+                )
         ),
 
         DaraField('Availabilitycontrolled',
@@ -220,7 +239,7 @@ def fields():
 
         
         DaraField('geographicCoverageFree',
-                 ('data',), ('ignore_missing',),
+                 ('data',), ('ignore_missing', 'dara'),
                 Input(
                 placeholder = 'eg. West-Germany',
                 name = 'Geographic Coverage (free)',
@@ -394,11 +413,12 @@ def fields():
         
         DaraField('numberUnits',
            ('data',), ('ignore_missing',),
-            Input(
+            Number(
             name = 'Number of Units',
             placeholder='eg 3456',
             size = 'small',
-            role='master'
+            role='master',
+            mi=1,
             )
         ),
 
@@ -408,8 +428,7 @@ def fields():
             name = 'Type of Units',
             role = 'slave',
             options = [
-                # default ==> no validation
-               # {'text': '', 'value': ''},
+                {'text': '', 'value': ''},
                 {'text': 'Individual', 'value': '1'},
                 {'text': 'Organization', 'value' : '2'},
                 {'text': 'Family', 'value': '3'},
@@ -423,7 +442,8 @@ def fields():
                 {'text': 'Group', 'value': '11'},
                 {'text': 'Object', 'value': '12'},
                 {'text': 'Other', 'value': '13'}
-                ]
+                ],
+            classes = ['dara_required'],
             )
         ),
 
@@ -431,10 +451,11 @@ def fields():
         DaraField('numberVariables',
             ('data',),  ('ignore_missing',),
 
-            Input(
+            Number(
             name= 'Number of Variables',
             placeholder= 'eg. 210',
             size = 'small',
+            mi=1,
             )
         ),
 
@@ -546,13 +567,12 @@ def fields():
         # the old url value to this field
         DaraField('Publication_PID',
             ('publication',), ('ignore_missing',),
-
-
             Input(
                 role = 'master',
                 name = 'Identifier',
                 placeholder = 'DOI, URL, or other identifier',
                 size = 'medium',
+                classes = ['dara_required'],
                 )
         ),
 
@@ -577,6 +597,8 @@ def fields():
                     {'text': 'UPC', 'value': 'UPC'}, 
                     {'text': 'URL', 'value': 'URL'}, 
                     {'text': 'URN', 'value': 'URN'}],
+                classes = ['dara_required'],
+
                 )
         ),
 
@@ -606,16 +628,18 @@ def fields():
                 Input(
                 name = 'Volume',
                 size = 'small',
+                classes = ['dara_required'],
+
                 )
         ),
 
         DaraField('Publication_Issue',
             ('publication',), ('ignore_missing',),
-
-
                 Input(
                 name = 'Issue',
                 size = 'small',
+                classes = ['dara_required'],
+
                 )
         ),
 
@@ -636,6 +660,7 @@ def fields():
                 Input(
                 name = 'Pages',
                 size = 'small',
+                classes = ['dara_required'],
                 )
         ),
 
@@ -759,6 +784,7 @@ def author_fields():
                     {'text': 'Web of Science', 'value': 'WoS'}
                 ],
                 role = 'slave',
+                classes = ['dara_required'],
                 ),
         ),
 

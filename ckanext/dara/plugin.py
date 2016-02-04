@@ -26,19 +26,15 @@ def vc(action, f_validators):
          'update': vals + [tk.get_converter('convert_to_extras')]}
     return m[action]
 
-# XXX filter ds_fields to only content dataset relevant fields (not resources)
+
 def schema_update(schema, action):
-    fields = chain(ds.fields(), ds.hidden_fields(), ds.single_fields())
+    fields = chain(dara_fields('dataset'), dara_fields('publication'), ds.hidden_fields(), ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
+    resource_schema_update(schema)
     
-    # resource_schema_update(schema)
-    
-    # XXX validating resource fields might throw errors.
-    # See https://github.com/ckan/ckan/issues/2816
-    # and https://github.com/ckan/ckan/issues/2331
-    # This is a long lasting CKAN Bug...
-    map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
-        tk.get_validator(v), f.validators)}), dara_fields('resource'))
+    # XXX validating resource custom fields does not work in CKAN!?.
+    #map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
+    #    tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
 
 def resource_schema_update(schema):
@@ -86,7 +82,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def get_validators(self):
         return {'authors': validators.authors,
-                'pubdate': validators.pubdate,
+                # 'pubdate': validators.pubdate,
+                # 'dara': validators.dara,
                 }
         
 

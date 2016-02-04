@@ -25,18 +25,18 @@ function master_slave_input() {
       var slave_input = $(slave).find(':input').first();
       console.log(slave_input);
       if(value === "") {
+        slave.hide();
         slave_input.prop('disabled', true);
         slave_input.prop('required', false);
-        slave.hide();
-        }
+      }
 
       $(master).on("input change keyup paste", function () 
         {
           if(master.prop('value') !=="") {
+            slave.fadeIn();
             slave_input.prop('disabled', false);
             slave_input.prop('required', true);
-            slave.fadeIn();
-          }
+            }
           else {
            slave.fadeOut(); 
            slave_input.prop('disabled', true);
@@ -74,8 +74,11 @@ function econws() {
                 $(aid_type).val('GND');
                 $(url).val(author.concept.value);
                 
-                // not really necessary to fadeIn here
-                //$(authorfields).find('.dara_slave').fadeIn();
+                // fadeIn() necessary here?
+                // $(authorfields).find('.dara_slave').fadeIn();
+                $(aid_type).prop('disabled', false);
+                $(aid_type).prop('required', true);
+
             };
             
             var wscall = function () {

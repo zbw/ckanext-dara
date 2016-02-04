@@ -36,7 +36,7 @@
     {# if we have at least one author, display fields with values. Otherwise
     return an empty fieldset #}
     {% if not authors %}
-        {{ authorfields(None, name, h) }}
+        {{ authorfields(None, name, h, errors) }}
     {% else %}
         {% for author in authors %}
             {{ authorfields(author, name, h, errors, loop.index) }}

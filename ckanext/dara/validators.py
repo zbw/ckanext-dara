@@ -7,6 +7,10 @@ from copy import deepcopy
 # from ckan.plugins.toolkit import missing
 from ckanext.dara.schema import author_fields
 from ckanext.dara.ftools import list_dicter
+from datetime import datetime
+from ckan.plugins.toolkit import Invalid
+from ckan.lib.navl.dictization_functions import unflatten
+
 
 
 error_key = '_error'
@@ -28,6 +32,11 @@ def authors(key, data, errors, context):
             if a['firstname'] == a['lastname'] == a['authorID'] == '':
                 msg = u'Authors must at least provide Firstname and Lastname OR Personal ID'
                 a.update({error_key: msg})
+
+            if a['authorID'] and not a['authorID_Type']:
+                msg = u'Please add type of Author_ID'
+                a.update({error_key: msg})
+
             return a
         
         return map(lambda a: val(a), authors)
@@ -111,5 +120,30 @@ def _orcid(author_orig):
     msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
     author[error_key] = msg
     return author
+
+
+# OBSOLETE; validated with HTML5 number field
+# def pubdate(value):
+#   """
+#   """
+#   msg = u'Not a valid publication year'
+#   this_year = datetime.now().year
+#   allo = xrange(0, this_year + 1)
+#   #import ipdb; ipdb.set_trace()
+#   try:
+#       val = int(value)
+#       if val not in allo:
+#           raise Invalid(msg)
+#   except:
+#       raise Invalid(msg)
+#   return value
+
+
+# def dara(key, data, errors, context):
+#    #import ipdb; ipdb.set_trace()
+#    #u_data = unflatten(data)
+#    pass
+
+
 
 

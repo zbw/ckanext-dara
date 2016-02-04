@@ -11,10 +11,10 @@ from ckanext.dara import schema as ds
 from itertools import chain
 from ckanext.dara import helpers
 from ckanext.dara import validators
-from collections import namedtuple
 from copy import deepcopy
 
 PREFIX = 'dara_'
+
 
 def dara_fields(dara_type):
     return filter(lambda field: dara_type in field.adapt, ds.fields())
@@ -22,21 +22,25 @@ def dara_fields(dara_type):
 
 def vc(action, f_validators):
     vals = map(lambda v: tk.get_validator(v), f_validators)
-    m = {'show': [tk.get_converter('convert_from_extras')] + vals, 
+    m = {'show': [tk.get_converter('convert_from_extras')] + vals,
          'update': vals + [tk.get_converter('convert_to_extras')]}
     return m[action]
 
 
 def schema_update(schema, action):
-    fields = chain(ds.fields(), ds.hidden_fields(), ds.single_fields())
+    fields = chain(dara_fields('dataset'), dara_fields('publication'), ds.hidden_fields(), ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
     resource_schema_update(schema)
+    
+    # XXX validating resource custom fields does not work in CKAN!?.
+    #map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
+    #    tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
 
 def resource_schema_update(schema):
     v = [tk.get_validator('ignore_missing')]
     map(lambda f: schema['resources'].update({PREFIX + f.id: v}), dara_fields('resource'))
-        
+    
 
 def dara_package_schema(schema):
     schema_update(schema, 'update')
@@ -77,7 +81,11 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_resource('resources', 'dara')
 
     def get_validators(self):
-        return {'authors': validators.authors}
+        return {'authors': validators.authors,
+                # 'pubdate': validators.pubdate,
+                # 'dara': validators.dara,
+                }
+        
 
     def get_helpers(self):
         return {

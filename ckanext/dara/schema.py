@@ -653,16 +653,37 @@ def fields():
       #         )
       # ),
 
-        DaraField('Publication_Pages',
+     #  DaraField('Publication_Pages',
+     #      ('publication',), ('ignore_missing',),
+
+
+     #          Input(
+     #          name = 'Pages',
+     #          size = 'small',
+     #          classes = ['dara_required'],
+     #          )
+     #  ),
+
+        DaraField('Publication_StartPage',
             ('publication',), ('ignore_missing',),
+                Number(
+                name='Start Page',
+                size='small',
+                classes = ['dara_required'],
+                )
+        ),
 
-
-                Input(
-                name = 'Pages',
+        DaraField('Publication_EndPage',
+            ('publication',), ('ignore_missing',),
+                Number(
+                name = 'End Page',
                 size = 'small',
                 classes = ['dara_required'],
                 )
         ),
+
+
+        
 
       # DaraField('Publication_ISBN',
       #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),

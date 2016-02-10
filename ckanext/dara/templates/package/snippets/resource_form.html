@@ -9,31 +9,82 @@
 
 {% block basic_fields %}
 
-{% set options = [
-{'text': 'Data', 'value': 'data'},
-{'text': 'Text/Documentation/PDF', 'value': 'text'},
-{'text': 'Code', 'value': 'code'},
-{'text': 'Other', 'value': 'other'}
-]
-%}
- 
-<div id="pres" title="Select a category for the resource you'd like to add. This will influence the number of metadata fields. In general, 'Data' has more fields than 'Code' or 'Text'.">
+    {# must copy the whole block here and can't use super() because we need to
+    modify the standard fields with title attribute #}
+
+    {% set options = [
+    {'text': 'Data', 'value': 'data'},
+    {'text': 'Text/Documentation/PDF', 'value': 'text'},
+    {'text': 'Code', 'value': 'code'},
+    {'text': 'Other', 'value': 'other'}
+    ]
+    %}
     
-{% set selected = res['dara_res_preselection'] or 'data' %}
-{{ form.select('dara_res_preselection', 
-                id = 'dara_res_preselection',
-                label = "This Resource is",
-                options = options,
-                error=errors,
-                selected=selected,
-                classes=['select-auto', 'control-select'],
-                )
-}}
+    <div id="pres" data-infotext="Select a category for the resource you'd like to add.
+        This will influence the number of metadata fields. In general, 'Data' has
+        more fields than 'Code' or 'Text'.">
+        
+    {% set selected = res['dara_res_preselection'] or 'data' %}
+    {{ form.select('dara_res_preselection', 
+                    id = 'dara_res_preselection',
+                    label = "This Resource is",
+                    options = options,
+                    error=errors,
+                    selected=selected,
+                    classes=['select-auto', 'control-select'],
+                    )
+    }}
 
-</div>
+    </div>
+
+    {% block basic_fields_url %}
+        {% set is_upload = (data.url_type == 'upload') %}
+        {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
+            is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
+            upload_label=_('File'), url_label=_('URL')) }}
+        {% endblock %}
 
 
-{{ super() }} 
+    {% block basic_fields_name %}
+        {{ form.input('name', 
+            id='field-name', 
+            label=_('Name'), 
+            placeholder=_('eg. January 2011 Gold Prices'), 
+            value=data.name, error=errors.name,
+            classes=['control-full'], 
+            attrs={'data-infotext': """Please provide the name of the file. System will
+            automatically insert the name of the uploaded file, but you can also insert
+            a new name. Please note that the file will be shown as 'unnamed resource' in
+            cases, where you do not provide a name for the resource."""},
+            ) 
+        }}
+    {% endblock %}
+
+    {% block basic_fields_description %}
+        {{ form.markdown('description', 
+            id='field-description',
+            label=_('Description'), 
+            placeholder=_('Some useful notes about the data'),
+            value=data.description, 
+            error=errors.description,
+            attrs={'data-infotext': """You are free to submit additional information on the
+            dataset within this field. For instance, you can describe the type of
+            information that is available in the dataset or the way which has been
+            used to collect the data."""},
+            ) 
+        }}
+    {% endblock %}
+
+    {% block basic_fields_format %}
+        {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
+        {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}
+            <span class="info-block info-block-small">
+            <i class="icon-info-sign"></i>
+            {{ _('This will be guessed automatically. Leave blank if you wish') }}
+            </span>
+        {% endcall %}
+    {% endblock %}
+
 {% endblock basic_fields %}
 
 
@@ -41,9 +92,7 @@
 {% block metadata_fields %}
     {% resource 'dara/dara.css' %}
     {% resource 'dara/underscore.js' %}
-    {#XXX do we need this?
     {% resource 'dara/jquery-ui.js' %} 
-    #}
     {% resource 'dara/dara.js' %}
 
         

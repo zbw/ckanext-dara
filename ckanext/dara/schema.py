@@ -13,11 +13,13 @@ class DaraWidget(object):
     """
     base class for all dara form widgets
     """
-    def __init__(self, form_type='input', name=u'', role=None, classes=[]):
+    def __init__(self, form_type='input', name=u'', role=None, classes=[],
+            info=u''):
         self.form_type = form_type
         self.name = name
         self.role = role
         self.classes = classes
+        self.info = info
 
 
 class Input(DaraWidget):
@@ -91,7 +93,9 @@ def fields():
                 mi = 1000,
                 ma = datetime.now().year,
                 classes=['dara_required'],
-                
+                info=u"""Please provide us with the publication year of your
+                    article. If you do not know the year, yet, please choose the
+                    actual year. Please note: This is a mandatory field."""
                 )
         ),
 
@@ -106,7 +110,13 @@ def fields():
                     {'value': '5', 'text': 'Unknown'},
                 ],
                 name='Availability',
-                classes=['dara_required']
+                classes=['dara_required'],
+                info=u"""By default the availability is 'Free Download'. You
+                should only change this value in cases when you are not
+                able/not allowed to upload the dataset used for your
+                calculations AND when you would like to provide a link to the
+                dataset, instead. Please note: This is a mandatory field.""",
+
             ),
         ),
         
@@ -153,6 +163,11 @@ def fields():
                 name = 'Version',
                 size = 'small',
                 classes= ['dara_required'],
+                info=u"""The default version number is 1. You should only
+                change the version number if you submit a revised version of
+                your supplementary data. In this case please choose an
+                appropriate new version number (e.g. 1.1 for minor revisions or
+                2 for major revisions)."""
                 )
         ),
 
@@ -244,6 +259,11 @@ def fields():
                 placeholder = 'eg. West-Germany',
                 name = 'Geographic Coverage (free)',
                 size = 'medium',
+                info=u"""Please state, which geographical areas are covered by
+                your dataset. This is a free text field, therefore you are free
+                to mention the region(s) that fit most (e.g. North-America;
+                Eurozone, Germany, EU-Member States,...)""",
+
                 )
         ),
         
@@ -254,6 +274,9 @@ def fields():
                 placeholder = 'eg. adults in Eastern and Western Germany',
                 name = 'Sampled Universe',
                 size = 'medium',
+                info=u"""Please specify the sample on which your dataset relies
+                (e.g. GDP of all states within the Eurozone, Companies in
+                China, foreign students in Canada,...).""",
                 )
         ),
 
@@ -284,6 +307,9 @@ def fields():
                     placeholder="",
                     name="Temporal Coverage (free)",
                     size='medium',
+                    info=u"""Please state which time period is covered by your
+                    dataset. This can be a single year (e.g. 1990) or a time
+                    period (e.g. 2004-2008).""",
                     )
         ),
 
@@ -419,6 +445,9 @@ def fields():
             size = 'small',
             role='master',
             mi=1,
+            info=u"""Please specify the number of units of your dataset. Such
+            units can be persons, households, organisations, states,
+            regions... please provide a whole number (e.g.43).""",
             )
         ),
 
@@ -444,6 +473,9 @@ def fields():
                 {'text': 'Other', 'value': '13'}
                 ],
             classes = ['dara_required'],
+            info=u"""You can choose the appropriate type of unit from a
+            (controlled) list (e.g. Household, Organisation,...). This is
+            mandatory if you give a value in 'Number of Units."""
             )
         ),
 
@@ -456,6 +488,8 @@ def fields():
             placeholder= 'eg. 210',
             size = 'small',
             mi=1,
+            info=u"""Please name the number of variables of the dataset (e.g.
+            12).""",
             )
         ),
 
@@ -464,7 +498,11 @@ def fields():
 
             Input(
             name = 'Type of Data',
-            placeholder= ''
+            placeholder= '',
+            info=u""" In this field we kindly ask you to provide some
+            information on the type of data. For instance, it can be a
+            longitudinal study, a cross-sectional study, experimental data, or
+            something other.""",
             )
         ),
         
@@ -509,6 +547,8 @@ def fields():
                 Text(
                 placeholder = 'any additional notes',
                 name = 'Additional Notes',
+                info=u""" Here you can state additional remarks, if needed
+                (free text field).""",
                 )
         ),
 
@@ -573,6 +613,8 @@ def fields():
                 placeholder = 'DOI, URL, or other identifier',
                 size = 'medium',
                 classes = ['dara_required'],
+                info=u"""Enter an identifier for the article. This should be an
+                URL, DOI, or Handle""",
                 )
         ),
 
@@ -598,7 +640,8 @@ def fields():
                     {'text': 'URL', 'value': 'URL'}, 
                     {'text': 'URN', 'value': 'URN'}],
                 classes = ['dara_required'],
-
+                info=u"""Select the type of the above given identifier. This is
+                mandatory."""
                 )
         ),
 
@@ -629,7 +672,8 @@ def fields():
                 name = 'Volume',
                 size = 'small',
                 classes = ['dara_required'],
-
+                info=u"""Enter the volume of the journal in which the article
+                is published. This is mandatory."""
                 )
         ),
 
@@ -639,6 +683,8 @@ def fields():
                 name = 'Issue',
                 size = 'small',
                 classes = ['dara_required'],
+                info=u"""Enter the issue of the journal in which the article is
+                published. This is mandatory.""",
 
                 )
         ),
@@ -653,16 +699,43 @@ def fields():
       #         )
       # ),
 
-        DaraField('Publication_Pages',
+     #  DaraField('Publication_Pages',
+     #      ('publication',), ('ignore_missing',),
+
+
+     #          Input(
+     #          name = 'Pages',
+     #          size = 'small',
+     #          classes = ['dara_required'],
+     #          )
+     #  ),
+
+        DaraField('Publication_StartPage',
             ('publication',), ('ignore_missing',),
-
-
-                Input(
-                name = 'Pages',
-                size = 'small',
+                Number(
+                name='Start Page',
+                size='small',
                 classes = ['dara_required'],
+                info=u"""Please enter the start page of the article as given in the journal. If
+                the journal is not printed, please simply enter 1, or give the
+                number as it appears in the PDF file. This is mandatory."""
                 )
         ),
+
+        DaraField('Publication_EndPage',
+            ('publication',), ('ignore_missing',),
+                Number(
+                name = 'End Page',
+                size = 'small',
+                classes = ['dara_required'],
+                info=u"""Please enter the end page of the article as given in the journal. If
+                the journal is not printed, please simply enter the
+                number as it appears in the PDF file. This is mandatory."""
+                )
+        ),
+
+
+        
 
       # DaraField('Publication_ISBN',
       #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
@@ -731,6 +804,11 @@ def author_fields():
                 name = 'Last Name',
                 size = '',
                 classes = ['econws', 'dara_required'],
+                info=u"""Please specify the last name of author. 
+                You will get autosuggests as soon you've typed the first
+                letters. In case of a
+                middle name, please add the middle name to the field 'first
+                name'. This is a mandatory field.""",
                 )
             ),
         
@@ -740,7 +818,9 @@ def author_fields():
                 placeholder = '',
                 name = 'First Name',
                 size = '',
-                classes = []
+                classes = [],
+                info=u"""Please specify the first name of author. In case of a
+                middle name, please also add it here. This is a mandatory field.""",
                 ),
             ),
 
@@ -750,6 +830,9 @@ def author_fields():
                 placeholder = 'Your institution',
                 name = 'Affiliation',
                 size = 'medium',
+                info=u"""Please state the affiliation you are working for
+                respectively the affiliation you already have mentioned in your
+                paper.""",
                 ),
             ),
 
@@ -757,7 +840,11 @@ def author_fields():
             Input(
                 placeholder = 'Personal URL of Author',
                 name = 'URL',
-                classes = []
+                classes = [],
+                info=u"""In this field, you can state your personal or
+                institutional website. Thereby, other users and visitors of
+                your data submission are enabled to directly inform themselves
+                about you and your fields of research.""",
                 ),
             ),
 
@@ -769,6 +856,10 @@ def author_fields():
                 size = 'small',
                 classes = [],
                 role = 'master',
+                info=u"""If available please enter your personal ID. In case of
+                ORCID the system will then try to get all other data
+                automatically from the ORCID API. Please note that if you give
+                a value here you must give the type of the ID also.""",
                 ),
         ),
 
@@ -785,6 +876,8 @@ def author_fields():
                 ],
                 role = 'slave',
                 classes = ['dara_required'],
+                info=u"""Select the type of the above given Personal ID.
+                This is mandatory if you've entered an ID.""",
                 ),
         ),
 

@@ -15,7 +15,15 @@
             value=data.title, 
             error=errors.title, 
             classes=['control-full', 'control-large', 'dara_required'], 
-            attrs={'data-module': 'slug-preview-target', 'required': 'required'}) }}
+            attrs={'data-module': 'slug-preview-target', 'required':'required', 
+            'data-infotext': """The title of your submission could be the title of your article,
+            supplemented by the addition '(replication data)'. By adding the
+            title of your paper and ‚replication data‘ the findability of your
+            data by search engines is facilitated. In addition, it is much
+            easier to interlink your paper with your data in the data
+            publisher. Please note: This is a mandatory field."""
+            }) 
+        }}
         
         {% set prefix = h.url_for(controller='package', action='read', id='') %}
         {% set domain = h.url_for(controller='package', action='read', 
@@ -40,6 +48,14 @@
             placeholder=_('Abstract or similiar'), 
             value=data.notes, 
             error=errors.notes,
+            attrs={"data-infotext": """Here, you are invited to provide would-be
+            replicators and interested readers with some information on the
+            entirety of your data submission. If you do not want or are simply
+            not able to provide such information, we recommend inserting the
+            abstract of your article into the description field. Thereby users
+            of the data publisher receive an impression of your research, the
+            aims and objectives as well as the methods and the type of data
+            associated with your research article."""}
             )
         }}
 
@@ -95,10 +111,10 @@
     <div id="publication">
         {% set is_admin = h.check_access('sysadmin') or
                h.check_journal_role(data, 'admin') %}
-        
-       <fieldset>
+                     <fieldset>
            {% if is_admin %}
                 <legend>Related Publication</legend>
+
            {% endif %}
 
          {# old block_package_basic_fields #}

@@ -36,7 +36,7 @@
         {% set label = widget.name %}
         {% set additional_classes = widget.classes %}
         {% set classes = [] %}
-        {% set attrs = {} %}
+        {% set attrs = {"data-infotext": widget.info} %}
 
         {#
         {% if error %}

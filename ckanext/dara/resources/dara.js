@@ -15,6 +15,8 @@ econws();
 //$(res_preselection());
 
 
+
+
 function master_slave_input() {
 
   // conditional field based on input 
@@ -23,7 +25,6 @@ function master_slave_input() {
       var slave = $(this).find('.dara_slave');
       var value = master.prop('value');
       var slave_input = $(slave).find(':input').first();
-      console.log(slave_input);
       if(value === "") {
         slave.hide();
         slave_input.prop('disabled', true);
@@ -192,6 +193,28 @@ $(function fill_resource_name() {
         // needs to
         // be called four times (or so) to actually get the correct url value
         $(fill_resource_name()); 
+    });
+});
+
+
+$( function dara_info() {
+    $( document ).tooltip({
+        items: "[data-infotext]",
+        content: function() {
+            return $( this ).attr('data-infotext')
+        },
+        position: {
+            my: "center bottom-10",
+            at: "center top",
+            using: function( position, feedback ) {
+                $( this ).css( position );
+                $( "<div>" )
+                    .addClass( "arrow" )
+                    .addClass( feedback.vertical )
+                    .addClass( feedback.horizontal )
+                    .appendTo( this );
+            }
+        }
     });
 });
 

@@ -77,12 +77,12 @@
         {% set label = widget.name %}
         {% set classes = ['inline'] %}
         {% set additional_classes = widget.classes %}
-        {% set attrs = {} %}
+        {% set attrs = {'data-infotext': widget.info} %}
         
         {% if 'econws' in widget.classes %}
         
-            {% set attrs={'class': 'econws_input', 'autocomplete': 'off',
-                            'list': 'names'} %}
+            {% do attrs.update({'class': 'econws_input', 'autocomplete': 'off',
+                            'list': 'names'}) %}
         
 
         {% endif %}

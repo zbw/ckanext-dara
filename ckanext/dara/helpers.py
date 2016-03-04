@@ -6,8 +6,6 @@ from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields
 from ckanext.dara.ftools import list_dicter
-from datetime import datetime
-from hashids import Hashids
 from pylons import config
 import json
 from ckan.new_authz import users_role_for_group_or_org
@@ -30,7 +28,7 @@ def dara_pkg():
     return pkg
 
 
-def dara_debug():
+def dara_debug(res):
     pkg_dict = dara_pkg()
     import pdb; pdb.set_trace()
 
@@ -115,52 +113,6 @@ def dara_authors(dara_type, data):
         return None
 
 
-def dara_doi(pkg):
-    """
-    used in snippets/package_metadata_fields.  For now we only take the pkg
-    creation date and build a unique hash out of it. If there is more than one
-    upload in one second and for the same journal/organization we'd have a
-    collision. This case might be rare.
-    """
-
-    # check if we have a DOI already
-    key = 'dara_DOI_Proposal'
-    if key in pkg and pkg[key]:
-        return pkg[key]
-
-    # DOI prefix must be set in CKAN config
-    prefix = config.get('ckanext.dara.doi_prefix')
-
-    # make sure we ALWAYS get an org id
-    try:
-        group = pkg['group_id']
-        data_dict = {'id': group, 'include_datasets': False}
-        org = tk.get_action('organization_show')(None, data_dict)
-        journal = org['name']
-    except:
-        journal = 'edawax'  # fallback
-
-    # building a unique DOI id
-    uid = __make_uid()
-    doi = '{}/{}.{}'.format(prefix, journal, uid)
-    return doi
-
-
-def dara_resource_doiid():
-    """
-    Called when form for resource is edited first time
-    """
-    return __make_uid()
-
-
-def __make_uid():
-    salt = '{:%Y.%m.%d - %H:%M:%S:%f}'.format(datetime.now())
-    now = '{:%y%j}'.format(datetime.now())
-    hashids = Hashids(salt=salt)
-    uid = hashids.encode(int(now))
-    return uid
-
-
 def check_journal_role(pkg, role):
     user = tk.c.user
     if not user:
@@ -175,6 +127,7 @@ def check_journal_role(pkg, role):
     if role_in_org == role:
         return True
     return False
+
 
 def resource_is_internal(res):
     url = res['url']

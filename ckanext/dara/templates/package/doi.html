@@ -5,6 +5,7 @@
 
 {% set isSysadmin = h.check_access('sysadmin', context) %}
 {% set DOI = pkg['dara_DOI'] %} 
+{% set DOI_Test = pkg['dara_DOI_Test'] %}
 {% set registered = pkg['dara_registered'] %}
 {% set updated = pkg['dara_updated'] %}
 
@@ -78,6 +79,7 @@
             <td>DOI: </td>
             <td><span style="font-size:125%; color: darkgreen">{{ DOI }}</span</td>
         </tr>
+
     {% else %}
         <tr>
             <td>DOI Proposal: </td>
@@ -99,12 +101,20 @@
         <td>{{ updated }}</td>
     </tr>
     {% endif %}
-    
-        </table>
-        
+    </table>    
 
     {% if isSysadmin %}
-        <p style="margin-top:12px;"><a href="/dataset/{{pkg['id']}}/dara_xml">XML</a></p>
+    <div style="background:lightgrey; max-width:400px;
+        padding:0 0 0 5px; margin-top:25px;">
+    <h3>Test / Control</h3>
+<p><a href="/dataset/{{pkg['id']}}/dara_xml">XML</a></p>
+
+     <pre>
+dara_DOI_Test: {{ pkg['dara_DOI_Test'] }}
+dara_registered_test: {{ pkg['dara_registered_test']}}
+dara_updated_test: {{ pkg['dara_updated_test'] }}
+     </pre>
+        </div>
     {% endif %}
        
 </div>
@@ -155,8 +165,11 @@
       <p class="description">
       {% if res['dara_DOI'] %}
       DOI: <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
-      {% elif isSysadmin %}
-      DOI Proposal: {{ pkg.dara_DOI_Proposal }}.{{ res['dara_doiid'] }}
+      {% else %}
+      DOI Proposal: {{ res['dara_DOI_Proposal'] }}      
+      {% endif %}
+      {% if isSysadmin %}
+       <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
       {% endif %}
       </p>
   

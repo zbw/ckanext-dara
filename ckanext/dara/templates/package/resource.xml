@@ -47,8 +47,7 @@ we need to make sure here, that dara gets a title #}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}
-{#XXX might be better to store doi_proposal in resource itself #}
-{% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doiid %}
+{% set doi = res.dara_DOI_Proposal %}
 {{ macros.doi(url, doi) }}
 
 {# *12.publication date #}

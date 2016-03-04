@@ -12,6 +12,9 @@ from itertools import chain
 from ckanext.dara import helpers
 from ckanext.dara import validators
 from copy import deepcopy
+from datetime import datetime
+from pylons import config
+
 
 PREFIX = 'dara_'
 
@@ -28,23 +31,45 @@ def vc(action, f_validators):
 
 
 def schema_update(schema, action):
-    fields = chain(dara_fields('dataset'), dara_fields('publication'), ds.hidden_fields(), ds.single_fields())
+    fields = chain(dara_fields('dataset'),
+                dara_fields('publication'),
+                ds.hidden_fields(),
+                ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
     resource_schema_update(schema)
     
     # XXX validating resource custom fields does not work in CKAN!?.
-    #map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
+    # map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
     #    tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
 
 def resource_schema_update(schema):
     v = [tk.get_validator('ignore_missing')]
-    map(lambda f: schema['resources'].update({PREFIX + f.id: v}), dara_fields('resource'))
+    fields = chain(dara_fields('data'),
+                dara_fields('text'),
+                dara_fields('code'),
+                dara_fields('other'),
+                ds.hidden_fields())
+    map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
     
 
 def dara_package_schema(schema):
     schema_update(schema, 'update')
     return schema
+
+
+def dara_doi(pkg):
+    # DOI prefix must be set in CKAN config
+    # TODO: catch missing config entry
+    # TODO: build check if DOI already exists...? better take microseconds :-)
+    prefix = config.get('ckanext.dara.doi_prefix')
+    timestamp = "{:%y%j.%H%M%S}".format(datetime.utcnow())
+    org_id = pkg.get('group_id', pkg.get('owner_org'))
+    data_dict = {'id': org_id, 'include_datasets': False}
+    org = tk.get_action('organization_show')(None, data_dict)
+    journal = org['name']
+    doi = u'{}/{}.{}'.format(prefix, journal, timestamp)
+    return doi
 
 
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -58,7 +83,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IDatasetForm, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
-    plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IValidators)
 
@@ -85,8 +109,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 # 'pubdate': validators.pubdate,
                 # 'dara': validators.dara,
                 }
-        
 
+   
     def get_helpers(self):
         return {
                 'dara_md': helpers.dara_md,
@@ -97,10 +121,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_authors': helpers.dara_authors,
                 'dara_fields': dara_fields,
                 'dara_auto_fields': helpers.dara_auto_fields,
-                'dara_doi': helpers.dara_doi,
-                'dara_resource_doiid' : helpers.dara_resource_doiid,
-                'dara_resource_url' : helpers.dara_resource_url,
-                'dara_author_fields' : helpers.dara_author_fields,
+                'dara_doi': dara_doi,
+                'dara_resource_url': helpers.dara_resource_url,
+                'dara_author_fields': helpers.dara_author_fields,
                 'check_journal_role': helpers.check_journal_role,
                 'resource_is_internal': helpers.resource_is_internal
                 }
@@ -144,3 +167,32 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ckan_icon="exchange")
 
         return map
+
+
+class DaraResourcesPlugin(plugins.SingletonPlugin):
+    """
+    Plugin for Resources Controller
+    """
+    # XXX we have to use this extra class for creation of DOI proposal. This is a
+    # little inconsistent with the dataset generation of DOI, which is done via
+    # helpers from the template. That's not possible for resources since we
+    # don't get the pkg (or any other relevant data) there. On the other hand
+    # there are some clashes and errors when using the after_create method with
+    # the dataset also. However, both dataset and resource actually use the same
+    # function for DOI generation (dara_doi()), only the calling point is
+    # different
+
+    plugins.implements(plugins.IResourceController, inherit=True)
+
+    def after_create(self, context, resource):
+        pkg_id = resource['package_id']
+        pkg_dict = tk.get_action('package_show')(context, {'id': pkg_id})
+        doi = dara_doi(pkg_dict)
+        resource['dara_DOI_Proposal'] = doi
+        tk.get_action('resource_update')(context, resource)
+    
+    #def before_show(self, resource_dict):
+    #    import ipdb; ipdb.set_trace()
+
+
+

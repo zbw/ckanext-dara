@@ -900,10 +900,13 @@ def hidden_fields():
     HiddenField = namedtuple('HiddenField', 'id validators')
     fields = (
                 HiddenField('DOI', ('ignore_missing',)), 
-                HiddenField('DOI_Proposal', ('ignore_missing',)), 
+                HiddenField('DOI_Proposal', ('ignore_missing',)),
+                HiddenField('DOI_Test', ('ignore_missing',)),
                 HiddenField('created', ('ignore_missing',)), 
                 HiddenField('registered', ('ignore_missing',)), 
                 HiddenField('updated', ('ignore_missing',)),
+                HiddenField('registered_test', ('ignore_missing',)), 
+                HiddenField('updated_test', ('ignore_missing',)),
                 HiddenField('type', ('ignore_missing',)),
 
                 # TODO this really should be in ckanext.edawax, but we had trouble

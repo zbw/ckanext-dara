@@ -20,12 +20,15 @@ setup(
 	include_package_data=True,
 	zip_safe=False,
 	install_requires=[
-            'hashids'
+            'hashids',
+            'lxml',
+            'toolz'
 	],
 	entry_points=\
 	"""
         [ckan.plugins]
 	# Add plugins here
     dara=ckanext.dara.plugin:DaraMetadataPlugin
+    dara_resources=ckanext.dara.plugin:DaraResourcesPlugin
 	""",
 )

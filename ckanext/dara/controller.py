@@ -51,14 +51,21 @@ class DaraController(PackageController):
         context = self._context()
 
         def store():
-            if params()['register'] or params()['test_register']:
+            if params()['register']:
                 # XXX in case of update we might not need to store the DOI
-                c.pkg_dict['dara_DOI'] = c.pkg_dict['dara_DOI_Proposal']
+                c.pkg_dict.update({'dara_DOI': c.pkg_dict['dara_DOI_Proposal']})
+            if params()['test_register']:
+                c.pkg_dict['dara_DOI_Test'] = c.pkg_dict['dara_DOI_Proposal']
+            
             tk.get_action('package_update')(context, c.pkg_dict)
     
         def response():
-            a = {201: ('dara_registered', 'Dataset registered'),
-                 200: ('dara_updated', 'Dataset updated')}
+            if params()['test']:
+                a = {201: ('dara_registered_test', 'Dataset registered'),
+                     200: ('dara_updated_test', 'Dataset updated')}
+            else:
+                a = {201: ('dara_registered', 'Dataset registered'),
+                     200: ('dara_updated', 'Dataset updated')}
             if dara in a.iterkeys():
                 date = '{:%Y-%m-%d-%H:%M:%S}'.format(datetime.now())
                 k = get_in([dara, 0], a)
@@ -72,6 +79,7 @@ class DaraController(PackageController):
             tk.redirect_to('dara_doi', id=id)
 
         def register_resources():
+            # XXX improve! to many ifs
             def reg(resource):
                 resource_id = resource['id']
                 c.resource = tk.get_action('resource_show')(context, {'id': resource_id})
@@ -79,9 +87,10 @@ class DaraController(PackageController):
                 dara = darapi(auth(), xml, test=params()['test'],
                         register=params()['register'])
                 if dara in (200, 201):
-                    doi = u'{}.{}'.format(c.pkg_dict['dara_DOI_Proposal'],
-                            resource['dara_doiid'])
-                    c.resource['dara_DOI'] = doi
+                    if params()['test']:
+                        c.resource['dara_DOI_Test'] = c.resource['dara_DOI_Proposal']
+                    else:
+                        c.resource['dara_DOI'] = c.resource['dara_DOI_Proposal']
                     tk.get_action('resource_update')(context, c.resource)
                 else:
                     h.flash_error("ERROR! Resource {} could not be registered ({}).\
@@ -137,16 +146,13 @@ def params():
     """
     ptest = lambda p: p in tk.request.params
 
-    # XXX change this for production
-    # test = ptest('testserver')
-    test = True
-    test_register = False
+    test = ptest('testserver')
     register = ptest('DOI')
+    test_register = False
 
     if test and register:
         register = False
         test_register = True
-
     return {'test': test, 'register': register,
             'test_register': test_register}
 

@@ -56,24 +56,16 @@ we need to make sure here, that dara gets a title #}
 {# *28/29 availability controlled/free 
 default is '1' (Download)
 #}
-{{ macros.availability(
-    res.dara_Availabilitycontrolled or '1', 
-    'en', 
-    res.dara_Availabilityfree) 
-}}
+{{ macros.availability(res.dara_Availabilitycontrolled or '1') }}
 
 {# 11. resource language #}
 {#XXX not implemented for resources #}
 {{ macros.resourceLanguage(res.dara_language or None) }}
 
-{# 13. alternative identifier 
-XXX not implemented for resource, and we can't use pkg.identifiers here
-{{ macros.alternativeIDs(pkg.dara_AlternativeIdentifier_ID or None, pkg.dara_AlternativeIdentifier_Type or None) }}
-#}
 
 {# 17. description #}
 {% if res.description %}
-{{ macros.description(res.description) }}
+{{ macros.description(res.description) or None }}
 {% endif %}
 
 {# XXX controlled not implemented yet; can have multiple entries #}  

@@ -85,13 +85,9 @@ TODO
 
 
 {# *28/29 availability controlled/free #}
-{% macro availability(controlled, lang, free) -%}
+{% macro availability(controlled) -%}
 <availability>
     <availabilityControlled>{{ controlled }}</availabilityControlled>
-    <availabilityFree>
-        <language>{{ lang }}</language>
-        <availabilityText>{{ free }}</availabilityText>
-    </availabilityFree>
 </availability>
 {%- endmacro %}
 
@@ -117,35 +113,42 @@ TODO
 
 {# 17. description #}
 {% macro description(text) -%}
+{% if text %}
 <descriptions>
     <description>
         <language>en</language> {# TODO: offer choices? #}
-        <freetext>{{ text or None }}</freetext>
-        <type>1</type> {# 1 = 'Abstract'. for now we assume type is alway Abstract
+        <freetext>{{ text }}</freetext>
+        <type>1</type> {# 1 = 'Abstract'. for now we assume type is always Abstract
                         TODO: offer choice #}
     </description>
 </descriptions>
+{% endif %}
 {%- endmacro %}
 
 
 {# 18. geographic coverage controlled/free #}
 {# XXX controlled not implemented yet; can have multiple entries #}  
 {% macro geographicCoverages(language, geocoverage, geocoverage_free) %}
+{% if geocoverage or geocoverage_free %}
 <geographicCoverages>
     <geographicCoverage>
         <language>{{ language }}</language> {#XXX language not implemented yet #}
       {% if geocoverage %}
         <geographicCoverageControlled>{{ geocoverage }}</geographicCoverageControlled>
       {% endif %}
-      <freetext>{{ geocoverage_free }}</freetext>
+      {% if geocoverage_free %}
+        <freetext>{{ geocoverage_free }}</freetext>
+      {% endif %}
       {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
       {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
     </geographicCoverage>
 </geographicCoverages>
+{% endif %}
 {% endmacro %}
 
 {# 19. sampled universe #}
 {% macro universes(lang, sampled) %}
+{% if sampled %}
 <universes>
     <universe>
         <language>{{ lang }}</language> {# XXX not implemented #}
@@ -155,10 +158,12 @@ TODO
         <sampled>{{ sampled }}</sampled>
     </universe>
 </universes>
+{% endif %}
 {% endmacro %}
 
 {# 20. sampling #}
 {% macro samplings(lang, method) %}
+{% if method %}
 <samplings>
     {# 1 or 2 samplings allowed #}
     <sampling>
@@ -166,6 +171,7 @@ TODO
         <method>{{ method }}</method>
     </sampling>
 </samplings>
+{% endif %}
 {% endmacro %}
 
 {# 31. relation #}

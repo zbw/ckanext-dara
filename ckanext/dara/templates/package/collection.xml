@@ -52,39 +52,14 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# *28/29 availability controlled/free 
 default is '1' (Download)
 #}
-{{ macros.availability(
-    pkg.dara_Availabilitycontrolled or '1', 
-    'en', 
-    pkg.dara_Availabilityfree) 
-}}
+{{ macros.availability(pkg.dara_Availabilitycontrolled or '1') }}
 
 {# 11. resource language #}
 {{ macros.resourceLanguage(pkg.dara_language or None) }}
 
-{# 13. alternative identifier #}
-{{ macros.alternativeIDs(
-    pkg.dara_AlternativeIdentifier_ID or None, 
-    pkg.dara_AlternativeIdentifier_Type or None) 
-}}
 
 {# 17. description #}
-{{ macros.description(pkg.notes) }}
-
-{# XXX controlled not implemented yet; can have multiple entries #}  
-{#  18. geographic coverage controlled/free #}
-{{ macros.geographicCoverages(
-    'en', 
-    pkg.dara_geographicCoverage or None, 
-    pkg.dara_geographicCoverageFree or None) 
-}}
-
-{# 19. sampled universe #}
-{#XXX we are using 'None' as fallback since the schema is not correct here.
-dara expects content, but schema does not force it #}
-{{ macros.universes('en', pkg.dara_universeSampled or None) }}
-
-{# 20. sampling #}
-{{ macros.samplings('en', pkg.dara_Sampling or None) }} {#XXX lang not implemented #}
+{{ macros.description(pkg.notes) or None }}
 
 {# 31. relation #}
 {# rel type '10' indicates 'HasPartOf' and references the resource (in our

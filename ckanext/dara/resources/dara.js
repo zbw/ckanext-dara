@@ -203,6 +203,7 @@ $( function dara_info() {
         content: function() {
             return $( this ).attr('data-infotext')
         },
+        show: {delay: 2000},
         position: {
             my: "center bottom-10",
             at: "center top",

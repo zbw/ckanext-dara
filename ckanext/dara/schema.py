@@ -612,7 +612,7 @@ def fields():
                 name = 'Identifier',
                 placeholder = 'DOI, URL, or other identifier',
                 size = 'medium',
-                classes = ['dara_required'],
+                classes = [],
                 info=u"""Enter an identifier for the article. This should be an
                 URL, DOI, or Handle""",
                 )
@@ -671,9 +671,9 @@ def fields():
                 Input(
                 name = 'Volume',
                 size = 'small',
-                classes = ['dara_required'],
+                classes = [],
                 info=u"""Enter the volume of the journal in which the article
-                is published. This is mandatory."""
+                is published."""
                 )
         ),
 
@@ -682,9 +682,9 @@ def fields():
                 Input(
                 name = 'Issue',
                 size = 'small',
-                classes = ['dara_required'],
+                classes = [],
                 info=u"""Enter the issue of the journal in which the article is
-                published. This is mandatory.""",
+                published.""",
 
                 )
         ),
@@ -715,10 +715,10 @@ def fields():
                 Number(
                 name='Start Page',
                 size='small',
-                classes = ['dara_required'],
+                classes = [],
                 info=u"""Please enter the start page of the article as given in the journal. If
                 the journal is not printed, please simply enter 1, or give the
-                number as it appears in the PDF file. This is mandatory."""
+                number as it appears in the PDF file."""
                 )
         ),
 
@@ -727,10 +727,10 @@ def fields():
                 Number(
                 name = 'End Page',
                 size = 'small',
-                classes = ['dara_required'],
+                classes = [],
                 info=u"""Please enter the end page of the article as given in the journal. If
                 the journal is not printed, please simply enter the
-                number as it appears in the PDF file. This is mandatory."""
+                number as it appears in the PDF file"""
                 )
         ),
 

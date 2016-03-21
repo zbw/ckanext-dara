@@ -55,21 +55,9 @@ that we should integrate somehow here #}
 
 {% block package_basic_fields_custom %}
 
-
-{# TODO: generate hidden inputs from schema.hidden_fields() #}
-
-<input type="hidden" value="{{ pkg['dara_DOI_Proposal'] or h.dara_doi(data) }}" name="dara_DOI_Proposal" />
+{# just for quick control #}
 <input type="hidden" value="{{ pkg['dara_DOI'] }}"  name="dara_DOI" />
 <input type="hidden" value="{{ pkg['dara_DOI_Test'] }}" name="dara_DOI_Test" />
-
-<input type="hidden" value="{{ pkg['dara_registered'] }}"
-                     name="dara_registered" />
-<input type="hidden" value="{{ pkg['dara_updated'] }}"
-                     name="dara_updated" />
-<input type="hidden" value="{{ pkg['dara_registered_test'] }}"
-                     name="dara_registered_test" />
-<input type="hidden" value="{{ pkg['dara_updated_test'] }}"
-                     name="dara_updated_test" />
 
 
 <input type="hidden" value="{{ h.in_review(pkg) }}"

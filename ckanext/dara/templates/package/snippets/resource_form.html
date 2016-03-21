@@ -98,8 +98,6 @@
     {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}
 
-    <input type="hidden" value="{{ res.dara_DOI_Proposal }}"
-                    name="dara_DOI_Proposal" />
     <input type="hidden" value="{{ res.dara_DOI }}" 
                     name="dara_DOI" />
     <input type="hidden" value="{{ res.dara_DOI_Test }}" 

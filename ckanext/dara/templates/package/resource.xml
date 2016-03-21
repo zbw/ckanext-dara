@@ -47,8 +47,7 @@ we need to make sure here, that dara gets a title #}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}
-{% set doi = res.dara_DOI_Proposal %}
-{{ macros.doi(url, doi) }}
+{{ macros.doi(url, h.res_doi(res)) }}
 
 {# *12.publication date #}
 {{ macros.publicationDate(res.dara_PublicationDate or pkg.dara_PublicationDate) }}
@@ -65,7 +64,7 @@ default is '1' (Download)
 
 {# 17. description #}
 {% if res.description %}
-{{ macros.description(res.description) or None }}
+{{ macros.description(res.description) }}
 {% endif %}
 
 {# XXX controlled not implemented yet; can have multiple entries #}  
@@ -86,7 +85,7 @@ dara expects content, but schema does not force it #}
 {# we need the container element here because the macro only creates single
 relations since collection do need to refer to more than one resource #}
 <relations>
-{{ macros.relation('DOI', pkg.dara_DOI_Proposal, 9) }}
+{{ macros.relation('DOI', h.pkg_doi(pkg), 9) }}
 </relations>
 
 

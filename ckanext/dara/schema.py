@@ -900,7 +900,7 @@ def hidden_fields():
     HiddenField = namedtuple('HiddenField', 'id validators')
     fields = (
                 HiddenField('DOI', ('ignore_missing',)), 
-                HiddenField('DOI_Proposal', ('ignore_missing',)),
+#                HiddenField('DOI_Proposal', ('ignore_missing',)),
                 HiddenField('DOI_Test', ('ignore_missing',)),
                 HiddenField('created', ('ignore_missing',)), 
                 HiddenField('registered', ('ignore_missing',)), 

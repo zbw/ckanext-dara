@@ -7,7 +7,10 @@
 {% set DOI = pkg['dara_DOI'] %} 
 {% set DOI_Test = pkg['dara_DOI_Test'] %}
 {% set registered = pkg['dara_registered'] %}
+{% set registered_test = pkg['dara_registered_test'] %}
 {% set updated = pkg['dara_updated'] %}
+{% set updated_test = pkg['dara_updated_test'] %}
+{% set use_testserver = h.dara_use_testserver() %}
 
 {# defaults = nothing registered #}
 {% set submit = 'Register' %}
@@ -16,7 +19,7 @@
 {% set register_text = "This dataset has not been registered and has no DOI." %}
 
 {# registered #}
-{% if registered %}
+{% if registered or (use_testserver and (registered_test or updated_test)) %}
     {% set submit = 'Update' %}
     {% set register_title = "Registered at da|ra" %}
     {% set register_background = "darkgreen" %}
@@ -25,8 +28,8 @@
     metadata, or register further resources below." %}
 {% endif %}
 
-{% if DOI %}
-    {% set register_text = "This dataset has already been registered and
+{% if DOI or (use_testserver and DOI_Test) %}
+    {% set register_text = "This dataset has already been registered, and
     received a DOI. You can, however, update the metadata at da|ra or register
     further resources below." %}
 {% endif %}
@@ -36,6 +39,12 @@
 {% block primary_content_inner %}
 {{ super() }}
 
+
+{% if use_testserver %}
+<span style="font-size:100%; color: #9E0707">
+!!!using da|ra Testserver!!!
+</span>
+{% endif %}
 
 <h1>DOI Registration</h1>
     
@@ -53,18 +62,19 @@
         
         <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>  
         
-        {% if isSysadmin %} 
+        {% if isSysadmin and not use_testserver %} 
         <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
         />Test
         {% endif %}
          
-        {% if not DOI %}
+        {% if not DOI and not (use_testserver and DOI_Test) %}
         <input type="checkbox" name="DOI" value="true"
         style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
         {% endif %}
         
         <p style="margin-top:12px;">
-        <input class="btn btn-primary" type="submit" value="{{ submit }}" />
+            <input class="btn btn-primary" type="submit"
+                value="{{ submit }}" />
         </p>
     
 
@@ -74,31 +84,30 @@
 <div id="dataset">
 <h2>Dataset</h2>
     <table>
-    {% if DOI %}
+    {% if DOI  or (use_testserver and DOI_Test) %}
         <tr>
-            <td>DOI: </td>
-            <td><span style="font-size:125%; color: darkgreen">{{ DOI }}</span</td>
+            <td><span style="font-size:125%; color: darkgreen">DOI: </span</td>
+            <td><span style="font-size:125%; color: darkgreen">{{ DOI or DOI_Test }}</span</td>
         </tr>
 
     {% else %}
         <tr>
             <td>DOI Proposal: </td>
-            <td><span style="color:darkred"> {{ pkg['dara_DOI_Proposal']
-                    }}</span></td>
+            <td><span style="color:darkred"> {{ h.pkg_doi(pkg) }}</span></td>
         </tr>
     {% endif %}
  
-    {% if registered %} 
+    {% if registered or (use_testserver and registered_test) %} 
     <tr>
         <td>Registered: </td>
-        <td>{{ registered}}</td>
+        <td>{{ registered or registered_test }}</td>
     </tr>
     {% endif %}
 
-    {% if updated %}
+    {% if updated or (use_testserver and updated_test) %}
     <tr>
         <td>Updated: </td>
-        <td>{{ updated }}</td>
+        <td>{{ updated or updated_test }}</td>
     </tr>
     {% endif %}
     </table>    
@@ -149,13 +158,15 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
    
   <div style="float:right; margin-left:20px; text-align:right;" >
     {% if h.resource_is_internal(res) %}
-      <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
-      value="register" /> 
-      {% if not res['dara_DOI'] %}
-      Get DOI 
+    
+      {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
+                Get DOI
       {% else %}
-      Update
+        Update 
       {% endif %}
+     <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
+                value="register" /> 
+
       
       {% if isSysadmin %}
       <span style="margin-left:12px;">
@@ -163,10 +174,13 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
       {% endif %}
       
       <p class="description">
+      
       {% if res['dara_DOI'] %}
-      DOI: <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
+      DOI:  <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
+      {% elif use_testserver and res['dara_DOI_Test'] %}
+      DOI (Test): <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
       {% else %}
-      DOI Proposal: {{ res['dara_DOI_Proposal'] }}      
+      DOI Proposal: {{ h.res_doi(res) }}  
       {% endif %}
       {% if isSysadmin %}
        <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>

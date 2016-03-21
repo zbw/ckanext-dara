@@ -29,6 +29,5 @@ setup(
         [ckan.plugins]
 	# Add plugins here
     dara=ckanext.dara.plugin:DaraMetadataPlugin
-    dara_resources=ckanext.dara.plugin:DaraResourcesPlugin
 	""",
 )

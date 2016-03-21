@@ -99,7 +99,7 @@ TODO
 {%- endmacro %}
 
 
-{# 13. alternative identifier #}
+{# 13. alternative identifier 
 {% macro alternativeIDs(id, type) -%}
 {% if id %}
 <alternativeIDs>
@@ -110,6 +110,8 @@ TODO
 </alternativeIDs>
 {% endif %}
 {%- endmacro %}
+#}
+
 
 {# 17. description #}
 {% macro description(text) -%}

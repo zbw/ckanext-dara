@@ -294,7 +294,7 @@ label[for="dara_res_preselection"] {
  */
 
 
-
+/* info circle 
 .controls::after {
     content: '\f05a';
     display: inline;
@@ -314,6 +314,38 @@ label[for="dara_res_preselection"] {
     cursor: help;
 }
 
+*/
 
+/* simple 'i'
+.controls::after {
+    content: "\f129";
+    display: inline;
+    width: auto;
+    height: auto;
+    line-height: normal;
+    vertical-align: baseline;
+    background-image: none;
+    background-position: 0% 0%;
+    background-repeat: repeat;
+    margin-top: 0;
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    text-align: right;
+    font-size: 14px;
+    margin-left:10px;
+    cursor: help;
+}
+*/
+
+
+.ib {
+    float: right;
+    position: relative;
+    top: -1.75em;
+    cursor: help;
+    color: darkred;
+}
 
 

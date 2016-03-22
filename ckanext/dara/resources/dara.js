@@ -197,18 +197,18 @@ $(function fill_resource_name() {
 });
 
 
+
 function dara_info(el, action, container) {
-    console.log(el);
+    var inp = $(container).find('[data-infotext]');
     $( el ).tooltip({
-       // items: "[data-infotext]",
-        items: el,
+        items: ".ib",
         //content: function() {
         //    return $( this ).attr('data-infotext')
         //},
         content: function () {
-            return $( container ).attr('data-infotext')
+            return $(inp).attr('data-infotext');
         },
-        show: {delay: 1},
+        show: {delay: 0},
         position: {
             my: "center bottom-10",
             at: "center top",
@@ -224,81 +224,19 @@ function dara_info(el, action, container) {
     });
 
     $( el ).tooltip(action);
-
 };
 
 
-var infobutton = $('.controls');
-infobutton.after().on("click", function () {
-    dara_info($(this), 'open', $( this ).find('[data-infotext]'));
-});
-infobutton.after().on('mouseout', function () {
-    dara_info($(this), 'destroy', infobutton);
-});
+$(function infobutton () {
 
+    var controls = $('.controls');
+    controls.after('<div class="ib"><i class="icon-info-sign" /></div>');
 
-
-/* obsolete for now
- *
-$(function metadata_level() {
-
-    $( "#dara_1" ).accordion({
-      collapsible: true,
-      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
-      active : 0 
+    $('.ib').on('click', function() {
+        dara_info($(this), 'open', $(this).prev());
     });
-
-    $( "#dara_2" ).accordion({
-      collapsible: true,
-      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
-      active : 2 // 2 is not a valid option so all levels are inactive
+    $('.ib').on('mouseout', function () {
+        dara_info($(this), 'destroy', $(this).prev());
     });
-
-    $( "#dara_3" ).accordion({
-      collapsible: true,
-      icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
-      heightStyle: "content",
-      active : 2 // 2 is not a valid option so all levels are inactive
-    });
-
+            
 });
-*/
-
-//XXX obsolete for now
-//$(function publication() {
-//  var publication = $('#dara_Publication');
-//  var pubs = $('#pubs').text();
-//  var active = parseInt(pubs);
-
-//  $(publication).accordion({
-//    collapsible: true,
-//    heightStyle: "content",
-//    icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
-//    active : active
-//  });
-//});
-
-
-//XXX obsolete for now
-//$(function resource() {
-//  var resource = $('#dara_Resource');
-
-//  $(resource).accordion({
-//    collapsible: true,
-//    heightStyle: "content",
-//    icons: { "header": "ui-icon-plus", "activeHeader": "ui-icon-minus" },
-//    active : 2
-//  });
-//
-//});
-
-
-
-
-
-
-
-
-
-
-

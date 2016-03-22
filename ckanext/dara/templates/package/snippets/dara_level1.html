@@ -70,7 +70,12 @@
     {% set tag_attrs = {
             'data-module-tags': '', 
             'data-module': 'autocomplete', 
-            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
+            'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?',
+            'data-infotext': """Please provide the data publisher with some
+            keywords which fit to your research article and/or to the data you
+            would like to submit. Most often, you can simply copy and paste the
+            keywords that have been mentioned in the abstract of your
+            article."""
             } 
         %}
         {{ form.input('tag_string', id='field-tags', 
@@ -136,7 +141,10 @@
           </label>
           <div class="controls">
             <select id="field-organizations" name="owner_org"
-                data-module="autocomplete">
+                data-module="autocomplete" 
+                data-infotext="Select the Journal. Usually there is only one
+                option."
+                >
               <option value="" 
                 {% if not selected_org and data.id %}
                     selected="selected" 

@@ -258,6 +258,7 @@ label[for="dara_res_preselection"] {
    /* font: normal 14px "Helvetica Neue", Sans-Serif;*/
     box-shadow: 0 0 7px black;
   }
+  /*
   .arrow {
     width: 70px;
     height: 16px;
@@ -290,4 +291,29 @@ label[for="dara_res_preselection"] {
     bottom: -20px;
     top: auto;
  }
+ */
+
+
+
+.controls::after {
+    content: '\f05a';
+    display: inline;
+    width: auto;
+    height: auto;
+    line-height: normal;
+    vertical-align: baseline;
+    background-image: none;
+    background-position: 0% 0%;
+    background-repeat: repeat;
+    margin-top: 0;
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;   
+    margin-left:10px;
+    cursor: help;
+}
+
+
+
 

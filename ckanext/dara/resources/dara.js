@@ -197,26 +197,43 @@ $(function fill_resource_name() {
 });
 
 
-$( function dara_info() {
-    $( document ).tooltip({
-        items: "[data-infotext]",
-        content: function() {
-            return $( this ).attr('data-infotext')
+function dara_info(el, action, container) {
+    console.log(el);
+    $( el ).tooltip({
+       // items: "[data-infotext]",
+        items: el,
+        //content: function() {
+        //    return $( this ).attr('data-infotext')
+        //},
+        content: function () {
+            return $( container ).attr('data-infotext')
         },
-        show: {delay: 2000},
+        show: {delay: 1},
         position: {
             my: "center bottom-10",
             at: "center top",
             using: function( position, feedback ) {
                 $( this ).css( position );
                 $( "<div>" )
-                    .addClass( "arrow" )
+                   // .addClass( "arrow" )
                     .addClass( feedback.vertical )
                     .addClass( feedback.horizontal )
                     .appendTo( this );
             }
         }
     });
+
+    $( el ).tooltip(action);
+
+};
+
+
+var infobutton = $('.controls');
+infobutton.after().on("click", function () {
+    dara_info($(this), 'open', $( this ).find('[data-infotext]'));
+});
+infobutton.after().on('mouseout', function () {
+    dara_info($(this), 'destroy', infobutton);
 });
 
 

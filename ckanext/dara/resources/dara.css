@@ -345,7 +345,11 @@ label[for="dara_res_preselection"] {
     position: relative;
     top: -1.75em;
     cursor: help;
-    color: darkred;
+    color: darkgray;
+}
+
+.ib:hover {
+    color:darkred;
 }
 
 

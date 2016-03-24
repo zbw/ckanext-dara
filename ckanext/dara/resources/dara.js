@@ -55,12 +55,13 @@ function econws() {
    
    _.each(inputs, function(inp) {
         $(inp).on("input keypress paste mouseenter focus", function(e) {
-            var val = $(this).val();
+            var val = $(inp).val();
             if(val === "") return;
             var par = inp.parentElement;
-            
+
             var update_fields = function (val) {
-                var authorfields = $(par.parentElement.parentElement); // XXX optimize
+                var authorfields = $(inp).closest('.author'); // XXX optimize
+
                 var firstname = $(authorfields).find('[data-author="firstname"]');
                 var aid = $(authorfields).find('[data-author="authorID"]');
                 var aid_type = $(authorfields).find('[data-author="authorID_Type"]');

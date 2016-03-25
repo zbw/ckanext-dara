@@ -50,13 +50,14 @@ function master_slave_input() {
 
 
 function econws() {
-   var objects = [];
-   var inputs = document.getElementsByClassName( 'econws_input' );
+   
+   var objects = []; // XXX better keep all objects vom econws?
+   var inputs = document.querySelectorAll( '.econws_input' );
    
    _.each(inputs, function(inp) {
-        $(inp).on("input keypress paste mouseenter focus", function(e) {
+        $(inp).on("input", function() {
             var val = $(inp).val();
-            if(val === "") return;
+            if(val.length < 2) return;
             var par = inp.parentElement;
 
             var update_fields = function (val) {
@@ -94,13 +95,14 @@ function econws() {
                         limit: 15
                     },
                     success: function ( data ){
-                        $('datalist').remove();
+                        var datalist = document.querySelector('#gnd_author_names');
+                        var options = datalist.querySelectorAll('option');
+                        _.each(options, function(option) {
+                            datalist.removeChild(option);
+                        });
+                        
                         var current_objects = data.results.bindings;
-                        var datal = document.createElement('datalist');
-                        par.appendChild(datal);
-                        var datalist = par.getElementsByTagName('datalist')[0];
-                        datalist.setAttribute('id', 'names');
-
+                       
                         _.each(current_objects, function(obj){
                             var option = document.createElement('option');
                             option.value = obj.concept.value;

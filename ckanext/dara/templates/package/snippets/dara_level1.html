@@ -9,6 +9,7 @@
     {% resource 'dara/dara.js' %}
     {% resource 'dara/underscore.js' %}
    
+    
     {{ form.input('title', id='field-title', 
             label=_('Title'), 
             placeholder=_('eg. A descriptive title.'), 
@@ -61,11 +62,13 @@
 
 
 {# fields generated from schema #}
+                
         <div id="dara_level_1">
-            <fieldset>
-            {{ dara_form.md('dataset', h, data, errors) }}
+             <fieldset>
+                {{ dara_form.md('dataset', h, data, errors) }}
             </fieldset>
-        </div>
+       </div>
+
  {# old block package_basic_fields_tags #}
     {% set tag_attrs = {
             'data-module-tags': '', 

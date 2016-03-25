@@ -14,6 +14,11 @@
     {% set aut = h.dara_authors %}
     
     <div id="authors_wrapper">
+
+    {# preset the datalist for authorname autosuggestions #}
+    <datalist id="gnd_author_names"></datalist>
+
+
     <fieldset id="authors">
         <legend>Authors</legend>
 
@@ -82,7 +87,7 @@
         {% if 'econws' in widget.classes %}
         
             {% do attrs.update({'class': 'econws_input', 'autocomplete': 'off',
-                            'list': 'names'}) %}
+                            'list': 'gnd_author_names'}) %}
         
 
         {% endif %}
@@ -113,6 +118,14 @@
         
         {% if widget.role == 'slave' %}
             {% do classes.append('dara_slave') %}
+        {% endif %}
+        
+         {% if widget.size == 'medium' %}
+            {% do classes.append('control-medium') %}
+        {% endif %}
+
+        {% if widget.size == 'small' %}
+            {% do classes.append('control-small') %}
         {% endif %}
 
 

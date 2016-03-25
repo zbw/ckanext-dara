@@ -802,7 +802,7 @@ def author_fields():
             Input(
                 placeholder = '',
                 name = 'Last Name',
-                size = '',
+                size = 'medium',
                 classes = ['econws', 'dara_required'],
                 info=u"""Please specify the last name of author. 
                 You will get autosuggests as soon you've typed the first
@@ -817,7 +817,7 @@ def author_fields():
             Input(
                 placeholder = '',
                 name = 'First Name',
-                size = '',
+                size = 'medium',
                 classes = [],
                 info=u"""Please specify the first name of author. In case of a
                 middle name, please also add it here. This is a mandatory field.""",
@@ -853,7 +853,7 @@ def author_fields():
             Input(
                 name = 'Personal ID',
                 placeholder = 'ORCID, Scopus, GND or Web of Science ID',
-                size = 'small',
+                size = '',
                 classes = [],
                 role = 'master',
                 info=u"""If available please enter your personal ID. In case of

@@ -1,23 +1,54 @@
 "use strict";
 
 
-var ws_objects = []
-econws();
+// TODO:
+// -    inp.oninput etc. als eigene Funktion, um sie in add_authors() separat
+//      als eventListener aufrufen zu können. So wie es jetzt ist, werden dann
+//      alle input Elemente noch mal gebunden
+//
+// -    jQuery in update_fields() loswerden. Es gibt inzwischen ein JS-natives
+//      .closest(), aber das ist noch zu neu
+//
+// -    rewrite inp.oninput as addEventLister function
+//
+// -    instead of clear_datalist() check for duplicates in datalist and only
+//      append (in ws_call()) when value is not already existent OR find some
+//      kind of unique() method for datalist
+//
+// -    check for purity
+//
+// -    better implement as ckan.module? 
+//      http://docs.ckan.org/en/latest/theming/javascript.html
 
-function econws() {
-   var inputs = document.querySelectorAll( '.econws_input' );
-   _.each(inputs, function(inp) {
+
+
+(function () {
+    
+// store/cache all results from econws
+var ws_objects = [];
+var datalist = document.getElementById('gnd_author_names');
+console.log(datalist);
+ws_init();
+
+function ws_init () {
+    //clear_datalist();
+    var inputs = document.querySelectorAll( '.econws_input' );
+    _.each(inputs, function (inp) {
         inp.oninput = function() {
+            
             var val = inp.value;
             if(val.length < 2) return;
-    
-            if(val.indexOf('http://d-nb.info/gnd/') != -1) {
-                update_fields(inp, val);
+            //var split_val = val.split(' [gnd:]');
+            //var sv = split_val[split_val.length-1];
+
+            if(val.indexOf(' [gnd:]') != -1) {
+                var val_split = val.split(' [gnd:]');
+                var ws_id = val_split[val_split.length -1];
+                update_fields(inp, ws_id);
                 return
             }
             
             wscall(val);
-
         }
     });
 }
@@ -26,7 +57,8 @@ function econws() {
 function update_fields (inp, val) {
     // TODO remove jquery
 
-    var authorfields = $(inp).closest('fieldset.author');  
+    var authorfields = $(inp).closest('fieldset.author');  // XXX
+
     var firstname = $(authorfields).find('[data-author="firstname"]');
     var aid = $(authorfields).find('[data-author="authorID"]');
     var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
@@ -60,20 +92,30 @@ function wscall(val) {
             limit: 15
         },
         success: function ( data ){
-            var datalist = document.querySelector('#gnd_author_names');
-            var options = datalist.querySelectorAll('option');
-            _.each(options, function(option) {
-                datalist.removeChild(option);
-            });
-            
+            clear_datalist();
             var current_objects = data.results.bindings;
-            
+                   
             _.each(current_objects, function(obj){
                 var option = document.createElement('option');
-                option.value = obj.concept.value;
-                option.text = obj.prefLabel.value;
+               // option.value = obj.concept.value; // XXX remove
+               // option.text = obj.prefLabel.value; // XXX append obj.concept.value
+                var text = obj.prefLabel.value;
+                option.text = text.substring(0,150);                
+                option.value = text + ' [gnd:]' + obj.concept.value;
                 datalist.appendChild(option);
             });
+            
+            /* this does not work, since datalist is no hmtl.collection anymore
+             * afterwards
+            XXX find a way to uniq datalist
+            datalist = _.unique(datalist.children, function(option) {
+                // use gnd id for comparison
+                var val_split = option.value.split(' [gnd:]');
+                var ws_id = val_split[val_split.length -1];
+                return ws_id;
+            });
+            */
+
             ws_objects.push(current_objects);
             
         },
@@ -84,27 +126,44 @@ function wscall(val) {
 }
 
 
-$(function add_authors() {
-  
-  var authorContainer = $('#authors');
-   
-  $('#add_author').on('click', function() {
+// might be obsolete?
+function clear_datalist () {
+    var options = datalist.querySelectorAll('option');
     
-    $('.hidden_authorfield')
-        .clone(true, true)
-        .prop('class', 'author')
-        .removeProp('disabled')
-        .appendTo(authorContainer)
-    $(master_slave_input());
-    econws();
-    return false;
-  });
+    _.each(options, function(option) {
+        datalist.removeChild(option);
+    });
+}
 
-  //remove author fieldset
-  $(authorContainer).on('click', '.remove_author', function() { 
-      $(this).parents('fieldset.author').remove();
-    return false;
-  });
-    
+
+$(function add_authors() {
+
+    var authorContainer = $('#authors');
+
+    $('#add_author').on('click', function() {
+        
+        $('.hidden_authorfield')
+            .clone(true, true)
+            .prop('class', 'author')
+            .removeProp('disabled')
+            .appendTo(authorContainer)
+        $(master_slave_input());  // XXX bad!  dara.js
+        ws_init();  // TODO: add eventlistener with function
+        return false;
+    });
+
+    //remove author fieldset
+    $(authorContainer).on('click', '.remove_author', function() { 
+        $(this).parents('fieldset.author').remove();
+        return false;
+    });
+        
 });
+
+
+
+
+}) ();
+
+
 

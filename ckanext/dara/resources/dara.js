@@ -6,10 +6,7 @@
 "use strict";
 
 
-//calling functions for the first time, if we dont want those functions bind
-//to $()
-$(master_slave_input());
-// econws();
+$(master_slave_input()); // XXX refactor!
 
 
 

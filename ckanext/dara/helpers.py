@@ -114,18 +114,13 @@ def dara_authors(dara_type, data):
 
 
 def check_journal_role(pkg, role):
+    iden = lambda a,b: a == b
     user = tk.c.user
     if not user:
         return False
-    if 'owner_org' in pkg:
-        group = pkg['owner_org']
-    elif 'group_id' in pkg:
-        group = pkg['group_id']
-    else:
-        return False
-    role_in_org = users_role_for_group_or_org(group, user)
-    if role_in_org == role:
-        return True
+    group = pkg.get('owner_org', pkg.get('group_id', False))
+    if group:
+        return iden(users_role_for_group_or_org(group, user), role)
     return False
 
 

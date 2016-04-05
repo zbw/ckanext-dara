@@ -57,7 +57,6 @@ def dara_package_schema(schema):
     return schema
 
 
-
 class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     '''
     A CKAN plugin for da|ra metadata schema. All additional functions are
@@ -71,6 +70,14 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IValidators)
+    plugins.implements(plugins.IResourceController, inherit=True)
+    
+    
+   #def before_create(self, context, resource):
+   #    
+   #    def get_pkg():
+   #        return tk.get_action('package_show')(context, {'id': context['package'].id})
+   #    import ipdb; ipdb.set_trace()
 
     
     

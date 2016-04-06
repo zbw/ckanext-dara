@@ -52,7 +52,7 @@ class DaraController(PackageController):
         self._check_access(id)
         context = self._context()
         
-        if params()['test']:
+        if params()['test'] or params()['test_register']:
             doi_key = 'dara_DOI_Test'
             a = {201: ('dara_registered_test', 'Dataset registered (Test)'),
                  200: ('dara_updated_test', 'Dataset updated (Test)')}
@@ -62,19 +62,15 @@ class DaraController(PackageController):
                  200: ('dara_updated', 'Dataset updated')}
 
         def store():
-            # XXX DOIs are updated when they already exist. Should we better avoid this?
             d = doi.pkg_doi(c.pkg_dict)
-            if params()['register']:
-                c.pkg_dict.update({'dara_DOI': d})
-            if params()['test_register']:
-                c.pkg_dict.update({'dara_DOI_Test': d})
+            c.pkg_dict.update({doi_key: d})
+            date = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+            k = get_in([dara, 0], a)
+            c.pkg_dict[k] = date
             tk.get_action('package_update')(context, c.pkg_dict)
     
         def response():
             if dara in a.iterkeys():
-                date = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-                k = get_in([dara, 0], a)
-                c.pkg_dict[k] = date
                 store()
                 h.flash_success(get_in([dara, 1], a))
             else:
@@ -207,19 +203,21 @@ def darapi(auth, xml, test=False, register=False):
     debugging.
     """
     
-    url = 'http://www.da-ra.de/dara/study/importXML'
-    if test:
-        url = 'http://dara-test.gesis.org:8084/dara/study/importXML'
-
+    d = {False: 'http://www.da-ra.de/dara/study/importXML',
+         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
+    url = d.get(test)
+    
     # socket does not take unicode, so we need to encode our unicode object
     # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets
     # XXX do we always get unicode object???
     xml_encoded = xml.encode('utf-8')
     
-    params = keyfilter(lambda x: register, {'registration': 'true'})
+    parameters = keyfilter(lambda x: register, {'registration': 'true'})
     headers = {'content-type': 'application/xml;charset=UTF-8'}
+    
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
-            params=params)
+            params=parameters)
+    
     return req.status_code
 
 

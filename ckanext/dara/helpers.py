@@ -114,7 +114,7 @@ def dara_authors(dara_type, data):
 
 
 def check_journal_role(pkg, role):
-    iden = lambda a,b: a == b
+    iden = lambda a, b: a == b
     user = tk.c.user
     if not user:
         return False
@@ -127,9 +127,7 @@ def check_journal_role(pkg, role):
 def resource_is_internal(res):
     url = res['url']
     site_url = config.get('ckan.site_url')
-    if url.startswith(site_url):
-        return True
-    return False
+    return url.startswith(site_url)
 
 
 

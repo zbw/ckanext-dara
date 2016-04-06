@@ -59,10 +59,9 @@ def dara_resource():
     # context (resource or package)
     try:
         if 'resource' in request.path:
-            resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
+            return tk.get_action('resource_show')(None, {'id': c.resource_id})
         else:
-            resource = c.resource
-        return resource
+            return c.resource
     except:
         return False
 
@@ -94,33 +93,27 @@ def dara_md():
     return named_levels
 
 
+# XXX why is there a param 'data_type'?
 def dara_authors(dara_type, data):
     """
     return authors as dict
     """
-    if data:
-        pack = data
-    else:
-        pack = dara_pkg()
-    try:
-        v = pack['dara_authors']
-        fields = author_fields()
-        if isinstance(v, list):
-            return list_dicter(v[:], [i.id for i in fields])
-        if isinstance(v, basestring):
-            return json.loads(v)
-    except KeyError:
-        return None
+    pack = data or dara_pkg()
+    v = pack.get('dara_authors') # None if key does not exist
+    if isinstance(v, list):
+        return list_dicter(v[:], [i.id for i in author_fields()])
+    if isinstance(v, basestring):
+        return json.loads(v)
+    return None
 
 
 def check_journal_role(pkg, role):
-    iden = lambda a, b: a == b
     user = tk.c.user
     if not user:
         return False
     group = pkg.get('owner_org', pkg.get('group_id', False))
     if group:
-        return iden(users_role_for_group_or_org(group, user), role)
+        return users_role_for_group_or_org(group, user) == role
     return False
 
 

@@ -31,6 +31,7 @@ def res_doi(res):
     # necessary to append 'R' here because of different creation timestamp
     # methods for packages and resources and possible clashes. # XXX CKAN!
     # pkg['metadata_created'] uses UTC, resources['created'] local time. 
+    # See https://github.com/ckan/ckan/issues/2903
     # Could be upgraded later (random char, random char/number combination)
     # which might be necessary for use with API
     return "{}R".format(doi_gen)

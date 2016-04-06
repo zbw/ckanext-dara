@@ -55,7 +55,7 @@ def dara_resource():
     """
     somehow hack. c.resource doesnt return a resource when calling .../dara_xml
     """
-    # XXX improve this. we should somehow be able to get the type of the
+    # TODO improve this. We should somehow be able to get the type of the
     # context (resource or package)
     try:
         if 'resource' in request.path:

@@ -41,7 +41,8 @@ Dataset.
 {% if DOI %}
 <a href="http://dx.doi.org/{{ DOI }}">http://dx.doi.org/{{ DOI }}</a>
 {% else %}
-<span style="color:darkred">No DOI yet</span>
+{% set url = h.full_current_url() %}
+<span style="color:darkred">{{ url }}</span>
 {% endif %}
 
 

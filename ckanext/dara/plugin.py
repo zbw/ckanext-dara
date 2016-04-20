@@ -14,6 +14,7 @@ from ckanext.dara import validators
 from copy import deepcopy
 from pylons import config
 import doi
+import mimetypes
 
 PREFIX = 'dara_'
 
@@ -98,6 +99,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'public')
         tk.add_resource('resources', 'dara')
+        mimetypes.add_type('STATA do', '.do')
+        mimetypes.add_type('STATA data', '.dta')
+        mimetypes.add_type('SRC', '.src')
 
     def get_validators(self):
         return {'authors': validators.authors,

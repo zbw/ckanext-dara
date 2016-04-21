@@ -39,7 +39,7 @@ def authors(key, data, errors, context):
 
             return a
         
-        return map(lambda a: val(a), authors)
+        return map(val, authors)
     
     def error_check(author):
         """
@@ -74,7 +74,7 @@ def authors(key, data, errors, context):
         
     dk = map(lambda a: a.strip(), data[key])
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
-    data[key] = json.dumps(map(lambda author: id_check(author), validate(authors)))
+    data[key] = json.dumps(map(id_check, validate(authors)))
     
 
 def _ytc(author_orig):

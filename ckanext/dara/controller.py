@@ -97,7 +97,7 @@ class DaraController(PackageController):
             c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
             resources = filter(lambda res: res['id'] in tk.request.params,
                     c.pkg_dict['resources'])
-            map(lambda resource: reg(resource), resources)
+            map(reg, resources)
 
         # first register resources
         register_resources()

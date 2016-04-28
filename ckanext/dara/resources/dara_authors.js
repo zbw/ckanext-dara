@@ -23,11 +23,9 @@
 
 
 (function () {
-    
 // store/cache all results from econws
 var ws_objects = [];
 var datalist = document.getElementById('gnd_author_names');
-console.log(datalist);
 ws_init();
 
 function ws_init () {
@@ -69,15 +67,18 @@ function update_fields (inp, val) {
     var authorname = author.prefName.value.split(", ");
     
     inp.value=authorname[0];
+    var slave = $(authorfields).find('.dara_slave');
+    $(aid_type)
+        .removeProp('disabled')
+        .prop('required', true)
+        .val('GND');
+    $(slave).show();
+
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
-    $(aid_type).val('GND');
     $(url).val(author.concept.value);
     
-    $(aid_type).prop('disabled', false);
-    $(aid_type).prop('required', true);
-
-    return;
+    return
 }
 
 

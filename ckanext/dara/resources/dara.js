@@ -26,6 +26,7 @@ function master_slave_input() {
 
       $(master).on("input change keyup paste", function () 
         {
+          console.log('master_slave_input called');
           if(master.prop('value') !=="") {
             slave.fadeIn();
             slave_input.prop('disabled', false);

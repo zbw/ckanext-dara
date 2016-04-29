@@ -92,7 +92,8 @@
         
 
         {% endif %}
-
+        
+        
                 
         {% for c in additional_classes %}
            {% do classes.append(c) %}
@@ -130,7 +131,7 @@
         {% endif %}
 
 
-        {% if widget.form_type == 'input' %}
+        {% if widget.form_type == 'input' and 'hidden_author_field' not in widget.classes %}
         {% do attrs.update({'data-author': key}) %}
             {{ form.input(name, label=label,
                     placeholder=placeholder, 
@@ -140,6 +141,21 @@
                     attrs=attrs) 
             }}
         {% endif %}
+
+       {% if widget.form_type == 'input' and 'hidden_author_field' in widget.classes %}
+       {#{% do attrs.update({'data-author': key}) %}
+            {{ form.input(name, label=None,
+                    type="hidden",
+                    placeholder=placeholder, 
+                    value=value,
+                    error=errors[id],
+                    classes=classes,
+                    attrs=attrs) 
+                    }}#}
+            <input type="hidden" value="{{ value }}" data-author="{{ key }}"
+                   name={{ name }} />
+        {% endif %}
+
 
         {% if widget.form_type == 'select' %}
             {% do attrs.update({'data-author': key}) %}
@@ -181,10 +197,10 @@
         {% endif %}
         
                             
-
         
      {% endfor %}
     
+     
 
  </fieldset>
  {% endmacro %}

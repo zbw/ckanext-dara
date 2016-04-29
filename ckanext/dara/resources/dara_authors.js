@@ -60,6 +60,7 @@ function update_fields (inp, val) {
     var firstname = $(authorfields).find('[data-author="firstname"]');
     var aid = $(authorfields).find('[data-author="authorID"]');
     var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
+    var aid_type_uri = $(authorfields).find('[data-author="authorID_URI"]');
     var author = _.find(_.flatten(ws_objects, true), function (ob) { 
         return ob.concept.value === val; 
     });
@@ -69,7 +70,7 @@ function update_fields (inp, val) {
     inp.value=authorname[0];
     var slave = $(authorfields).find('.dara_slave');
     $(aid_type)
-        .removeProp('disabled')
+        //.removeProp('disabled')
         .prop('required', true)
         .val('GND');
     $(slave).show();
@@ -77,6 +78,7 @@ function update_fields (inp, val) {
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
     $(url).val(author.concept.value);
+    $(aid_type_uri).val(author.concept.value);
     
     return
 }

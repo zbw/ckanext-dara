@@ -21,7 +21,6 @@ def authors(key, data, errors, context):
     validate, and transform author fields to JSON string and store it
     """
     # XXX Shouldn't the converter part be in converters, not in validators...?!
-    
     if errors[key] or not isinstance(data[key], list):
         return
 
@@ -73,6 +72,7 @@ def authors(key, data, errors, context):
         return error_check(author)
         
     dk = map(lambda a: a.strip(), data[key])
+
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
     data[key] = json.dumps(map(id_check, validate(authors)))
     

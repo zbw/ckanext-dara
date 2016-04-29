@@ -884,7 +884,7 @@ def author_fields():
         AuthorField('authorID_URI',
                 Input(
                     name='Personal ID URI',
-                    classes = ['hide'],
+                    classes = ['hidden_author_field'],
                     ),
         ),
                 

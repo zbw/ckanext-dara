@@ -20,22 +20,22 @@ function master_slave_input() {
       var slave_input = $(slave).find(':input').first();
       if(value === "") {
         slave.hide();
-        slave_input.prop('disabled', true);
         slave_input.prop('required', false);
+        slave_input.val('');
       }
 
       $(master).on("input change keyup paste", function () 
         {
-          console.log('master_slave_input called');
           if(master.prop('value') !=="") {
             slave.fadeIn();
-            slave_input.prop('disabled', false);
+            //slave_input.prop('disabled', false);
             slave_input.prop('required', true);
             }
           else {
            slave.fadeOut(); 
-           slave_input.prop('disabled', true);
+           //slave_input.prop('disabled', true);
            slave_input.prop('required', false);
+           slave_input.val('');
 
         }
       });

@@ -1,19 +1,17 @@
-import unittest
 from ckanext.dara.ftools import list_dicter, dicter, grouper
 from ckanext.dara.schema import author_fields
 
 
+class TestFunctionalTools(object):
 
-class TestFunctionalTools(unittest.TestCase):
-
-    def setUp(self):
+    def setup(self):
         self.seq = [u'Bunn', u'Derek W.', u'',
                 u'http://d-nb.info/gnd/170390756', u'170390756', u'GND', u'',
                 u'Manning', u'Alan', u'', u'http://d-nb.info/gnd/13188543X',
                 u'13188543X', u'GND', u'']
+
         self.ids = map(lambda t: t.id, author_fields())
 
-        
     def test_grouper(self):
         result = grouper(self.seq, len(self.ids))
         
@@ -28,12 +26,15 @@ class TestFunctionalTools(unittest.TestCase):
         ts = result[0]
         ss = result[1]
         # TODO: test all seq items
+
         assert ts['firstname'] == self.seq[1]
         assert ts['lastname'] == self.seq[0]
         assert ss['firstname'] == self.seq[8]
         assert ss['lastname'] == self.seq[7]
 
-
     def test_list_dicter(self):
-        pass
+        a = dicter(grouper(self.seq, len(self.ids)), self.ids)
+        b = list_dicter(self.seq, self.ids)
+        assert a == b
+
 

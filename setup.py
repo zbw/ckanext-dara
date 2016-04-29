@@ -22,7 +22,8 @@ setup(
 	install_requires=[
             'hashids',
             'lxml',
-            'toolz'
+            'toolz',
+            'untangle',
 	],
 	entry_points=\
 	"""

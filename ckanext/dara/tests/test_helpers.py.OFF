@@ -9,7 +9,7 @@ import pylons.test
 import pylons.config as config
 import webtest
 
-from ckanext.dara import helpers as dara_helpers
+#from ckanext.dara import helpers as dara_helpers
 import ckan.model as model
 # import ckan.tests.legacy as tests
 import ckan.tests.factories as factories
@@ -17,12 +17,35 @@ import nose.tools as nose_tools
 
 import ckan.plugins as plugins
 import ckan.tests.helpers as test_helpers
-from ckan.tests.helpers import FunctionalTestBase
+from ckan.tests.helpers import FunctionalTestBase, change_config, reset_db
 import ckan.lib.helpers as ckan_helpers
+import ckan.lib.search as search
+from ckanext.dara import helpers as dara_helpers
 
 class TestDaraHelpers(FunctionalTestBase):
     """
     """
+    def setup(self):
+        """
+        Create users and organizations
+        """
+        reset_db()
+        search.clear()
+        self.sysadmin = factories.Sysadmin()
+        self.test_member_1 = factories.User()
+        self.test_member_2 = factories.User()
+        self.test_editor = factories.User()
+
+        users = [{'name': self.test_member_1['name'], 'capacity': 'member'},
+                 {'name': self.test_member_2['name'], 'capacity': 'member'},
+                 {'name': self.test_editor['name'], 'capacity': 'editor'}]
+
+        self.test_org_1 = factories.Organization(users=users,
+            name="testjournal")
+        self.test_org_2 = factories.Organization()
+        self.test_package = self._dara_testpackage()
+
+
     @classmethod
     def setup_class(cls):
         super(TestDaraHelpers, cls).setup_class()
@@ -35,12 +58,23 @@ class TestDaraHelpers(FunctionalTestBase):
     def teardown_class(cls):
         plugins.unload('dara')
         super(TestDaraHelpers, cls).teardown_class()
+
+    def _dara_testpackage(self):
+        pkg = factories.Dataset(
+            dara_authors=['Bargfrede', 'Philipp', '', '', ''],
+            dara_PublicationDate='2002',
+            dara_currentVersion="1",
+            owner_org=self.test_org_1['id']
+        )
+        return pkg
+
    
     def test_dara_auto_fields(self):
-        pkg = factories.Dataset()
+        pkg = self.test_package
         af = dara_helpers.dara_auto_fields()
         pkg_url = ckan_helpers.url_for(controller='package', action='read',
                 id=pkg.id)
+        import ipdb; ipdb.set_trace()
         assert af['URL'] == 'http://edawax.de' + pkg_url
     
    #def test_check_journal_role_true(self):

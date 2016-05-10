@@ -212,7 +212,6 @@ def darapi(auth, xml, test=False, register=False):
     
     parameters = keyfilter(lambda x: register, {'registration': 'true'})
     headers = {'content-type': 'application/xml;charset=UTF-8'}
-    
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)
     

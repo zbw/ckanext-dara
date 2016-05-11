@@ -78,7 +78,8 @@ function update_fields (inp, val) {
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
     $(url).val(author.concept.value);
-    $(aid_type_uri).val(author.concept.value);
+    //$(aid_type_uri).val(author.concept.value);
+    $(aid_type_uri).val('http://d-nb.info/gnd');
     
     return
 }

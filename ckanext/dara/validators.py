@@ -96,7 +96,8 @@ def _orcid(author_orig):
         firstname=['orcid-bio', 'personal-details', 'given-names', 'value'],
         lastname=['orcid-bio', 'personal-details', 'family-name', 'value'],
         url=['orcid-bio', 'researcher-urls', 'researcher-url', 0, 'url', 'value'],
-        authorID_URI=['orcid-identifier', 'uri'])
+        #authorID_URI=['orcid-identifier', 'uri']
+        )
     
     def orcid_call(author_id):
         # sandbox only for development
@@ -114,6 +115,7 @@ def _orcid(author_orig):
     if req.status_code == 200:
         profile = req.json()['orcid-profile']
         author.update(map(orcid_map, mapping.iterkeys()))
+        author.update({'authorID_URI': 'http://orcid.org'})
         return author
     
     # TODO: more detailed error reasons

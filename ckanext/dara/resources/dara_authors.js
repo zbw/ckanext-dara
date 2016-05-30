@@ -17,7 +17,7 @@
 //
 // -    check for purity
 //
-// -    better implement as ckan.module? 
+// -    better implement as ckan.module?
 //      http://docs.ckan.org/en/latest/theming/javascript.html
 
 
@@ -33,7 +33,7 @@ function ws_init () {
     var inputs = document.querySelectorAll( '.econws_input' );
     _.each(inputs, function (inp) {
         inp.oninput = function() {
-            
+
             var val = inp.value;
             if(val.length < 2) return;
             //var split_val = val.split(' [gnd:]');
@@ -45,7 +45,7 @@ function ws_init () {
                 update_fields(inp, ws_id);
                 return
             }
-            
+
             wscall(val);
         }
     });
@@ -61,12 +61,12 @@ function update_fields (inp, val) {
     var aid = $(authorfields).find('[data-author="authorID"]');
     var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
     var aid_type_uri = $(authorfields).find('[data-author="authorID_URI"]');
-    var author = _.find(_.flatten(ws_objects, true), function (ob) { 
-        return ob.concept.value === val; 
+    var author = _.find(_.flatten(ws_objects, true), function (ob) {
+        return ob.concept.value === val;
     });
     var url = $(authorfields).find('[data-author="url"]');
     var authorname = author.prefName.value.split(", ");
-    
+
     inp.value=authorname[0];
     var slave = $(authorfields).find('.dara_slave');
     $(aid_type)
@@ -77,10 +77,10 @@ function update_fields (inp, val) {
 
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
-    $(url).val(author.concept.value);
+    $(url).val(author.concept.value, '');
     //$(aid_type_uri).val(author.concept.value);
     $(aid_type_uri).val('http://d-nb.info/gnd');
-    
+
     return
 }
 
@@ -98,17 +98,17 @@ function wscall(val) {
         success: function ( data ){
             clear_datalist();
             var current_objects = data.results.bindings;
-                   
+
             _.each(current_objects, function(obj){
                 var option = document.createElement('option');
                // option.value = obj.concept.value; // XXX remove
                // option.text = obj.prefLabel.value; // XXX append obj.concept.value
                 var text = obj.prefLabel.value;
-                option.text = text.substring(0,150);                
+                option.text = text.substring(0,150);
                 option.value = text + ' [gnd:]' + obj.concept.value;
                 datalist.appendChild(option);
             });
-            
+
             /* this does not work, since datalist is no hmtl.collection anymore
              * afterwards
             XXX find a way to uniq datalist
@@ -121,11 +121,11 @@ function wscall(val) {
             */
 
             ws_objects.push(current_objects);
-            
+
         },
-        
+
     });
-    
+
     return
 }
 
@@ -133,7 +133,7 @@ function wscall(val) {
 // might be obsolete?
 function clear_datalist () {
     var options = datalist.querySelectorAll('option');
-    
+
     _.each(options, function(option) {
         datalist.removeChild(option);
     });
@@ -145,7 +145,7 @@ $(function add_authors() {
     var authorContainer = $('#authors');
 
     $('#add_author').on('click', function() {
-        
+
         $('.hidden_authorfield')
             .clone(true, true)
             .prop('class', 'author')
@@ -157,17 +157,14 @@ $(function add_authors() {
     });
 
     //remove author fieldset
-    $(authorContainer).on('click', '.remove_author', function() { 
+    $(authorContainer).on('click', '.remove_author', function() {
         $(this).parents('fieldset.author').remove();
         return false;
     });
-        
+
 });
 
 
 
 
 }) ();
-
-
-

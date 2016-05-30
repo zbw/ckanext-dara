@@ -26,7 +26,7 @@ def authors(key, data, errors, context):
 
     def validate(authors_orig):
         authors = deepcopy(authors_orig)
-        
+
         def val(a):
             if a['firstname'] == a['lastname'] == a['authorID'] == '':
                 msg = u'Authors must at least provide Firstname and Lastname OR Personal ID'
@@ -37,9 +37,9 @@ def authors(key, data, errors, context):
                 a.update({error_key: msg})
 
             return a
-        
+
         return map(val, authors)
-    
+
     def error_check(author):
         """
         only this function appends errors
@@ -52,6 +52,7 @@ def authors(key, data, errors, context):
         """
         sets missing http prefix for author url
         """
+
         if author['url']:
             if not author['url'].startswith(('http://', 'https://')):
                 author['url'] = 'http://' + author['url']
@@ -70,12 +71,12 @@ def authors(key, data, errors, context):
         if id_value and not id_type:
             author.update({error_key: u'Please provide type of author ID'})
         return error_check(author)
-        
+
     dk = map(lambda a: a.strip(), data[key])
 
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
     data[key] = json.dumps(map(id_check, validate(authors)))
-    
+
 
 def _ytc(author_orig):
     """ yet to come """
@@ -98,7 +99,7 @@ def _orcid(author_orig):
         url=['orcid-bio', 'researcher-urls', 'researcher-url', 0, 'url', 'value'],
         #authorID_URI=['orcid-identifier', 'uri']
         )
-    
+
     def orcid_call(author_id):
         # sandbox only for development
         # orcid_base = 'http://pub.sandbox.orcid.org/v1.2'
@@ -109,7 +110,7 @@ def _orcid(author_orig):
 
     def orcid_map(k):
         return (k, get_in(mapping[k], profile, default=author_orig[k]))
-    
+
     author = deepcopy(author_orig)
     req = orcid_call(author['authorID'])
     if req.status_code == 200:
@@ -117,7 +118,7 @@ def _orcid(author_orig):
         author.update(map(orcid_map, mapping.iterkeys()))
         author.update({'authorID_URI': 'http://orcid.org'})
         return author
-    
+
     # TODO: more detailed error reasons
     msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
     author[error_key] = msg
@@ -145,7 +146,3 @@ def _orcid(author_orig):
 #    #import ipdb; ipdb.set_trace()
 #    #u_data = unflatten(data)
 #    pass
-
-
-
-

@@ -1,6 +1,6 @@
 {# getting authors directly from pkg_dict is only possible if we manage to
 store it properly (without validation errors). So long we'll use helpers to
-convert the JSON String 
+convert the JSON String
 {% set dara_authors = pkg_dict['dara_authors'] %}
 #}
     {% set dara_authors = h.dara_authors('dataset', data) %}
@@ -14,32 +14,32 @@ convert the JSON String
 
     {% if dara_authors %}
 
-        
+
     {% for author in dara_authors %}
         {% if author == dara_authors[-1] %}
             {{ (author['lastname'], author['firstname']) | join(', ')}}
         {% else %}
-            {{ author['lastname'] ~ ', ' ~ author['firstname']  }}; 
+            {{ author['lastname'] ~ ', ' ~ author['firstname']  }};
         {% endif %}
     {% endfor %}
-    
+
 {% endif %}
 
 
 {# this is just for demo. PublicationDate will be the final key! #}
 ({{ pkg_dict.dara_PublicationDate or pkg_dict.dara_year }}):
 
-{{ pkg_dict.title }}. 
+{{ pkg_dict.title }}.
 {% if pkg_dict.dara_currentVersion %}
-Version: {{ pkg_dict.dara_currentVersion }}. 
+Version: {{ pkg_dict.dara_currentVersion }}.
 {% endif %}
 
 
 {{ journal }}.
-Dataset. 
+Dataset.
 
 {% if DOI %}
-<a href="http://dx.doi.org/{{ DOI }}">http://dx.doi.org/{{ DOI }}</a>
+<a property="schema:sameAs" href="http://dx.doi.org/{{ DOI }}">http://dx.doi.org/{{ DOI }}</a>
 {% else %}
 {% set url = h.full_current_url() %}
 <a href="{{ url }}">{{ url }}</a>

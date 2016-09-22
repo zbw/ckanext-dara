@@ -1,0 +1,25 @@
+{% ckan_extends %}
+{% set DOI = package['dara_DOI'] %}
+{% if DOI %}
+    {% set pkg_url = "http://dx.doi.org/" ~ DOI  %}
+{% endif %}
+{% set dara_authors = h.dara_authors('dataset', package) %}
+{#
+{% set dara_debug = h.dara_debug(package) %}
+#}
+
+    {% block heading %}
+        {% snippet 'package/snippets/authors.html', dara_authors=dara_authors %}
+    {{ super() }}
+    {% endblock %}
+
+      {% block resources_outer %}
+      {% if DOI %}
+      <div style="margin-top:0.3em">
+         {% snippet 'package/snippets/doi.html', DOI=DOI %}
+     </div>
+      {% endif %}
+
+      {{ super() }}
+
+      {% endblock %}

@@ -71,7 +71,7 @@ class Number(DaraWidget):
         self.form_type="number"
         self.min = mi
         self.max = ma
-        
+
 
 
 
@@ -79,9 +79,9 @@ def fields():
     """
     main function that returns most of da|ra metadata fields
     """
-    
+
     DaraField = namedtuple('DaraField', 'id adapt validators widget')
-    
+
     fields = (
 
         DaraField('PublicationDate',
@@ -119,8 +119,8 @@ def fields():
 
             ),
         ),
-        
-        
+
+
       # DaraField('Availabilityfree',
       #     ('dataset'), ('ignore_missing',),
 
@@ -130,8 +130,8 @@ def fields():
       #         placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
       #         )
       #     ),
-    
-        
+
+
        #DaraField('OtherTitle',
        #    ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
        #    Input(
@@ -148,14 +148,14 @@ def fields():
        #    role = 'slave',
        #    name = 'Type of other Title',
        #    options = [
-       #        {'text': 'Alternative Title', 'value': '1'}, 
-       #        {'text': 'Translated Title', 'value': '2'}, 
-       #        {'text': 'Subtitle', 'value': '3'}, 
+       #        {'text': 'Alternative Title', 'value': '1'},
+       #        {'text': 'Translated Title', 'value': '2'},
+       #        {'text': 'Subtitle', 'value': '3'},
        #        {'text': 'Original Title', 'value': '4'}],
        #    )
        #),
 
-        
+
         DaraField('currentVersion',
                 ('dataset', 'data', 'code'), ('not_empty',),
                 Input(
@@ -178,29 +178,29 @@ def fields():
        #        name = 'Language',
        #        options = [
        #            {'text': 'English', 'value': 'eng'},
-       #            {'text': 'Belarusian', 'value': 'bel'}, 
-       #            {'text': 'Bosnian', 'value': 'bos'}, 
-       #            {'text': 'Czech', 'value': 'cze'}, 
-       #            {'text': 'Dutch', 'value': 'dut'}, 
-       #            {'text': 'Estonian', 'value': 'est'}, 
-       #            {'text': 'Finnish', 'value': 'fin'}, 
-       #            {'text': 'French', 'value': 'fre'}, 
-       #            {'text': 'German', 'value': 'ger'}, 
-       #            {'text': 'Greek', 'value': 'gre'}, 
-       #            {'text': 'Croatian', 'value': 'hrv'}, 
-       #            {'text': 'Hungarian', 'value': 'hun'}, 
-       #            {'text': 'Italian', 'value': 'ita'}, 
-       #            {'text': 'Latvian', 'value': 'lav'}, 
-       #            {'text': 'Lithuanian', 'value': 'lit'}, 
-       #            {'text': 'Norwegian', 'value': 'nor'}, 
-       #            {'text': 'Polish', 'value': 'pol'}, 
-       #            {'text': 'Romanian', 'value': 'rum'}, 
-       #            {'text': 'Russian', 'value': 'rus'}, 
-       #            {'text': 'Slovak', 'value': 'slo'}, 
-       #            {'text': 'Slovenian', 'value': 'slv'}, 
-       #            {'text': 'Spanish', 'value': 'spa'}, 
-       #            {'text': 'Serbian', 'value': 'srp'}, 
-       #            {'text': 'Swedish', 'value': 'swe'}, 
+       #            {'text': 'Belarusian', 'value': 'bel'},
+       #            {'text': 'Bosnian', 'value': 'bos'},
+       #            {'text': 'Czech', 'value': 'cze'},
+       #            {'text': 'Dutch', 'value': 'dut'},
+       #            {'text': 'Estonian', 'value': 'est'},
+       #            {'text': 'Finnish', 'value': 'fin'},
+       #            {'text': 'French', 'value': 'fre'},
+       #            {'text': 'German', 'value': 'ger'},
+       #            {'text': 'Greek', 'value': 'gre'},
+       #            {'text': 'Croatian', 'value': 'hrv'},
+       #            {'text': 'Hungarian', 'value': 'hun'},
+       #            {'text': 'Italian', 'value': 'ita'},
+       #            {'text': 'Latvian', 'value': 'lav'},
+       #            {'text': 'Lithuanian', 'value': 'lit'},
+       #            {'text': 'Norwegian', 'value': 'nor'},
+       #            {'text': 'Polish', 'value': 'pol'},
+       #            {'text': 'Romanian', 'value': 'rum'},
+       #            {'text': 'Russian', 'value': 'rus'},
+       #            {'text': 'Slovak', 'value': 'slo'},
+       #            {'text': 'Slovenian', 'value': 'slv'},
+       #            {'text': 'Spanish', 'value': 'spa'},
+       #            {'text': 'Serbian', 'value': 'srp'},
+       #            {'text': 'Swedish', 'value': 'swe'},
        #            {'text': 'Ukrainian', 'value': 'ukr'}],
        #        )
        #),
@@ -222,25 +222,25 @@ def fields():
        #        role = 'slave',
        #        name = 'Type of Alternative Identifier',
        #        options = [
-       #            {'text': ''}, 
-       #            {'text': 'DOI', 'value': 'DOI'}, 
-       #            {'text': 'ARK', 'value': 'ARK'}, 
-       #            {'text': 'EAN13', 'value': 'EAN13'}, 
-       #            {'text': 'EISSN', 'value': 'EISSN'}, 
-       #            {'text': 'Handle', 'value': 'Handle'}, 
-       #            {'text': 'ISBN', 'value': 'ISBN'}, 
-       #            {'text': 'ISSN', 'value': 'ISSN'}, 
-       #            {'text': 'ISTC', 'value': 'ISTC'}, 
-       #            {'text': 'LISSN', 'value': 'LISSN'}, 
-       #            {'text': 'LSID', 'value': 'LSID'}, 
-       #            {'text': 'PURL', 'value': 'PURL'}, 
-       #            {'text': 'UPC', 'value': 'UPC'}, 
-       #            {'text': 'URL', 'value': 'URL'}, 
+       #            {'text': ''},
+       #            {'text': 'DOI', 'value': 'DOI'},
+       #            {'text': 'ARK', 'value': 'ARK'},
+       #            {'text': 'EAN13', 'value': 'EAN13'},
+       #            {'text': 'EISSN', 'value': 'EISSN'},
+       #            {'text': 'Handle', 'value': 'Handle'},
+       #            {'text': 'ISBN', 'value': 'ISBN'},
+       #            {'text': 'ISSN', 'value': 'ISSN'},
+       #            {'text': 'ISTC', 'value': 'ISTC'},
+       #            {'text': 'LISSN', 'value': 'LISSN'},
+       #            {'text': 'LSID', 'value': 'LSID'},
+       #            {'text': 'PURL', 'value': 'PURL'},
+       #            {'text': 'UPC', 'value': 'UPC'},
+       #            {'text': 'URL', 'value': 'URL'},
        #            {'text': 'URN', 'value': 'URN'}],
        #        )
        #),
 
-        
+
         #TODO erstmal raus wegen fehlendem Vokabular
        #DaraField('geographicCoverage',
        #         ('dataset', 'data'), ('ignore_missing',),
@@ -252,7 +252,7 @@ def fields():
        #        )
        #),
 
-        
+
         DaraField('geographicCoverageFree',
                  ('data',), ('ignore_missing', 'dara'),
                 Input(
@@ -266,7 +266,7 @@ def fields():
 
                 )
         ),
-        
+
 
         DaraField('universeSampled',
                 ('data',), ('ignore_missing',),
@@ -280,7 +280,7 @@ def fields():
                 )
         ),
 
-        
+
        #DaraField('Sampling',
        #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',)
 
@@ -290,7 +290,7 @@ def fields():
        #        )
        #),
 
-        
+
         #TODO
        #DaraField('temporalCoverageFormal',
        #        ('data',), ('ignore_missing',)
@@ -299,7 +299,7 @@ def fields():
        #            name = "Temporal Coverage (controlled)",
        #            )
        #),
-        
+
         DaraField('temporalCoverageFree',
                 ('data',), ('ignore_missing',),
 
@@ -335,7 +335,7 @@ def fields():
        #        )
        #),
 
-        
+
        #XXX Collection Mode not selected
        #DaraField('CollectionMode_controlled',
        #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
@@ -343,29 +343,29 @@ def fields():
        #        Select(
        #        name = 'Collection Mode (controlled)',
        #        options = [
-       #            {'text': '', 'value': ''}, 
-       #            {'text': 'Interview', 'value': '1'}, 
-       #            {'text': 'Interview: Face-to-Face', 'value': '2'}, 
-       #            {'text': 'Interview: Telephone', 'value': '3'}, 
-       #            {'text': 'Interview: E-Mail', 'value': '4'}, 
-       #            {'text': 'Interview: CATI', 'value': '5'}, 
-       #            {'text': 'Interview: CAPI', 'value': '6'}, 
-       #            {'text': 'Self-completed questionnaire', 'value': '7'}, 
-       #            {'text': 'Self-completed questionnaire: Paper/Pencil', 'value': '8'}, 
-       #            {'text': 'Self-completed questionnaire: Web-based', 'value': '9'}, 
-       #            {'text': 'Self-completed questionnaire: CASI', 'value': '10'}, 
-       #            {'text': 'Self-completed questionnaire: ACASI', 'value': '11'}, 
-       #            {'text': 'Coding', 'value': '12'}, {'text': 'Transcription', 'value': '13'}, 
-       #            {'text': 'Compilation', 'value': '14'}, 
-       #            {'text': 'Synthesis', 'value': '15'}, 
-       #            {'text': 'Recording', 'value': '16'}, 
-       #            {'text': 'Simulation', 'value': '17'}, 
-       #            {'text': 'Observation', 'value': '18'}, 
-       #            {'text': 'Observation: Field', 'value': '19'}, 
-       #            {'text': 'Observation: Laboratory', 'value': '20'}, 
-       #            {'text': 'Observation: Participant', 'value': '21'}, 
-       #            {'text': 'Experiments', 'value': '22'}, 
-       #            {'text': 'Focus Group', 'value': '23'}, 
+       #            {'text': '', 'value': ''},
+       #            {'text': 'Interview', 'value': '1'},
+       #            {'text': 'Interview: Face-to-Face', 'value': '2'},
+       #            {'text': 'Interview: Telephone', 'value': '3'},
+       #            {'text': 'Interview: E-Mail', 'value': '4'},
+       #            {'text': 'Interview: CATI', 'value': '5'},
+       #            {'text': 'Interview: CAPI', 'value': '6'},
+       #            {'text': 'Self-completed questionnaire', 'value': '7'},
+       #            {'text': 'Self-completed questionnaire: Paper/Pencil', 'value': '8'},
+       #            {'text': 'Self-completed questionnaire: Web-based', 'value': '9'},
+       #            {'text': 'Self-completed questionnaire: CASI', 'value': '10'},
+       #            {'text': 'Self-completed questionnaire: ACASI', 'value': '11'},
+       #            {'text': 'Coding', 'value': '12'}, {'text': 'Transcription', 'value': '13'},
+       #            {'text': 'Compilation', 'value': '14'},
+       #            {'text': 'Synthesis', 'value': '15'},
+       #            {'text': 'Recording', 'value': '16'},
+       #            {'text': 'Simulation', 'value': '17'},
+       #            {'text': 'Observation', 'value': '18'},
+       #            {'text': 'Observation: Field', 'value': '19'},
+       #            {'text': 'Observation: Laboratory', 'value': '20'},
+       #            {'text': 'Observation: Participant', 'value': '21'},
+       #            {'text': 'Experiments', 'value': '22'},
+       #            {'text': 'Focus Group', 'value': '23'},
        #            {'text': 'Other', 'value': '24'}],
        #        )
        #),
@@ -379,7 +379,7 @@ def fields():
        #        size = 'medium',
        #        )
        #),
-        
+
         #XXX timedimension fields not selected
        #DaraField('TimeDimension_controlled',
        #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
@@ -387,18 +387,18 @@ def fields():
        #        Select(
        #        name = 'Time Dimension (controlled)',
        #        options = [
-       #            {'text': '', 'value': ''}, 
-       #            {'text': 'Longitudinal ', 'value': '1'}, 
-       #            {'text': 'Longitudinal.CohortEventBased ', 'value': '2'}, 
-       #            {'text': 'Longitudinal.TrendRepeatedCrossSection ', 'value': '3'}, 
-       #            {'text': 'Longitudinal.Panel ', 'value': '4'}, 
-       #            {'text': 'Longitudinal.Panel.Continuous', 'value': '5'}, 
-       #            {'text': 'Longitudinal: Panel: Interval', 'value': '6'}, 
-       #            {'text': 'Time Series', 'value': '7'}, 
-       #            {'text': 'TimeSeries: Continuous', 'value': '8'}, 
-       #            {'text': 'TimeSeries: Discrete', 'value': '9'}, 
-       #            {'text': 'Cross-section', 'value': '10'}, 
-       #            {'text': 'Cross-section ad-hoc follow-up', 'value': '11'}, 
+       #            {'text': '', 'value': ''},
+       #            {'text': 'Longitudinal ', 'value': '1'},
+       #            {'text': 'Longitudinal.CohortEventBased ', 'value': '2'},
+       #            {'text': 'Longitudinal.TrendRepeatedCrossSection ', 'value': '3'},
+       #            {'text': 'Longitudinal.Panel ', 'value': '4'},
+       #            {'text': 'Longitudinal.Panel.Continuous', 'value': '5'},
+       #            {'text': 'Longitudinal: Panel: Interval', 'value': '6'},
+       #            {'text': 'Time Series', 'value': '7'},
+       #            {'text': 'TimeSeries: Continuous', 'value': '8'},
+       #            {'text': 'TimeSeries: Discrete', 'value': '9'},
+       #            {'text': 'Cross-section', 'value': '10'},
+       #            {'text': 'Cross-section ad-hoc follow-up', 'value': '11'},
        #            {'text': 'Other', 'value': '12'}],
        #        )
        #),
@@ -434,9 +434,9 @@ def fields():
       #         )
       # ),
 
-        
 
-        
+
+
         DaraField('numberUnits',
            ('data',), ('ignore_missing',),
             Number(
@@ -479,7 +479,7 @@ def fields():
             )
         ),
 
-        
+
         DaraField('numberVariables',
             ('data',),  ('ignore_missing',),
 
@@ -505,9 +505,9 @@ def fields():
             something other.""",
             )
         ),
-        
+
         # technical file data; format is retrieved from CKAN
-        #TODO get automatically 
+        #TODO get automatically
        #DaraField('file_size',
        #    ('data', 'text', 'code'), ('ignore_missing',),
 
@@ -554,8 +554,8 @@ def fields():
 
 
 ###### publication fields start here, not separated anymore #############
-        
-        
+
+
       # DaraField('Publication_Author',
       #         ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
 
@@ -624,20 +624,20 @@ def fields():
                 role = 'slave',
                 name = 'Type of Identifier',
                 options = [
-                    {'text': '', 'value': ''}, 
-                    {'text': 'DOI', 'value': 'DOI'}, 
-                    {'text': 'ARK', 'value': 'ARK'}, 
-                    {'text': 'EAN13', 'value': 'EAN13'}, 
-                    {'text': 'EISSN', 'value': 'EISSN'}, 
-                    {'text': 'Handle', 'value': 'Handle'}, 
-                    {'text': 'ISBN', 'value': 'ISBN'}, 
-                    {'text': 'ISSN', 'value': 'ISSN'}, 
-                    {'text': 'ISTC', 'value': 'ISTC'}, 
-                    {'text': 'LISSN', 'value': 'LISSN'}, 
-                    {'text': 'LSID', 'value': 'LSID'}, 
-                    {'text': 'PURL', 'value': 'PURL'}, 
-                    {'text': 'UPC', 'value': 'UPC'}, 
-                    {'text': 'URL', 'value': 'URL'}, 
+                    {'text': '', 'value': ''},
+                    {'text': 'DOI', 'value': 'DOI'},
+                    {'text': 'ARK', 'value': 'ARK'},
+                    {'text': 'EAN13', 'value': 'EAN13'},
+                    {'text': 'EISSN', 'value': 'EISSN'},
+                    {'text': 'Handle', 'value': 'Handle'},
+                    {'text': 'ISBN', 'value': 'ISBN'},
+                    {'text': 'ISSN', 'value': 'ISSN'},
+                    {'text': 'ISTC', 'value': 'ISTC'},
+                    {'text': 'LISSN', 'value': 'LISSN'},
+                    {'text': 'LSID', 'value': 'LSID'},
+                    {'text': 'PURL', 'value': 'PURL'},
+                    {'text': 'UPC', 'value': 'UPC'},
+                    {'text': 'URL', 'value': 'URL'},
                     {'text': 'URN', 'value': 'URN'}],
                 classes = ['dara_required'],
                 info=u"""Select the type of the above given identifier. This is
@@ -735,7 +735,7 @@ def fields():
         ),
 
 
-        
+
 
       # DaraField('Publication_ISBN',
       #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
@@ -773,46 +773,46 @@ def fields():
       #         Select(
       #         name = 'Document Type',
       #         options = [
-      #             {'text': '', 'value': ''}, 
-      #             {'text': 'Working Paper', 'value': '1'}, 
-      #             {'text': 'Article', 'value': '2'}, 
-      #             {'text': 'Report', 'value': '3'}, 
-      #             {'text': 'Book/Monograph', 'value': '4'}, 
-      #             {'text': 'Manuscript', 'value': '5'}, 
-      #             {'text': 'Reference Book', 'value': '6'}, 
-      #             {'text': 'Review', 'value': '7'}, 
-      #             {'text': 'Series', 'value': '8'}, 
-      #             {'text': 'Journal', 'value': '9'}, 
+      #             {'text': '', 'value': ''},
+      #             {'text': 'Working Paper', 'value': '1'},
+      #             {'text': 'Article', 'value': '2'},
+      #             {'text': 'Report', 'value': '3'},
+      #             {'text': 'Book/Monograph', 'value': '4'},
+      #             {'text': 'Manuscript', 'value': '5'},
+      #             {'text': 'Reference Book', 'value': '6'},
+      #             {'text': 'Review', 'value': '7'},
+      #             {'text': 'Series', 'value': '8'},
+      #             {'text': 'Journal', 'value': '9'},
       #             {'text': 'Magazine', 'value': '10'}],
       #         )
       # ),
 
     )
-    
+
     return fields
 
 
 def author_fields():
-    
+
     AuthorField = namedtuple('AuthorField', 'id widget')
     fields = (
-        
-        
-        AuthorField('lastname', 
+
+
+        AuthorField('lastname',
             Input(
                 placeholder = '',
                 name = 'Last Name',
                 size = 'medium',
                 classes = ['econws', 'dara_required'],
-                info=u"""Please specify the last name of author. 
+                info=u"""Please specify the last name of author.
                 You will get autosuggests as soon you've typed the first
                 letters. In case of a
                 middle name, please add the middle name to the field 'first
                 name'. This is a mandatory field.""",
                 )
             ),
-        
-        
+
+
         AuthorField('firstname',
             Input(
                 placeholder = '',
@@ -820,11 +820,11 @@ def author_fields():
                 size = 'medium',
                 classes = [],
                 info=u"""Please specify the first name of author. In case of a
-                middle name, please also add it here. This is a mandatory field.""",
+                middle name, please also add it here.""",
                 ),
             ),
 
-        
+
         AuthorField('affil',
             Input(
                 placeholder = 'Your institution',
@@ -868,7 +868,7 @@ def author_fields():
                 name = 'Type',
                 options = [
                     {'text': '', 'value': ''},
-                    {'text': 'ORCID', 'value': 'ORCID'}, 
+                    {'text': 'ORCID', 'value': 'ORCID'},
                     {'text': 'GND', 'value': 'GND'},
                     {'text': 'Scopus', 'value': 'Scopus'},
                     {'text': 'RePEc', 'value': 'Repec'},
@@ -887,25 +887,25 @@ def author_fields():
                     classes = ['hidden_author_field'],
                     ),
         ),
-                
+
         )
 
     return fields
 
-        
+
 def hidden_fields():
     """
     hidden fields, not mutable by user
     """
     HiddenField = namedtuple('HiddenField', 'id validators')
     fields = (
-                HiddenField('DOI', ('ignore_missing',)), 
+                HiddenField('DOI', ('ignore_missing',)),
 #                HiddenField('DOI_Proposal', ('ignore_missing',)),
                 HiddenField('DOI_Test', ('ignore_missing',)),
-                HiddenField('created', ('ignore_missing',)), 
-                HiddenField('registered', ('ignore_missing',)), 
+                HiddenField('created', ('ignore_missing',)),
+                HiddenField('registered', ('ignore_missing',)),
                 HiddenField('updated', ('ignore_missing',)),
-                HiddenField('registered_test', ('ignore_missing',)), 
+                HiddenField('registered_test', ('ignore_missing',)),
                 HiddenField('updated_test', ('ignore_missing',)),
                 HiddenField('type', ('ignore_missing',)),
 
@@ -917,15 +917,10 @@ def hidden_fields():
 
 
 def single_fields():
-    
+
     SingleField = namedtuple('SingleField', 'id validators')
     fields = (
             SingleField('authors', ('ignore_missing', 'authors',)),
             )
-    
+
     return fields
-
-
-
-
-

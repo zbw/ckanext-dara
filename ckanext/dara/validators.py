@@ -28,8 +28,8 @@ def authors(key, data, errors, context):
         authors = deepcopy(authors_orig)
 
         def val(a):
-            if a['firstname'] == a['lastname'] == a['authorID'] == '':
-                msg = u'Authors must at least provide Firstname and Lastname OR Personal ID'
+            if a['lastname'] == a['authorID'] == '':
+                msg = u'Authors must at least provide Last Name OR Personal ID'
                 a.update({error_key: msg})
 
             if a['authorID'] and not a['authorID_Type']:

@@ -28,7 +28,7 @@ def dara_pkg():
     return pkg
 
 
-def dara_debug(res):
+def dara_debug(obj):
     pkg_dict = dara_pkg()
     import pdb; pdb.set_trace()
 
@@ -121,8 +121,3 @@ def resource_is_internal(res):
     url = res['url']
     site_url = config.get('ckan.site_url')
     return url.startswith(site_url)
-
-
-
-
-

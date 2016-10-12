@@ -30,7 +30,7 @@ def dara_pkg():
 
 def dara_debug(obj):
     pkg_dict = dara_pkg()
-    import pdb; pdb.set_trace()
+    import ipdb; ipdb.set_trace()
 
 
 def dara_auto_fields():

@@ -7,13 +7,18 @@ from copy import deepcopy
 # from ckan.plugins.toolkit import missing
 from ckanext.dara.schema import author_fields
 from ckanext.dara.ftools import list_dicter
-from datetime import datetime
-from ckan.plugins.toolkit import Invalid
-from ckan.lib.navl.dictization_functions import unflatten
-
-
+# from datetime import datetime
+# from ckan.plugins.toolkit import Invalid
+# from ckan.lib.navl.dictization_functions import unflatten
 
 error_key = '_error'
+
+
+def normalize_issue_string(value):
+    """ Issues are sometimes Double ('4+5'). Users tend to use different separators for
+    double numbers, which is a problem for journal listings. So here we replace common
+    separators with '/'."""
+    return value.replace('+', '/').replace('-', '/')
 
 
 def authors(key, data, errors, context):
@@ -123,26 +128,3 @@ def _orcid(author_orig):
     msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
     author[error_key] = msg
     return author
-
-
-# OBSOLETE; validated with HTML5 number field
-# def pubdate(value):
-#   """
-#   """
-#   msg = u'Not a valid publication year'
-#   this_year = datetime.now().year
-#   allo = xrange(0, this_year + 1)
-#   #import ipdb; ipdb.set_trace()
-#   try:
-#       val = int(value)
-#       if val not in allo:
-#           raise Invalid(msg)
-#   except:
-#       raise Invalid(msg)
-#   return value
-
-
-# def dara(key, data, errors, context):
-#    #import ipdb; ipdb.set_trace()
-#    #u_data = unflatten(data)
-#    pass

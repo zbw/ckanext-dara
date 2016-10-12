@@ -37,7 +37,7 @@ def schema_update(schema, action):
                 ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
     resource_schema_update(schema)
-    
+
     # XXX validating resource custom fields does not work in CKAN!?.
     # map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
     #    tk.get_validator(v), f.validators)}), dara_fields('resource'))
@@ -51,7 +51,7 @@ def resource_schema_update(schema):
                 dara_fields('other'),
                 ds.hidden_fields())
     map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
-    
+
 
 def dara_package_schema(schema):
     schema_update(schema, 'update')
@@ -72,16 +72,16 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IResourceController, inherit=True)
-    
-    
+
+
    #def before_create(self, context, resource):
-   #    
+   #
    #    def get_pkg():
    #        return tk.get_action('package_show')(context, {'id': context['package'].id})
    #    import ipdb; ipdb.set_trace()
 
-    
-    
+
+
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
         schema_update(schema, 'show')
@@ -105,11 +105,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def get_validators(self):
         return {'authors': validators.authors,
+                'normalize_issue_string': validators.normalize_issue_string,
                 # 'pubdate': validators.pubdate,
                 # 'dara': validators.dara,
                 }
 
-   
+
     def get_helpers(self):
         return {
                 'dara_md': helpers.dara_md,
@@ -139,13 +140,13 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         # registers itself as the default (above).
         return []
 
-    
+
     def before_map(self, map):
         """
         """
         # map.connect() accepts arbitrary **kw and *args. That's why
         # we can add the template for the calls of the controller here
-        
+
         map.connect('/dataset/{id}/dara_xml',
                 controller="ckanext.dara.controller:DaraController",
                 action='xml',
@@ -168,6 +169,3 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 ckan_icon="exchange")
 
         return map
-
-
-

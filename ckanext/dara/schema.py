@@ -667,8 +667,7 @@ def fields():
         DaraField('Publication_Volume',
             ('publication',), ('ignore_missing',),
 
-
-                Input(
+                Number(
                 name = 'Volume',
                 size = 'small',
                 classes = [],
@@ -678,7 +677,7 @@ def fields():
         ),
 
         DaraField('Publication_Issue',
-            ('publication',), ('ignore_missing',),
+            ('publication',), ('ignore_missing', 'normalize_issue_string'),
                 Input(
                 name = 'Issue',
                 size = 'small',

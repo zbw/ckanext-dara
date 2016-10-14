@@ -36,7 +36,7 @@ class DaraController(PackageController):
         return {'model': model, 'session': model.Session,
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
-    
+
     # TODO do this as decorator, as in edawax.controller
     def _check_access(self, id):
         context = self._context()
@@ -51,7 +51,7 @@ class DaraController(PackageController):
 
         self._check_access(id)
         context = self._context()
-        
+
         if params()['test'] or params()['test_register']:
             doi_key = 'dara_DOI_Test'
             a = {201: ('dara_registered_test', 'Dataset registered (Test)'),
@@ -68,7 +68,7 @@ class DaraController(PackageController):
             k = get_in([dara, 0], a)
             c.pkg_dict[k] = date
             tk.get_action('package_update')(context, c.pkg_dict)
-    
+
         def response():
             if dara in a.iterkeys():
                 store()
@@ -93,7 +93,7 @@ class DaraController(PackageController):
                     h.flash_error("ERROR! Resource {} could not be registered ({}).\
                             Dataset has not been registered".format(resource_id, dara))
                     tk.redirect_to('dara_doi', id=id)
-        
+
             c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
             resources = filter(lambda res: res['id'] in tk.request.params,
                     c.pkg_dict['resources'])
@@ -101,7 +101,7 @@ class DaraController(PackageController):
 
         # first register resources
         register_resources()
-                
+
         # register package. we must first get the pkg with the updated resources to
         # get their DOIs/URLs
         c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
@@ -121,7 +121,7 @@ class DaraController(PackageController):
         doc = etree.parse(StringIO(xml_string))
         xmlschema.assertValid(doc)
         return xml_string
-    
+
     def doi(self, id, template):
         """
         DOI manager page
@@ -141,15 +141,15 @@ def params():
     defaults: register at 'real' server and get a DOI
     """
     # TODO implement this more functional
-    
+
     ptest = lambda p: p in tk.request.params
     ctest = {'true': True, 'false': False}.get(config.get('ckanext.dara.use_testserver', 'false'))
-    
+
     # defaults
     test = False
     register = ptest('DOI')
     test_register = False
-    
+
     if ctest or ptest('testserver'):
         test = True
 
@@ -164,7 +164,7 @@ def params():
 def auth():
     def gc(kw):
         auths = map(lambda t: config.get(t, False), kw)
-        if False in auths:  # if False...? hm...
+        if not all(auths):
             raise DaraError("User and/or password ({}, {}) not \
                    set in CKAN config".format(kw[0], kw[1]))
         return tuple(auths)  # requests needs tuple
@@ -172,7 +172,7 @@ def auth():
     if params()['test']:
         return gc(['ckanext.dara.demo.user', 'ckanext.dara.demo.password'])
     return gc(['ckanext.dara.user', 'ckanext.dara.password'])
-    
+
 
 def darapi(auth, xml, test=False, register=False):
     """
@@ -201,7 +201,7 @@ def darapi(auth, xml, test=False, register=False):
     also returns a huge chunk of html output. However, it can be used for
     debugging.
     """
-    
+
     d = {False: 'http://www.da-ra.de/dara/study/importXML',
          True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
     url = d.get(test)
@@ -209,12 +209,10 @@ def darapi(auth, xml, test=False, register=False):
     # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets
     # XXX do we always get unicode object???
     xml_encoded = xml.encode('utf-8')
-    
+
     parameters = keyfilter(lambda x: register, {'registration': 'true'})
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)
-    
+
     return req.status_code
-
-

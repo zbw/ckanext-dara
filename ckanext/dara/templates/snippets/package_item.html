@@ -4,12 +4,20 @@
     {% set pkg_url = "http://dx.doi.org/" ~ DOI  %}
 {% endif %}
 {% set dara_authors = h.dara_authors('dataset', package) %}
+{% set submission_id = package['dara_jda_submission_id'] %}
+{% set is_admin = h.check_journal_role(package, 'admin') or h.check_access('sysadmin') %}
 {#
 {% set dara_debug = h.dara_debug(package) %}
 #}
 
     {% block heading %}
+    {% if submission_id and is_admin %}
+        <div style="float:right; color: grey; ">
+            {{ submission_id }}
+        </div>
+    {% endif %}
         {% snippet 'package/snippets/authors.html', dara_authors=dara_authors %}
+
     {{ super() }}
     {% endblock %}
 

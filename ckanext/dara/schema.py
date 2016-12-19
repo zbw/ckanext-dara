@@ -542,8 +542,6 @@ def fields():
 
         DaraField('note',
                 ('data', 'code'), ('ignore_missing',),
-
-
                 Text(
                 placeholder = 'any additional notes',
                 name = 'Additional Notes',
@@ -551,6 +549,16 @@ def fields():
                 (free text field).""",
                 )
         ),
+
+        DaraField('jda_submission_id',
+            ('dataset',), ('ignore_missing',),
+            Input(
+                placeholder="eg. 2016-12346",
+                name="Article Submission ID",
+                info=u"If you have been given a submission ID for your article add it here. This helps the publishing journal to connect the dataset with the article.",
+            ),
+        ),
+
 
 
 ###### publication fields start here, not separated anymore #############

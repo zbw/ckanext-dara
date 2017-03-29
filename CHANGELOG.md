@@ -3,6 +3,15 @@ Changelog
 
 started with v1.1.1
 
+v1.2.0
+------
+[date]
+
+-   confirmation dialogue before DOI registration
+
+-   show `DOI_Test` in package view
+
+
 
 v1.1.1 2017-01-18
 -----------------

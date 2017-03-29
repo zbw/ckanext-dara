@@ -34,10 +34,18 @@
     further resources below." %}
 {% endif %}
 
-
-
 {% block primary_content_inner %}
 {{ super() }}
+
+{% resource 'dara/doi-confirm.js' %}
+{% set confirm = h.dump_json({'content': '
+<p>This will register a DOI (Digital Object Identifier) for the dataset. A
+DOI is a persistent identifier that <em>must</em> link to a valid URI.
+Therefore, the dataset can neither be deleted, nor be retracted after registration.</p>
+<p>Are you you sure you want to register the dataset now?</p>',
+'confirm': 'OK',
+'heading': 'Please Confirm DOI Registration',
+}) %}
 
 
 {% if use_testserver %}
@@ -47,14 +55,13 @@
 {% endif %}
 
 <h1>DOI Registration</h1>
-    
-<form action="/dataset/{{pkg['id']}}/dara_register" method='post'>
+
+<form id="doiregform" action="/dataset/{{ pkg['id'] }}/dara_register" method='post'>
 
 <div id="register" 
     style="float:right; text-align:center; width:200px;
         margin:10px 0px 0px 10px; margin-top:-60px;">
 
-    
     <p style="background-color:{{ register_background }}; width:100%; font-size:125%;
     font-weight:normal; color:white; ">{{ register_title }}</p>
      
@@ -73,11 +80,17 @@
         {#{% endif %}#}
         
         <p style="margin-top:12px;">
-            <input class="btn btn-primary" type="submit"
-                value="{{ submit }}" />
+           {% if DOI %} 
+                <input class="btn btn-primary" type="submit"
+                    value="{{ submit }}" />
+            {% else %}
+                <input class="btn btn-primary" type="button"
+                    data-module="doi-confirm"
+                    data-module-i18n="{{ confirm }}"
+                    href="/dataset/{{ pkg['id'] }}/dara_register"
+                    value="{{ submit }}" />
+            {% endif %}
         </p>
-    
-
     </div>
 </div>
 

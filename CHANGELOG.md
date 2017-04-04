@@ -9,7 +9,7 @@ v1.2.0
 
 -   confirmation dialogue before DOI registration
 
--   show `DOI_Test` in package view
+-   show `DOI_Test` in package view and package_list
 
 
 

@@ -1,5 +1,6 @@
 {% ckan_extends %}
 {% set DOI = package['dara_DOI'] %}
+{% set DOI_Test = package['dara_DOI_Test'] %}
 {% if DOI %}
     {% set pkg_url = "http://dx.doi.org/" ~ DOI  %}
 {% endif %}
@@ -22,11 +23,13 @@
     {% endblock %}
 
       {% block resources_outer %}
-      {% if DOI %}
       <div style="margin-top:0.3em">
-         {% snippet 'package/snippets/doi.html', DOI=DOI %}
-     </div>
+      {% if DOI %}
+         {% snippet 'package/snippets/doi.html', DOI=DOI, test="false" %}
+      {% elif DOI_Test %}
+         {% snippet 'package/snippets/doi.html', DOI=DOI_Test, test="true" %}
       {% endif %}
+      </div>
 
       {{ super() }}
 

@@ -3,6 +3,28 @@
 {# macros for dara metadata XML templates. necessary since collections and
 resources have different variables #}
 
+{# XXX missing here:
+
+    [X]  temporalCoverageFree 
+    [X]  numberUnits
+    [X]  unitType XXX dito
+    [X]  numberVariables XXX dito
+    [X]  dataType XXX dito
+    [X]  note
+    
+    XXX we don't have enough data for strucured Publication data: doctype, authors, title are missing.
+    for now only using unstructuredPublication, without text. Only PID and PIDType needed
+    [X]   Publication_PID
+    [X]  Publication_PIDType
+    
+    -   (PublicationVolume)
+    -   (PublicationIssue)
+    -   (Publication_StartPage)
+    -   (Publication_EndPage)
+
+
+#}
+
 
 {% macro resourceIdentifier(id, currentVersion) -%}
 <resourceIdentifier>
@@ -176,6 +198,33 @@ TODO
 {% endif %}
 {% endmacro %}
 
+{# 21.2 temporal coverage free #}
+{% macro temporalCoverageFree(tc) %}
+{% if tc %}
+<temporalCoverages>
+    <temporalCoverage>
+        <language>en</language>
+        <temporalCoverageFree>{{ tc }}</temporalCoverageFree>
+    </temporalCoverage>
+</temporalCoverages>
+{% endif %}
+{% endmacro %}
+
+
+{# 27. notes #}
+{% macro note(note) %}
+{% if note %}
+<notes>
+    <note>
+        <language>en</language>
+        <text>{{ note }}</text>
+    </note>
+</notes>
+{% endif %}
+{% endmacro %}
+
+
+
 {# 31. relation #}
 {% macro relation(identifier_type, identifier, relation_type) %}
 <relation>
@@ -184,3 +233,5 @@ TODO
     <relationType>{{ relation_type }}</relationType>
 </relation>
 {% endmacro %}
+
+

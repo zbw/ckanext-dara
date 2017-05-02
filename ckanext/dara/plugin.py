@@ -125,6 +125,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_author_fields': helpers.dara_author_fields,
                 'check_journal_role': helpers.check_journal_role,
                 'resource_is_internal': helpers.resource_is_internal,
+                'fileinfo': helpers.fileinfo,
                 'res_doi': doi.res_doi,
                 'pkg_doi': doi.pkg_doi,
                 'dara_use_testserver': doi.use_testserver

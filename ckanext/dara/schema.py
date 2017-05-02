@@ -507,7 +507,7 @@ def fields():
         ),
 
         # technical file data; format is retrieved from CKAN
-        #TODO get automatically
+        # XXX done by h.fileinfo()
        #DaraField('file_size',
        #    ('data', 'text', 'code'), ('ignore_missing',),
 
@@ -629,25 +629,10 @@ def fields():
         DaraField('Publication_PIDType',
                 ('publication',), ('ignore_missing',),
                 Select(
-                role = 'slave',
-                name = 'Type of Identifier',
-                options = [
-                    {'text': '', 'value': ''},
-                    {'text': 'DOI', 'value': 'DOI'},
-                    {'text': 'ARK', 'value': 'ARK'},
-                    {'text': 'EAN13', 'value': 'EAN13'},
-                    {'text': 'EISSN', 'value': 'EISSN'},
-                    {'text': 'Handle', 'value': 'Handle'},
-                    {'text': 'ISBN', 'value': 'ISBN'},
-                    {'text': 'ISSN', 'value': 'ISSN'},
-                    {'text': 'ISTC', 'value': 'ISTC'},
-                    {'text': 'LISSN', 'value': 'LISSN'},
-                    {'text': 'LSID', 'value': 'LSID'},
-                    {'text': 'PURL', 'value': 'PURL'},
-                    {'text': 'UPC', 'value': 'UPC'},
-                    {'text': 'URL', 'value': 'URL'},
-                    {'text': 'URN', 'value': 'URN'}],
-                classes = ['dara_required'],
+                role='slave',
+                namedtuple='Type of Identifier',
+                options=pid_types(),
+                classes=['dara_required'],
                 info=u"""Select the type of the above given identifier. This is
                 mandatory."""
                 )
@@ -931,3 +916,10 @@ def single_fields():
             )
 
     return fields
+
+
+def pid_types():
+    """ return dictionary with key,values of PID types """
+    types = ['', 'DOI', 'ARK', 'EAN13', 'EISSN', 'Handle', 'ISBN', 'ISSN',
+            'ISTC', 'LISSN', 'LSID', 'PURL', 'UPC', 'URL', 'URN']
+    return map(lambda k: {'text': k, 'value': k}, types)

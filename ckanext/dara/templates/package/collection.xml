@@ -86,6 +86,26 @@ case) #}
 {% endif %}
 
 
-</resource>
+{# 32. Publications #}
+{# XXX we don't have enough data for structured publications: doctype, authors, title
+so we use unstructuredPublication. freetext can be empty, but must be present.
+Publications are not relevant for resources (yet!), so only here in collection
+#}
+{% if pkg.dara_Publication_PID %}
+<publications>
+    <publication>
+        <unstructuredPublication>
+            <freetext></freetext>
+            <PIDs>
+                <PID>
+                    <ID>{{ pkg.dara_Publication_PID }}</ID>
+                    <pidType>{{ pkg.dara_Publication_PIDType }}</pidType>
+                </PID>
+            </PIDs>
+        </unstructuredPublication>
+    </publication>
+</publications>
+{% endif %}
 
+</resource>
 

@@ -10,6 +10,10 @@ from pylons import config
 import json
 from ckan.new_authz import users_role_for_group_or_org
 from ckan import model
+import requests
+from hurry.filesize import size, si
+from toolz.itertoolz import last
+
 
 
 def dara_pkg():
@@ -121,3 +125,22 @@ def resource_is_internal(res):
     url = res['url']
     site_url = config.get('ckan.site_url')
     return url.startswith(site_url)
+
+
+def fileinfo(res):
+    """
+    return dictionary with filename and filesize of res
+    """
+    url = res['url']
+    req = requests.head(url, headers={'Accept-Encoding': 'identity'})
+    filename = last(filter(lambda i: i, url.split('/')))
+    cr = last(req.headers['content-range'].split('/'))
+    cl = req.headers.get('content-length', cr)
+    
+    # for now we just take the original content-length
+    # filesize = size(int(cl), system=si)
+    
+    return {'filesize': cl,
+            'filename': filename}
+
+

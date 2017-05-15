@@ -139,32 +139,38 @@
     %}
     #}
       {% set organizations_available = h.organizations_available('create_dataset') %}
-      {% if organizations_available %}
-        <div class="control-group">
-          <label for="field-organizations" class="control-label">{{ _('Journal') }}
-          </label>
-          <div class="controls">
-            <select id="field-organizations" name="owner_org"
-                data-module="autocomplete" 
-                data-infotext="Select the Journal. Usually there is only one
-                option."
-                >
-              <option value="" 
-                {% if not selected_org and data.id %}
-                    selected="selected" 
-                {% endif %}>{{ _('Select a journal...') }}</option>
-              {% for organization in organizations_available %}
-                {# get out first org from users list only if there is not an existing org #}
-                {% set selected_org = 
-                    (existing_org and existing_org == organization.id) 
-                    or (not existing_org and not data.id and organization.id == organizations_available[0].id)
-                %}
-                <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.title }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-      {% endif %}
+          {% if organizations_available %}
+            {# only show journal selection if author is member of more than
+                one journal #}  
+            {% if organizations_available|length > 1 %}
+            <div class="control-group">
+                <label for="field-organizations" class="control-label">{{ _('Journal') }}
+                </label>
+                <div class="controls">
+                    <select id="field-organizations" name="owner_org"
+                        data-module="autocomplete" 
+                        data-infotext="Select the Journal"
+                        >
+                    <option value="" 
+                        {% if not selected_org and data.id %}
+                            selected="selected" 
+                        {% endif %}>{{ _('Select a journal...') }}</option>
+                    {% for organization in organizations_available %}
+                        {# get out first org from users list only if there is not an existing org #}
+                        {% set selected_org = 
+                            (existing_org and existing_org == organization.id) 
+                            or (not existing_org and not data.id and organization.id == organizations_available[0].id)
+                        %}
+                        <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.title }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                </div>
+            {% else %}
+                <input type="hidden" name="owner_org"  
+                    value="{{ existing_org or organizations_available[0].id }}" />
+            {% endif %}
+        {% endif %}
         
 {% if is_admin %}
        {{ dara_form.md('publication', h, data, errors) }}

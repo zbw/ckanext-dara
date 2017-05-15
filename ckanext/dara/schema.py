@@ -630,7 +630,7 @@ def fields():
                 ('publication',), ('ignore_missing',),
                 Select(
                 role='slave',
-                namedtuple='Type of Identifier',
+                name='Type of Identifier',
                 options=pid_types(),
                 classes=['dara_required'],
                 info=u"""Select the type of the above given identifier. This is

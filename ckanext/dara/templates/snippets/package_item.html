@@ -7,6 +7,9 @@
 {% set dara_authors = h.dara_authors('dataset', package) %}
 {% set submission_id = package['dara_jda_submission_id'] %}
 {% set is_admin = h.check_journal_role(package, 'admin') or h.check_access('sysadmin') %}
+{% set use_testserver = h.dara_use_testserver() %}
+
+
 {#
 {% set dara_debug = h.dara_debug(package) %}
 #}
@@ -26,7 +29,7 @@
       <div style="margin-top:0.3em">
       {% if DOI %}
          {% snippet 'package/snippets/doi.html', DOI=DOI, test="false" %}
-      {% elif DOI_Test %}
+      {% elif DOI_Test and use_testserver %}
          {% snippet 'package/snippets/doi.html', DOI=DOI_Test, test="true" %}
       {% endif %}
       </div>

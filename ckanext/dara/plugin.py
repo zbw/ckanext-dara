@@ -15,6 +15,9 @@ from copy import deepcopy
 from pylons import config
 import doi
 import mimetypes
+import api
+
+
 
 PREFIX = 'dara_'
 
@@ -72,6 +75,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IResourceController, inherit=True)
+    plugins.implements(plugins.IActions)
+    
 
 
    #def before_create(self, context, resource):
@@ -110,6 +115,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 # 'dara': validators.dara,
                 }
 
+    def get_actions(self):
+        return {'get_by_doi': api.get_by_doi}
 
     def get_helpers(self):
         return {

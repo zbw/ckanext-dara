@@ -74,13 +74,14 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
         />Test
         {% endif %}
          
-        {#{% if not DOI and not (use_testserver and DOI_Test) %}#}
+        {# {% if not DOI and not (use_testserver and DOI_Test) %}#}
+        {% if not (use_testserver and DOI_Test) and not DOI  %}
         <input type="checkbox" name="DOI" value="true"
         style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
-        {#{% endif %}#}
+        {% endif %}
         
         <p style="margin-top:12px;">
-           {% if DOI %} 
+           {% if DOI  or (use_testserver and DOI_Test) %} 
                 <input class="btn btn-primary" type="submit"
                     value="{{ submit }}" />
             {% else %}

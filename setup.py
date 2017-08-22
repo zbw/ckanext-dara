@@ -24,6 +24,7 @@ setup(
             'lxml',
             'toolz',
             'untangle',
+            'hurry.filesize'
 	],
 	entry_points=\
 	"""

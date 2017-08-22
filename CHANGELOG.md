@@ -3,6 +3,18 @@ Changelog
 
 started with v1.1.1
 
+v1.3.0
+------
+[no date yet]
+
+-   New API request: get dataset by DOI
+
+-   No 'Get DOI' if DOI already registered
+
+-   add hurry.filesize as dependency
+
+-   add mimetype LOG
+
 v1.2.0
 ------
 [2017-06-14]

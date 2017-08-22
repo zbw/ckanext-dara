@@ -107,6 +107,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         mimetypes.add_type('STATA do', '.do')
         mimetypes.add_type('STATA data', '.dta')
         mimetypes.add_type('SRC', '.src')
+        mimetypes.add_type('LOG', '.log')
 
     def get_validators(self):
         return {'authors': validators.authors,

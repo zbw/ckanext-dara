@@ -822,6 +822,7 @@ def author_fields():
                 placeholder = 'Your institution',
                 name = 'Affiliation',
                 size = 'medium',
+                classes=['econws_affil'],
                 info=u"""Please state the affiliation you are working for
                 respectively the affiliation you already have mentioned in your
                 paper.""",

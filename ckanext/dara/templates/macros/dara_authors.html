@@ -4,20 +4,24 @@
 {% resource 'dara/underscore.js' %}
 {% resource 'dara/dara.js' %}
 {% resource 'dara/dara_authors.js' %}
+{% resource 'dara/dara_authors_affiliation.js' %}
 
 {% macro authors(dara_type, h, data, errors) -%}
 
 
     {% resource 'dara/underscore.js' %}
     {% resource 'dara/dara.js' %}
+
+
     {# {% set debug = h.dara_debug() %}#}
 
     {% set aut = h.dara_authors %}
     
     <div id="authors_wrapper">
 
-    {# preset the datalist for authorname autosuggestions #}
+    {# preset the datalist #}
     <datalist id="gnd_author_names"></datalist>
+    <datalist id="gnd_author_affiliations"></datalist>
 
 
     <fieldset id="authors">
@@ -89,11 +93,16 @@
         
             {% do attrs.update({'class': 'econws_input', 'autocomplete': 'off',
                             'list': 'gnd_author_names'}) %}
-        
-
         {% endif %}
         
         
+        {% if 'econws_affil' in widget.classes %}
+            {% do attrs.update({'class': 'econws_affil', 'autocomplete': 'off',
+            'list': 'gnd_author_affiliations'}) %}
+        {% endif %}
+
+
+
                 
         {% for c in additional_classes %}
            {% do classes.append(c) %}

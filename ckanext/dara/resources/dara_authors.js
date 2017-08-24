@@ -11,10 +11,6 @@
 //
 // -    rewrite inp.oninput as addEventLister function
 //
-// -    instead of clear_datalist() check for duplicates in datalist and only
-//      append (in ws_call()) when value is not already existent OR find some
-//      kind of unique() method for datalist
-//
 // -    check for purity
 //
 // -    better implement as ckan.module?
@@ -25,30 +21,98 @@
 (function () {
 // store/cache all results from econws
 var ws_objects = [];
-var datalist = document.getElementById('gnd_author_names');
-ws_init();
+var dl_names = document.getElementById('gnd_author_names');
+var dl_affil = document.getElementById('gnd_author_affiliations');
+ws_names_init();
+ws_affil_init();
 
-function ws_init () {
-    //clear_datalist();
+
+function ws_names_init () {
     var inputs = document.querySelectorAll( '.econws_input' );
     _.each(inputs, function (inp) {
         inp.oninput = function() {
-
             var val = inp.value;
+            if(_.isUndefined(val)) return;
             if(val.length < 2) return;
-            //var split_val = val.split(' [gnd:]');
-            //var sv = split_val[split_val.length-1];
-
             if(val.indexOf(' [gnd:]') != -1) {
                 var val_split = val.split(' [gnd:]');
                 var ws_id = val_split[val_split.length -1];
                 update_fields(inp, ws_id);
                 return
             }
-
-            wscall(val);
+            ws_names_call(val);
         }
     });
+}
+
+
+function ws_affil_init () {
+    var inputs = document.querySelectorAll( '.econws_affil' );
+    _.each(inputs, function (inp) {
+        inp.oninput = function() {
+            var val = inp.value;
+            if(_.isUndefined(val)) return;
+            if(val.length < 2) return;
+            ws_affil_call(val);
+        }
+    });
+}
+
+
+function ws_names_call(val) {
+    $.ajax({
+        url: "http://zbw.eu/beta/econ-ws/suggest2",
+        dataType: "json",
+        async: true,
+        data: {
+            query: val,
+            dataset: 'econ_pers',
+            limit: 15
+        },
+        success: function ( data ){
+            var current_objects = data.results.bindings;
+            _.each(current_objects, function(obj){
+                var option = document.createElement('option');
+                var text = obj.prefLabel.value;
+                option.text = text.substring(0,150);
+                option.value = text + ' [gnd:]' + obj.concept.value;
+                if(! is_in_datalist(dl_names, option.value)) {
+                    dl_names.appendChild(option);
+                };
+            });
+
+            ws_objects.push(current_objects);
+        },
+    });
+
+    return
+}
+
+
+function ws_affil_call(val) {
+    $.ajax({
+        url: "http://zbw.eu/beta/econ-ws/suggest2",
+        dataType: "json",
+        async: true,
+        data: {
+            query: val,
+            dataset: 'econ_corp',
+            limit: 15
+        },
+        success: function ( data ){
+            var current_objects = data.results.bindings;
+            _.each(current_objects, function(obj){
+                var option = document.createElement('option');
+                option.value = option.text = obj.prefLabel.value;
+                if(! is_in_datalist(dl_affil, option.value)) {
+                    dl_affil.appendChild(option);
+                };
+            });
+        },
+
+    });
+
+    return
 }
 
 
@@ -85,65 +149,8 @@ function update_fields (inp, val) {
 }
 
 
-function wscall(val) {
-    $.ajax({
-        url: "http://zbw.eu/beta/econ-ws/suggest2",
-        dataType: "json",
-        async: true,
-        data: {
-            query: val,
-            dataset: 'econ_pers',
-            limit: 15
-        },
-        success: function ( data ){
-            clear_datalist();
-            var current_objects = data.results.bindings;
-
-            _.each(current_objects, function(obj){
-                var option = document.createElement('option');
-               // option.value = obj.concept.value; // XXX remove
-               // option.text = obj.prefLabel.value; // XXX append obj.concept.value
-                var text = obj.prefLabel.value;
-                option.text = text.substring(0,150);
-                option.value = text + ' [gnd:]' + obj.concept.value;
-                datalist.appendChild(option);
-            });
-
-            /* this does not work, since datalist is no hmtl.collection anymore
-             * afterwards
-            XXX find a way to uniq datalist
-            datalist = _.unique(datalist.children, function(option) {
-                // use gnd id for comparison
-                var val_split = option.value.split(' [gnd:]');
-                var ws_id = val_split[val_split.length -1];
-                return ws_id;
-            });
-            */
-
-            ws_objects.push(current_objects);
-
-        },
-
-    });
-
-    return
-}
-
-
-// might be obsolete?
-function clear_datalist () {
-    var options = datalist.querySelectorAll('option');
-
-    _.each(options, function(option) {
-        datalist.removeChild(option);
-    });
-}
-
-
 $(function add_authors() {
-
     var authorContainer = $('#authors');
-
     $('#add_author').on('click', function() {
 
         $('.hidden_authorfield')
@@ -152,7 +159,8 @@ $(function add_authors() {
             .removeProp('disabled')
             .appendTo(authorContainer)
         $(master_slave_input());  // XXX bad!  dara.js
-        ws_init();  // TODO: add eventlistener with function
+        ws_names_init();  // TODO: add eventlistener with function
+        ws_affil_init();
         return false;
     });
 
@@ -164,6 +172,13 @@ $(function add_authors() {
 
 });
 
+
+function is_in_datalist(datalist, option_value) {
+    var datalist_options = datalist.querySelectorAll('option');
+    var v = _.any(datalist_options, function(dlopt){ 
+        return dlopt.value === option_value });
+    return v
+}
 
 
 

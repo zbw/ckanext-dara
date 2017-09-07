@@ -831,8 +831,8 @@ def author_fields():
 
         AuthorField('url',
             Input(
-                placeholder = 'Personal URL of Author',
-                name = 'URL',
+                placeholder = 'http://www...',
+                name = 'Professional URL',
                 classes = [],
                 info=u"""In this field, you can state your personal or
                 institutional website. Thereby, other users and visitors of
@@ -858,7 +858,7 @@ def author_fields():
 
         AuthorField('authorID_Type',
                 Select(
-                name = 'Type',
+                name = 'ID Type',
                 options = [
                     {'text': '', 'value': ''},
                     {'text': 'ORCID', 'value': 'ORCID'},

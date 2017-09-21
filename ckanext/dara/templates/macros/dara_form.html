@@ -9,6 +9,7 @@
 {# level is obsolete but there are still many callers that submit them; #}
 {% macro md(type, h, data, errors) -%}
 
+
 {% set fields = h.dara_fields(type) %}
     {% set dara = h.dara_pkg() %}
     
@@ -50,6 +51,16 @@
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
         {% endif %}
+
+        {% if 'select.jels' in additional_classes %}
+            {% do attrs.update({'class': 'select_jels', 'multiple': 'multiple',
+            'style': 'width: 62%'
+            }) %}
+        {% endif %}
+
+
+
+
 
         
         {% if widget.placeholder %}

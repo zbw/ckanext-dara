@@ -2,6 +2,8 @@ import json
 import requests
 from toolz.dicttoolz import get_in
 from toolz.functoolz import pipe
+from itertools import count
+
 # from toolz.itertoolz import first, partition
 from copy import deepcopy
 # from ckan.plugins.toolkit import missing
@@ -128,3 +130,38 @@ def _orcid(author_orig):
     msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
     author[error_key] = msg
     return author
+
+
+def jels_string_convert(key, data, errors, context):
+    '''Takes a list of jels that is a comma-separated string (in data[key])
+    and parses tag names. These are added to the data dict, enumerated. 
+    (borrowed from ckan/logic, we don't need further validation)'''
+    
+    if isinstance(data[key], basestring):
+        tags = [tag.strip() \
+                for tag in data[key].split(',') \
+                if tag.strip()]
+    else:
+        tags = data[key]
+
+    current_index = max( [int(k[1]) for k in data.keys() if len(k) == 3 and
+        k[0] == 'dara_jels'] + [-1] )
+    
+    nt = zip(count(current_index+1), tags)
+    import ipdb; ipdb.set_trace()
+    #for num, tag in zip(count(current_index+1), tags):
+    for num, tag in nt:
+        data[('dara_jels', num, 'name')] = tag
+
+    # for tag in tags:
+        # tag_length_validator(tag, context)
+        # tag_name_validator(tag, context)
+
+
+def list_to_string(value, context):
+    
+    import ipdb; ipdb.set_trace()
+    if isinstance(value, list):
+        return ','.join(value)
+    return value
+

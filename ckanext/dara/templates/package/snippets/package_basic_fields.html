@@ -64,8 +64,17 @@ that we should integrate somehow here #}
        name="dara_edawax_review" />
 <input type="hidden" name="private" value="{{ h.is_private(pkg) }}" />
 
+
+{# XXX TEST 
+<p>JELs: {{ data.dara_jels }}</p>
+#}
+
+
 {% snippet "package/snippets/dara_level1.html", form=form,
     dara_type='dataset', errors=errors, data=data %}
+
+
+
 
 {% endblock %}
 

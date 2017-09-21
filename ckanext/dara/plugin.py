@@ -10,7 +10,7 @@ import ckan.plugins.toolkit as tk
 from ckanext.dara import schema as ds
 from itertools import chain
 from ckanext.dara import helpers
-from ckanext.dara import validators
+from ckanext.dara import validators, converters
 from copy import deepcopy
 from pylons import config
 import doi
@@ -26,19 +26,25 @@ def dara_fields(dara_type):
     return filter(lambda field: dara_type in field.adapt, ds.fields())
 
 
-def vc(action, f_validators):
-    vals = map(lambda v: tk.get_validator(v), f_validators)
+def vc(action, field):
+    # vals = map(lambda v: tk.get_validator(v), field.validators)
+    # c_show = map(lambda c: tk.get_converter(c), field.converters_show)
+    # c_update = map(lambda c: tk.get_converter(c), field.converters_update)
+    # m = {'show': c_show + vals,
+         # 'update': vals + c_update}
+
+    vals = map(lambda v: tk.get_validator(v), field.validators)
     m = {'show': [tk.get_converter('convert_from_extras')] + vals,
          'update': vals + [tk.get_converter('convert_to_extras')]}
     return m[action]
-
 
 def schema_update(schema, action):
     fields = chain(dara_fields('dataset'),
                 dara_fields('publication'),
                 ds.hidden_fields(),
                 ds.single_fields())
-    map(lambda f: schema.update({PREFIX + f.id: vc(action, f.validators)}), fields)
+    map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
+    
     resource_schema_update(schema)
 
     # XXX validating resource custom fields does not work in CKAN!?.
@@ -85,11 +91,19 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
    #        return tk.get_action('package_show')(context, {'id': context['package'].id})
    #    import ipdb; ipdb.set_trace()
 
+    # def after_update(self, context, pkg_dict):
+        # import ipdb; ipdb.set_trace()
+
+    # def before_view(self, pkg_dict):
+        # import ipdb; ipdb.set_trace()
 
 
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
         schema_update(schema, 'show')
+        schema.update({
+            'dara_jels': [tk.get_converter('string_to_list')]
+                })
         return schema
 
     def create_package_schema(self):
@@ -112,8 +126,17 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_validators(self):
         return {'authors': validators.authors,
                 'normalize_issue_string': validators.normalize_issue_string,
+                #'jels': validators.list_to_string,
+                'string_to_list': converters.string_to_list,
+                'list_to_string': validators.list_to_string,
+                'jels_to_string': validators.jels_string_convert,
                 # 'pubdate': validators.pubdate,
                 # 'dara': validators.dara,
+                }
+
+    def get_converters(self):
+        return {'list_to_string': converters.list_to_string,
+                'string_to_list': converters.string_to_list,
                 }
 
     def get_actions(self):

@@ -560,7 +560,7 @@ def fields():
         ),
 
         DaraField('jels',
-                ('dataset',), ('ignore_missing', 'list_to_string',),
+                ('dataset',), ('ignore_missing', 'jel_convert',),
                 Select(
                     name="JELs",
                     info="Bla Bla",

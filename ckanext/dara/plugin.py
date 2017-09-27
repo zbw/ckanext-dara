@@ -101,9 +101,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
         schema_update(schema, 'show')
-        schema.update({
-            'dara_jels': [tk.get_converter('string_to_list')]
-                })
         return schema
 
     def create_package_schema(self):
@@ -126,17 +123,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_validators(self):
         return {'authors': validators.authors,
                 'normalize_issue_string': validators.normalize_issue_string,
-                #'jels': validators.list_to_string,
-                'string_to_list': converters.string_to_list,
-                'list_to_string': validators.list_to_string,
-                'jels_to_string': validators.jels_string_convert,
-                # 'pubdate': validators.pubdate,
-                # 'dara': validators.dara,
-                }
-
-    def get_converters(self):
-        return {'list_to_string': converters.list_to_string,
-                'string_to_list': converters.string_to_list,
+                'jel_convert': validators.jel_convert,
                 }
 
     def get_actions(self):

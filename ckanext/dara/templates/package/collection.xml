@@ -57,6 +57,9 @@ default is '1' (Download)
 {# 11. resource language #}
 {{ macros.resourceLanguage(pkg.dara_language or 'eng') }}
 
+{# 11. JEL classification #}
+{{ macros.classification(pkg.dara_jels or None) }}
+
 
 {# 17. description #}
 {{ macros.description(pkg.notes) }}

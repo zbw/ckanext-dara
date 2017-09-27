@@ -134,7 +134,23 @@ TODO
 {%- endmacro %}
 #}
 
-
+{# 14. JEL classification #}
+{% macro classification(jels) -%}
+{% if jels %}
+<classifications>
+    <classification>
+        <classificationInternal>
+            <schema>JEL</schema>
+            <identifiers>
+                {% for jel in jels %}
+                <identifier>{{ jel }}</identifier>
+                {% endfor %}
+            </identifiers>
+        </classificationInternal>
+    </classification>
+</classifications>
+{% endif %}
+{%- endmacro %}
 
 
 {# 17. description #}

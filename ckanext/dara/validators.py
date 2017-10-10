@@ -133,11 +133,21 @@ def _orcid(author_orig):
 
 
 def jel_convert(value, context):
-    
+    """This is rather hacky and might seem to be
+    illogical. In case of more than on JEL field entry a list is returned that must
+    be transformed to a string. CKAN than does some other operations (flattened
+    dict) and calls this function a second time, only that this time a list is
+    expected as return value. The second condition deals with that as well as with
+    the case that only one field value is returned, which is a simple unicode
+    string.  CKAN then later adds curly brackets (e.g. u"{A12}") and calls this
+    function a second time. I couldnt find out where (and why) CKAN adds the
+    brackets, so here we remove them and then return a list with one string."""
+        
     if isinstance(value, list):
         return ','.join(value)
+    
     if isinstance(value, basestring):
-        return value.split(',')
+        return value.replace('{', '').replace('}', '').split(',')
 
     return value
 

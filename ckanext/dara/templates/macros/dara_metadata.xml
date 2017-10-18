@@ -242,6 +242,15 @@ TODO
 {% endmacro %}
 
 
+{# 30. rights #}
+{% macro rights() %}
+<rights>
+    <right>
+      <language>en</language>
+      <rightsText>Creative Commons Attribution 4.0 (CC-BY)</rightsText>
+    </right>
+</rights>
+{% endmacro %}
 
 {# 31. relation #}
 {% macro relation(identifier_type, identifier, relation_type) %}

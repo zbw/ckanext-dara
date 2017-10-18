@@ -57,6 +57,11 @@ default is '1' (Download)
 #}
 {{ macros.availability(res.dara_Availabilitycontrolled or '1') }}
 
+{# 30. rights #}
+{{ macros.rights() }}
+
+
+
 {# 11. resource language #}
 {#XXX not implemented for resources #}
 {{ macros.resourceLanguage(res.dara_language or None) }}

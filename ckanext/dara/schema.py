@@ -103,11 +103,11 @@ def fields():
             ('data'), ('ignore_missing',), # no not_empty here since we have 1 as default in dara xml anyways
             Select(
                 options=[
-                    {'value': '1', 'text': 'Free Download'},
-                    {'value': '2', 'text': 'Delivery on demand'},
-                    {'value': '3', 'text': 'Onsite only'},
-                    {'value': '4', 'text': 'Not available'},
-                    {'value': '5', 'text': 'Unknown'},
+                    {'value': 'Download', 'text': 'Free Download'},
+                    {'value': 'Delivery', 'text': 'Delivery on demand'},
+                    {'value': 'OnSite', 'text': 'Onsite only'},
+                    {'value': 'NotAvailable', 'text': 'Not available'},
+                    {'value': 'Unknown', 'text': 'Unknown'},
                 ],
                 name='Availability',
                 classes=['dara_required'],
@@ -458,19 +458,20 @@ def fields():
             role = 'slave',
             options = [
                 {'text': '', 'value': ''},
-                {'text': 'Individual', 'value': '1'},
-                {'text': 'Organization', 'value' : '2'},
-                {'text': 'Family', 'value': '3'},
-                {'text': 'Family: Household family', 'value': '4'},
-                {'text': 'Household', 'value': '5'},
-                {'text': 'Housing Unit', 'value': '6'},
-                {'text': 'Event/Process', 'value': '7'},
-                {'text': 'Geographic Unit', 'value': '8'},
-                {'text': 'Time Unit', 'value': '9'},
-                {'text': 'Text Unit', 'value': '10'},
-                {'text': 'Group', 'value': '11'},
-                {'text': 'Object', 'value': '12'},
-                {'text': 'Other', 'value': '13'}
+                {'text': 'Individual', 'value': 'Individual'},
+                {'text': 'Organization', 'value': 'Organization'},
+                {'text': 'Family', 'value': 'Family'},
+                {'text': 'Family: Household family', 'value':
+                    'Family.HouseholdFamily'},
+                {'text': 'Household', 'value': 'Household'},
+                {'text': 'Housing Unit', 'value': 'HousingUnit'},
+                {'text': 'Event/Process', 'value': 'EventOrProcess'},
+                {'text': 'Geographic Unit', 'value': 'GeographicUnit'},
+                {'text': 'Time Unit', 'value': 'TimeUnit'},
+                {'text': 'Text Unit', 'value': 'TextUnit'},
+                {'text': 'Group', 'value': 'Group'},
+                {'text': 'Object', 'value': 'Object'},
+                {'text': 'Other', 'value': 'Other'}
                 ],
             classes = ['dara_required'],
             info=u"""You can choose the appropriate type of unit from a
@@ -563,7 +564,7 @@ def fields():
                 ('dataset',), ('ignore_missing', 'jel_convert',),
                 Select(
                     name="JELs",
-                    info="Bla Bla",
+                    info="Put as many JELs as you like here",
                     classes=["select.jels"],
                     options=jels_to_options(),
                    # size="medium",

@@ -9,7 +9,7 @@ import ckan.lib.helpers as h
 from StringIO import StringIO
 from lxml import etree
 from datetime import datetime
-from ckanext.dara.dara_schema.v3_1 import schema
+from ckanext.dara.dara_schema.v4_0 import schema
 from pylons import config
 from ckanext.dara.ftools import memoize
 import requests

@@ -147,7 +147,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'fileinfo': helpers.fileinfo,
                 'res_doi': doi.res_doi,
                 'pkg_doi': doi.pkg_doi,
-                'dara_use_testserver': doi.use_testserver
+                'dara_use_testserver': doi.use_testserver,
+                'av_transform': helpers.av_transform,
+                'unit_type_transform': helpers.unit_type_transform,
                 }
 
     def is_fallback(self):

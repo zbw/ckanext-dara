@@ -1,6 +1,8 @@
 <!-- <?xml version="1.0" encoding="UTF-8"?>-->
 
 {# dara XML for Datasets (Collections) #}
+{# dara schema v4_0 #}
+
 
 {% import 'macros/dara_metadata.xml' as macros %}
 
@@ -17,11 +19,11 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 #}
 
 
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:noNamespaceSchemaLocation="doi:10.4232/10.mdsxsd.3.1">
+<resource xmlns="http://da-ra.de/schema/kernel-4" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://da-ra.de/schema/kernel-4 http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/dara.xsd">
 
-<!-- this is a Collection -->
-<resourceType>1</resourceType> 
+<resourceType>Collection</resourceType> 
 {{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion)}} 
 
 {# 1. title #}
@@ -52,7 +54,7 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# *28/29 availability controlled/free 
 default is '1' (Download)
 #}
-{{ macros.availability(pkg.dara_Availabilitycontrolled or '1') }}
+{{ macros.availability('Download') }} {# Download is fix for collections #}
 
 {# 30. rights #}
 {{ macros.rights() }}
@@ -90,8 +92,7 @@ case) #}
     {% endif %}
     {% set identifier = res.dara_DOI or h.dara_resource_url(res.url) %}
 
-    {# '10' indicates 'HasPart' #}
-    {{ macros.relation(identifier_type, identifier, 10) }}
+    {{ macros.relation(identifier_type, identifier, 'HasPart') }}
 {% endfor %}
 </relations>
 {% endif %}

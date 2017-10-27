@@ -5,7 +5,7 @@ import ckan.plugins.toolkit as tk
 from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields
-from ckanext.dara.ftools import list_dicter
+from ckanext.dara.ftools import list_dicter, dicter
 from pylons import config
 import json
 from ckan.new_authz import users_role_for_group_or_org
@@ -13,6 +13,7 @@ from ckan import model
 import requests
 from hurry.filesize import size, si
 from toolz.itertoolz import last
+
 
 
 
@@ -134,7 +135,7 @@ def fileinfo(res):
     url = res['url']
     req = requests.head(url, headers={'Accept-Encoding': 'identity'})
     filename = last(filter(lambda i: i, url.split('/')))
-    cr = last(req.headers['content-range'].split('/'))
+    cr = last(req.headers.get('content-range', '0').split('/'))
     cl = req.headers.get('content-length', cr)
     
     # for now we just take the original content-length
@@ -142,5 +143,22 @@ def fileinfo(res):
     
     return {'filesize': cl,
             'filename': filename}
+
+
+
+def av_transform(num):
+    """ necessary for backward compatibilty in v4_0 """
+    options = {'1': 'Download', '2': 'Delivery', '3': 'OnSite', '4':
+            'NotAvailable', '5': 'Unknown'}
+    return options.get(num, 'Unknown')
+
+
+def unit_type_transform(num):
+    numstrings = map(str, range(1, 14))
+    values = ['Individual', 'Organization', 'Family', 'Family.HouseholdFamily',
+            'Household', 'HousingUnit', 'EventOrProcess', 'GeographicUnit', 'TimeUnit',
+            'TextUnit', 'Group', 'Object', 'Other']
+    d = dict(zip(numstrings, values))
+    return d.get(num)
 
 

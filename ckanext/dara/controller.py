@@ -203,7 +203,8 @@ def darapi(auth, xml, test=False, register=False):
     """
 
     d = {False: 'http://www.da-ra.de/dara/study/importXML',
-         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
+#         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
+          True: 'http://labs.da-ra.de/dara/study/importXML'}  
     url = d.get(test)
     # socket does not take unicode, so we need to encode our unicode object
     # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets

@@ -73,7 +73,7 @@ TODO
         {% if author['authorID'] %}
             <personIDs>
                 <personID>
-                    <identifierURI>{{ author['authorID'] }}</identifierURI>
+                    <identifierURI>{{ author['authorID_URI'] }}</identifierURI>
                     <identifierSchema>{{ author['authorID_Type'] }}</identifierSchema>
                     {# <schemaURI>{{ author['authorID_URI'] }}</schemaURI> #} {# not in 4.0 #}
                 </personID>

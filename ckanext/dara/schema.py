@@ -874,8 +874,8 @@ def author_fields():
                 name = 'ID Type',
                 options = [
                     {'text': '', 'value': ''},
-                    {'text': 'ORCID', 'value': 'ORCID'},
                     {'text': 'GND', 'value': 'GND'},
+                    {'text': 'ORCID', 'value': 'ORCID'},
                     {'text': 'Scopus', 'value': 'Scopus'},
                     {'text': 'RePEc', 'value': 'Repec'},
                     {'text': 'Web of Science', 'value': 'WoS'}

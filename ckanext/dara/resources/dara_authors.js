@@ -128,7 +128,6 @@ function update_fields (inp, val) {
     var author = _.find(_.flatten(ws_objects, true), function (ob) {
         return ob.concept.value === val;
     });
-    var url = $(authorfields).find('[data-author="url"]');
     var authorname = author.prefName.value.split(", ");
 
     inp.value=authorname[0];
@@ -141,12 +140,15 @@ function update_fields (inp, val) {
 
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
-    $(url).val(author.concept.value, '');
     //$(aid_type_uri).val(author.concept.value);
     $(aid_type_uri).val('http://d-nb.info/gnd');
 
     return
 }
+
+
+// 124825109 snower
+// 129798215 wagner
 
 
 $(function add_authors() {

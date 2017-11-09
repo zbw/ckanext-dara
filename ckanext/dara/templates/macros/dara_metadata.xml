@@ -71,11 +71,15 @@ TODO
         <firstName>{{ author['firstname'] or None }}</firstName>
         <lastName>{{ author['lastname'] or None }}</lastName>
         {% if author['authorID'] %}
+            {% if author['authorID_Type'] == 'GND' %}
+                {% set uri = "http://d-nb.info/gnd/" ~ author['authorID'] %}
+            {% elif author['authorID_Type'] == 'ORCID' %}
+                {% set uri = "http://orcid.org/" ~ author['authorID'] %}
+            {% endif %}
             <personIDs>
                 <personID>
-                    <identifierURI>{{ author['authorID_URI'] }}</identifierURI>
+                    <identifierURI>{{ uri }}</identifierURI>
                     <identifierSchema>{{ author['authorID_Type'] }}</identifierSchema>
-                    {# <schemaURI>{{ author['authorID_URI'] }}</schemaURI> #} {# not in 4.0 #}
                 </personID>
             </personIDs>
         {% endif %}

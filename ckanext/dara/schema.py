@@ -887,13 +887,7 @@ def author_fields():
                 ),
         ),
 
-        AuthorField('authorID_URI',
-                Input(
-                    name='Personal ID URI',
-                    classes = ['hidden_author_field'],
-                    ),
-        ),
-
+        
         )
 
     return fields

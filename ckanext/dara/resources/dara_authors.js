@@ -29,6 +29,7 @@ ws_affil_init();
 
 function ws_names_init () {
     var inputs = document.querySelectorAll( '.econws_input' );
+
     _.each(inputs, function (inp) {
         inp.oninput = function() {
             var val = inp.value;
@@ -124,7 +125,6 @@ function update_fields (inp, val) {
     var firstname = $(authorfields).find('[data-author="firstname"]');
     var aid = $(authorfields).find('[data-author="authorID"]');
     var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
-    var aid_type_uri = $(authorfields).find('[data-author="authorID_URI"]');
     var author = _.find(_.flatten(ws_objects, true), function (ob) {
         return ob.concept.value === val;
     });
@@ -140,15 +140,9 @@ function update_fields (inp, val) {
 
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
-    //$(aid_type_uri).val(author.concept.value);
-    $(aid_type_uri).val('http://d-nb.info/gnd');
 
     return
 }
-
-
-// 124825109 snower
-// 129798215 wagner
 
 
 $(function add_authors() {

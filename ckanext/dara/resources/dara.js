@@ -9,6 +9,13 @@
 $(master_slave_input()); // XXX refactor!
 
 
+$(".select_jels").select2({
+// TODO: get JELs with request to econ_ws
+// https://select2.org/data-sources/ajax
+    placeholder: "Start typing and select JELs",
+    allowClear: true,
+});
+
 
 function master_slave_input() {
 

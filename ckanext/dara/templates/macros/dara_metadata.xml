@@ -1,5 +1,7 @@
 <!-- <?xml version="1.0" encoding="UTF-8"?>-->
 
+{# for dara schema v4_0 #}
+
 {# macros for dara metadata XML templates. necessary since collections and
 resources have different variables #}
 
@@ -71,17 +73,16 @@ TODO
         {% if author['authorID'] %}
             <personIDs>
                 <personID>
-                    <identifier>{{ author['authorID'] }}</identifier>
+                    <identifierURI>{{ author['authorID_URI'] }}</identifierURI>
                     <identifierSchema>{{ author['authorID_Type'] }}</identifierSchema>
-                    <schemaURI>{{ author['authorID_URI'] }}</schemaURI>
+                    {# <schemaURI>{{ author['authorID_URI'] }}</schemaURI> #} {# not in 4.0 #}
                 </personID>
             </personIDs>
         {% endif %}
         {#TODO condition einbauen, statt None #}
         <affiliation>
             <affiliationName>
-                <language>en</language>
-                <name>{{ author['affil'] or None }}</name>
+                {{ author['affil'] or None }}
             </affiliationName>
         </affiliation>
     </person>
@@ -107,9 +108,9 @@ TODO
 
 
 {# *28/29 availability controlled/free #}
-{% macro availability(controlled) -%}
+{% macro availability(type) -%}
 <availability>
-    <availabilityControlled>{{ controlled }}</availabilityControlled>
+    <availabilityType>{{ type }}</availabilityType> {# only Download here #}
 </availability>
 {%- endmacro %}
 
@@ -134,6 +135,24 @@ TODO
 {%- endmacro %}
 #}
 
+{# 14. JEL classification #}
+{% macro classification(jels) -%}
+{% if jels %}
+<classifications>
+    <classification>
+        <classificationInternal>
+            <classificationSchemaType>JEL</classificationSchemaType>
+            <identifiers>
+                {% for jel in jels %}
+                <identifier>{{ jel }}</identifier>
+                {% endfor %}
+            </identifiers>
+        </classificationInternal>
+    </classification>
+</classifications>
+{% endif %}
+{%- endmacro %}
+
 
 {# 17. description #}
 {% macro description(text) -%}
@@ -142,7 +161,7 @@ TODO
     <description>
         <language>en</language> {# TODO: offer choices? #}
         <freetext>{{ text }}</freetext>
-        <type>1</type> {# 1 = 'Abstract'. for now we assume type is always Abstract
+        <descriptionType>Abstract</descriptionType> {# for now we assume type is always Abstract
                         TODO: offer choice #}
     </description>
 </descriptions>
@@ -156,12 +175,17 @@ TODO
 {% if geocoverage or geocoverage_free %}
 <geographicCoverages>
     <geographicCoverage>
-        <language>{{ language }}</language> {#XXX language not implemented yet #}
-      {% if geocoverage %}
+        {#  <language>{{ language }}</language>#}
+        {% if geocoverage %}
         <geographicCoverageControlled>{{ geocoverage }}</geographicCoverageControlled>
       {% endif %}
       {% if geocoverage_free %}
-        <freetext>{{ geocoverage_free }}</freetext>
+      <geographicCoveragesFree>
+          <geographicCoverageFree>
+              <language>{{ language }}</language>
+              <freetext>    {{ geocoverage_free }}</freetext>
+          </geographicCoverageFree>
+      </geographicCoveragesFree>
       {% endif %}
       {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
       {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
@@ -203,8 +227,12 @@ TODO
 {% if tc %}
 <temporalCoverages>
     <temporalCoverage>
-        <language>en</language>
-        <temporalCoverageFree>{{ tc }}</temporalCoverageFree>
+        <temporalCoveragesFree>
+            <temporalCoverageFree>
+                <language>en</language>
+                <freetext>{{ tc }}</freetext>
+            </temporalCoverageFree>
+        </temporalCoveragesFree>
     </temporalCoverage>
 </temporalCoverages>
 {% endif %}
@@ -224,6 +252,15 @@ TODO
 {% endmacro %}
 
 
+{# 30. rights #}
+{% macro rights() %}
+<rights>
+    <right>
+      <language>en</language>
+      <freetext>Creative Commons Attribution 4.0 (CC-BY)</freetext>
+    </right>
+</rights>
+{% endmacro %}
 
 {# 31. relation #}
 {% macro relation(identifier_type, identifier, relation_type) %}

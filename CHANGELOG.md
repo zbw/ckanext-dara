@@ -5,7 +5,7 @@ started with v1.1.1
 
 v1.3.1
 ------
-[no date yet]
+[2017-10-16]
 
 -   New API request: get dataset by DOI
 
@@ -14,6 +14,11 @@ v1.3.1
 -   add hurry.filesize as dependency
 
 -   add mimetype LOG
+
+-   author affiliations via autosuggest and GND data
+
+-   JELs field and validator
+
 
 v1.2.0
 ------

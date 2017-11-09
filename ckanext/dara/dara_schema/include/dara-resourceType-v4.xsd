@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Version 1.0 - 2011
+    Version 3.1 - 2014-11
+    Version 4.0 - 2017-09
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://da-ra.de/schema/kernel-4" targetNamespace="http://da-ra.de/schema/kernel-4" elementFormDefault="qualified">
+  <xs:simpleType name="resourceType" id="resourceType">
+    <xs:annotation>
+      <xs:documentation>The general type of a resource.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Collection"/>
+      <xs:enumeration value="Dataset"/>
+      <xs:enumeration value="Text"/>
+      <xs:enumeration value="Software"/>
+      <xs:enumeration value="Image"/>
+      <xs:enumeration value="Audiovisual"/>
+      <xs:enumeration value="InteractiveResource"/>
+      <xs:enumeration value="Event"/>
+      <xs:enumeration value="Model"/>
+      <xs:enumeration value="PhysicalObject"/>
+      <xs:enumeration value="Service"/>
+      <xs:enumeration value="Sound"/>
+      <xs:enumeration value="Workflow"/>
+      <xs:enumeration value="Other"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

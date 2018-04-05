@@ -101,26 +101,24 @@ def _orcid(author_orig):
     # 0000-0002-1516-2382 # Hendrik Bunke, public
 
     mapping = dict(
-        firstname=['orcid-bio', 'personal-details', 'given-names', 'value'],
-        lastname=['orcid-bio', 'personal-details', 'family-name', 'value'],
-        url=['orcid-bio', 'researcher-urls', 'researcher-url', 0, 'url', 'value'],
+        firstname=['name', 'given-names', 'value'],
+        lastname=['name', 'family-name', 'value'],
+        url=['other-names', 'other-name', 0, 'source', 'source-orcid', 'uri']
         )
 
     def orcid_call(author_id):
-        # sandbox only for development
-        # orcid_base = 'http://pub.sandbox.orcid.org/v1.2'
-        orcid_base = 'http://pub.orcid.org'
+        orcid_base = "https://pub.orcid.org/v2.1"
         headers = {'Accept': 'application/orcid+json'}
-        url = '{}/{}/orcid-profile'.format(orcid_base, author_id)
+        url = '{}/{}/personal-details'.format(orcid_base, author_id)
         return requests.get(url, headers=headers)
 
     def orcid_map(k):
-        return (k, get_in(mapping[k], profile, default=author_orig[k]))
+        return (k, get_in(mapping[k], profile))
 
     author = deepcopy(author_orig)
     req = orcid_call(author['authorID'])
     if req.status_code == 200:
-        profile = req.json()['orcid-profile']
+        profile = req.json()
         author.update(map(orcid_map, mapping.iterkeys()))
         return author
 

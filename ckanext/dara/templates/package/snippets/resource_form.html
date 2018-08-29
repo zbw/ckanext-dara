@@ -19,13 +19,13 @@
     {'text': 'Other', 'value': 'other'}
     ]
     %}
-    
+
     <div id="pres" data-infotext="Select a category for the resource you'd like to add.
         This will influence the number of metadata fields. In general, 'Data' has
         more fields than 'Code' or 'Text'.">
-        
+
     {% set selected = res['dara_res_preselection'] or 'data' %}
-    {{ form.select('dara_res_preselection', 
+    {{ form.select('dara_res_preselection',
                     id = 'dara_res_preselection',
                     label = "This Resource is",
                     options = options,
@@ -36,9 +36,9 @@
     }}
 
     </div>
-
     {% block basic_fields_url %}
-        {% set is_upload = (data.url_type == 'upload') %}
+        {#% set is_upload = (data.url_type == 'upload') %#}
+        {% set is_upload = True %}
         {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
             is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
             upload_label=_('File'), url_label=_('URL')) }}
@@ -46,32 +46,32 @@
 
 
     {% block basic_fields_name %}
-        {{ form.input('name', 
-            id='field-name', 
-            label=_('Name'), 
-            placeholder=_('eg. January 2011 Gold Prices'), 
+        {{ form.input('name',
+            id='field-name',
+            label=_('Name'),
+            placeholder=_('eg. January 2011 Gold Prices'),
             value=data.name, error=errors.name,
-            classes=['control-full'], 
+            classes=['control-full'],
             attrs={'data-infotext': """Please provide the name of the file. System will
             automatically insert the name of the uploaded file, but you can also insert
             a new name. Please note that the file will be shown as 'unnamed resource' in
             cases, where you do not provide a name for the resource."""},
-            ) 
+            )
         }}
     {% endblock %}
 
     {% block basic_fields_description %}
-        {{ form.markdown('description', 
+        {{ form.markdown('description',
             id='field-description',
-            label=_('Description'), 
+            label=_('Description'),
             placeholder=_('Some useful notes about the data'),
-            value=data.description, 
+            value=data.description,
             error=errors.description,
             attrs={'data-infotext': """You are free to submit additional information on the
             dataset within this field. For instance, you can describe the type of
             information that is available in the dataset or the way which has been
             used to collect the data."""},
-            ) 
+            )
         }}
     {% endblock %}
 
@@ -92,24 +92,24 @@
 {% block metadata_fields %}
     {% resource 'dara/dara.css' %}
     {% resource 'dara/underscore.js' %}
-    {% resource 'dara/jquery-ui.js' %} 
+    {% resource 'dara/jquery-ui.js' %}
     {% resource 'dara/dara.js' %}
-        
+
     {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}
 
-    <input type="hidden" value="{{ res.dara_DOI }}" 
+    <input type="hidden" value="{{ res.dara_DOI }}"
                     name="dara_DOI" />
-    <input type="hidden" value="{{ res.dara_DOI_Test }}" 
+    <input type="hidden" value="{{ res.dara_DOI_Test }}"
                     name="dara_DOI_Test" />
 
 
-    
-    {#XXX DEBUG: dataset authors are overwritten by resource authors; off for 
-    now 
+
+    {#XXX DEBUG: dataset authors are overwritten by resource authors; off for
+    now
     {{ authors.authors('resource', h) }}
     #}
-       
+
 
     <fieldset id="dara_data">
         {{ dara_form.md('data', h, data, errors) }}

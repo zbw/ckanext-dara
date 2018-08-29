@@ -18,7 +18,6 @@ import mimetypes
 import api
 
 
-
 PREFIX = 'dara_'
 
 
@@ -31,12 +30,13 @@ def vc(action, field):
     # c_show = map(lambda c: tk.get_converter(c), field.converters_show)
     # c_update = map(lambda c: tk.get_converter(c), field.converters_update)
     # m = {'show': c_show + vals,
-         # 'update': vals + c_update}
+    # 'update': vals + c_update}
 
     vals = map(lambda v: tk.get_validator(v), field.validators)
     m = {'show': [tk.get_converter('convert_from_extras')] + vals,
          'update': vals + [tk.get_converter('convert_to_extras')]}
     return m[action]
+
 
 def schema_update(schema, action):
     fields = chain(dara_fields('dataset'),
@@ -44,7 +44,7 @@ def schema_update(schema, action):
                 ds.hidden_fields(),
                 ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
-    
+
     resource_schema_update(schema)
 
     # XXX validating resource custom fields does not work in CKAN!?.
@@ -82,7 +82,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions)
-    
+
 
 
    #def before_create(self, context, resource):

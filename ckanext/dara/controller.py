@@ -17,14 +17,10 @@ from ckanext.dara.helpers import check_journal_role
 import doi
 
 import os
-import ckan.logic as logic
 import ckan.lib.uploader as uploader
 import paste.fileapp
-from ckan.common import request
 import mimetypes
 
-NotFound = logic.NotFound
-NotAuthorized = logic.NotAuthorized
 
 class DaraError(Exception):
     def __init__(self, msg):
@@ -163,27 +159,25 @@ class DaraController(PackageController):
         """
         Force download of text files
         """
-        print(id)
-        print(resource_id)
-        print(filename)
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
         force_download = self._check_extension(filename)
+
         try:
             rsc = tk.get_action('resource_show')(context, {'id': resource_id})
             pkg = tk.get_action('package_show')(context, {'id': id})
-        except NotFound:
-            abort(404, _('Resource not found'))
-        except NotAuthorized:
-            abort(401, _('Unauthorized to read resource %s') % id)
+        except tk.ObjectNotFound:
+            tk.abort(404, 'Resource not found')
+        except tk.NotAuthorized:
+            tk.abort(401, 'Unauthorized to read resource %s' % id)
 
         if rsc.get('url_type') == 'upload':
             upload = uploader.ResourceUpload(rsc)
             filepath = upload.get_path(rsc['id'])
             fileapp = paste.fileapp.FileApp(filepath)
             try:
-               status, headers, app_iter = request.call_application(fileapp)
+               status, headers, app_iter = tk.request.call_application(fileapp)
             except OSError:
                abort(404, _('Resource data not found'))
             response.headers.update(dict(headers))
@@ -191,7 +185,8 @@ class DaraController(PackageController):
             if content_type:
                 response.headers['Content-Type'] = content_type
                 if force_download:
-                    response.headers['Content-Disposition'] = "attachment; filename={}".format(filename)
+                    header_value = "attachment; filename={}".format(filename)
+                    response.headers['Content-Disposition'] = header_value
             response.status = status
             return app_iter
         elif not 'url' in rsc:

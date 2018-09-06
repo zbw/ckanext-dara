@@ -139,7 +139,7 @@ class DaraController(PackageController):
         c.pkg = context['package']
         return tk.render(template)
 
-     def _check_extension(self, filename):
+    def _check_extension(self, filename):
         """
         check if the file extension should force a download
         """
@@ -153,7 +153,7 @@ class DaraController(PackageController):
               return True
         return False
 
-     def resource_download(self, id, resource_id, filename=None):
+    def resource_download(self, id, resource_id, filename=None):
         """
         Force the download for the specified files
         """
@@ -185,11 +185,11 @@ class DaraController(PackageController):
               if force_download:
                  header_value = "attachment; filename={}".format(filename)
                  response.headers['Content-Disposition'] = header_value
-          response.status = status
-          return app_iter
-       elif not 'url' in rsc:
-          abort(404, _('No download is available'))
-       redirect(rsc['url'])
+           response.status = status
+           return app_iter
+        elif not 'url' in rsc:
+           abort(404, _('No download is available'))
+        redirect(rsc['url'])
 
 
 # @memoize

@@ -161,8 +161,8 @@ class DaraController(PackageController):
         """
         Force the download for the specified files
         """
-        context = {'modle': model, 'session': model.Session,
-                   'user': c.user or c.author, 'author_user_obj': c.userobj}
+        context = self._context()
+
 
         force_download = self._check_extension(filename)
 

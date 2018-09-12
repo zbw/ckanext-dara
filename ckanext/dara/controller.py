@@ -218,7 +218,6 @@ class DaraController(PackageController):
         """
         Force download of text files
         """
-        self._check_access(id)
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 

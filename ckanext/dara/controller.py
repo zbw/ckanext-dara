@@ -195,10 +195,6 @@ class DaraController(PackageController):
         redirect(rsc['url'])
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> jda-dev/master
 # @memoize
 def params():
     """

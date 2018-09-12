@@ -180,7 +180,7 @@ class DaraController(PackageController):
            try:
               status, headers, app_iter = tk.request.call_application(fileapp)
            except OSError:
-              abort(404, _('Resource data not found'))
+              tk.abort(404, _('Resource data not found'))
            response.headers.update(dict(headers))
            content_type, content_enc = mimetypes.guess_type(rsc.get('url', ''))
            if content_type:

@@ -1,6 +1,5 @@
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
-
 from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk
 from ckan.common import c, response
@@ -16,6 +15,11 @@ import requests
 from toolz.dicttoolz import keyfilter, get_in
 from ckanext.dara.helpers import check_journal_role
 import doi
+
+import os
+import ckan.lib.uploader as uploader
+import paste.fileapp
+import mimetypes
 
 
 # imports for new download function
@@ -192,6 +196,64 @@ class DaraController(PackageController):
         redirect(rsc['url'])
 
 
+    # new download function, based on resource_download in
+    # ckan/controllers/package.py -> resource_download
+    def _check_extension(self, filename):
+        """
+        Check if the extension should force a download
+        return True/False
+        """
+        extensions_for_download = ['.txt', '.do', '.log']
+        if filename:
+            try:
+                name, ext = os.path.splitext(filename)
+            except:
+                return False
+            if ext in extensions_for_download:
+                return True
+        return False
+
+
+    def resource_download(self, id, resource_id, filename=None):
+        """
+        Force download of text files
+        """
+        self._check_access(id)
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        force_download = self._check_extension(filename)
+
+        try:
+            rsc = tk.get_action('resource_show')(context, {'id': resource_id})
+            pkg = tk.get_action('package_show')(context, {'id': id})
+        except tk.ObjectNotFound:
+            tk.abort(404, 'Resource not found')
+        except tk.NotAuthorized:
+            tk.abort(401, 'Unauthorized to read resource %s' % id)
+
+        if rsc.get('url_type') == 'upload':
+            upload = uploader.ResourceUpload(rsc)
+            filepath = upload.get_path(rsc['id'])
+            fileapp = paste.fileapp.FileApp(filepath)
+            try:
+               status, headers, app_iter = tk.request.call_application(fileapp)
+            except OSError:
+               abort(404, _('Resource data not found'))
+            response.headers.update(dict(headers))
+            content_type, content_enc = mimetypes.guess_type(rsc.get('url',''))
+            if content_type:
+                response.headers['Content-Type'] = content_type
+                if force_download:
+                    header_value = "attachment; filename={}".format(filename)
+                    response.headers['Content-Disposition'] = header_value
+            response.status = status
+            return app_iter
+        elif not 'url' in rsc:
+            abort(404, _('No download is available'))
+        redirect(rsc['url'])
+
+
 # @memoize
 def params():
     """
@@ -263,7 +325,7 @@ def darapi(auth, xml, test=False, register=False):
 
     d = {False: 'http://www.da-ra.de/dara/study/importXML',
 #         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
-          True: 'http://labs.da-ra.de/dara/study/importXML'}  
+          True: 'http://labs.da-ra.de/dara/study/importXML'}
     url = d.get(test)
     # socket does not take unicode, so we need to encode our unicode object
     # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets

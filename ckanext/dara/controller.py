@@ -163,7 +163,6 @@ class DaraController(PackageController):
         """
         context = self._context()
 
-
         force_download = self._check_extension(filename)
 
         try:
@@ -196,6 +195,10 @@ class DaraController(PackageController):
         redirect(rsc['url'])
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> jda-dev/master
 # @memoize
 def params():
     """

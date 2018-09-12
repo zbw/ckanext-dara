@@ -2,7 +2,7 @@
 # ZBW - Leibniz Information Centre for Economics
 from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk
-from ckan.common import c, response
+from ckan.common import c, response, _
 from ckan import model
 import ckan.lib.helpers as h
 from StringIO import StringIO

@@ -81,6 +81,12 @@ def fields():
     """
 
     DaraField = namedtuple('DaraField', 'id adapt validators widget')
+    # id: will appear in the 'id' tag of the HTML page. Gets appended to
+    #     dara_field....
+    # adapt: defines the form(s) that the field will appear in (?)
+    # validators: validator and converter for the field
+    # widget: holds info used to create the HTML element
+    #!!!!see macros for implementation
 
     fields = (
 
@@ -569,7 +575,7 @@ def fields():
                     options=jels_to_options(),
                    # size="medium",
                 ),
-                
+
         ),
 
 
@@ -627,7 +633,8 @@ def fields():
         # XXX out as long we have edawax_url. we need a mechanism for transferring
         # the old url value to this field
         DaraField('Publication_PID',
-            ('publication',), ('ignore_missing',),
+            #('publication',), ('ignore_missing',),
+            ('publication',), ('dara_doi_validator',),
             Input(
                 role = 'master',
                 name = 'Identifier',
@@ -887,7 +894,7 @@ def author_fields():
                 ),
         ),
 
-        
+
         )
 
     return fields

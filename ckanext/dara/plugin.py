@@ -125,6 +125,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {'authors': validators.authors,
                 'normalize_issue_string': validators.normalize_issue_string,
                 'jel_convert': validators.jel_convert,
+                'dara_doi_validator': validators.dara_doi_validator
                 }
 
     def get_actions(self):
@@ -189,7 +190,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 action="doi",
                 template="package/doi.html",
                 ckan_icon="exchange")
-        
+
         map.connect('/dataset/{id}/resource/{resource_id}/download/{filename}',
                 controller="ckanext.dara.controller:DaraController",
                 action="resource_download")

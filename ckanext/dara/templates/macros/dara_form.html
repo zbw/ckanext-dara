@@ -57,9 +57,9 @@ Examples:
 
 {% set fields = h.dara_fields(type) %}
     {% set dara = h.dara_pkg() %}
-    
+
     {#    {% set debug = h.dara_debug(data) %} #}
-    
+
     {% for field in fields %}
 
 
@@ -72,14 +72,14 @@ Examples:
             {% set value = res[id] or dara[id]%}
         {% else %}
             {% set value = data[id] %}
-            
+
             {#XXX temporary! We'll need a 'default' for all fields in schema #}
             {% if id == 'dara_currentVersion' %}
                 {% set value = data[id] or '1' %}
             {% endif %}
-        
+
         {% endif %}
-        
+
         {% set field_id = 'field-' ~id %}
         {% set label = widget.name %}
         {% set additional_classes = widget.classes %}
@@ -91,20 +91,20 @@ Examples:
             {% do classes.append('error') %}
         {% endif %}
         #}
-        
+
         {#TODO optimize! #}
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
         {% endif %}
 
-        
+
         {% if 'select.jels' in additional_classes %}
            {% do attrs.update({'class': 'select_jels', 'multiple': 'multiple',
             'style': 'width: 62%'
             }) %}
         {% endif %}
 
-        
+
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}
         {% else %}
@@ -114,13 +114,13 @@ Examples:
         {% for c in additional_classes %}
            {% do classes.append(c) %}
         {% endfor %}
-    
+
         {# this relies on the correct sort order in fields dict! #}
         {% if widget.role == 'master' %}
-            {% do classes.append('dara_master') %} 
+            {% do classes.append('dara_master') %}
             <fieldset class="dara_master_slave">
         {% endif %}
-        
+
         {% if widget.role == 'slave' %}
             {% do classes.append('dara_slave') %}
         {% endif %}
@@ -132,27 +132,27 @@ Examples:
         {% if widget.size == 'small' %}
             {% do classes.append('control-small') %}
         {% endif %}
-        
+
         {% if widget.form_type == 'input' %}
-            {{ form.input(id, 
+            {{ form.input(id,
                     label=label,
                     id= field_id,
-                    placeholder=placeholder, 
+                    placeholder=placeholder,
                     value=value,
                     error = errors[id],
                     attrs = attrs,
-                    classes=classes) 
+                    classes=classes)
             }}
-        
+
         {% endif %}
 
         {% if widget.form_type == 'select' %}
             {% set options = widget.options %}
-            
+
             {% if type in  ('data', 'text', 'code', 'other') %}
                 {% set res = h.dara_resource() %}
                 {% set selected = res[id] or dara[id] or options[0] %}
-            
+
             {% else %}
                 {% set selected = data[id] or options[0] %}
             {% endif %}
@@ -161,7 +161,7 @@ Examples:
             {% do classes.append('control-select') %}
 
             {# using our custom select #}
-            {{ select(id, 
+            {{ select(id,
                 id = field_id,
                 label = label,
                 options = options,
@@ -170,7 +170,7 @@ Examples:
                 classes=classes,
                 attrs=attrs,
                 )
-                        
+
             }}
         {% endif %}
 
@@ -178,22 +178,22 @@ Examples:
             {% do classes.append('control-full') %}
             {{ form.markdown(id, label=label,
                     id= field_id,
-                    placeholder='', 
+                    placeholder='',
                     value=value,
                     error=errors,
-                    classes=classes) 
+                    classes=classes)
             }}
         {% endif %}
-        
+
 
         {% if widget.form_type == 'date' %}
              {{ form.input(id, label=label,
                     id= field_id,
-                    placeholder='', 
+                    placeholder='',
                     value=value,
                     error=errors,
                     type="date",
-                    classes=classes) 
+                    classes=classes)
             }}
         {% endif %}
 
@@ -206,23 +206,49 @@ Examples:
                     error=errors[id],
                     type="number",
                     attrs = attrs,
-                    classes=classes) 
+                    classes=classes)
             }}
         {% endif %}
 
 
-        
-    
+
+
         {#XXX this works only when there's only one slave! #}
         {% if widget.role == 'slave' %}
             </fieldset>
         {% endif %}
-    
 
-        
+
+
 
     {% endfor %}
 
 {%- endmacro %}
 
 
+{# overridding the form for image upload #}
+{% macro image_upload(data, errors, field_url='image_url', field_upload='image_upload', field_clear='clear_upload',
+                      is_url=false, is_upload=false, is_upload_enabled=false, placeholder=false,
+                      url_label='', upload_label='',
+                      attrs={})  %}
+  {% set placeholder = placeholder if placeholder else _('http://example.com/my-image.jpg') %}
+  {% set url_label = url_label or _('Image URL')  %}
+  {% set upload_label = upload_label or _('Image')  %}
+
+  {% if is_upload_enabled %}
+  <div class="image-upload" data-module="image-upload" data-module-is_url="{{ 'true' if is_url else 'false' }}" data-module-is_upload="{{ 'true' if is_upload else 'false' }}"
+       data-module-field_url="{{ field_url }}" data-module-field_upload="{{ field_upload }}" data-module-field_clear="{{ field_clear }}" data-module-upload_label="{{ upload_label }}">
+  {% endif %}
+
+  {{ form.input(field_url, label=url_label, id='field-image-url', placeholder=placeholder, value=data.get(field_url), error=errors.get(field_url), classes=['control-full'], attrs=attrs) }}
+
+  {% if is_upload_enabled %}
+    {{ form.input(field_upload, label=upload_label, id='field-image-upload', type='file', placeholder='', value='', error='', classes=['control-full'], attrs=attrs) }}
+    {% if is_upload %}
+      {{ checkbox(field_clear, label=_('Clear Upload'), id='field-clear-upload', value='true', error='', classes=['control-full']) }}
+    {% endif %}
+  {% endif %}
+
+  {% if is_upload_enabled %}</div>{% endif %}
+
+{% endmacro %}

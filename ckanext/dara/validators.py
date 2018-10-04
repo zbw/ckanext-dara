@@ -157,7 +157,6 @@ def jel_convert(value, context):
 
 
 def _check_doi_resolves(doi):
-    print(doi)
     url = 'http://dx.doi.org/' + doi
     r = requests.get(url)
     return r.status_code
@@ -165,8 +164,8 @@ def _check_doi_resolves(doi):
 def _check_if_new(context):
     # new packages don't have 'package' in their context becuase they don't exist
     if 'package' in context.keys():
-        return False
-    return True
+        return True
+    return False
 
 def dara_doi_validator(key, data, errors, context):
     # based on ignore_missing validator

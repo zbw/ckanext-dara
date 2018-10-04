@@ -1,10 +1,13 @@
 """
+These test work on the validator in 'validators.py' but this is no longer
+the validation that runs. Check new validator in controller for details.
+
 Test Implementation of a DOI validator for the related publication
 form
 """
 import pylons.test, pylons, pylons.config as c, ckan.model as model, ckan.tests as tests, ckan.plugins as plugins, ckan.tests.factories as factories
 from ckan.tests import helpers
-import ckanext.dara.validators as v
+import ckanext.dara.validators as v  #import the validator
 import unittest
 import ckan.lib.navl.dictization_functions as df
 from ckan.plugins.toolkit import Invalid

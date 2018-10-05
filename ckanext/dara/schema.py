@@ -820,9 +820,7 @@ def author_fields():
                 name = 'Affiliation',
                 size = 'medium',
                 classes=['econws_affil'],
-                info=u"""Please state the affiliation you are working for
-                respectively the affiliation you already have mentioned in your
-                paper.""",
+                info=u"""Please provide the author's affiliation when the article was submitted for publication.""",
                 ),
             ),
 

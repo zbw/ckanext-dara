@@ -552,7 +552,7 @@ def fields():
                 ('dataset',), ('ignore_missing', 'jel_convert',),
                 Select(
                     name="JELs",
-                    info="Put as many JELs as you like here",
+                    info="Enter as many JELs as necessary.",
                     classes=["select.jels"],
                     options=jels_to_options(),
                    # size="medium",
@@ -831,7 +831,7 @@ def author_fields():
                 placeholder = 'http://www...',
                 name = 'Professional URL',
                 classes = [],
-                info=u"""Enter your personal or institutional homepate. Start with 'http'""",
+                info=u"""Enter your personal or institutional homepage. Start with 'http'""",
                 ),
             ),
 

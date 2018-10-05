@@ -41,11 +41,12 @@
     <div id="image_upload" data-infotext="Test data here.">
         {% block basic_fields_url %}
             {% set is_upload = (data.url_type == 'upload') %}
-            {{ dara_form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
-                is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
-                upload_label=_('File'), url_label=_('URL'),
-                attrs={'data-infotext': """Click on 'Upload' to submit a file or click on 'link' to point to a URL/DOI which leads t othe dataset/file you used in your research."""})
-            }}
+            {{ form.image_upload(data, errors, field_url='url',
+                    field_upload='upload',
+                    field_clear='clear_upload',
+                    is_upload_enabled=h.uploads_enabled(),
+                    is_url=data.url and not is_upload, is_upload=is_upload,
+                    upload_label=_('File'), url_label=_('URL')) }}
         {% endblock %}
     </div>
 

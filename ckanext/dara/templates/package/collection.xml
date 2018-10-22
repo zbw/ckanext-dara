@@ -103,7 +103,7 @@ case) #}
 so we use unstructuredPublication. freetext can be empty, but must be present.
 Publications are not relevant for resources (yet!), so only here in collection
 #}
-{% if pkg.dara_Publication_PID %}
+{#% if pkg.dara_Publication_PID %}
 <publications>
     <publication>
         <unstructuredPublication>
@@ -117,7 +117,10 @@ Publications are not relevant for resources (yet!), so only here in collection
         </unstructuredPublication>
     </publication>
 </publications>
-{% endif %}
+{% endif %#}
+
+{# 32 Publications but with more fields #}
+{{ macros.publication(pkg) }}
 
 </resource>
 

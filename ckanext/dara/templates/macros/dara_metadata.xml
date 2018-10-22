@@ -275,4 +275,45 @@ TODO
 </relation>
 {% endmacro %}
 
+{# 32 publications #}
+{# this is for the collection/journal only #}
+{% macro publication(pkg) %}
+<publictions>
+    <publication>
+        <structuredPublication>
+            <journal>{{ pkg.organization['title'] }}</journal>
+            <volumne>{{ pkg.dara_Publication_Volume }}</volumne>
+            <issue>{{ pkg.dara_Publication_Issue }}</issue>
+            <pages>p. {{ pkg.dara_Publication_EndPage|int - pkg.dara_Publication_StartPage|int }}</pages>
+            <isbn>{{ pkg.organization['isbn'] }}</isbn>
+            <ISSNs>
+                <ISSN>{{ pkg.organization['issn'] }}</ISSN>
+            </ISSNs>
+        </structuredPublication>
+        <unstructuredPublication>
+            <PIDs>
+                <PID>
+                    <ID>{{ pkg.dara_Publication_PID }}</ID>
+                    <pidType>{{ pkg.dara_Publication_PIDType }}</pidType>
+                </PID>
+            </PIDs>
+        </unstructuredPublication>
+    </publication>
+</publictions>
+{% endmacro %}
 
+
+{# publisher [collection level] #}
+{% macro publisher() %}
+<publisher>
+    <institution>
+        <institutionName>ZBW - Leibniz Informationszentrum Wirtschaft</institutionName>
+        <institutionIDs>
+            <institutionID>
+                <identifierURI>1165319829</identifierURI>
+                <identifierSchema>GND</identifierSchema>
+            </institutionID>
+        </institutionIDs>
+    </institution>
+</publisher>
+{% endmacro %}

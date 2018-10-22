@@ -47,6 +47,9 @@ we need to make sure here, that dara gets a title #}
 {% endfor %}
 </creators>
 
+{# publisher #}
+{#{ macros.publisher() }#}
+
 {# 8. URL, 9. DOI proposal #}
 {{ macros.doi(url, h.res_doi(res)) }}
 

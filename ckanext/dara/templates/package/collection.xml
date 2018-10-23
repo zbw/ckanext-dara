@@ -24,7 +24,7 @@ http://www.da-ra.de/en/technical-information/doi-registration/
          xsi:schemaLocation="http://da-ra.de/schema/kernel-4 http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/dara.xsd">
 
 <resourceType>Collection</resourceType> 
-{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion)}} 
+{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion) }} 
 
 {# 1. title #}
 {{ macros.titles(pkg.title, 'en') }}  
@@ -50,6 +50,9 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 
 {# *12.publication date #}
 {{ macros.publicationDate(pkg.dara_PublicationDate) }}
+
+{# 3 publisher #}
+{{ macros.publisher() }}
 
 {# *28/29 availability controlled/free 
 default is '1' (Download)

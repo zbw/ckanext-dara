@@ -130,10 +130,7 @@ class DaraController(PackageController):
         xmlschema_doc = etree.parse(StringIO(schema))
         xmlschema = etree.XMLSchema(xmlschema_doc)
         doc = etree.parse(StringIO(xml_string))
-        try:
-            xmlschema.assertValid(doc)
-        except etree.DocumentInvalid as e:
-            print(e.error_log)
+        xmlschema.assertValid(doc)
         return xml_string
 
     def doi(self, id, template):

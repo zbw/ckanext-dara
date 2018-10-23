@@ -278,19 +278,11 @@ TODO
 {# 32 publications #}
 {# this is for the collection/journal only #}
 {% macro publication(pkg) %}
-<publictions>
+<publications>
     <publication>
-        <structuredPublication>
-            <journal>{{ pkg.organization['title'] }}</journal>
-            <volumne>{{ pkg.dara_Publication_Volume }}</volumne>
-            <issue>{{ pkg.dara_Publication_Issue }}</issue>
-            <pages>p. {{ pkg.dara_Publication_EndPage|int - pkg.dara_Publication_StartPage|int }}</pages>
-            <isbn>{{ pkg.organization['isbn'] }}</isbn>
-            <ISSNs>
-                <ISSN>{{ pkg.organization['issn'] }}</ISSN>
-            </ISSNs>
-        </structuredPublication>
+        {% if pkg.dara_Publication_PID %}
         <unstructuredPublication>
+            <freetext></freetext>
             <PIDs>
                 <PID>
                     <ID>{{ pkg.dara_Publication_PID }}</ID>
@@ -298,12 +290,40 @@ TODO
                 </PID>
             </PIDs>
         </unstructuredPublication>
+        {% endif %}
+        <structuredPublication>
+            <authorsEditors>
+                <authorEditor>
+                    <author>
+                        <firstName>None</firstName>
+                        <lastName>None</lastName>
+                    </author>
+                </authorEditor>
+            </authorsEditors>
+            <title>None</title>
+            <journal>{{ pkg.organization['title'] }}</journal>
+            <volume>{{ pkg.dara_Publication_Volume }}</volume>
+            <issue>{{ pkg.dara_Publication_Issue }}</issue>
+            <pages>p. {{ pkg.dara_Publication_EndPage|int - pkg.dara_Publication_StartPage|int }}</pages>
+            {% if pkg.organization['isbn'] %}
+            <isbn>
+                {{ pkg.organization['isbn'] }}
+            </isbn>
+            {% endif %}
+            {% if pkg.organization['issns']|length > 0 %}
+            <ISSNs>
+                {% for issn in pkg.organization['issns'] %}
+                <ISSN>{{ issn }}</ISSN>
+                {% endfor %}
+            </ISSNs>
+            {% endif %}
+        </structuredPublication>
     </publication>
-</publictions>
+</publications>
 {% endmacro %}
 
 
-{# publisher [collection level] #}
+{# publisher [doesn't work in collections or resources] #}
 {% macro publisher() %}
 <publisher>
     <institution>

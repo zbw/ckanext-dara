@@ -59,9 +59,7 @@ Examples:
     {% set dara = h.dara_pkg() %}
     
     {#    {% set debug = h.dara_debug(data) %} #}
-    
     {% for field in fields %}
-
 
         {% set widget = field.widget %}
         {% set id = 'dara_' ~ field.id %}
@@ -187,6 +185,11 @@ Examples:
         
 
         {% if widget.form_type == 'date' %}
+            {% if field.id == 'temporalCoverageFormal_start' %}
+             {{ start_end_date(h, data) }}
+            {% endif %}
+             
+            {#% if field.id == 'temporalCoverageFormal' %}
              {{ form.input(id, label=label,
                     id= field_id,
                     placeholder='', 
@@ -195,6 +198,8 @@ Examples:
                     type="date",
                     classes=classes) 
             }}
+            {% endif %#}
+
         {% endif %}
 
         {% if widget.form_type == 'number' %}
@@ -225,4 +230,72 @@ Examples:
 
 {%- endmacro %}
 
+{% macro start_end_date(h, data) %}
+    {% set fields = h.dara_fields('data') %}
 
+    <div class="control-small control-group">
+        <label class="control-label">Temporal Coverage</label>
+        <div class="controls{{ " " ~ control_classes | join(' ') }}">
+
+            {% for field in fields %}
+                {% set start = {'element': '', 
+                                'widget': '', 
+                                'id': '', 
+                                'value': '', 
+                                'field_id': '', 
+                                'label': '', 
+                                'additional_classes': '', 
+                                'classes': [], 
+                                'attrs': ''} %}
+                
+                {% set end = {'element': '', 
+                              'widget': '', 
+                              'id': '', 
+                              'value': '', 
+                              'field_id': '', 
+                              'label': '', 
+                              'additional_classes': '', 
+                              'classes': [], 
+                              'attrs': ''} %}
+
+                {% if field.id == 'temporalCoverageFormal_start' %}
+                    {% if start.update({'widget': field.widget}) %}{% endif %}
+                    {% if start.update({'element': field}) %}{% endif %}
+                    {% if start.update({'field_id': 'dara_' + field.id}) %}{% endif %}
+                    {% if start.update({'value': data[start.field_id]}) %}{% endif %}
+                    {% if start.update({'id': 'field-' + start.field_id}) %}{% endif %}
+                    {% if start.update({'label': start.widget.name}) %}{% endif %}
+                    {% if start.update({'additional_classes': start.widget.classes}) %}{% endif %}
+                    {% if start.update({'attrs': {"data-infotext": start.widget.info}}) %}{% endif %}
+                    
+                    <input id="{{ start.id }}" type="date" 
+                           name="{{ start.field_id }}" value="{{ start.value | empty_and_escape }}" 
+                           placeholder="" {{ attributes(start.attrs) }} /> &mdash;
+
+
+                {% elif field.id == 'temporalCoverageFormal_end' %}
+                    {% if end.update({'widget': field.widget}) %}{% endif %}
+                    {% if end.update({'element': field}) %}{% endif %}
+                    {% if end.update({'field_id': 'dara_' + field.id}) %}{% endif %}
+                    {% if end.update({'value': data[end.field_id]}) %}{% endif %}
+                    {% if end.update({'id': 'field-' + end.field_id })%}{% endif %}
+                    {% if end.update({'label': end.widget.name}) %}{% endif %}
+                    {% if end.update({'additional_classes': end.widget.classes}) %}{% endif %}
+                    {% if end.update({'attrs': {"data-infotext": end.widget.info}}) %}{% endif %}
+                    
+                    <input id="{{ end.id }}" type="date" 
+                           name="{{ end.field_id }}" value="{{ end.value | empty_and_escape }}" 
+                           placeholder="" {{ attributes(end.attrs) }} />
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+{% endmacro %}
+
+{%- macro attributes(attrs={}) -%}
+  {%- for key, value in attrs.items() -%}
+  {{ " " }}{{ key }}{% if value != "" %}="{{ value }}"{% endif %}
+  {%- endfor -%}
+{%- endmacro -%}

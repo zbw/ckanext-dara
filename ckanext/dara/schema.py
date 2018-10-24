@@ -46,7 +46,7 @@ class Text(DaraWidget):
     """
     DaraWidget for textfields
     """
-    def __init__(self, placeholder='', **kw):
+    def __init__(self,  size='', placeholder='', **kw):
         super(Text, self).__init__(**kw)
         self.form_type = 'text'
 
@@ -55,9 +55,10 @@ class Date(DaraWidget):
     """
     DaraWidget for date fields
     """
-    def __init__(self, **kw):
+    def __init__(self, size='', **kw):
         super(Date, self).__init__(**kw)
         self.form_type = "date"
+        self.size = size
 
 
 class Number(DaraWidget):
@@ -292,17 +293,34 @@ def fields():
 
 
         #TODO
-       #DaraField('temporalCoverageFormal',
-       #        ('data',), ('ignore_missing',)
-       #        Date(
-       #            classes= ['todo'],
-       #            name = "Temporal Coverage (controlled)",
-       #            )
-       #),
+        DaraField('temporalCoverageFormal_start',
+                ('data',), ('ignore_missing',),
+                Date(
+                    classes= [],
+                    size= 'small',
+                    name = "Start Date",
+                    )
+        ),
+
+        DaraField('temporalCoverageFormal_end',
+                ('data',), ('ignore_missing',),
+                Date(
+                    classes= [],
+                    size= 'small',
+                    name = "End Date",
+                    )
+        ),
+
+        DaraField('temporalCoverageFormal',
+                ('data',), ('ignore_missing',),
+                Date(
+                    classes= [],
+                    name = "Temporal Coverage (Formal)",
+                    )
+        ),
 
         DaraField('temporalCoverageFree',
                 ('data',), ('ignore_missing',),
-
                 Input(
                     placeholder="",
                     name="Temporal Coverage (free)",

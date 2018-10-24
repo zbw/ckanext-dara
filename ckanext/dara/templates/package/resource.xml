@@ -90,7 +90,7 @@ dara expects content, but schema does not force it #}
 {{ macros.samplings('en', res.dara_Sampling or None) }} {#XXX lang not implemented #}
 
 {# 21. temporalCoverage #}
-{{ macros.temporalCoverageFree(res.dara_temporalCoverageFree or None) }}
+{{ macros.temporalCoverageFree(res.dara_temporalCoverageFree or None), res.dara_temporalCoverageFormal_start or None, res.dara_temporalCoverageFormal_end or None}}
 
 
 {# 26. Dataset, only relevant for resources #}

@@ -227,9 +227,26 @@ TODO
 {% endmacro %}
 
 {# 21.2 temporal coverage free #}
-{% macro temporalCoverageFree(tc) %}
-{% if tc %}
+{% macro temporalCoverageFree(tc,start, end) %}
+{% if tc or if start%}
 <temporalCoverages>
+    {% if start %}
+    <temporalCoverage>
+        <temporalCoverageFormal>
+            <startDate>
+                <date>
+                    {{ h.date_format(start) }}
+                </date>
+            </startDate>
+            <endDate>
+                <date>
+                    {{ h.date_format(end) }}
+                </date>
+            </endDate>
+        </temporalCoverageFormal>
+    </temporalCoverage>
+    {% endif %}
+    {% if tc %}
     <temporalCoverage>
         <temporalCoveragesFree>
             <temporalCoverageFree>
@@ -238,6 +255,7 @@ TODO
             </temporalCoverageFree>
         </temporalCoveragesFree>
     </temporalCoverage>
+    {% endif %}
 </temporalCoverages>
 {% endif %}
 {% endmacro %}

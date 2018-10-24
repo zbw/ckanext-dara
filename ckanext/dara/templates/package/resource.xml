@@ -38,7 +38,7 @@ we need to make sure here, that dara gets a title #}
 #}
 
 {# TODO 3. collective title  #}
-      
+
 {# 4. creators  TODO: 4.2 institution #}
 {#XXX for now we take the authors given in the collection here #}
 <creators>  

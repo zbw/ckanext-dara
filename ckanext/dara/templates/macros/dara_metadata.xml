@@ -277,7 +277,7 @@ TODO
 
 {# 32 publications #}
 {# this is for the collection/journal only #}
-{% macro publication(pkg) %}
+{% macro publication(pkg, identification) %}
 <publications>
     <publication>
         {% if pkg.dara_Publication_PID %}
@@ -305,16 +305,16 @@ TODO
             <volume>{{ pkg.dara_Publication_Volume }}</volume>
             <issue>{{ pkg.dara_Publication_Issue }}</issue>
             <pages>p. {{ pkg.dara_Publication_EndPage|int - pkg.dara_Publication_StartPage|int }}</pages>
-            {% if pkg.organization['isbn'] %}
-            <isbn>
-                {{ pkg.organization['isbn'] }}
-            </isbn>
+            
+            {% if identification[1] == 'isbn' %}
+                <isbn>
+                    {{ identification[0] }}
+                </isbn>
             {% endif %}
-            {% if pkg.organization['issns']|length > 0 %}
+            
+            {% if identification[1] == 'issn' %}
             <ISSNs>
-                {% for issn in pkg.organization['issns'] %}
-                <ISSN>{{ issn }}</ISSN>
-                {% endfor %}
+                <ISSN>{{ identification[0] }}</ISSN>
             </ISSNs>
             {% endif %}
         </structuredPublication>

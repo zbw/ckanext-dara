@@ -162,3 +162,11 @@ def unit_type_transform(num):
     return d.get(num)
 
 
+def org_extra_info(pkg):
+    """ Get extra values for an organization (ISBN/ISSN) """
+    print(pkg['organization']['name'])
+    journal = pkg['organization']['name']
+    data = tk.get_action('organization_show')(None, {'id': journal})
+    if data:
+        return (data['publicationID'], data['publicationID_Type'])
+    return (0, 0)

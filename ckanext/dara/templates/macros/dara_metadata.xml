@@ -227,37 +227,37 @@ TODO
 {% endmacro %}
 
 {# 21.2 temporal coverage free #}
-{% macro temporalCoverageFree(tc,start, end) %}
-{% if tc or if start%}
-<temporalCoverages>
-    {% if start %}
-    <temporalCoverage>
-        <temporalCoverageFormal>
-            <startDate>
-                <date>
-                    {{ h.date_format(start) }}
-                </date>
-            </startDate>
-            <endDate>
-                <date>
-                    {{ h.date_format(end) }}
-                </date>
-            </endDate>
-        </temporalCoverageFormal>
-    </temporalCoverage>
+{% macro temporalCoverageFree(tc, start, end, h) %}
+    {% if (tc) or if (start) %}
+        <temporalCoverages>
+            {% if start %}
+            <temporalCoverage>
+                <temporalCoverageFormal>
+                    <startDate>
+                        <date>
+                            {{ start }}
+                        </date>
+                    </startDate>
+                    <endDate>
+                        <date>
+                            {{ end }}
+                        </date>
+                    </endDate>
+                </temporalCoverageFormal>
+            </temporalCoverage>
+            {% endif %}
+            {% if tc %}
+            <temporalCoverage>
+                <temporalCoveragesFree>
+                    <temporalCoverageFree>
+                        <language>en</language>
+                        <freetext>{{ tc }}</freetext>
+                    </temporalCoverageFree>
+                </temporalCoveragesFree>
+            </temporalCoverage>
+            {% endif %}
+        </temporalCoverages>
     {% endif %}
-    {% if tc %}
-    <temporalCoverage>
-        <temporalCoveragesFree>
-            <temporalCoverageFree>
-                <language>en</language>
-                <freetext>{{ tc }}</freetext>
-            </temporalCoverageFree>
-        </temporalCoveragesFree>
-    </temporalCoverage>
-    {% endif %}
-</temporalCoverages>
-{% endif %}
 {% endmacro %}
 
 

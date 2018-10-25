@@ -173,5 +173,6 @@ def org_extra_info(pkg):
 
 def date_format(date):
     """ Transform date from mm/dd/yyyy to YYYY-MM-DD """
-    parts = date.split('/')
+    parts = date.split('-')
+    print(parts)
     return "{}-{}-{}".format(parts[2], parts[0], parts[1])

@@ -53,8 +53,7 @@ we need to make sure here, that dara gets a title #}
 {# *12.publication date #}
 {{ macros.publicationDate(res.dara_PublicationDate or pkg.dara_PublicationDate) }}
 
-{# *28/29 availability controlled/free 
-#}
+{# *28/29 availability controlled/free #}
 {% set av = res.dara_Availabilitycontrolled or 'Download' %}
 {% if av in ['1', '2', '3', '4', '5'] %}
     {% set av = h.av_transform(av) %}
@@ -90,7 +89,7 @@ dara expects content, but schema does not force it #}
 {{ macros.samplings('en', res.dara_Sampling or None) }} {#XXX lang not implemented #}
 
 {# 21. temporalCoverage #}
-{{ macros.temporalCoverageFree(res.dara_temporalCoverageFree or None), res.dara_temporalCoverageFormal_start or None, res.dara_temporalCoverageFormal_end or None}}
+{{ macros.temporalCoverageFree(res.dara_temporalCoverageFree or None, res.dara_temporalCoverageFormal_start or None, res.dara_temporalCoverageFormal_end or None, h) }}
 
 
 {# 26. Dataset, only relevant for resources #}

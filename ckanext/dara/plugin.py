@@ -151,7 +151,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'av_transform': helpers.av_transform,
                 'unit_type_transform': helpers.unit_type_transform,
                 'org_extra_info': helpers.org_extra_info,
-                'date_format': helpers.date_format,
                 }
 
     def is_fallback(self):

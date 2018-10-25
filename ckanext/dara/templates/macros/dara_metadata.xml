@@ -77,7 +77,7 @@ TODO
                 {% set uri = "http://orcid.org/" ~ author['authorID'] %}
             {% elif author['authorID_Type'] == 'Scopus' %}
                 {% set uri = "https://www.scopus.com/authid/detail.uri?authorId=" ~ author['authorID'] %}
-            {% elif author['authorID_Type'] == 'RePEc' %}
+            {% elif author['authorID_Type'] == 'Repec' %}
                 {% set uri = "https://ideas.repec.org/e/" ~ author['authorID'] ~ ".html" %}
             {% elif author['authorID_Type'] == 'WoS' %}
                 {% set uri = "http://researcherid.com/rid/" ~ author['authorID'] %}

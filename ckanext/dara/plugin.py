@@ -189,7 +189,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 action="doi",
                 template="package/doi.html",
                 ckan_icon="exchange")
-        
+
         map.connect('/dataset/{id}/resource/{resource_id}/download/{filename}',
                 controller="ckanext.dara.controller:DaraController",
                 action="resource_download")

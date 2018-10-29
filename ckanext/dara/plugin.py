@@ -45,21 +45,21 @@ def schema_update(schema, action):
                 ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
 
-    resource_schema_update(schema)
+    resource_schema_update(schema, action)
 
     # XXX validating resource custom fields does not work in CKAN!?.
     # map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
     #    tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
 
-def resource_schema_update(schema):
+def resource_schema_update(schema, action):
     v = [tk.get_validator('ignore_missing')]
     fields = chain(dara_fields('data'),
                 dara_fields('text'),
                 dara_fields('code'),
                 dara_fields('other'),
                 ds.hidden_fields())
-    map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
+    map(lambda f: schema['resources'].update({PREFIX + f.id: vc(action, f)}), fields)
 
 
 def dara_package_schema(schema):

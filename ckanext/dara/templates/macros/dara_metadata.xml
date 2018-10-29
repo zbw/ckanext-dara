@@ -181,7 +181,7 @@ TODO
     <geographicCoverage>
         {#  <language>{{ language }}</language>#}
         {% if geocoverage %}
-        <geographicCoverageControlled>{{ geocoverage }}</geographicCoverageControlled>
+            <geographicCoverageControlled>{{ geocoverage }}</geographicCoverageControlled>
       {% endif %}
       {% if geocoverage_free %}
       <geographicCoveragesFree>
@@ -228,7 +228,7 @@ TODO
 
 {# 21.2 temporal coverage free #}
 {% macro temporalCoverageFree(tc, start, end, h) %}
-    {% if (tc) or if (start) %}
+    {% if (tc) or (start) %}
         <temporalCoverages>
             {% if start %}
             <temporalCoverage>

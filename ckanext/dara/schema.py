@@ -241,21 +241,19 @@ def fields():
        #        )
        #),
 
-
         #TODO erstmal raus wegen fehlendem Vokabular
-       #DaraField('geographicCoverage',
-       #         ('dataset', 'data'), ('ignore_missing',),
-
-       #        Select(
-       #        classes = ['todo'],
-       #        name = 'Geographic Coverage (controlled)',
-       #        options = [{'text': ''}],
-       #        )
-       #),
+       DaraField('geographicCoverage',
+                ('data',), ('ignore_missing', 'jel_convert',),
+               Select(
+               classes = ["select.jels"],
+               name = 'Geographic Coverage (controlled)',
+               options = geo.geo,
+               )
+       ),
 
 
         DaraField('geographicCoverageFree',
-                 ('data',), ('ignore_missing', 'dara'),
+                 ('data',), ('ignore_missing',),
                 Input(
                 placeholder = 'eg. West-Germany',
                 name = 'Geographic Coverage (free)',

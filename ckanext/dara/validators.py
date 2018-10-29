@@ -138,7 +138,6 @@ def jel_convert(value, context):
     string.  CKAN then later adds curly brackets (e.g. u"{A12}") and calls this
     function a second time. I couldnt find out where (and why) CKAN adds the
     brackets, so here we remove them and then return a list with one string."""
-        
     if isinstance(value, list):
         return ','.join(value)
     
@@ -146,5 +145,3 @@ def jel_convert(value, context):
         return value.replace('{', '').replace('}', '').split(',')
 
     return value
-
-

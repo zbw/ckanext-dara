@@ -181,7 +181,9 @@ TODO
     <geographicCoverage>
         {#  <language>{{ language }}</language>#}
         {% if geocoverage %}
-            <geographicCoverageControlled>{{ geocoverage }}</geographicCoverageControlled>
+            {% for value in geocoverage %}
+            <geographicCoverageControlled>{{ value }}</geographicCoverageControlled>
+            {% endfor %}
       {% endif %}
       {% if geocoverage_free %}
       <geographicCoveragesFree>

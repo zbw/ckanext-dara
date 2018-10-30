@@ -124,7 +124,7 @@ Publications are not relevant for resources (yet!), so only here in collection
 
 {# 32 Publications but with more fields #}
 {% set identification = h.org_extra_info(pkg) %}
-{{ macros.publication(pkg, identification) }}
+{#{ macros.publication(pkg, identification) }#}
 
 </resource>
 

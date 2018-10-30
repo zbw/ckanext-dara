@@ -178,14 +178,16 @@ TODO
 {% macro geographicCoverages(language, geocoverage, geocoverage_free) %}
 {% if geocoverage or geocoverage_free %}
 <geographicCoverages>
+    {% if geocoverage %}
+        {% for value in geocoverage %}
+            <geographicCoverage>
+                <geographicCoverageControlled>{{ value }}</geographicCoverageControlled>
+            </geographicCoverage>
+        {% endfor %}
+    {% endif %}
+
+    {% if geocoverage_free %}
     <geographicCoverage>
-        {#  <language>{{ language }}</language>#}
-        {% if geocoverage %}
-            {% for value in geocoverage %}
-            <geographicCoverageControlled>{{ value }}</geographicCoverageControlled>
-            {% endfor %}
-      {% endif %}
-      {% if geocoverage_free %}
       <geographicCoveragesFree>
           <geographicCoverageFree>
               <language>{{ language }}</language>

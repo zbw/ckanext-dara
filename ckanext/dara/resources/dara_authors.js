@@ -47,6 +47,7 @@ function ws_names_init () {
 }
 
 
+//if someone starts typing clear the ID field
 function ws_affil_init () {
     var inputs = document.querySelectorAll( '.econws_affil' );
     _.each(inputs, function (inp) {
@@ -60,6 +61,9 @@ function ws_affil_init () {
                 update_fields_aff(inp, ws_id);
                 return
             }
+            //clear affiliation ID if the name changed
+            clear_aff_id(inp);
+
             ws_affil_call(val);
         }
     });
@@ -107,6 +111,7 @@ function ws_affil_call(val) {
             limit: 15
         },
         success: function ( data ){
+            //If the search term doesn't have resuts, clear the ID fields
             var current_objects = data.results.bindings;
             _.each(current_objects, function(obj){
                 var option = document.createElement('option');
@@ -174,6 +179,14 @@ function update_fields_aff (inp, val) {
     $(affID).val(affiliation.concept.value.replace('http://d-nb.info/gnd/', ''));
 
     return
+}
+
+function clear_aff_id(inp){
+    var authorfields = $(inp).closest('fieldset.author');
+    var affID = $(authorfields).find('[data-author="affilID"]');
+    var affID_Type = $(authorfields).find('[data-author="affID_Type"]')
+
+    $(affID.val(null));
 }
 
 $(function add_authors() {

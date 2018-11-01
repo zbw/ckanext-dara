@@ -185,7 +185,7 @@ Examples:
         
 
         {% if widget.form_type == 'date' %}
-            {% if field.id == 'temporalCoverageFormal_start' %}
+            {% if field.id == 'temporalCoverageFormal' %}
              {{ start_end_date(h, data) }}
             {% endif %}
              
@@ -258,7 +258,7 @@ Examples:
                               'classes': [], 
                               'attrs': ''} %}
 
-                {% if field.id == 'temporalCoverageFormal_start' %}
+                {% if field.id == 'temporalCoverageFormal' %}
                     {% if start.update({'widget': field.widget}) %}{% endif %}
                     {% if start.update({'element': field}) %}{% endif %}
                     {% if start.update({'field_id': 'dara_' + field.id}) %}{% endif %}

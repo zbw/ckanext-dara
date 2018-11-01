@@ -1,5 +1,6 @@
+# coding=utf-8
 geo = [
-        {"text":"AALAND ISLANDS", "value":"AX"},
+        {"text":"ÅLAND ISLANDS".decode('utf-8'), "value":"AX"},
         {"text":"AFGHANISTAN", "value":"AF"},
         {"text":"ALBANIA", "value":"AL"},
         {"text":"ALGERIA", "value":"DZ"},
@@ -52,9 +53,10 @@ geo = [
         {"text":"CONGO, Republic of", "value":"CG"},
         {"text":"COOK ISLANDS", "value":"CK"},
         {"text":"COSTA RICA", "value":"CR"},
-        {"text":"COTE D'IVOIRE", "value":"CI"},
+        {"text":"CÔTE D'IVOIRE".decode('utf-8'), "value":"CI"},
         {"text":"CROATIA (local name: Hrvatska)", "value":"HR"},
         {"text":"CUBA", "value":"CU"},
+        {"text":"CURAÇAO".decode('utf-8'), "value":"CW"},
         {"text":"CYPRUS", "value":"CY"},
         {"text":"CZECH REPUBLIC", "value":"CZ"},
         {"text":"DENMARK", "value":"DK"},
@@ -173,7 +175,7 @@ geo = [
         {"text":"PORTUGAL", "value":"PT"},
         {"text":"PUERTO RICO", "value":"PR"},
         {"text":"QATAR", "value":"QA"},
-        {"text":"REUNION", "value":"RE"},
+        {"text":"RÉUNION".decode('utf-8'), "value":"RE"},
         {"text":"ROMANIA", "value":"RO"},
         {"text":"RUSSIAN FEDERATION", "value":"RU"},
         {"text":"RWANDA", "value":"RW"},

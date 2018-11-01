@@ -6,7 +6,6 @@
 
 {% set res = h.dara_resource() %}
 
-
 {% block basic_fields %}
 
     {# must copy the whole block here and can't use super() because we need to
@@ -23,7 +22,6 @@
     <div id="pres" data-infotext="Select a category for the resource you'd like to add.
         This will influence the number of metadata fields. In general, 'Data' has
         more fields than 'Code' or 'Text'.">
-
     {% set selected = res['dara_res_preselection'] or 'data' %}
     {{ form.select('dara_res_preselection',
                     id = 'dara_res_preselection',
@@ -94,6 +92,7 @@
     {% resource 'dara/underscore.js' %}
     {% resource 'dara/jquery-ui.js' %}
     {% resource 'dara/dara.js' %}
+    {% resource 'dara/date_validation.js' %}
 
     {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}

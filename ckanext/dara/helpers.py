@@ -4,7 +4,7 @@
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
-from ckanext.dara.schema import author_fields
+from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
 from pylons import config
 import json
@@ -110,7 +110,6 @@ def dara_authors(dara_type, data):
     if isinstance(v, basestring):
         return json.loads(v)
     return None
-
 
 def check_journal_role(pkg, role):
     user = tk.c.user

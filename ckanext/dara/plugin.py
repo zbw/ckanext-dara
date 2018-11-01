@@ -125,6 +125,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {'authors': validators.authors,
                 'normalize_issue_string': validators.normalize_issue_string,
                 'jel_convert': validators.jel_convert,
+                'dates': validators.dates,
                 }
 
     def get_actions(self):

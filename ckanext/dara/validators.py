@@ -7,11 +7,12 @@ from itertools import count
 # from toolz.itertoolz import first, partition
 from copy import deepcopy
 # from ckan.plugins.toolkit import missing
-from ckanext.dara.schema import author_fields
+from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter
 # from datetime import datetime
 # from ckan.plugins.toolkit import Invalid
 # from ckan.lib.navl.dictization_functions import unflatten
+from ckan.plugins.toolkit import Invalid
 
 error_key = '_error'
 
@@ -65,6 +66,7 @@ def authors(key, data, errors, context):
                 author['url'] = 'http://' + author['url']
         return author
 
+
     def id_check(author):
         """
         checks ID type and calls appropriate function
@@ -83,6 +85,21 @@ def authors(key, data, errors, context):
 
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
     data[key] = json.dumps(map(id_check, validate(authors)))
+
+
+def dates(key, data, errors, context):
+    """ 
+        make sure if there is a start date there is also an end date 
+        and vice-versa.
+    """
+    e = {}
+    start = data[('resources', 0, 'dara_temporalCoverageFormal')]
+    end = data[('resources', 0, 'dara_temporalCoverageFormal_end')]
+
+    if len(start) > 0 and len(end) == 0:
+        raise Invalid('End date required')
+    elif len(start) == 0 and len(end) > 0:
+        raise Invalid('Start date required')
 
 
 def _ytc(author_orig):

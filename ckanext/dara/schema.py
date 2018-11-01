@@ -292,7 +292,7 @@ def fields():
 
 
         #TODO
-        DaraField('temporalCoverageFormal_start',
+        DaraField('temporalCoverageFormal',
                 ('data',), ('ignore_missing',),
                 Date(
                     classes= [],
@@ -310,13 +310,13 @@ def fields():
                     )
         ),
 
-        DaraField('temporalCoverageFormal',
-                ('data',), ('ignore_missing',),
-                Date(
-                    classes= [],
-                    name = "Temporal Coverage (Formal)",
-                    )
-        ),
+        #DaraField('temporalCoverageFormal',
+        #        ('data',), ('ignore_missing',),
+        #        Date(
+        #            classes= [],
+        #            name = "Temporal Coverage (Formal)",
+        #            )
+        #),
 
         DaraField('temporalCoverageFree',
                 ('data',), ('ignore_missing',),

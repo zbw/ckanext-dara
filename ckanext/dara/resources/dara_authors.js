@@ -54,6 +54,12 @@ function ws_affil_init () {
             var val = inp.value;
             if(_.isUndefined(val)) return;
             if(val.length < 2) return;
+            if(val.indexOf(' [gnd:]') != -1) {
+                var val_split = val.split(' [gnd:]');
+                var ws_id = val_split[val_split.length -1];
+                update_fields_aff(inp, ws_id);
+                return
+            }
             ws_affil_call(val);
         }
     });
@@ -104,11 +110,15 @@ function ws_affil_call(val) {
             var current_objects = data.results.bindings;
             _.each(current_objects, function(obj){
                 var option = document.createElement('option');
-                option.value = option.text = obj.prefLabel.value;
+                var text = obj.prefLabel.value;
+                option.text = text.substring(0, 150);
+                option.value = text + ' [gnd:]' + obj.concept.value;
                 if(! is_in_datalist(dl_affil, option.value)) {
                     dl_affil.appendChild(option);
                 };
             });
+
+            ws_objects.push(current_objects);
         },
 
     });
@@ -119,7 +129,6 @@ function ws_affil_call(val) {
 
 function update_fields (inp, val) {
     // TODO remove jquery
-
     var authorfields = $(inp).closest('fieldset.author');  // XXX
 
     var firstname = $(authorfields).find('[data-author="firstname"]');
@@ -128,6 +137,7 @@ function update_fields (inp, val) {
     var author = _.find(_.flatten(ws_objects, true), function (ob) {
         return ob.concept.value === val;
     });
+
     var authorname = author.prefName.value.split(", ");
 
     inp.value=authorname[0];
@@ -138,12 +148,33 @@ function update_fields (inp, val) {
         .val('GND');
     $(slave).show();
 
+
     $(firstname).val(authorname[1]);
     $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
 
     return
 }
 
+
+function update_fields_aff (inp, val) {
+    var authorfields = $(inp).closest('fieldset.author');
+    var affID = $(authorfields).find('[data-author="affilID"]');
+    var affID_Type = $(authorfields).find('[data-author="affID_Type"]');
+    var affiliation = _.find(_.flatten(ws_objects, true), function (ob){
+        return ob.concept.value === val;
+    });
+    var aff_name = affiliation.prefName.value.split(', ');
+    inp.value = aff_name;
+
+    $(affID_Type)
+        //.removeProp('disabled')
+        .prop('required', true)
+        .val('GND');
+
+    $(affID).val(affiliation.concept.value.replace('http://d-nb.info/gnd/', ''));
+
+    return
+}
 
 $(function add_authors() {
     var authorContainer = $('#authors');

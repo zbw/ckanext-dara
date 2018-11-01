@@ -859,6 +859,33 @@ def author_fields():
                 ),
             ),
 
+        AuthorField('affilID',
+            Input(
+                placeholder = 'Your institution',
+                name = 'Affiliation ID',
+                size = 'medium',
+                classes=['no_display'],
+                info=u""".""",
+                ),
+            ),
+
+        # For the time being, all IDS are assumed to be GND
+        #AuthorField('affID_Type',
+        #        Select(
+        #        name = 'ID Type',
+        #        options = [
+        #            {'text': '', 'value': ''},
+        #            {'text': 'GND', 'value': 'GND'},
+        #            {'text': 'ORCID', 'value': 'ORCID'},
+        #            {'text': 'Scopus', 'value': 'Scopus'},
+        #            {'text': 'RePEc', 'value': 'Repec'},
+        #            {'text': 'Web of Science', 'value': 'WoS'}
+        #        ],
+        #        classes = ['no_display'],
+        #        info=u""".""",
+        #        ),
+        #),
+
         AuthorField('url',
             Input(
                 placeholder = 'http://www...',

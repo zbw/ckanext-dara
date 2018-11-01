@@ -166,6 +166,11 @@ font-size:14px !important;
     visibility:hidden;
 }
 
+.no_display {
+  display: none !important;
+  visibility: hidden;
+}
+
 .hidden_authorfield {
     display: none;
 }

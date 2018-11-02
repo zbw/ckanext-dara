@@ -92,7 +92,6 @@ def dates(key, data, errors, context):
         make sure if there is a start date there is also an end date 
         and vice-versa.
     """
-    e = {}
     start = data[('resources', 0, 'dara_temporalCoverageFormal')]
     end = data[('resources', 0, 'dara_temporalCoverageFormal_end')]
 

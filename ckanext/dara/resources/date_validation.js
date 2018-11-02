@@ -1,5 +1,3 @@
-console.log('testing');
-
 var form = document.getElementById('resource-edit');
 var button = document.getElementsByName('save')[0];
 
@@ -10,7 +8,6 @@ form.onsubmit = function(event){
     var valid = check_dates(start_date, end_date);
     
     if (valid !== true){
-        console.log('not valid');
         if (valid == 'start'){
             start_date.setAttribute('required', 'required');
         } else {

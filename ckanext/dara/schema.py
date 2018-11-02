@@ -293,7 +293,7 @@ def fields():
 
         #TODO
         DaraField('temporalCoverageFormal',
-                ('data',), ('ignore_missing',),
+                ('data',), ('ignore_missing', 'dates',),
                 Date(
                     classes= [],
                     size= 'small',
@@ -558,15 +558,15 @@ def fields():
       #     )
       # ),
 
-        DaraField('note',
-                ('data', 'code'), ('ignore_missing',),
-                Text(
-                placeholder = 'any additional notes',
-                name = 'Additional Notes',
-                info=u""" Here you can state additional remarks, if needed
-                (free text field).""",
-                )
-        ),
+        #DaraField('note',
+        #        ('data', 'code'), ('ignore_missing',),
+        #        Text(
+        #        placeholder = 'any additional notes',
+        #        name = 'Additional Notes',
+        #        info=u""" Here you can state additional remarks, if needed
+        #        (free text field).""",
+        #        )
+        #),
 
         DaraField('jda_submission_id',
             ('dataset',), ('ignore_missing',),

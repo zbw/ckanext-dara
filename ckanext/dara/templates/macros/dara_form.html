@@ -186,7 +186,7 @@ Examples:
 
         {% if widget.form_type == 'date' %}
             {% if field.id == 'temporalCoverageFormal' %}
-             {{ start_end_date(h, data) }}
+             {{ start_end_date(h, data, errors) }}
             {% endif %}
              
             {#% if field.id == 'temporalCoverageFormal' %}
@@ -230,67 +230,70 @@ Examples:
 
 {%- endmacro %}
 
-{% macro start_end_date(h, data) %}
+{% macro start_end_date(h, data, error) %}
     {% set fields = h.dara_fields('data') %}
 
     <div class="control-small control-group">
-        <label class="control-label">Temporal Coverage</label>
-        <div class="controls{{ " " ~ control_classes | join(' ') }}">
 
             {% for field in fields %}
-                {% set start = {'element': '', 
-                                'widget': '', 
-                                'id': '', 
-                                'value': '', 
-                                'field_id': '', 
-                                'label': '', 
-                                'additional_classes': '', 
-                                'classes': [], 
-                                'attrs': ''} %}
-                
-                {% set end = {'element': '', 
-                              'widget': '', 
-                              'id': '', 
-                              'value': '', 
-                              'field_id': '', 
-                              'label': '', 
-                              'additional_classes': '', 
-                              'classes': [], 
-                              'attrs': ''} %}
-
-                {% if field.id == 'temporalCoverageFormal' %}
-                    {% if start.update({'widget': field.widget}) %}{% endif %}
-                    {% if start.update({'element': field}) %}{% endif %}
-                    {% if start.update({'field_id': 'dara_' + field.id}) %}{% endif %}
-                    {% if start.update({'value': data[start.field_id]}) %}{% endif %}
-                    {% if start.update({'id': 'field-' + start.field_id}) %}{% endif %}
-                    {% if start.update({'label': start.widget.name}) %}{% endif %}
-                    {% if start.update({'additional_classes': start.widget.classes}) %}{% endif %}
-                    {% if start.update({'attrs': {"data-infotext": start.widget.info}}) %}{% endif %}
+                    {% set start = {'element': '', 
+                                    'widget': '', 
+                                    'id': '', 
+                                    'value': '', 
+                                    'field_id': '', 
+                                    'label': '', 
+                                    'additional_classes': '', 
+                                    'classes': [], 
+                                    'attrs': ''} %}
                     
-                    <input id="{{ start.id }}" type="date" 
-                           name="{{ start.field_id }}" value="{{ start.value | empty_and_escape }}" 
-                           placeholder="" {{ attributes(start.attrs) }} /> &mdash;
+                    {% set end = {'element': '', 
+                                  'widget': '', 
+                                  'id': '', 
+                                  'value': '', 
+                                  'field_id': '', 
+                                  'label': '', 
+                                  'additional_classes': '', 
+                                  'classes': [], 
+                                  'attrs': ''} %}
+
+                    {% if field.id == 'temporalCoverageFormal' %}
+                        {% if start.update({'widget': field.widget}) %}{% endif %}
+                        {% if start.update({'element': field}) %}{% endif %}
+                        {% if start.update({'field_id': 'dara_' + field.id}) %}{% endif %}
+                        {% if start.update({'value': data[start.field_id]}) %}{% endif %}
+                        {% if start.update({'id': 'field-' + start.field_id}) %}{% endif %}
+                        {% if start.update({'label': start.widget.name}) %}{% endif %}
+                        {% if start.update({'additional_classes': start.widget.classes}) %}{% endif %}
+                        {% if start.update({'attrs': {"data-infotext": start.widget.info}}) %}{% endif %}
+<div class="control-group{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
+    <label class="control-label" for="{{ for }}">{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Temporal Coverage') }}</label>
+        <div class="controls{{ " " ~ control_classes | join(' ') }}">
+            <input id="{{ start.id }}" type="date" 
+                               name="{{ start.field_id }}" value="{{ start.value | empty_and_escape }}" 
+                               placeholder="" {{ attributes(start.attrs) }} /> &mdash;
 
 
-                {% elif field.id == 'temporalCoverageFormal_end' %}
-                    {% if end.update({'widget': field.widget}) %}{% endif %}
-                    {% if end.update({'element': field}) %}{% endif %}
-                    {% if end.update({'field_id': 'dara_' + field.id}) %}{% endif %}
-                    {% if end.update({'value': data[end.field_id]}) %}{% endif %}
-                    {% if end.update({'id': 'field-' + end.field_id })%}{% endif %}
-                    {% if end.update({'label': end.widget.name}) %}{% endif %}
-                    {% if end.update({'additional_classes': end.widget.classes}) %}{% endif %}
-                    {% if end.update({'attrs': {"data-infotext": end.widget.info}}) %}{% endif %}
-                    
-                    <input id="{{ end.id }}" type="date" 
-                           name="{{ end.field_id }}" value="{{ end.value | empty_and_escape }}" 
-                           placeholder="" {{ attributes(end.attrs) }} />
+                    {% elif field.id == 'temporalCoverageFormal_end' %}
+                        {% if end.update({'widget': field.widget}) %}{% endif %}
+                            {% if end.update({'element': field}) %}{% endif %}
+                            {% if end.update({'field_id': 'dara_' + field.id}) %}{% endif %}
+                            {% if end.update({'value': data[end.field_id]}) %}{% endif %}
+                            {% if end.update({'id': 'field-' + end.field_id })%}{% endif %}
+                            {% if end.update({'label': end.widget.name}) %}{% endif %}
+                            {% if end.update({'additional_classes': end.widget.classes}) %}{% endif %}
+                            {% if end.update({'attrs': {"data-infotext": end.widget.info}}) %}{% endif %}
+                            
+            <input id="{{ end.id }}" type="date" 
+                                   name="{{ end.field_id }}" value="{{ end.value | empty_and_escape }}" 
+                                   placeholder="" {{ attributes(end.attrs) }} />
+      {% if error and error is iterable %}<span class="error-block">{{ _('Requires start and end dates.') }}</span>{% endif %}
+      {{ extra_html }}
+    </div>
+  </div>
 
-                {% endif %}
+                    {% endif %}
             {% endfor %}
         </div>
-    </div>
     <br>
 {% endmacro %}
 

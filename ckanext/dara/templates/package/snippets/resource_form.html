@@ -27,7 +27,7 @@
                     id = 'dara_res_preselection',
                     label = "This Resource is",
                     options = options,
-                    error=errors,
+                    error="",
                     selected=selected,
                     classes=['select-auto', 'control-select'],
                     )
@@ -64,7 +64,7 @@
             label=_('Description'),
             placeholder=_('Some useful notes about the data'),
             value=data.description,
-            error=errors.description,
+            error="",
             attrs={'data-infotext': """You are free to submit additional information on the
             dataset within this field. For instance, you can describe the type of
             information that is available in the dataset or the way which has been
@@ -92,7 +92,7 @@
     {% resource 'dara/underscore.js' %}
     {% resource 'dara/jquery-ui.js' %}
     {% resource 'dara/dara.js' %}
-    {% resource 'dara/date_validation.js' %}
+    {#% resource 'dara/date_validation.js' %#}
 
     {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}

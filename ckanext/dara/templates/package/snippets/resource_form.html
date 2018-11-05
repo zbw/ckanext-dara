@@ -12,7 +12,7 @@
     modify the standard fields with title attribute #}
 
     {% set options = [
-    {'text': 'Data', 'value': 'data'},
+    {'text': 'Dataset', 'value': 'data'},
     {'text': 'Text/Documentation/PDF', 'value': 'text'},
     {'text': 'Code', 'value': 'code'},
     {'text': 'Other', 'value': 'other'}
@@ -30,17 +30,24 @@
                     error="",
                     selected=selected,
                     classes=['select-auto', 'control-select'],
+                    attrs={'data-infotext': """Please first choose whether the file you submit is a dataset, code, a text file, or something else."""}
                     )
     }}
 
     </div>
-    
-    {% block basic_fields_url %}
-        {% set is_upload = (data.url_type == 'upload') %}
-        {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
-            is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
-            upload_label=_('File'), url_label=_('URL')) }}
+
+    <div id="image_upload" data-infotext="Test data here.">
+        {% block basic_fields_url %}
+            {% set is_upload = (data.url_type == 'upload') %}
+
+            {{ dara_form.image_upload(data, errors, field_url='url',
+                field_upload='upload', field_clear='clear_upload',
+                is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
+                upload_label=_('File'), url_label=_('URL'),
+                attrs={'data-infotext': """Click on 'Upload' to submit a file or click on 'link' to point to a URL/DOI which leads t othe dataset/file you used in your research."""})
+            }}
         {% endblock %}
+    </div>
 
 
     {% block basic_fields_name %}
@@ -50,10 +57,7 @@
             placeholder=_('eg. January 2011 Gold Prices'),
             value=data.name, error=errors.name,
             classes=['control-full'],
-            attrs={'data-infotext': """Please provide the name of the file. System will
-            automatically insert the name of the uploaded file, but you can also insert
-            a new name. Please note that the file will be shown as 'unnamed resource' in
-            cases, where you do not provide a name for the resource."""},
+            attrs={'data-infotext': """If you would like to rename a file, you can do it here."""},
             )
         }}
     {% endblock %}
@@ -64,17 +68,14 @@
             label=_('Description'),
             placeholder=_('Some useful notes about the data'),
             value=data.description,
-            error="",
-            attrs={'data-infotext': """You are free to submit additional information on the
-            dataset within this field. For instance, you can describe the type of
-            information that is available in the dataset or the way which has been
-            used to collect the data."""},
+            error=errors.description,
+            attrs={'data-infotext': """Please provide information about the file (eg. type of data, software used, origin, methodology...)."""},
             )
         }}
     {% endblock %}
 
     {% block basic_fields_format %}
-        {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
+        {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?', 'data-infotext': """Enter the format of the file."""} %}
         {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}
             <span class="info-block info-block-small">
             <i class="icon-info-sign"></i>

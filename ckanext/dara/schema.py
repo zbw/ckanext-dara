@@ -95,9 +95,8 @@ def fields():
                 mi = 1000,
                 ma = datetime.now().year,
                 classes=['dara_required'],
-                info=u"""Please provide us with the publication year of your
-                    article. If you do not know the year, yet, please choose the
-                    actual year. Please note: This is a mandatory field."""
+                info=u"""Please provide the publication year of your
+                    article."""
                 )
         ),
 
@@ -113,11 +112,7 @@ def fields():
                 ],
                 name='Availability',
                 classes=['dara_required'],
-                info=u"""By default the availability is 'Free Download'. You
-                should only change this value in cases when you are not
-                able/not allowed to upload the dataset used for your
-                calculations AND when you would like to provide a link to the
-                dataset, instead. Please note: This is a mandatory field.""",
+                info=u"""By default the availability is 'Free Download'. Please change it to 'Onsite Only,' if you've provided a link or DOI to a dataset that you cannot upload for legal reasons (see 'URL' field above).""",
 
             ),
         ),
@@ -165,11 +160,7 @@ def fields():
                 name = 'Version',
                 size = 'small',
                 classes= ['dara_required'],
-                info=u"""The default version number is 1. You should only
-                change the version number if you submit a revised version of
-                your supplementary data. In this case please choose an
-                appropriate new version number (e.g. 1.1 for minor revisions or
-                2 for major revisions)."""
+                info=u"""The default version number is 1. This should only be changed in the case of minor revisions (eg. 1.1) or major revisions (eg. 2) to your submitted data."""
                 )
         ),
 
@@ -259,10 +250,7 @@ def fields():
                 placeholder = 'eg. West-Germany',
                 name = 'Geographic Coverage (free)',
                 size = 'medium',
-                info=u"""Please state, which geographical areas are covered by
-                your dataset. This is a free text field, therefore you are free
-                to mention the region(s) that fit most (e.g. North-America;
-                Eurozone, Germany, EU-Member States,...)""",
+                info=u"""Please detail which geographic areas are acovered by your dataset.""",
 
                 )
         ),
@@ -558,15 +546,15 @@ def fields():
       #     )
       # ),
 
-        #DaraField('note',
-        #        ('data', 'code'), ('ignore_missing',),
-        #        Text(
-        #        placeholder = 'any additional notes',
-        #        name = 'Additional Notes',
-        #        info=u""" Here you can state additional remarks, if needed
-        #        (free text field).""",
-        #        )
-        #),
+        DaraField('note',
+                ('data', 'code'), ('ignore_missing',),
+                Text(
+                placeholder = 'any additional notes',
+                name = 'Additional Notes',
+                info=u"""Please provide any additional remarks regarding your dataset
+                (free text field).""",
+                )
+        ),
 
         DaraField('jda_submission_id',
             ('dataset',), ('ignore_missing',),
@@ -581,12 +569,12 @@ def fields():
                 ('dataset',), ('ignore_missing', 'jel_convert',),
                 Select(
                     name="JELs",
-                    info="Put as many JELs as you like here",
+                    info="Enter as many JELs as necessary.",
                     classes=["select.jels"],
                     options=jels_to_options(),
                    # size="medium",
                 ),
-                
+
         ),
 
 
@@ -651,8 +639,7 @@ def fields():
                 placeholder = 'DOI, URL, or other identifier',
                 size = 'medium',
                 classes = [],
-                info=u"""Enter an identifier for the article. This should be an
-                URL, DOI, or Handle""",
+                info=u"""Please enter the article's http-address or DOI. If using a DOI, please start with the suffix: 10.XXXX ('dx.doi.org' is not required).""",
                 )
         ),
 
@@ -826,11 +813,8 @@ def author_fields():
                 name = 'Last Name',
                 size = 'medium',
                 classes = ['econws', 'dara_required'],
-                info=u"""Please specify the last name of author.
-                You will get autosuggests as soon you've typed the first
-                letters. In case of a
-                middle name, please add the middle name to the field 'first
-                name'. This is a mandatory field.""",
+                info=u"""Please specify the last name of the author.
+                Choose the name from the list, if available. Middle names should be included in the field 'First Name'""",
                 )
             ),
 
@@ -853,9 +837,7 @@ def author_fields():
                 name = 'Affiliation',
                 size = 'medium',
                 classes=['econws_affil'],
-                info=u"""Please state the affiliation you are working for
-                respectively the affiliation you already have mentioned in your
-                paper.""",
+                info=u"""Please provide the author's affiliation when the article was submitted for publication.""",
                 ),
             ),
 
@@ -891,10 +873,7 @@ def author_fields():
                 placeholder = 'http://www...',
                 name = 'Professional URL',
                 classes = [],
-                info=u"""In this field, you can state your personal or
-                institutional website. Thereby, other users and visitors of
-                your data submission are enabled to directly inform themselves
-                about you and your fields of research.""",
+                info=u"""Enter your personal or institutional homepage. Start with 'http'""",
                 ),
             ),
 
@@ -906,10 +885,7 @@ def author_fields():
                 size = '',
                 classes = [],
                 role = 'master',
-                info=u"""If available please enter your personal ID. In case of
-                ORCID the system will then try to get all other data
-                automatically from the ORCID API. Please note that if you give
-                a value here you must give the type of the ID also.""",
+                info=u"""Enter any personal ID you have (eg. ORCID, WOS, RePEc). If you choose your last name from a list, this will be filled in automatically.""",
                 ),
         ),
 
@@ -931,7 +907,7 @@ def author_fields():
                 ),
         ),
 
-        
+
         )
 
     return fields

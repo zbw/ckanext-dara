@@ -22,7 +22,7 @@ form.onsubmit = function(event){
 
 function check_dates(start, end){
     if (start.value.length > 0 && end.value.length == 0){
-        return "end"
+        return "end";
     }
     if (start.value.length == 0 && end.value.length > 0){
         return "start";

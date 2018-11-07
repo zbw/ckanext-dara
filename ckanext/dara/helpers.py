@@ -182,3 +182,30 @@ def resource_type(data):
     if data == "other":
         return "Other"
 
+def build_citation(data):
+    """ Build a citation using APA style for use in freetext 'publications' """
+    citation = ''
+    journal_title = data['organization']['title']
+    vol = data['dara_Publication_Volume']
+    iss = data['dara_Publication_Issue']
+
+    citation += journal_title
+    if vol != '':
+        citation += ", {}".format(vol)
+    if iss != '':
+        citation += "({})".format(iss)
+    return citation
+
+
+def query_crossref(doi):
+    """
+        Plan to only run this if there's a DOI but the publication 
+        metadata is incomplete.
+    """
+    base_url = "https://api.crossref.org/works/{doi}"
+    
+    response = requests.get(base_url.format(doi=doi))
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    return False

@@ -319,7 +319,7 @@ TODO
     <publication>
         {% if pkg.dara_Publication_PID %}
         <unstructuredPublication>
-            <freetext></freetext>
+            <freetext>pkg</freetext>
             <PIDs>
                 <PID>
                     <ID>{{ pkg.dara_Publication_PID }}</ID>
@@ -328,6 +328,7 @@ TODO
             </PIDs>
         </unstructuredPublication>
         {% endif %}
+        {#
         <structuredPublication>
             <authorsEditors>
                 <authorEditor>
@@ -355,6 +356,7 @@ TODO
             </ISSNs>
             {% endif %}
         </structuredPublication>
+        #}
     </publication>
 </publications>
 {% endmacro %}
@@ -367,11 +369,11 @@ TODO
         <institutionName>ZBW - Leibniz Informationszentrum Wirtschaft</institutionName>
         <institutionIDs>
             <institutionID>
-                <identifierURI>1165319829</identifierURI>
+                <identifierURI>http://d-nb.info/gnd/1165319829</identifierURI>
                 <identifierSchema>GND</identifierSchema>
             </institutionID>
             <institutionID>
-                <identifierURI>157505890</identifierURI>
+                <identifierURI>https://viaf.org/viaf/157505890</identifierURI>
                 <identifierSchema>VIAF</identifierSchema>
             </institutionID>
         </institutionIDs>

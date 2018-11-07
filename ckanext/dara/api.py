@@ -46,4 +46,3 @@ def get_by_doi(context, q):
     
     return data
     
- 

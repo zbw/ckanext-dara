@@ -153,6 +153,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'unit_type_transform': helpers.unit_type_transform,
                 'org_extra_info': helpers.org_extra_info,
                 'resource_type': helpers.resource_type,
+                'build_citation': helpers.build_citation,
                 }
 
     def is_fallback(self):

@@ -233,7 +233,6 @@ def fields():
        #        )
        #),
 
-        #TODO erstmal raus wegen fehlendem Vokabular
        DaraField('geographicCoverage',
                 ('data',), ('ignore_missing', 'jel_convert',),
                Select(
@@ -279,7 +278,6 @@ def fields():
        #),
 
 
-        #TODO
         DaraField('temporalCoverageFormal',
                 ('data',), ('ignore_missing', 'dates',),
                 Date(

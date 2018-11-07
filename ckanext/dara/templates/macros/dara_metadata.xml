@@ -194,6 +194,12 @@ TODO
 {% if geocoverage or geocoverage_free %}
 <geographicCoverages>
     {% if geocoverage %}
+        {% set geocoverage = geocoverage.replace("[u'", "").replace("', u'", ",").replace("']", "") %}
+        {% if ',' in geocoverage %}
+            {% set geocoverage = geocoverage.split(',') %}
+        {% else %}
+            {% set geocoverage = [geocoverage] %}
+        {% endif %}
         {% for value in geocoverage %}
             <geographicCoverage>
                 <geographicCoverageControlled>{{ value }}</geographicCoverageControlled>

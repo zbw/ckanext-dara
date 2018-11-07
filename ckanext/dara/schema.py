@@ -544,15 +544,15 @@ def fields():
       #     )
       # ),
 
-        DaraField('note',
-                ('data', 'code'), ('ignore_missing',),
-                Text(
-                placeholder = 'any additional notes',
-                name = 'Additional Notes',
-                info=u"""Please provide any additional remarks regarding your dataset
-                (free text field).""",
-                )
-        ),
+        # DaraField('note',
+        #         ('data', 'code'), ('ignore_missing',),
+        #         Text(
+        #         placeholder = 'any additional notes',
+        #         name = 'Additional Notes',
+        #         info=u"""Please provide any additional remarks regarding your dataset
+        #         (free text field).""",
+        #         )
+        # ),
 
         DaraField('jda_submission_id',
             ('dataset',), ('ignore_missing',),

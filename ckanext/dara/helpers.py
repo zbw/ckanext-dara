@@ -165,6 +165,7 @@ def org_extra_info(pkg):
     """ Get extra values for an organization (ISBN/ISSN) """
     journal = pkg['organization']['name']
     data = tk.get_action('organization_show')(None, {'id': journal})
+    print(data)
     if data:
         return (data['publicationID'], data['publicationID_Type'])
     return (0, 0)

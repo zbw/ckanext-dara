@@ -13,7 +13,7 @@ from ckan import model
 import requests
 from hurry.filesize import size, si
 from toolz.itertoolz import last
-
+import json
 
 
 
@@ -165,7 +165,6 @@ def org_extra_info(pkg):
     """ Get extra values for an organization (ISBN/ISSN) """
     journal = pkg['organization']['name']
     data = tk.get_action('organization_show')(None, {'id': journal})
-    print(data)
     if data:
         return (data['publicationID'], data['publicationID_Type'])
     return (0, 0)
@@ -183,20 +182,37 @@ def resource_type(data):
     if data == "other":
         return "Other"
 
+def _parse_authors(data):
+    authors = []
+    data = json.loads(data)
+    for author in data:
+        first = author['firstname'][0]
+        last = author['lastname']
+        authors.append('{}, {}.'.format(last, first))
+    return ', '.join(authors)
+
 def build_citation(data):
     """ Build a citation using APA style for use in freetext 'publications' """
-    citation = ''
+    citation = '{authors} ({year}). {journal}{vol}, {pages}.'
+    volume_issue = ''
+
+    authors = data.get('dara_authors', '')
     journal_title = data['organization']['title']
-    vol = data['dara_Publication_Volume']
-    iss = data['dara_Publication_Issue']
+    vol = data.get('dara_Publication_Volume', '')
+    iss = data.get('dara_Publication_Issue', '')
+    date = data.get('dara_PublicationDate', '')
+    start_page = data.get('dara_Publication_StartPage', '')
+    end_page = data.get('dara_Publication_EndPage', '')
+    pages = '{}-{}'.format(start_page, end_page)
 
-    citation += journal_title
-    if vol != '':
-        citation += ", {}".format(vol)
-    if iss != '':
-        citation += "({})".format(iss)
-    return citation
+    authors = _parse_authors(authors)
 
+    if vol:
+        volume_issue += ", {}".format(vol)
+    if iss:
+        volume_issue += "({})".format(iss)
+
+    return citation.format(authors=authors, year=date, journal=journal_title, vol=volume_issue, pages=pages)
 
 def query_crossref(doi):
     """

@@ -215,10 +215,10 @@ TODO
               <freetext>    {{ geocoverage_free }}</freetext>
           </geographicCoverageFree>
       </geographicCoveragesFree>
-      {% endif %}
       {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
       {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
     </geographicCoverage>
+    {% endif %}
 </geographicCoverages>
 {% endif %}
 {% endmacro %}

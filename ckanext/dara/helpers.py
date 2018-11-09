@@ -103,12 +103,32 @@ def dara_authors(dara_type, data):
     """
     return authors as dict
     """
+    # if it's a resource check if there is author data at that level
+    # if there is, use it otherwise default to the collection data
+    if dara_type in ['res', 'resource']:
+        pack = data or dara_pkg()
+        if 'resources' in pack.keys():
+            for resource in pack['resources']:
+                if resource['id'] == c.resource_id:
+                    v = resource['dara_authors']
+        else:
+            v = pack['dara_authors']
+        if isinstance(v, unicode):
+            import ast
+            new_v = ast.literal_eval(v)
+            dct = list_dicter(new_v[:], [i.id for i in author_fields()])
+            if dct[0]['lastname'] == '':
+                # if the request is for XML return the collection data
+                # otherwise, return an empty string
+                if 'dara_xml' in request.path:
+                    pass
+                else:
+                    return dct[:6]
+            else:
+                return dct
+
     pack = data or dara_pkg()
     v = pack.get('dara_authors') # None if key does not exist
-    if isinstance(v, unicode):
-        import ast
-        new_v = ast.literal_eval(v)
-        return list_dicter(new_v[:], [i.id for i in author_fields()])
     if isinstance(v, list):
         return list_dicter(v[:], [i.id for i in author_fields()])
     if isinstance(v, basestring):

@@ -105,6 +105,10 @@ def dara_authors(dara_type, data):
     """
     pack = data or dara_pkg()
     v = pack.get('dara_authors') # None if key does not exist
+    if isinstance(v, unicode):
+        import ast
+        new_v = ast.literal_eval(v)
+        return list_dicter(new_v[:], [i.id for i in author_fields()])
     if isinstance(v, list):
         return list_dicter(v[:], [i.id for i in author_fields()])
     if isinstance(v, basestring):

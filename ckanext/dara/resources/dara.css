@@ -357,3 +357,64 @@ label[for="dara_res_preselection"] {
     color:darkred;
 }
 
+/*add button*/
+.plus-button {
+    border: 2px solid green;
+    background-color: #fff;
+    font-size: 8px;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 999px;
+    position: relative;
+}
+
+.plus-button:after,
+.plus-button:before {
+        content: "";
+        display: block;
+        background-color: green;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+.plus-button:before {
+        height: 1em;
+        width: 0.2em;
+    }
+
+.plus-button:after {
+        height: 0.2em;
+        width: 1em;
+    }
+
+
+/*remove button*/
+.minus-button {
+    border: 2px solid red;
+    background-color: #fff;
+    font-size: 8px;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 999px;
+    position: relative;
+}
+
+.minus-button:after,
+.minus-button:before {
+        content: "";
+        display: block;
+        background-color: red;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+
+.minus-button:after {
+        height: 0.2em;
+        width: 1em;
+    }
+

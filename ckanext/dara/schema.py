@@ -798,7 +798,6 @@ def fields():
 
     return fields
 
-
 def author_fields():
 
     AuthorField = namedtuple('AuthorField', 'id widget')
@@ -910,6 +909,41 @@ def author_fields():
 
     return fields
 
+
+def resource_author_fields():
+    AuthorField = namedtuple('AuthorField', 'id widget')
+    fields = (
+
+        AuthorField('lastname',
+            Input(
+                placeholder = '',
+                name = 'Last Name',
+                size = 'medium',
+                classes = ['econws'],
+                info = u""" """,
+            )
+        ),
+
+        AuthorField('firstname',
+            Input(
+                placeholder = '',
+                name = 'First Name',
+                size = 'medium',
+                classes = ['econws'],
+                info = u""" """,
+            )
+        ),
+
+        AuthorField('Institution',
+            Input(
+                placeholder = '',
+                name = 'Institution',
+                size = 'medium',
+                classes = ['econws'],
+                info = u""" """,
+            )
+        ),
+    )
 
 def hidden_fields():
     """

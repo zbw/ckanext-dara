@@ -94,6 +94,8 @@
     {% resource 'dara/jquery-ui.js' %}
     {% resource 'dara/dara.js' %}
     {% resource 'dara/date_validation.js' %}
+    {% resource 'dara/resource_authors.js' %}
+    {% resource 'dara/dara_authors.js' %}
 
     {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}
@@ -106,9 +108,19 @@
 
 
     {#XXX DEBUG: dataset authors are overwritten by resource authors; off for
-    now
-    {{ authors.authors('resource', h) }}
-    #}
+    now #}
+    <div id="resource_authors">
+        <div id="add_authors_selection">
+            <button type="button" class="plus-button" area-hidden="true" id="author_toggle_on"></button> 
+            <button type="button" class="minus-button" area-hidden="true" id="author_toggle_off" style="display: none;"></button>
+            <strong id="message">Add authors, if different from the previous page</strong>
+        </div>
+        <div id="resource_authors_section" style="display: none;">
+            {{ authors.authors('resource', h, data, errors) }}
+        </div>
+    </div>
+    <hr>
+    
 
     <fieldset id="dara_data">
         {{ dara_form.md('data', h, data, errors) }}

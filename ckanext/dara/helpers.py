@@ -122,14 +122,14 @@ def dara_authors(dara_type, data):
         if isinstance(v, unicode):
             import ast
             new_v = ast.literal_eval(v)
-            dct = list_dicter(new_v[:], [i.id for i in author_fields()])
-            if dct[0]['lastname'] == '':
+            dct = list_dicter(new_v[:], [i.id for i in resource_author_fields()])
+            if dct[0]['lastname'] == '' and dct[0]['institution'] == '':
                 # if the request is for XML return the collection data
                 # otherwise, return an empty string
                 if 'dara_xml' in request.path:
                     pass
                 else:
-                    return dct[:6]
+                    return dct[:3]
             else:
                 return dct
 

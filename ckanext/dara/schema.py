@@ -920,7 +920,8 @@ def resource_author_fields():
                 name = 'Last Name',
                 size = 'medium',
                 classes = ['econws'],
-                info = u""" """,
+                info = u"""Please specify the last name of the author.
+                Choose the name from the list, if available. Middle names should be included in the field 'First Name.'""",
             )
         ),
 
@@ -930,7 +931,7 @@ def resource_author_fields():
                 name = 'First Name',
                 size = 'medium',
                 classes = ['econws'],
-                info = u""" """,
+                info = u"""Please specify the first name of author. In case of a middle name, please also add it here.""",
             )
         ),
 
@@ -940,10 +941,12 @@ def resource_author_fields():
                 name = 'Institution',
                 size = 'medium',
                 classes = ['econws'],
-                info = u""" """,
+                info = u"""If an institution is responsible for the creation of the data resource, please list them here.""",
             )
         ),
     )
+
+    return fields
 
 def hidden_fields():
     """

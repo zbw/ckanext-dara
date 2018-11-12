@@ -40,15 +40,15 @@
      
     
     {# hide an empty authorfield that can be cloned by jQuery #}
-    {{ authorfields(None, name, h, errors, index=2, hide=True) }} 
+    {{ authorfields(None, name, h, errors, index=2, hide=True, type=dara_type) }} 
     
     {# if we have at least one author, display fields with values. Otherwise
     return an empty fieldset #}
     {% if not authors %}
-        {{ authorfields(None, name, h, errors) }}
+        {{ authorfields(None, name, h, errors, type=dara_type) }}
     {% else %}
         {% for author in authors %}
-            {{ authorfields(author, name, h, errors, loop.index) }}
+            {{ authorfields(author, name, h, errors, loop.index, type=dara_type) }}
         {% endfor %}
     {% endif %}
 
@@ -61,10 +61,16 @@
 {%- endmacro %}
 
 
-{% macro authorfields(author, name, h, errors, index=1, hide=False) -%}
+{% macro authorfields(author, name, h, errors, index=1, hide=False, type=None) -%}
     {% resource 'dara/dara.js' %}
-    {% set fields = h.dara_author_fields() %}
+    {% if type == 'dataset' %}
+        {% set fields = h.dara_author_fields() %}
+    {% else %}
+        {% set fields = h.resource_author_fields() %}
+    {% endif %}
+
     {% set classes = [] %}
+
     {% if hide %}
         {% set disabled = 'disabled = disabled' %}
         {% do classes.append('hidden_authorfield') %}
@@ -88,21 +94,20 @@
         {% set additional_classes = widget.classes %}
         {% set attrs = {'data-infotext': widget.info} %}
         
+        {% if label == 'Institution' %}
+            <div class="or_divider">- OR -</div>
+        {% endif %}
+
         {% if 'econws' in widget.classes %}
-        
             {% do attrs.update({'class': 'econws_input', 'autocomplete': 'off',
                             'list': 'gnd_author_names'}) %}
         {% endif %}
-        
-        
+
         {% if 'econws_affil' in widget.classes %}
             {% do attrs.update({'class': 'econws_affil', 'autocomplete': 'off',
             'list': 'gnd_author_affiliations'}) %}
         {% endif %}
 
-
-
-                
         {% for c in additional_classes %}
            {% do classes.append(c) %}
         {% endfor %}
@@ -113,7 +118,6 @@
         {% endif %}
         #}
 
-        
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}
         {% else %}

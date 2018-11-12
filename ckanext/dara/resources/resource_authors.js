@@ -44,7 +44,7 @@ toggleOff.addEventListener('click', function(event){
 
 function clearAuthors(){
     var targets = document.getElementsByName('dara_authors');
-    for (i=0; i<targets.length; i++){
+    for (var i=0; i<targets.length; i++){
         console.log(targets[i].value);
         targets[i].value = "";
         console.log(targets[i].value);

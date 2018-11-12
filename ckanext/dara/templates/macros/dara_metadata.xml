@@ -90,6 +90,7 @@ TODO
             </personIDs>
         {% endif %}
         {#TODO condition einbauen, statt None #}
+        {% if author['affil'] %}
         <affiliation>
             <affiliationName>
                 {{ author['affil'] or None }}
@@ -104,6 +105,14 @@ TODO
                 </affiliationIDs>
             {% endif %}
         </affiliation>
+        {% endif %}
+        {% if author['institution'] %}
+        <institution>
+            <institutionName>
+                {{ author['institution'] }}
+            </institutionName>
+        </institution>
+        {% endif %}
     </person>
 </creator>
 {%- endmacro %}

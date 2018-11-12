@@ -941,7 +941,7 @@ def resource_author_fields():
                 name = 'Institution',
                 size = 'medium',
                 classes = ['econws'],
-                info = u"""If an institution is responsible for the creation of the data resource, please list them here.""",
+                info = u"""If an institution is responsible for the creation of the data resource, please list it here.""",
             )
         ),
     )

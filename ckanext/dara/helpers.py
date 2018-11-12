@@ -108,6 +108,7 @@ def dara_authors(dara_type, data):
     """
     # if it's a resource check if there is author data at that level
     # if there is, use it otherwise default to the collection data
+    v = None
     if dara_type in ['res', 'resource']:
         pack = data or dara_pkg()
         if 'resources' in pack.keys():
@@ -119,6 +120,7 @@ def dara_authors(dara_type, data):
                 v = pack['dara_authors']
             else:
                 return None
+        
         if isinstance(v, unicode):
             import ast
             new_v = ast.literal_eval(v)

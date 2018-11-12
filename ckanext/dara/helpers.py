@@ -55,6 +55,9 @@ def dara_auto_fields():
 def dara_author_fields():
     return dara_schema.author_fields()
 
+def resource_author_fields():
+    return dara_schema.resource_author_fields()
+
 
 def dara_resource():
     """
@@ -112,7 +115,10 @@ def dara_authors(dara_type, data):
                 if resource['id'] == c.resource_id:
                     v = resource['dara_authors']
         else:
-            v = pack['dara_authors']
+            if 'dara_authors' in pack.keys():
+                v = pack['dara_authors']
+            else:
+                return None
         if isinstance(v, unicode):
             import ast
             new_v = ast.literal_eval(v)

@@ -145,6 +145,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_auto_fields': helpers.dara_auto_fields,
                 'dara_resource_url': helpers.dara_resource_url,
                 'dara_author_fields': helpers.dara_author_fields,
+                'resource_author_fields': helpers.resource_author_fields,
                 'check_journal_role': helpers.check_journal_role,
                 'resource_is_internal': helpers.resource_is_internal,
                 'fileinfo': helpers.fileinfo,

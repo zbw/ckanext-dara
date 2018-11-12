@@ -911,7 +911,7 @@ def author_fields():
 
 
 def resource_author_fields():
-    AuthorField = namedtuple('AuthorField', 'id widget')
+    AuthorField = namedtuple('ResourceAuthorField', 'id widget')
     fields = (
 
         AuthorField('lastname',
@@ -934,7 +934,7 @@ def resource_author_fields():
             )
         ),
 
-        AuthorField('Institution',
+        AuthorField('institution',
             Input(
                 placeholder = '',
                 name = 'Institution',

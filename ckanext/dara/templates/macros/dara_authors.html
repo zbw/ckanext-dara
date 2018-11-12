@@ -37,7 +37,6 @@
         {% set authors = aut('resource', data) or aut('dataset', data) %}
         {% set name = 'dara_authors' %}
     {% endif %}
-     
     
     {# hide an empty authorfield that can be cloned by jQuery #}
     {{ authorfields(None, name, h, errors, index=2, hide=True, type=dara_type) }} 

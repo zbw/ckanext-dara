@@ -161,6 +161,6 @@ def test_darapi_resource():
 
 
 
-            
+
 
 

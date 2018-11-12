@@ -263,7 +263,6 @@ def darapi(auth, xml, test=False, register=False):
     also returns a huge chunk of html output. However, it can be used for
     debugging.
     """
-
     d = {False: 'http://www.da-ra.de/dara/study/importXML',
 #         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
           True: 'http://labs.da-ra.de/dara/study/importXML'}

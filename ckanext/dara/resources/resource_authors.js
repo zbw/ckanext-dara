@@ -36,7 +36,7 @@ toggleOn.addEventListener('click', function(event){
 
 toggleOff.addEventListener('click', function(event){
     author_section.style.display = 'none';
-    message.innerHTML = "Add authors, if different from the previous page";
+    message.innerHTML = "Creator (if the creator is not the author(s), please click to edit this field)";
     toggleOff.style.display = "none";
     toggleOn.style.display = "inline";
     clearAuthors();

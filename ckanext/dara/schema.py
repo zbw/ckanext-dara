@@ -930,7 +930,7 @@ def resource_author_fields():
                 placeholder = '',
                 name = 'First Name',
                 size = 'medium',
-                classes = ['econws'],
+                classes = [''],
                 info = u"""Please specify the first name of author. In case of a middle name, please also add it here.""",
             )
         ),
@@ -940,13 +940,36 @@ def resource_author_fields():
                 placeholder = '',
                 name = 'Institution',
                 size = 'medium',
-                classes = ['econws'],
-                info = u"""If an institution is responsible for the creation of the data resource, please list it here.""",
+                classes = ['econws_affil'],
+                info = u"""If an institution is responsible for the creation of the data resource, please list it here. Otherwise, this field can be used to track creator affiliation.""",
             )
         ),
+
+        AuthorField('authorID',
+            Input(
+                name = 'Personal ID',
+                placeholder = 'GND',
+                size = '',
+                classes = ['no_display'],
+                role = '',
+                info=u""" """,
+                ),
+        ),
+
+        AuthorField('affilID',
+            Input(
+                placeholder = 'Your institution',
+                name = 'Affiliation ID',
+                size = 'medium',
+                classes=['no_display'],
+                info=u""" """,
+             ),
+        ),
+
     )
 
     return fields
+
 
 def hidden_fields():
     """

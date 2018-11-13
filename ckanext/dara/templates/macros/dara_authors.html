@@ -23,7 +23,6 @@
     <datalist id="gnd_author_names"></datalist>
     <datalist id="gnd_author_affiliations"></datalist>
 
-
     <fieldset id="authors">
         <legend>Authors</legend>
     {% if dara_type == 'dataset' %}
@@ -39,10 +38,12 @@
     {% endif %}
     
     {# hide an empty authorfield that can be cloned by jQuery #}
-    {{ authorfields(None, name, h, errors, index=2, hide=True, type=dara_type) }} 
+    {{ authorfields(None,name,h,errors,index=2,hide=True,type=dara_type) }} 
     
-    {# if we have at least one author, display fields with values. Otherwise
-    return an empty fieldset #}
+    {# 
+        if we have at least one author, display fields with values. 
+        Otherwise return an empty fieldset 
+    #}
     {% if not authors %}
         {{ authorfields(None, name, h, errors, type=dara_type) }}
     {% else %}
@@ -94,7 +95,7 @@
         {% set attrs = {'data-infotext': widget.info} %}
         
         {% if label == 'Institution' %}
-            <div class="or_divider">- OR -</div>
+            <div class="or_divider">- AND/OR -</div>
         {% endif %}
 
         {% if 'econws' in widget.classes %}

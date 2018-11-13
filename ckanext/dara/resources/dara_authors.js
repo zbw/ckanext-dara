@@ -41,6 +41,9 @@ function ws_names_init () {
                 update_fields(inp, ws_id);
                 return
             }
+            //clear author ID if the name changed
+            clear_author_id(inp);
+
             ws_names_call(val);
         }
     });
@@ -181,10 +184,18 @@ function update_fields_aff (inp, val) {
     return
 }
 
+function clear_author_id(inp){
+    var authorfields = $(inp).closest('fieldset.author');
+    var name = $(authorfields).find('[data-author="lastname"]');
+    var aid = $(authorfields).find('[data-author="authorID"]');
+
+    $(aid.val(null));
+}
+
 function clear_aff_id(inp){
     var authorfields = $(inp).closest('fieldset.author');
     var affID = $(authorfields).find('[data-author="affilID"]');
-    var affID_Type = $(authorfields).find('[data-author="affID_Type"]')
+    var affID_Type = $(authorfields).find('[data-author="affID_Type"]');
 
     $(affID.val(null));
 }

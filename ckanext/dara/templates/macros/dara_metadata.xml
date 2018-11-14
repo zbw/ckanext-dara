@@ -77,7 +77,7 @@ TODO
             {% elif author['authorID_Type'] == 'ORCID' %}
                 {% set uri = "http://orcid.org/" ~ author['authorID'] %}
             {% elif author['authorID_Type'] == 'Repec' %}
-                {% set uri = "https://ideas.repec.org/e/" ~ author['authorID'] %}
+                {% set uri = "https://ideas.repec.org/e/" ~ author['authorID'] ~ ".html" %}
             {% elif author['authorID_Type'] == 'WoS' %}
                 {% set uri = "http://www.researcherid.com/rid/" ~ author['authorID'] %}
             {% elif author['authorID_Type'] == 'Scopus' %}
@@ -99,14 +99,14 @@ TODO
             </personIDs>
         {% endif %}
         {#TODO condition einbauen, statt None #}
-        {% if author['affil'] or author['institution'] %}
+        {% if author['affil'] or author['institution'] -%}
         <affiliation>
             <affiliationName>
-                {% if author['affil'] %}
+                {%- if author['affil'] -%}
                     {{ author['affil'] }}
-                {% else %}
+                {%- else -%}
                     {{ author['institution'] }}
-                {% endif %}
+                {%- endif -%}
             </affiliationName>
             {% if author['affilID'] %}
                 {% set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] %}
@@ -118,25 +118,25 @@ TODO
                 </affiliationIDs>
             {% endif %}
         </affiliation>
-        {% endif %}
+        {%- endif %}
     </person>
     {% endif %}
-    {% if author['institution'] and not author['lastname'] %}
+    {%- if author['institution'] and not author['lastname'] -%}
     <institution>
         <institutionName>
-            {{ author['institution'] }}
+            {{- author['institution'] -}}
         </institutionName>
-        {% if author['affilID'] %}
-        {% set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] %}
+        {%- if author['affilID'] -%}
+        {%- set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] -%}
         <institutionIDs>
             <institutionID>
                 <identifierURI>{{ aff_uri }}</identifierURI>
                 <identifierSchema>GND</identifierSchema>
             </institutionID>
         </institutionIDs>
-        {% endif %}
+        {%- endif -%}
     </institution>
-    {% endif %}
+    {%- endif -%}
 </creator>
 {%- endmacro %}
 
@@ -244,7 +244,7 @@ TODO
       <geographicCoveragesFree>
           <geographicCoverageFree>
               <language>{{ language }}</language>
-              <freetext>    {{ geocoverage_free }}</freetext>
+              <freetext>{{ geocoverage_free }}</freetext>
           </geographicCoverageFree>
       </geographicCoveragesFree>
       {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
@@ -292,12 +292,12 @@ TODO
                 <temporalCoverageFormal>
                     <startDate>
                         <date>
-                            {{ start }}
+                            {{- start -}}
                         </date>
                     </startDate>
                     <endDate>
                         <date>
-                            {{ end }}
+                            {{- end -}}
                         </date>
                     </endDate>
                 </temporalCoverageFormal>

@@ -223,6 +223,8 @@ def resource_type(data):
     if data == "other":
         return "Other"
 
+    return "Dataset"
+
 def _parse_authors(data):
     authors = []
     data = json.loads(data)

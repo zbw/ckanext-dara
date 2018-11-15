@@ -2,6 +2,7 @@ from toolz.dicttoolz import get_in
 import ckan.plugins.toolkit as tk
 from pylons import config
 
+from ckanext.dara.controller import DaraController as xml
 
 # XXX   I haven't found a way to make the CKAN API handle custom exceptions
 # properly, so we use logic.NotFound
@@ -31,7 +32,7 @@ def get_by_doi(context, q):
     doi = q.get('doi', None)
     if not doi:
         raise tk.ObjectNotFound("DOI not given")
-    
+
     ts = config.get('ckanext.dara.use_testserver', 'false')
     field = {'true': 'dara_DOI_Test', 'false': 'dara_DOI'}.get(ts)
     
@@ -45,4 +46,3 @@ def get_by_doi(context, q):
         raise tk.ObjectNotFound("Object with DOI {}".format(doi))
     
     return data
-    

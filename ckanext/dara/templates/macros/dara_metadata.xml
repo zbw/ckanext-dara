@@ -98,7 +98,7 @@ TODO
                 </personID>
             </personIDs>
         {% endif %}
-        {#TODO condition einbauen, statt None #}
+        {# TODO condition einbauen, statt None #}
         {% if author['affil'] or author['institution'] -%}
         <affiliation>
             <affiliationName>

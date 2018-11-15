@@ -247,7 +247,7 @@ class TestDaraXml(FunctionalTestBase):
 
     def test_partial_resource_xml(self):
         app = self._get_test_app()
-        pkg = self.test_package
+        pkg = self.test_partial
         res = factories.Resource(package_id=pkg['id'], **partial_resource)
         response = _get_resource_action_page(app, pkg['name'], res['id'], 'dara_xml')
         nt.eq_(response.headers['Content-Type'], 'text/xml; charset=utf-8')
@@ -282,7 +282,6 @@ class TestDaraXml(FunctionalTestBase):
         assert "<identifierURI>http://d-nb.info/gnd/10064214-7" not in response.body
         assert "<identifierURI>http://d-nb.info/gnd/6012742-9" not in response.body
         assert"<identifierURI>http://d-nb.info/gnd/pid1" in response.body
-        assert"<identifierURI>https://ideas.repec.org/e/pid2.html" in response.body
         assert "<freetext>Someplace" in response.body
         assert "<freetext>Sometime" in response.body
         assert "<sampled>Der Michel" in response.body

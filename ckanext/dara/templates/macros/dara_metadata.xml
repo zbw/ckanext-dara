@@ -204,6 +204,23 @@ TODO
 {% endif %}
 {%- endmacro %}
 
+{# author classification #}
+{% macro author_classification(tags) %}
+{% if tags %}
+<freeKeywords>
+    <freeKeyword>
+        <language>en</language>
+        <keywords>
+            {% for tag in tags %}
+                <keyword>
+                    {{- tag.display_name -}}
+                </keyword>
+            {% endfor %}
+        </keywords>
+    </freeKeyword>
+</freeKeywords>
+{% endif %}
+{% endmacro %}
 
 {# 17. description #}
 {% macro description(text) -%}

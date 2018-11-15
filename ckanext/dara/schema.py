@@ -105,10 +105,7 @@ def fields():
             Select(
                 options=[
                     {'value': 'Download', 'text': 'Free Download'},
-                    {'value': 'Delivery', 'text': 'Delivery on demand'},
                     {'value': 'OnSite', 'text': 'Onsite only'},
-                    {'value': 'NotAvailable', 'text': 'Not available'},
-                    {'value': 'Unknown', 'text': 'Unknown'},
                 ],
                 name='Availability',
                 classes=['dara_required'],

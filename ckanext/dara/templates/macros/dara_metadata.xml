@@ -87,11 +87,11 @@ TODO
                 <personID>
                     <identifierURI>{{ uri }}</identifierURI>
                     <identifierSchema>
-                        {%- if author['authorID_Type'] %}
+                        {%- if author['authorID_Type'] -%}
                             {{ author['authorID_Type'] }}
-                        {% else %}
+                        {%- else -%}
                             GND
-                        {% endif -%}
+                        {%- endif -%}
                     </identifierSchema>
                 </personID>
             </personIDs>

@@ -74,11 +74,10 @@ class TestDaraApiExtension(FunctionalTestBase):
         app = self._get_test_app()
         id_ = dataset['id']
         name = dataset['name']
-        #r = tk.get_action('xml_show')({'id': name})
+
         url = '/api/3/action/xml_show?id={id}'
-        response = app.get(
-                            url=url.format(id=id_)
-                          )
+        response = app.get(url=url.format(id=id_))
+
         assert "resource was found" in response.body
 
     def test_resource_api(self):
@@ -87,12 +86,11 @@ class TestDaraApiExtension(FunctionalTestBase):
         res = factories.Resource(package_id=pkg['id'], **full_resource)
         pkg_id = res['package_id']
         res_id = res['id']
-        #r = tk.get_action('xml_show')({'id': res_id})
+
         url = '/api/3/action/xml_show?id={id}'
-        response = app.get(
-                            url=url.format(id=res_id)
-                          )
-        assert "resource was found" in response.body
+        response = app.get(url=url.format(id=res_id))
+
+        assert "resource was found!" in response.body, response
 
     def test_resource_api_fail(self):
         app = self._get_test_app()
@@ -100,10 +98,11 @@ class TestDaraApiExtension(FunctionalTestBase):
         res = factories.Resource(package_id=pkg['id'], **full_resource)
         pkg_id = res['package_id']
         res_id = res['id']
-        #r = tk.get_action('xml_show')({'id': res_id})
+
         url = '/api/3/action/xml_show?id={id}'
         response = app.get(url=url.format(id='fail'))
         data = json.loads(response.body)
+
         assert data['result'] == "Unable to generate XML.", data
 
 

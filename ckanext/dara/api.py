@@ -53,9 +53,7 @@ def xml_show(context, data_dict):
         actions = {'package_show': 'package/collection.xml', 'resource_show': 'package/resource.xml'}
         for action, temp in actions.items():
             try:
-                #pkg = tk.get_action(action)(None, context)
                 pkg = tk.get_action(action)(None, {'id': id_})
-                template = temp
                 return action, pkg
             except Exception as e:
                 pkg = None

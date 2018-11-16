@@ -188,8 +188,10 @@ function clear_author_id(inp){
     var authorfields = $(inp).closest('fieldset.author');
     var name = $(authorfields).find('[data-author="lastname"]');
     var aid = $(authorfields).find('[data-author="authorID"]');
+    var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
 
     $(aid.val(null));
+    aid_type[0].parentNode.parentNode.style.display = 'none';
 }
 
 function clear_aff_id(inp){

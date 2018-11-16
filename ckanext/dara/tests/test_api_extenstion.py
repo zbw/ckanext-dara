@@ -1,5 +1,7 @@
+import json
 import untangle
 import ckan.model as model
+from routes import url_for
 import ckan.plugins as plugins
 import ckan.lib.search as search
 import ckan.plugins.toolkit as tk
@@ -68,16 +70,16 @@ class TestDaraApiExtension(FunctionalTestBase):
         return pkg
 
     def test_collection_api(self):
-        """
-        test dara_xml generation and view for dataset
-        """
         dataset = self.test_package
         app = self._get_test_app()
         id_ = dataset['id']
         name = dataset['name']
-        r = tk.get_action('xml_show')({'id': name})
-        assert False, r
-
+        #r = tk.get_action('xml_show')({'id': name})
+        url = '/api/3/action/xml_show?id={id}'
+        response = app.get(
+                            url=url.format(id=id_)
+                          )
+        assert "resource was found" in response.body
 
     def test_resource_api(self):
         app = self._get_test_app()
@@ -85,8 +87,24 @@ class TestDaraApiExtension(FunctionalTestBase):
         res = factories.Resource(package_id=pkg['id'], **full_resource)
         pkg_id = res['package_id']
         res_id = res['id']
-        r = tk.get_action('xml_show')({'id': res_id})
-        assert False, r
+        #r = tk.get_action('xml_show')({'id': res_id})
+        url = '/api/3/action/xml_show?id={id}'
+        response = app.get(
+                            url=url.format(id=res_id)
+                          )
+        assert "resource was found" in response.body
+
+    def test_resource_api_fail(self):
+        app = self._get_test_app()
+        pkg = self.test_package
+        res = factories.Resource(package_id=pkg['id'], **full_resource)
+        pkg_id = res['package_id']
+        res_id = res['id']
+        #r = tk.get_action('xml_show')({'id': res_id})
+        url = '/api/3/action/xml_show?id={id}'
+        response = app.get(url=url.format(id='fail'))
+        data = json.loads(response.body)
+        assert data['result'] == "Unable to generate XML.", data
 
 
 full_resource = {

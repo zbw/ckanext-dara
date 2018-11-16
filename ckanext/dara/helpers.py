@@ -17,11 +17,14 @@ import json
 
 
 
-def dara_pkg():
+def dara_pkg(id=None):
     """
     get package for several helper functions
     XXX DO WE REALLY NEED THIS?
     """
+    if id:
+        pkg = tk.get_action('package_show')(None, {'id': id})
+        return pkg
 
     pkg_id = tk.c.id
     try:
@@ -46,7 +49,10 @@ def dara_auto_fields():
     if 'localhost' in site_url:
         site_url = "http://edawax.de"
 
-    pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+    if pkg:
+        pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+    else:
+        pkg_url = ''
     dara_url = site_url + pkg_url
 
     return {'URL': dara_url}

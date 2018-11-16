@@ -7,10 +7,15 @@
 {% import 'macros/dara_metadata.xml' as macros %}
 
 
-{% set auto = h.dara_auto_fields() %}
-{% set pkg = h.dara_pkg() %}
-{% set dara_authors = h.dara_authors('dataset', data) %}
+{% if id %}
+    {% set pkg = h.dara_pkg() %}
+{% else %}
+    {% set pkg = h.dara_pkg(id) %}
+{% endif %}
 
+{% set auto = h.dara_auto_fields() %}
+
+{% set dara_authors = h.dara_authors('dataset', data) %}
 {# {% set debug = h.dara_debug() %} #}
 
 {#

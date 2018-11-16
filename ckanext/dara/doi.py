@@ -25,6 +25,7 @@ def res_doi(res):
     doi = res.get('dara_DOI', None)
     if doi:
         return doi
+    print(res)
     pkg = tk.get_action('package_show')(None, {'id': res['package_id']})
     doi_gen = dara_doi(get_journal_name(pkg), res['created'])
 
@@ -39,9 +40,12 @@ def res_doi(res):
 
 # helpers
 def pkg_doi(pkg):
-    doi = pkg.get('dara_DOI', None)
-    if doi:
-        return doi
+    try:
+        doi = pkg.get('dara_DOI', None)
+        if doi:
+            return doi
+    except AttributeError:
+        pass
     return dara_doi(get_journal_name(pkg), pkg['metadata_created'])
  
 

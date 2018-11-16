@@ -131,7 +131,10 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 }
 
     def get_actions(self):
-        return {'get_by_doi': api.get_by_doi}
+        return {
+                    'get_by_doi': api.get_by_doi,
+                    'xml_show': api.xml_show
+               }
 
     def get_helpers(self):
         return {

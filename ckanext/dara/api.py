@@ -2,7 +2,6 @@ from toolz.dicttoolz import get_in
 import ckan.plugins.toolkit as tk
 from pylons import config
 
-from ckanext.dara.controller import DaraController as xml
 
 # XXX   I haven't found a way to make the CKAN API handle custom exceptions
 # properly, so we use logic.NotFound
@@ -46,3 +45,28 @@ def get_by_doi(context, q):
         raise tk.ObjectNotFound("Object with DOI {}".format(doi))
     
     return data
+
+
+@tk.side_effect_free
+def xml_show(context, data_dict):
+    def _get_type(id):
+        actions = {'package_show': 'package/collection.xml', 'resource_show': 'package/resource.xml'}
+        for action, temp in actions.items():
+            try:
+                #pkg = tk.get_action(action)(None, context)
+                pkg = tk.get_action(action)(None, {'id': id_})
+                template = temp
+                return action, pkg
+            except Exception as e:
+                pkg = None
+                template = None
+        return False, False
+
+    id_ = context.get('id', data_dict.get('id', None))
+    method, pkg = _get_type(id_)
+    if method == 'package_show':
+        tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=id_, template='package/collection.xml')
+    elif method == 'resource_show':
+        tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=pkg['package_id'], resource_id=id_, template='package/resource.xml')
+    return 'Unable to generate XML.'
+

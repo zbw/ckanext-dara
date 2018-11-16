@@ -42,7 +42,6 @@ class DaraController(PackageController):
     displays and validates dara XML for the dataset or resource, and registers
     it at da|ra.
     """
-
     def _context(self):
         return {'model': model, 'session': model.Session,
                 'user': c.user or c.author, 'for_view': True,

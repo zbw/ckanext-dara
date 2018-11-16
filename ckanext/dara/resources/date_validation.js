@@ -7,6 +7,7 @@ form.onsubmit = function(event){
     var start_date = document.getElementById('field-dara_temporalCoverageFormal');
     var end_date = document.getElementById('field-dara_temporalCoverageFormal_end');
     var valid = check_dates(start_date, end_date);
+    console.log(valid);
     start_date.setAttribute('required', '');
     end_date.setAttribute('required', '');
 
@@ -38,12 +39,15 @@ form.onsubmit = function(event){
 function check_dates(start, end){
     console.log('checking');
     if (start.value.length > 0 && end.value.length == 0){
+        console.log('1');
         return "end";
     }
     if (start.value.length == 0 && end.value.length > 0){
+        console.log('2');
         return "start";
     }
     if (start.value > end.value){
+        console.log('3');
         return "order";
     }
 

@@ -276,7 +276,7 @@ def fields():
 
 
         DaraField('temporalCoverageFormal',
-                ('data',), ('ignore_missing', 'dates',),
+                ('data',), ('ignore_missing',),
                 Date(
                     classes= [],
                     size= 'small',

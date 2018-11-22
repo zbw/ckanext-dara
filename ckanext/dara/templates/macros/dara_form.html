@@ -103,6 +103,12 @@ Examples:
             }) %}
         {% endif %}
 
+        {% if 'select.geo' in additional_classes %}
+           {% do attrs.update({'class': 'select_geo', 'multiple': 'multiple',
+            'style': 'width: 62%'
+            }) %}
+        {% endif %}
+
 
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}

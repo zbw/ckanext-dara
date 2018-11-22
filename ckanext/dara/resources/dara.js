@@ -16,6 +16,13 @@ $(".select_jels").select2({
     allowClear: true,
 });
 
+$(".select_geo").select2({
+// TODO: get JELs with request to econ_ws
+// https://select2.org/data-sources/ajax
+    placeholder: "Start typing and select countries",
+    allowClear: true,
+});
+
 
 function master_slave_input() {
 

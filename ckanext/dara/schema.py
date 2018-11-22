@@ -233,7 +233,7 @@ def fields():
        DaraField('geographicCoverage',
                 ('data',), ('ignore_missing', 'jel_convert',),
                Select(
-               classes = ["select.jels"],
+               classes = ["select.geo"],
                name = 'Geographic Coverage (controlled)',
                options = geo.geo,
                )
@@ -243,7 +243,7 @@ def fields():
         DaraField('geographicCoverageFree',
                  ('data',), ('ignore_missing',),
                 Input(
-                placeholder = 'eg. West-Germany',
+                placeholder = 'eg. Berlin',
                 name = 'Geographic Coverage (free)',
                 size = 'medium',
                 info=u"""Please detail which geographic areas are acovered by your dataset.""",

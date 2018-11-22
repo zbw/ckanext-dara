@@ -38,8 +38,8 @@ resources have different variables #}
 {% macro titles(title, language) -%}
 <titles>
     <title>
-      <titleName>{{ title }}</titleName>
-       <language>{{ language }}</language>
+        <language>{{ language }}</language>
+        <titleName>{{ title }}</titleName>
     </title>
 </titles>
 {%- endmacro %}

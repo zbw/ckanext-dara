@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 from toolz.dicttoolz import get_in
@@ -13,6 +14,13 @@ from ckanext.dara.ftools import list_dicter
 # from ckan.plugins.toolkit import Invalid
 # from ckan.lib.navl.dictization_functions import unflatten
 from ckan.plugins.toolkit import Invalid
+
+# for new validator
+from ckan.plugins.toolkit import Invalid
+import ckan.lib.navl.dictization_functions as df
+missing = df.missing
+StopOnError = df.StopOnError
+
 
 error_key = '_error'
 
@@ -156,8 +164,42 @@ def jel_convert(value, context):
     brackets, so here we remove them and then return a list with one string."""
     if isinstance(value, list):
         return ','.join(value)
-    
+
     if isinstance(value, basestring):
         return value.replace('{', '').replace('}', '').split(',')
 
     return value
+
+
+def _check_doi_resolves(doi):
+    url = 'http://dx.doi.org/' + doi
+    r = requests.get(url)
+    return r.status_code
+
+def _check_if_new(context):
+    # new packages don't have 'package' in their context becuase they don't exist
+    if 'package' in context.keys():
+        return True
+    return False
+
+def dara_doi_validator(key, data, errors, context):
+    # based on ignore_missing validator
+    value = data.get(key)
+
+    if value is missing or value is None:
+        data.pop(key, None)
+        raise StopOnError
+
+    # Only validate for new items to avoid 'test' dois causing a crash
+    is_new = _check_if_new(context)
+    if is_new:
+        type_ = data.get(('dara_Publication_PIDType', ))
+        if type_ == 'DOI':
+            pattern = re.compile('^10.\d{4,9}/[-._;()/:a-zA-Z0-9]+$')
+            match = pattern.match(value)
+            if match is None:
+                raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx')
+            if _check_doi_resolves(value) != 200:
+                raise Invalid("http://dx.doi.org/{} is unreachable.".format(value))
+    return value
+

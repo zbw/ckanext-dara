@@ -199,7 +199,5 @@ def dara_doi_validator(key, data, errors, context):
             match = pattern.match(value)
             if match is None:
                 raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx')
-            if _check_doi_resolves(value) != 200:
-                raise Invalid("http://dx.doi.org/{} is unreachable.".format(value))
     return value
 

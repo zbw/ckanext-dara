@@ -634,7 +634,7 @@ def fields():
         # the old url value to this field
         DaraField('Publication_PID',
             #('publication',), ('ignore_missing',),
-            ('publication',), ('ignore_missing',),
+            ('publication',), ('ignore_missing', 'dara_doi_validator',),
             Input(
                 role = 'master',
                 name = 'Identifier',

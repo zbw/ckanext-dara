@@ -234,10 +234,11 @@ def resource_type(data):
 def _parse_authors(data):
     authors = []
     data = json.loads(data)
+    
     for author in data:
         first = author['firstname'][0]
         last = author['lastname']
-        authors.append('{}, {}.'.format(last, first))
+        authors.append('{}, {}.'.format(last.encode('utf-8'), first))
     return ', '.join(authors)
 
 def build_citation(data):

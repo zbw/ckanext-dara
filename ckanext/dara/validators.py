@@ -156,12 +156,6 @@ def id_validation(data):
     i = data['authorID']
     pattern = re.compile(patterns[t])
     match = pattern.match(i)
-    print('==============')
-    print(data)
-    print(t)
-    print(patterns[t])
-    print(i)
-    print(match)
     if match is None:
         msg = 'Personal ID "{}"" does not seem to be a valid {} ID'.format(i, t)
         raise Invalid(msg)
@@ -206,16 +200,15 @@ def dara_doi_validator(key, data, errors, context):
         data.pop(key, None)
         raise StopOnError
 
-    # Only validate for new items to avoid 'test' dois causing a crash
-    is_new = _check_if_new(context)
-    if is_new:
-        type_ = data.get(('dara_Publication_PIDType', ))
-        if type_ == 'DOI':
-            pattern = re.compile('^10.\d{4,9}/[-._;()/:a-zA-Z0-9]+$')
-            match = pattern.match(value)
-            if match is None:
-                raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx')
+    type_ = data.get(('dara_Publication_PIDType', ))
+    if type_ == 'DOI':
+        pattern = re.compile('^10.\d{4,9}/[-._;()/:a-zA-Z0-9]+$')
+        match = pattern.match(value)
+        if match is None:
+            raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx')
+
     return value
+
 
 patterns = {
                 'GND': '^1[01]?\d{7}[0-9X]|[47]\d{6}-\d|[1-9]\d{0,7}-[0-9X]|3\d{7}[0-9X]$',

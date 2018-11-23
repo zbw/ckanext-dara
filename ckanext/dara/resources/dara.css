@@ -8,7 +8,6 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 .ui-widget-content, .dara_level {
   background-color: rgb(240,240,240) !important;
   background-image:none !important;
-
 }
 
 
@@ -136,6 +135,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 font-size:14px !important;
 }
 
+/* color of remove author button*/
 .dara_red {
   color:  rgb(129, 6, 6) !important;
 }
@@ -179,19 +179,23 @@ font-size:14px !important;
     background-color:lightyellow
 }
 
+/* small field lengths */
 .control-small input {
     width:120px;
 }
 
+/* author form fields are set to be inline */
 .inline {
     display: inline;
 }
 
+/* group of author fields */
 fieldset.author {
     margin-bottom: 30px;
     margin-left: 50px;
 }
 
+/* 'X' button used to remove authors */
 .remove_author {
     display:inline;
     float:left;
@@ -203,6 +207,7 @@ fieldset.author {
     
 }
 
+/* details selector for some fields. Only displays when required */
 .dara_slave select {
     width:auto;
     font-size:0.75em !important;
@@ -244,19 +249,17 @@ label[for="dara_res_preselection"] {
 
 
 /* jquery-ui tooltip */
-
 .ui-tooltip-content {
     font-size:75%;
     line-height:1.4em;
     color: white;
 /*    font-family:;*/
 }
-
-  .ui-tooltip, .arrow:after {
+.ui-tooltip, .arrow:after {
     background: rgba(139,0,0,0.75) !important;
     border: 2px solid white;
   }
-  .ui-tooltip {
+.ui-tooltip {
     padding: 10px 20px;
     color: white;
     border-radius: 20px;
@@ -345,6 +348,7 @@ label[for="dara_res_preselection"] {
 */
 
 
+/* info button to the right of the field */
 .ib {
     float: right;
     position: relative;
@@ -352,11 +356,16 @@ label[for="dara_res_preselection"] {
     cursor: help;
     color: darkgray;
 }
-
 .ib:hover {
     color:darkred;
 }
 
+/*********************************
+ *********************************
+ * Buttons to add/remove authors *
+ * on the resource forms         *
+ *********************************
+ *********************************/
 /*add button*/
 .plus-button {
     border: 2px solid green;

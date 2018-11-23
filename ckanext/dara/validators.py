@@ -68,7 +68,6 @@ def authors(key, data, errors, context):
         """
         sets missing http prefix for author url
         """
-
         if author['url']:
             if not author['url'].startswith(('http://', 'https://')):
                 author['url'] = 'http://' + author['url']
@@ -81,8 +80,7 @@ def authors(key, data, errors, context):
         """
         id_type = author['authorID_Type']
         id_value = author['authorID']
-        funcs = {'ORCID': _orcid, 'GND': _ytc, 'Scopus': _ytc, 'WoS': _ytc,
-                'Repec': _ytc}
+        funcs = {'ORCID': _orcid, 'GND': id_validation, 'Scopus': id_validation, 'WoS': id_validation, 'Repec': id_validation}
         if id_type and id_value:
             return pipe(author, funcs[id_type], url_check, error_check)
         if id_value and not id_type:
@@ -152,6 +150,24 @@ def _orcid(author_orig):
     return author
 
 
+def id_validation(data):
+    """ simple validation that checks that the given ID matches the expected pattern """
+    t = data['authorID_Type']
+    i = data['authorID']
+    pattern = re.compile(patterns[t])
+    match = pattern.match(i)
+    print('==============')
+    print(data)
+    print(t)
+    print(patterns[t])
+    print(i)
+    print(match)
+    if match is None:
+        msg = 'Personal ID "{}"" does not seem to be a valid {} ID'.format(i, t)
+        raise Invalid(msg)
+    return data
+
+
 def jel_convert(value, context):
     """This is rather hacky and might seem to be
     illogical. In case of more than on JEL field entry a list is returned that must
@@ -201,3 +217,9 @@ def dara_doi_validator(key, data, errors, context):
                 raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx')
     return value
 
+patterns = {
+                'GND': '^1[01]?\d{7}[0-9X]|[47]\d{6}-\d|[1-9]\d{0,7}-[0-9X]|3\d{7}[0-9X]$',
+                'Scopus': "^\d{10,11}$",
+                'Repec': '^p[a-z]{2}[1-9]\d{0,4}$',
+                'WoS': '^[A-Z]-\d{4}-(19|20)\d\d$'
+            }

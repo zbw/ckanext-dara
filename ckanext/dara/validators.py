@@ -132,7 +132,10 @@ def _orcid(author_orig):
         orcid_base = "https://pub.orcid.org/v2.1"
         headers = {'Accept': 'application/orcid+json'}
         url = '{}/{}/personal-details'.format(orcid_base, author_id)
-        return requests.get(url, headers=headers)
+        try:
+            return requests.get(url, headers=headers, timeout=3.05)
+        except requests.exceptions.Timeout as e:
+            return {'status_code': 400}
 
     def orcid_map(k):
         return (k, get_in(mapping[k], profile))

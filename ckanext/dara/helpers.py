@@ -271,7 +271,10 @@ def query_crossref(doi):
     """
     base_url = "https://api.crossref.org/works/{doi}"
     
-    response = requests.get(base_url.format(doi=doi))
+    try:
+        response = requests.get(base_url.format(doi=doi), timeout=3.05)
+    except requests.exceptions.Timeout as e:
+        return False
     if response.status_code == 200:
         data = response.json()
         return data

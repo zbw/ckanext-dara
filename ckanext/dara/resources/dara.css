@@ -79,6 +79,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 }
 
+/* 'add author' button */
 #add_author {
     margin-left:80px; 
 }
@@ -91,14 +92,13 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 .dara_master_slave {
 }
 
-
+/* details selector for some fields. Only displays when required */
 .dara_slave {
 /*  margin-left:100px ! important; */
     float:right;
     margin-right:200px;
     margin-top:0px;
 }
-
 .dara_slave label {
   font-size: 12px;
   color:rgb(90,90,90);
@@ -127,7 +127,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 }
 
-
+/* form field font size */
 .ui-widget input, 
 .ui-widget select, 
 .ui-widget textarea, 
@@ -135,7 +135,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 font-size:14px !important;
 }
 
-/* color of remove author button*/
+/* color of "remove author" button*/
 .dara_red {
   color:  rgb(129, 6, 6) !important;
 }
@@ -161,16 +161,18 @@ font-size:14px !important;
     float:right;
 }
 
+/*****************************************************************
+ * Fields that can be repeated are hidden and javascript is used *
+ * to copy the hidden fields and create new ones.                *
+ *****************************************************************/
 .hidden  {
 /*    display:none; */
     visibility:hidden;
 }
-
 .no_display {
   display: none !important;
   visibility: hidden;
 }
-
 .hidden_authorfield {
     display: none;
 }
@@ -233,6 +235,7 @@ fieldset.author {
     color:darkgrey;
 }
 
+/* 'this resource is for' block at the top of the resource form */
 label[for="dara_res_preselection"] {
     font-size:normal;
     margin-left:-20px;
@@ -427,6 +430,7 @@ label[for="dara_res_preselection"] {
         width: 1em;
     }
 
+/* "AND/OR" in the author secton of the resource */
 .or_divider{
     padding-left: 60px;
     font-weight: bold;

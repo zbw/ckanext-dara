@@ -21,14 +21,14 @@ var message = document.getElementById('message');
 
 if (populated){
     author_section.style.display = 'block';
-    message.innerHTML = "Remove authors";
+    message.innerHTML = "Remove creators";
     toggleOn.style.display = "none";
     toggleOff.style.display = "inline";
 }
 
 toggleOn.addEventListener('click', function(event){
     author_section.style.display = 'block';
-    message.innerHTML = "Remove authors";
+    message.innerHTML = "Remove creators";
     toggleOn.style.display = "none";
     toggleOff.style.display = "inline";
 });

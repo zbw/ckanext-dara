@@ -14,6 +14,11 @@
 
 
     {# {% set debug = h.dara_debug() %}#}
+    {% if dara_type == 'dataset' %}
+        {% set who = 'Author' %}
+    {% else %}
+        {% set who = 'Creator' %}
+    {% endif %}
 
     {% set aut = h.dara_authors %}
     
@@ -24,7 +29,8 @@
     <datalist id="gnd_author_affiliations"></datalist>
 
     <fieldset id="authors">
-        <legend>Authors</legend>
+        <legend>{{ who }}s</legend>
+        
     {% if dara_type == 'dataset' %}
         {% set authors = aut('dataset', data) %} 
         {% set name = 'dara_authors' %}
@@ -55,7 +61,7 @@
     </fieldset>
 
     <p style="margin-bottom:25px; margin-left:-25px;"><a href="#" class="btn" id="add_author">
-    Add Author</a> </p>
+    Add {{ who }}</a> </p>
 
     </div>
 {%- endmacro %}
@@ -65,8 +71,10 @@
     {% resource 'dara/dara.js' %}
     {% if type == 'dataset' %}
         {% set fields = h.dara_author_fields() %}
+        {% set who = 'Author' %}
     {% else %}
         {% set fields = h.resource_author_fields() %}
+        {% set who = 'Creator' %}
     {% endif %}
 
     {% set classes = [] %}
@@ -80,9 +88,9 @@
         {% if index > 1 %}
             <div><a href="#" class="dara_red remove_author" title="Remove
             Author">[x]</a></div>
-        <label>Author</label>
+        <label>{{ who }}</label>
         {% else %}
-        <label class="required">Author</label>
+        <label class="required">{{ who }}</label>
         {% endif %}
 
     {% for field in fields %}

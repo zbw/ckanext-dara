@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 from toolz.dicttoolz import get_in
@@ -7,11 +8,19 @@ from itertools import count
 # from toolz.itertoolz import first, partition
 from copy import deepcopy
 # from ckan.plugins.toolkit import missing
-from ckanext.dara.schema import author_fields
+from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter
 # from datetime import datetime
 # from ckan.plugins.toolkit import Invalid
 # from ckan.lib.navl.dictization_functions import unflatten
+from ckan.plugins.toolkit import Invalid
+
+# for new validator
+from ckan.plugins.toolkit import Invalid
+import ckan.lib.navl.dictization_functions as df
+missing = df.missing
+StopOnError = df.StopOnError
+
 
 error_key = '_error'
 
@@ -59,11 +68,11 @@ def authors(key, data, errors, context):
         """
         sets missing http prefix for author url
         """
-
         if author['url']:
             if not author['url'].startswith(('http://', 'https://')):
                 author['url'] = 'http://' + author['url']
         return author
+
 
     def id_check(author):
         """
@@ -71,8 +80,7 @@ def authors(key, data, errors, context):
         """
         id_type = author['authorID_Type']
         id_value = author['authorID']
-        funcs = {'ORCID': _orcid, 'GND': _ytc, 'Scopus': _ytc, 'WoS': _ytc,
-                'Repec': _ytc}
+        funcs = {'ORCID': _orcid, 'GND': id_validation, 'Scopus': id_validation, 'WoS': id_validation, 'Repec': id_validation}
         if id_type and id_value:
             return pipe(author, funcs[id_type], url_check, error_check)
         if id_value and not id_type:
@@ -83,6 +91,20 @@ def authors(key, data, errors, context):
 
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
     data[key] = json.dumps(map(id_check, validate(authors)))
+
+
+def dates(key, data, errors, context):
+    """ 
+        make sure if there is a start date there is also an end date 
+        and vice-versa.
+    """
+    start = data[('resources', 0, 'dara_temporalCoverageFormal')]
+    end = data[('resources', 0, 'dara_temporalCoverageFormal_end')]
+
+    if len(start) > 0 and len(end) == 0:
+        raise Invalid('End date required')
+    elif len(start) == 0 and len(end) > 0:
+        raise Invalid('Start date required')
 
 
 def _ytc(author_orig):
@@ -110,7 +132,10 @@ def _orcid(author_orig):
         orcid_base = "https://pub.orcid.org/v2.1"
         headers = {'Accept': 'application/orcid+json'}
         url = '{}/{}/personal-details'.format(orcid_base, author_id)
-        return requests.get(url, headers=headers)
+        try:
+            return requests.get(url, headers=headers, timeout=3.05)
+        except requests.exceptions.Timeout as e:
+            return {'status_code': 400}
 
     def orcid_map(k):
         return (k, get_in(mapping[k], profile))
@@ -128,6 +153,18 @@ def _orcid(author_orig):
     return author
 
 
+def id_validation(data):
+    """ simple validation that checks that the given ID matches the expected pattern """
+    t = data['authorID_Type']
+    i = data['authorID']
+    pattern = re.compile(patterns[t])
+    match = pattern.match(i)
+    if match is None:
+        msg = 'Personal ID "{}"" does not seem to be a valid {} ID'.format(i, t)
+        raise Invalid(msg)
+    return data
+
+
 def jel_convert(value, context):
     """This is rather hacky and might seem to be
     illogical. In case of more than on JEL field entry a list is returned that must
@@ -138,13 +175,47 @@ def jel_convert(value, context):
     string.  CKAN then later adds curly brackets (e.g. u"{A12}") and calls this
     function a second time. I couldnt find out where (and why) CKAN adds the
     brackets, so here we remove them and then return a list with one string."""
-        
     if isinstance(value, list):
         return ','.join(value)
-    
+
     if isinstance(value, basestring):
         return value.replace('{', '').replace('}', '').split(',')
 
     return value
 
 
+def _check_doi_resolves(doi):
+    url = 'http://dx.doi.org/' + doi
+    r = requests.get(url)
+    return r.status_code
+
+def _check_if_new(context):
+    # new packages don't have 'package' in their context becuase they don't exist
+    if 'package' in context.keys():
+        return True
+    return False
+
+def dara_doi_validator(key, data, errors, context):
+    # based on ignore_missing validator
+    value = data.get(key)
+
+    if value is missing or value is None:
+        data.pop(key, None)
+        raise StopOnError
+
+    type_ = data.get(('dara_Publication_PIDType', ))
+    if type_ == 'DOI':
+        pattern = re.compile('^10.\d{4,9}/[-._;()/:a-zA-Z0-9]+$')
+        match = pattern.match(value)
+        if match is None:
+            raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx')
+
+    return value
+
+
+patterns = {
+                'GND': '^1[01]?\d{7}[0-9X]|[47]\d{6}-\d|[1-9]\d{0,7}-[0-9X]|3\d{7}[0-9X]$',
+                'Scopus': "^\d{10,11}$",
+                'Repec': '^p[a-z]{2}[1-9]\d{0,4}$',
+                'WoS': '^[A-Z]-\d{4}-(19|20)\d\d$'
+            }

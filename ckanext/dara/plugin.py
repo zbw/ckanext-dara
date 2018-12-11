@@ -45,21 +45,23 @@ def schema_update(schema, action):
                 ds.single_fields())
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
 
-    resource_schema_update(schema)
+    resource_schema_update(schema, action)
 
     # XXX validating resource custom fields does not work in CKAN!?.
     # map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
     #    tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
 
-def resource_schema_update(schema):
+def resource_schema_update(schema, action):
     v = [tk.get_validator('ignore_missing')]
     fields = chain(dara_fields('data'),
                 dara_fields('text'),
                 dara_fields('code'),
                 dara_fields('other'),
                 ds.hidden_fields())
-    map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
+    #map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
+    map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
+        tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
 
 def dara_package_schema(schema):
@@ -125,10 +127,15 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {'authors': validators.authors,
                 'normalize_issue_string': validators.normalize_issue_string,
                 'jel_convert': validators.jel_convert,
+                'dates': validators.dates,
+                'dara_doi_validator': validators.dara_doi_validator
                 }
 
     def get_actions(self):
-        return {'get_by_doi': api.get_by_doi}
+        return {
+                    'get_by_doi': api.get_by_doi,
+                    'xml_show': api.xml_show
+               }
 
     def get_helpers(self):
         return {
@@ -142,6 +149,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_auto_fields': helpers.dara_auto_fields,
                 'dara_resource_url': helpers.dara_resource_url,
                 'dara_author_fields': helpers.dara_author_fields,
+                'resource_author_fields': helpers.resource_author_fields,
                 'check_journal_role': helpers.check_journal_role,
                 'resource_is_internal': helpers.resource_is_internal,
                 'fileinfo': helpers.fileinfo,
@@ -150,6 +158,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_use_testserver': doi.use_testserver,
                 'av_transform': helpers.av_transform,
                 'unit_type_transform': helpers.unit_type_transform,
+                'org_extra_info': helpers.org_extra_info,
+                'resource_type': helpers.resource_type,
+                'build_citation': helpers.build_citation,
                 }
 
     def is_fallback(self):

@@ -8,7 +8,6 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 .ui-widget-content, .dara_level {
   background-color: rgb(240,240,240) !important;
   background-image:none !important;
-
 }
 
 
@@ -80,6 +79,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 }
 
+/* 'add author' button */
 #add_author {
     margin-left:80px; 
 }
@@ -92,14 +92,13 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 .dara_master_slave {
 }
 
-
+/* details selector for some fields. Only displays when required */
 .dara_slave {
 /*  margin-left:100px ! important; */
     float:right;
     margin-right:200px;
     margin-top:0px;
 }
-
 .dara_slave label {
   font-size: 12px;
   color:rgb(90,90,90);
@@ -128,7 +127,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 }
 
-
+/* form field font size */
 .ui-widget input, 
 .ui-widget select, 
 .ui-widget textarea, 
@@ -136,6 +135,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 font-size:14px !important;
 }
 
+/* color of "remove author" button*/
 .dara_red {
   color:  rgb(129, 6, 6) !important;
 }
@@ -161,11 +161,18 @@ font-size:14px !important;
     float:right;
 }
 
+/*****************************************************************
+ * Fields that can be repeated are hidden and javascript is used *
+ * to copy the hidden fields and create new ones.                *
+ *****************************************************************/
 .hidden  {
 /*    display:none; */
     visibility:hidden;
 }
-
+.no_display {
+  display: none !important;
+  visibility: hidden;
+}
 .hidden_authorfield {
     display: none;
 }
@@ -174,19 +181,23 @@ font-size:14px !important;
     background-color:lightyellow
 }
 
+/* small field lengths */
 .control-small input {
-    width:104px;
+    width:120px;
 }
 
+/* author form fields are set to be inline */
 .inline {
     display: inline;
 }
 
+/* group of author fields */
 fieldset.author {
     margin-bottom: 30px;
     margin-left: 50px;
 }
 
+/* 'X' button used to remove authors */
 .remove_author {
     display:inline;
     float:left;
@@ -198,6 +209,7 @@ fieldset.author {
     
 }
 
+/* details selector for some fields. Only displays when required */
 .dara_slave select {
     width:auto;
     font-size:0.75em !important;
@@ -223,6 +235,7 @@ fieldset.author {
     color:darkgrey;
 }
 
+/* 'this resource is for' block at the top of the resource form */
 label[for="dara_res_preselection"] {
     font-size:normal;
     margin-left:-20px;
@@ -239,19 +252,17 @@ label[for="dara_res_preselection"] {
 
 
 /* jquery-ui tooltip */
-
 .ui-tooltip-content {
     font-size:75%;
     line-height:1.4em;
     color: white;
 /*    font-family:;*/
 }
-
-  .ui-tooltip, .arrow:after {
+.ui-tooltip, .arrow:after {
     background: rgba(139,0,0,0.75) !important;
     border: 2px solid white;
   }
-  .ui-tooltip {
+.ui-tooltip {
     padding: 10px 20px;
     color: white;
     border-radius: 20px;
@@ -340,6 +351,7 @@ label[for="dara_res_preselection"] {
 */
 
 
+/* info button to the right of the field */
 .ib {
     float: right;
     position: relative;
@@ -347,8 +359,80 @@ label[for="dara_res_preselection"] {
     cursor: help;
     color: darkgray;
 }
-
 .ib:hover {
     color:darkred;
 }
 
+/*********************************
+ *********************************
+ * Buttons to add/remove authors *
+ * on the resource forms         *
+ *********************************
+ *********************************/
+/*add button*/
+.plus-button {
+    border: 2px solid green;
+    background-color: #fff;
+    font-size: 8px;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 999px;
+    position: relative;
+}
+
+.plus-button:after,
+.plus-button:before {
+        content: "";
+        display: block;
+        background-color: green;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+.plus-button:before {
+        height: 1em;
+        width: 0.2em;
+    }
+
+.plus-button:after {
+        height: 0.2em;
+        width: 1em;
+    }
+
+
+/*remove button*/
+.minus-button {
+    border: 2px solid red;
+    background-color: #fff;
+    font-size: 8px;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 999px;
+    position: relative;
+}
+
+.minus-button:after,
+.minus-button:before {
+        content: "";
+        display: block;
+        background-color: red;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+
+.minus-button:after {
+        height: 0.2em;
+        width: 1em;
+    }
+
+/* "AND/OR" in the author secton of the resource */
+.or_divider{
+    padding-left: 60px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

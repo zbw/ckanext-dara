@@ -7,10 +7,15 @@
 {% import 'macros/dara_metadata.xml' as macros %}
 
 
-{% set auto = h.dara_auto_fields() %}
-{% set pkg = h.dara_pkg() %}
-{% set dara_authors = h.dara_authors('dataset', data) %}
+{% if id %}
+    {% set pkg = h.dara_pkg() %}
+{% else %}
+    {% set pkg = h.dara_pkg(id) %}
+{% endif %}
 
+{% set auto = h.dara_auto_fields() %}
+
+{% set dara_authors = h.dara_authors('dataset', data) %}
 {# {% set debug = h.dara_debug() %} #}
 
 {#
@@ -24,7 +29,7 @@ http://www.da-ra.de/en/technical-information/doi-registration/
          xsi:schemaLocation="http://da-ra.de/schema/kernel-4 http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/dara.xsd">
 
 <resourceType>Collection</resourceType> 
-{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion)}} 
+{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion) }} 
 
 {# 1. title #}
 {{ macros.titles(pkg.title, 'en') }}  
@@ -51,6 +56,9 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# *12.publication date #}
 {{ macros.publicationDate(pkg.dara_PublicationDate) }}
 
+{# 3 publisher #}
+{{ macros.publisher() }}
+
 {# *28/29 availability controlled/free 
 default is '1' (Download)
 #}
@@ -67,6 +75,8 @@ default is '1' (Download)
 {# 11. JEL classification #}
 {{ macros.classification(pkg.dara_jels or None) }}
 
+{# Author supplied classification #}
+{{ macros.author_classification(pkg.tags or None) }}
 
 {# 17. description #}
 {{ macros.description(pkg.notes) }}
@@ -107,7 +117,7 @@ Publications are not relevant for resources (yet!), so only here in collection
 <publications>
     <publication>
         <unstructuredPublication>
-            <freetext></freetext>
+            <freetext>{{ h.build_citation(pkg).decode('utf-8') }}</freetext>
             <PIDs>
                 <PID>
                     <ID>{{ pkg.dara_Publication_PID }}</ID>
@@ -118,6 +128,10 @@ Publications are not relevant for resources (yet!), so only here in collection
     </publication>
 </publications>
 {% endif %}
+
+{# 32 Publications but with more fields #}
+{#% set identification = h.org_extra_info(pkg) %#}
+{#{ macros.publication(pkg, identification) }#}
 
 </resource>
 

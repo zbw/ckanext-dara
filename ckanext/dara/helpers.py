@@ -4,7 +4,7 @@
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
-from ckanext.dara.schema import author_fields
+from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
 from pylons import config
 import json
@@ -13,15 +13,18 @@ from ckan import model
 import requests
 from hurry.filesize import size, si
 from toolz.itertoolz import last
+import json
 
 
 
-
-def dara_pkg():
+def dara_pkg(id=None):
     """
     get package for several helper functions
     XXX DO WE REALLY NEED THIS?
     """
+    if id:
+        pkg = tk.get_action('package_show')(None, {'id': id})
+        return pkg
 
     pkg_id = tk.c.id
     try:
@@ -46,7 +49,10 @@ def dara_auto_fields():
     if 'localhost' in site_url:
         site_url = "http://edawax.de"
 
-    pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+    if pkg:
+        pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+    else:
+        pkg_url = ''
     dara_url = site_url + pkg_url
 
     return {'URL': dara_url}
@@ -54,6 +60,9 @@ def dara_auto_fields():
 
 def dara_author_fields():
     return dara_schema.author_fields()
+
+def resource_author_fields():
+    return dara_schema.resource_author_fields()
 
 
 def dara_resource():
@@ -103,6 +112,44 @@ def dara_authors(dara_type, data):
     """
     return authors as dict
     """
+    # if it's a resource check if there is author data at that level
+    # if there is, use it otherwise default to the collection data
+    v = None
+    if 'new_resource' in request.path:
+        return None
+    if dara_type in ['res', 'resource']:
+        pack = data or dara_pkg()
+        if 'resources' in pack.keys():
+            for resource in pack['resources']:
+                if resource['id'] == c.resource_id:
+                    if 'dara_authors' in resource.keys():
+                        v = resource['dara_authors']
+        else:
+            if 'dara_authors' in pack.keys():
+                v = pack['dara_authors']
+            else:
+                return None
+
+        if isinstance(v, unicode):
+            import ast
+            new_v = ast.literal_eval(v)
+            dct=list_dicter(new_v[:], [i.id for i in resource_author_fields()])
+            if dct[0]['lastname'] == '' and dct[0]['institution'] == '':
+                # if the request is for XML return the collection data
+                # otherwise, return an empty string
+                if 'dara_xml' in request.path:
+                    return get_collection_data(data)
+                else:
+                    return dct[:3]
+            else:
+                return dct
+        else:
+            if 'dara_xml' in request.path:
+                return get_collection_data(data)
+        return None
+    return get_collection_data(data)
+
+def get_collection_data(data):
     pack = data or dara_pkg()
     v = pack.get('dara_authors') # None if key does not exist
     if isinstance(v, list):
@@ -110,7 +157,6 @@ def dara_authors(dara_type, data):
     if isinstance(v, basestring):
         return json.loads(v)
     return None
-
 
 def check_journal_role(pkg, role):
     user = tk.c.user
@@ -162,3 +208,74 @@ def unit_type_transform(num):
     return d.get(num)
 
 
+def org_extra_info(pkg):
+    """ Get extra values for an organization (ISBN/ISSN) """
+    journal = pkg['organization']['name']
+    data = tk.get_action('organization_show')(None, {'id': journal})
+    if data:
+        return (data['publicationID'], data['publicationID_Type'])
+    return (0, 0)
+
+def resource_type(data):
+    if data == 'data':
+        return 'Dataset'
+
+    if data == "text":
+        return "Text"
+
+    if data == "code":
+        return "Software"
+
+    if data == "other":
+        return "Other"
+
+    return "Dataset"
+
+def _parse_authors(data):
+    authors = []
+    data = json.loads(data)
+    
+    for author in data:
+        first = author['firstname'][0]
+        last = author['lastname']
+        authors.append('{}, {}.'.format(last.encode('utf-8'), first))
+    return ', '.join(authors)
+
+def build_citation(data):
+    """ Build a citation using APA style for use in freetext 'publications' """
+    citation = '{authors} ({year}). {journal}{vol}, {pages}.'
+    volume_issue = ''
+
+    authors = data.get('dara_authors', '')
+    journal_title = data['organization']['title']
+    vol = data.get('dara_Publication_Volume', '')
+    iss = data.get('dara_Publication_Issue', '')
+    date = data.get('dara_PublicationDate', '')
+    start_page = data.get('dara_Publication_StartPage', '')
+    end_page = data.get('dara_Publication_EndPage', '')
+    pages = '{}-{}'.format(start_page, end_page)
+
+    authors = _parse_authors(authors)
+
+    if vol:
+        volume_issue += ", {}".format(vol)
+    if iss:
+        volume_issue += "({})".format(iss)
+
+    return citation.format(authors=authors, year=date, journal=journal_title, vol=volume_issue, pages=pages)
+
+def query_crossref(doi):
+    """
+        Plan to only run this if there's a DOI but the publication 
+        metadata is incomplete.
+    """
+    base_url = "https://api.crossref.org/works/{doi}"
+    
+    try:
+        response = requests.get(base_url.format(doi=doi), timeout=3.05)
+    except requests.exceptions.Timeout as e:
+        return False
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    return False

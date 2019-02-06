@@ -21,8 +21,6 @@ this.ckan.module('preview-slug-new', function ($) {
       var sandbox = this.sandbox;
       var options = this.options;
       var el = this.el;
-      console.log(el);
-      console.dir(el);
       var _ = sandbox.translate;
 
       var slug = el.slug();
@@ -77,6 +75,8 @@ this.ckan.module('preview-slug-new', function ($) {
     }
   };
 });
+
+
 
 var escape = $.url.escape;
 function slugPreview(options, parent) {

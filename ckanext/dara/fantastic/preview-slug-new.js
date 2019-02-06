@@ -3,6 +3,8 @@
 // by cutting out the middine of the title.
 // The code originaed in `plugins/jquery.slug-preview.js`
 // and `modules/sllug-preview.js`
+//
+// -- Duplicated from /resources because DEV & Test/Prod have slightly different needs
 "use-strict";
 
 
@@ -21,8 +23,6 @@ this.ckan.module('preview-slug-new', function ($) {
       var sandbox = this.sandbox;
       var options = this.options;
       var el = this.el;
-      console.log(el);
-      console.dir(el);
       var _ = sandbox.translate;
 
       var slug = el.slug();

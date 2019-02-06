@@ -18,18 +18,15 @@ this.ckan.module('preview-slug-new', function ($) {
     },
 
     initialize: function () {
-      console.log('=================');
       var sandbox = this.sandbox;
       var options = this.options;
       var el = this.el;
+      console.log(el);
+      console.dir(el);
       var _ = sandbox.translate;
 
-      console.log('this', this);
-      console.log('el', el);
       var slug = el.slug();
-      console.log('slug', slug);
       var parent = slug.parents('.control-group');
-      console.log('parent', parent);
       var preview;
 
       if (!(parent.length)) {
@@ -81,7 +78,7 @@ this.ckan.module('preview-slug-new', function ($) {
   };
 });
 
-
+var escape = $.url.escape;
 function slugPreview(options, parent) {
   options = $.extend(true, slugPreview.defaults, options || {});
 

@@ -2,7 +2,8 @@
 // Truncates titles > 99 characters to be 90
 // by cutting out the middine of the title.
 // The code originaed in `plugins/jquery.slug-preview.js`
-// and `modules/sllug-preview.js`
+// and `modules/sllug-preview.js` this is a mashup of the two into
+// one module
 "use-strict";
 
 
@@ -33,7 +34,7 @@ this.ckan.module('preview-slug-new', function ($) {
 
       // Leave the slug field visible
       if (!parent.hasClass('error')) {
-        preview = slugPreview({
+        preview = this.slugPreview({
           prefix: options.prefix,
           placeholder: options.placeholder,
           i18n: {
@@ -72,64 +73,65 @@ this.ckan.module('preview-slug-new', function ($) {
       sandbox.subscribe('slug-target-changed', function (value) {
         slug.val(value).trigger('change');
       });
+    },
+
+    slugPreview: function (options, parent) {
+      var escape = $.url.escape;
+      options = $.extend(true, this.defaults, options || {});
+
+      var collected = parent.map(function () {
+        var element = $(parent);
+        var field = element.find('input');
+        var preview = $(options.template);
+        var value = preview.find('.slug-preview-value');
+        var required = $('<div>').append($('.control-required', element).clone()).html();
+
+        function setValue() {
+          var val = escape(field.val()) || options.placeholder;
+          if (val.length > 99){
+            val = val.slice(0,45) + val.slice(-45);
+          }
+          value.text(val);
+        }
+
+        preview.find('strong').html(required + ' ' + options.i18n['URL'] + ':');
+        preview.find('.slug-preview-prefix').text(options.prefix);
+        preview.find('button').text(options.i18n['Edit']).click(function (event) {
+          event.preventDefault();
+          element.show();
+          preview.hide();
+        });
+
+        setValue();
+        field.on('change', setValue);
+
+        element.after(preview).hide();
+
+        return preview[0];
+      });
+
+      // Append the new elements to the current jQuery stack so that the caller
+      // can modify the elements. Then restore the originals by calling .end().
+      return parent.pushStack(collected);
+    },
+
+    defaults: {
+      prefix: '',
+      placeholder: '',
+      i18n: {
+        'URL': 'URL',
+        'Edit': 'Edit'
+      },
+      template: [
+        '<div class="slug-preview">',
+        '<strong></strong>',
+        '<span class="slug-preview-prefix"></span><span class="slug-preview-value"></span>',
+        '<button class="btn btn-mini"></button>',
+        '</div>'
+      ].join('\n')
     }
+
   };
 });
 
 
-
-var escape = $.url.escape;
-function slugPreview(options, parent) {
-  options = $.extend(true, slugPreview.defaults, options || {});
-
-  var collected = parent.map(function () {
-    var element = $(parent);
-    var field = element.find('input');
-    var preview = $(options.template);
-    var value = preview.find('.slug-preview-value');
-    var required = $('<div>').append($('.control-required', element).clone()).html();
-
-    function setValue() {
-      var val = escape(field.val()) || options.placeholder;
-      if (val.length > 99){
-        val = val.slice(0,45) + val.slice(-45);
-      }
-      value.text(val);
-    }
-
-    preview.find('strong').html(required + ' ' + options.i18n['URL'] + ':');
-    preview.find('.slug-preview-prefix').text(options.prefix);
-    preview.find('button').text(options.i18n['Edit']).click(function (event) {
-      event.preventDefault();
-      element.show();
-      preview.hide();
-    });
-
-    setValue();
-    field.on('change', setValue);
-
-    element.after(preview).hide();
-
-    return preview[0];
-  });
-
-  // Append the new elements to the current jQuery stack so that the caller
-  // can modify the elements. Then restore the originals by calling .end().
-  return parent.pushStack(collected);
-}
-
-slugPreview.defaults = {
-  prefix: '',
-  placeholder: '',
-  i18n: {
-    'URL': 'URL',
-    'Edit': 'Edit'
-  },
-  template: [
-    '<div class="slug-preview">',
-    '<strong></strong>',
-    '<span class="slug-preview-prefix"></span><span class="slug-preview-value"></span>',
-    '<button class="btn btn-mini"></button>',
-    '</div>'
-  ].join('\n')
-};

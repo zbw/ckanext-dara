@@ -27,11 +27,12 @@
                                     id='', qualified=true) %}
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% set attrs = {
-            'data-module': 'slug-preview-slug',
+            'data-module': 'preview-slug-new',
             'data-module-prefix': domain,
             'data-module-placeholder': '<dataset>'
             }
         %}
+        {# slug-preview-slug #}
 
         {{ form.prepend('name', id='field-name', label=_('URL'),
             prepend=prefix,

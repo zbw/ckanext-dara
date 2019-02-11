@@ -36,16 +36,15 @@
 
     </div>
 
+
     <div id="image_upload" data-infotext="Test data here.">
+
         {% block basic_fields_url %}
             {% set is_upload = (data.url_type == 'upload') %}
-
-            {{ dara_form.image_upload(data, errors, field_url='url',
-                field_upload='upload', field_clear='clear_upload',
+            {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
                 is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
-                upload_label=_('File'), url_label=_('URL'),
-                attrs={'data-infotext': """Click on 'Upload' to submit a file or click on 'link' to point to a URL/DOI which leads t othe dataset/file you used in your research."""})
-            }}
+                upload_label=_('File'), url_label=_('URL')) }}
+
         {% endblock %}
     </div>
 
@@ -111,7 +110,7 @@
     now #}
     <div id="resource_authors">
         <div id="add_authors_selection">
-            <button type="button" class="plus-button" area-hidden="true" id="author_toggle_on"></button> 
+            <button type="button" class="plus-button" area-hidden="true" id="author_toggle_on"></button>
             <button type="button" class="minus-button" area-hidden="true" id="author_toggle_off" style="display: none;"></button>
             <strong id="message">Creator (if the creator is not the author(s), please click to edit this field)</strong>
         </div>
@@ -120,7 +119,7 @@
         </div>
     </div>
     <hr>
-    
+
 
     <fieldset id="dara_data">
         {{ dara_form.md('data', h, data, errors) }}
@@ -148,6 +147,16 @@ the reason for this remove Previous button here #}
 {% block previous_button %}
 {#        <button class="btn" name="save" value="go-dataset" type="submit">{{
     _('Previous') }}</button> #}
+    <button class="btn btn-danger" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
+    <script>
+        function cancel(event){
+            var current = window.location.href;
+            window.location.href = current.replace('/new_resource', '');
+        }
+
+        var button = document.getElementById('cancel_button');
+        button.addEventListener('click', cancel, false);
+    </script>
 {% endblock %}
 
 

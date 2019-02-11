@@ -1,10 +1,10 @@
 {% extends 'package/edit_base.html' %}
-{% set pkg = h.dara_pkg() %} 
+{% set pkg = h.dara_pkg() %}
 {#{% set debug = h.dara_debug() %} #}
 {# {% set pkg = c.pkg_dict %} #}
 
 {% set isSysadmin = h.check_access('sysadmin', context) %}
-{% set DOI = pkg['dara_DOI'] %} 
+{% set DOI = pkg['dara_DOI'] %}
 {% set DOI_Test = pkg['dara_DOI_Test'] %}
 {% set registered = pkg['dara_registered'] %}
 {% set registered_test = pkg['dara_registered_test'] %}
@@ -58,30 +58,30 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
 
 <form id="doiregform" action="/dataset/{{ pkg['id'] }}/dara_register" method='post'>
 
-<div id="register" 
+<div id="register"
     style="float:right; text-align:center; width:200px;
         margin:10px 0px 0px 10px; margin-top:-60px;">
 
     <p style="background-color:{{ register_background }}; width:100%; font-size:125%;
     font-weight:normal; color:white; ">{{ register_title }}</p>
-     
+
     <div id="doi_form" style=" padding:0px 10px 10px 10px;">
-        
-        <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>  
-        
-        {% if isSysadmin and not use_testserver %} 
+
+        <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>
+
+        {% if isSysadmin and not use_testserver %}
         <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
         />Test
         {% endif %}
-         
+
         {# {% if not DOI and not (use_testserver and DOI_Test) %}#}
         {% if not (use_testserver and DOI_Test) and not DOI  %}
         <input type="checkbox" name="DOI" value="true"
         style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
         {% endif %}
-        
+
         <p style="margin-top:12px;">
-           {% if DOI  or (use_testserver and DOI_Test) %} 
+           {% if DOI  or (use_testserver and DOI_Test) %}
                 <input class="btn btn-primary" type="submit"
                     value="{{ submit }}" />
             {% else %}
@@ -110,8 +110,8 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
             <td><span style="color:darkred"> {{ h.pkg_doi(pkg) }}</span></td>
         </tr>
     {% endif %}
- 
-    {% if registered or (use_testserver and registered_test) %} 
+
+    {% if registered or (use_testserver and registered_test) %}
     <tr>
         <td>Registered: </td>
         <td>{{ registered or registered_test }}</td>
@@ -124,7 +124,7 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
         <td>{{ updated or updated_test }}</td>
     </tr>
     {% endif %}
-    </table>    
+    </table>
 
     {% if isSysadmin %}
     <div style="background:lightgrey; max-width:400px;
@@ -139,10 +139,10 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
      </pre>
         </div>
     {% endif %}
-       
+
 </div>
-    
-<div id="resources" style="margin-top:36px;">  
+
+<div id="resources" style="margin-top:36px;">
   <h2>Resources</h2>
   <p class="description">By default, single resources do not get a DOI, only the dataset as a
   collection. Here you can, however, select resources that you would like to
@@ -151,12 +151,12 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
   external URLs.</p>
 
     {% set resources = pkg['resources'] %}
-    
+
     {% if resources %}
       <ul class="resource-list">
           {% for res in resources %}
-          
-         
+
+
 
 {# originally from resource_item.html ##############################}
 
@@ -168,53 +168,53 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
 
 
 <li class="resource-item" data-id="{{ res.id }}">
-  
-   
+
+
   <div style="float:right; margin-left:20px; text-align:right;" >
     {% if h.resource_is_internal(res) %}
-    
+
       {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
                 Get DOI
       {% else %}
-        Update 
+        Update
       {% endif %}
      <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
-                value="register" /> 
+                value="register" />
 
-      
+
       {% if isSysadmin %}
       <span style="margin-left:12px;">
           <a href="{{ url }}/dara_xml">XML</a></span>
       {% endif %}
-      
+
       <p class="description">
-      
+
       {% if res['dara_DOI'] %}
       DOI:  <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
       {% elif use_testserver and res['dara_DOI_Test'] %}
       DOI (Test): <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
       {% else %}
-      DOI Proposal: {{ h.res_doi(res) }}  
+      DOI Proposal: {{ h.res_doi(res) }}
       {% endif %}
       {% if isSysadmin %}
        <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
       {% endif %}
       </p>
-  
+
       {% else %}
       No DOI assignable
   {% endif %}
-  
+
   </div>
 
-  <a class="heading" href="{{ url }}" 
+  <a class="heading" href="{{ url }}"
       title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}
-    <span class="format-label" 
-        property="dc:format" 
+    <span class="format-label"
+        property="dc:format"
         data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
     </span>
-    
+
     {# XXX throws an error, off for now
     {{ h.popular('views', res.tracking_summary.total, min=10) }}
     #}
@@ -226,11 +226,11 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
       {{ h.markdown_extract(res.description, extract_length=80) }}
     {% endif %}
   </p>
- 
+
 </li>
 {# end resource item ############################################ #}
 
-        
+
          {% endfor %}
       </ul>
     {% else %}

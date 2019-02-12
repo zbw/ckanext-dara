@@ -169,10 +169,8 @@ class DaraController(PackageController):
            rsc = tk.get_action('resource_show')(context, {'id': resource_id})
            pkg = tk.get_action('package_show')(context, {'id': id})
         except tk.ObjectNotFound:
-            print('Couldnt find resource')
             tk.abort(404, 'Resource not found')
         except tk.NotAuthorized:
-            print('Unauthorized to read resource')
             tk.abort(401, 'Unauthorized to read resource %s' % id)
 
         if rsc.get('url_type') == 'upload':

@@ -161,6 +161,7 @@ class DaraController(PackageController):
         Force the download for the specified files
         """
         context = self._context()
+        context['ignore_auth'] = True
 
         force_download = self._check_extension(filename)
 
@@ -168,9 +169,11 @@ class DaraController(PackageController):
            rsc = tk.get_action('resource_show')(context, {'id': resource_id})
            pkg = tk.get_action('package_show')(context, {'id': id})
         except tk.ObjectNotFound:
-           tk.abort(404, 'Resource not found')
+            print('Couldnt find resource')
+            tk.abort(404, 'Resource not found')
         except tk.NotAuthorized:
-           tk.abort(401, 'Unauthorized to read resource %s' % id)
+            print('Unauthorized to read resource')
+            tk.abort(401, 'Unauthorized to read resource %s' % id)
 
         if rsc.get('url_type') == 'upload':
            upload = uploader.ResourceUpload(rsc)

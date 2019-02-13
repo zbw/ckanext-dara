@@ -195,6 +195,29 @@ class DaraController(PackageController):
         redirect(rsc['url'])
 
 
+    def cancel(self, pkg_id):
+        """
+            When a user cancels adding additional resources, they were being
+            put into the `draft` state which prevented them from appearing
+            in the list of datasets.
+
+            Drafts only appear in the list of author's submissions even if they have been published.
+
+            This assumes `canceled` datasets are finished but the author made
+            a mistake in trying to add too many resources.
+        """
+        context = self._context()
+        pkg = tk.get_action('package_show')(None, {'id': pkg_id})
+        pkg['state'] = 'active'
+        update = tk.get_action('package_update')(context, pkg)
+
+        redirect(pkg_id)
+
+
+def redirect(id):
+    tk.redirect_to(controller='package', action='read', id=id)
+
+
 # @memoize
 def params():
     """

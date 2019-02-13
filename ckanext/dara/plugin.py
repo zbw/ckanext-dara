@@ -210,4 +210,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 controller="ckanext.dara.controller:DaraController",
                 action="resource_download")
 
+        # change package state
+        map.connect('/dataset/state/{pkg_id}',
+                     controller="ckanext.dara.controller:DaraController",
+                     action="cancel")
+
         return map

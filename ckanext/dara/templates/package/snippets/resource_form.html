@@ -185,34 +185,8 @@ the reason for this remove Previous button here #}
         }
 
         function cancel(event){
-            {{ h.cancel() }}
             var current = window.location.href;
-            var parts = current.split('/');
-            var id = parts[parts.length-1];
-            console.log('###################');
-            var pkg = getPackage(id, parts);
-            console.log(pkg);
-            console.log('>>>>>>>>>>>>>>>>>>>');
-            var response = updatePackage(pkg, parts);
-            console.log(response);
-
-
-            //window.location.href = current.replace('/new_resource', '');
-            /* This leaves the state as 'draft' which prevest the dataset
-             * from appearing in lists.
-             * Need to find a way to set state to active after canceling.
-             * Get package data >> set state = 'active' >> get_action('package_update')
-             *
-             */
-
-             /* TODO: try the following
-             * Create a function that handles this. The function is called
-             * from ajax?
-             *
-             *
-             *
-             *
-             */
+            window.location.href = current.replace('/new_resource', '/state');
         }
 
         var button = document.getElementById('cancel_button');

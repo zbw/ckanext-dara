@@ -16,7 +16,6 @@ from ckanext.dara.ftools import list_dicter
 from ckan.plugins.toolkit import Invalid
 
 # for new validator
-from ckan.plugins.toolkit import Invalid
 import ckan.lib.navl.dictization_functions as df
 missing = df.missing
 StopOnError = df.StopOnError
@@ -94,8 +93,8 @@ def authors(key, data, errors, context):
 
 
 def dates(key, data, errors, context):
-    """ 
-        make sure if there is a start date there is also an end date 
+    """
+        make sure if there is a start date there is also an end date
         and vice-versa.
     """
     start = data[('resources', 0, 'dara_temporalCoverageFormal')]

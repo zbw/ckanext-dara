@@ -149,41 +149,6 @@ the reason for this remove Previous button here #}
     _('Previous') }}</button> #}
     <button class="btn btn-danger" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
     <script>
-        function getPackage(id, parts){
-            return $.ajax({
-                            type: 'GET',
-                            url: parts[0]+'//'+ parts[2] + '/api/3/action/package_show',
-                            cache: false,
-                            data: 'id=' + id,
-                            async: false,
-                            success: function(result){
-                                var pkg = result['result'];
-                                pkg['state'] = 'active';
-                            },
-                            error: function(r, status, error){
-                                console.log('Error');
-                            }
-                        });
-        }
-
-        function updatePackage(data, parts){
-            console.log('Doing the update thing');
-            return $.ajax({
-                            type: 'POST',
-                            url: parts[0]+'//'+ parts[2] + '/api/3/action/package_update',
-                            cache: false,
-                            data: data,
-                            async: false,
-                            success: function(result){
-                                console.log('success?');
-                                console.log(result);
-                            },
-                            error: function(r, status, error){
-                                console.log('Error');
-                            }
-                        });
-        }
-
         function cancel(event){
             var current = window.location.href;
             window.location.href = current.replace('/new_resource', '/state');
@@ -194,4 +159,19 @@ the reason for this remove Previous button here #}
     </script>
 {% endblock %}
 
+
+{% block add_button %}
+    <button class="btn btn-danger" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
+    <script>
+        function cancel(event){
+            var current = window.location.href;
+            window.location.href = current.replace('/new_resource', '/state');
+        }
+
+        var button = document.getElementById('cancel_button');
+        button.addEventListener('click', cancel, false);
+    </script>
+
+      <button class="btn btn-primary" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
+      {% endblock %}
 

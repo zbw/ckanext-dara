@@ -5,6 +5,10 @@
 // and `modules/sllug-preview.js`
 //
 // -- Duplicated from /resources because DEV & Test/Prod have slightly different needs
+
+/*
+ * TODO: make sure this works when long strings are pasted in
+ */
 "use-strict";
 
 
@@ -83,6 +87,7 @@ function slugPreview(options, parent) {
   options = $.extend(true, slugPreview.defaults, options || {});
 
   var collected = parent.map(function () {
+    var nameField = document.getElementById('field-name');
     var element = $(parent);
     var field = element.find('input');
     var preview = $(options.template);
@@ -95,6 +100,8 @@ function slugPreview(options, parent) {
         val = val.slice(0,45) + val.slice(-45);
       }
       value.text(val);
+      nameField.value = val;
+
     }
 
     preview.find('strong').html(required + ' ' + options.i18n['URL'] + ':');
@@ -104,7 +111,6 @@ function slugPreview(options, parent) {
       element.show();
       preview.hide();
     });
-
     setValue();
     field.on('change', setValue);
 

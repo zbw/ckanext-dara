@@ -27,7 +27,7 @@ class BulkUpdater:
         return data
 
 
-    def update_package(self):
+    def update_package(self, package):
         """ update a packages affilID """
         data = self.get_package(package)
         try:
@@ -60,7 +60,8 @@ class BulkUpdater:
             b_id=binding[u'concept'][u'value'].replace('http://d-nb.info/gnd/', '')
             prefLabel = binding[u'prefLabel'][u'value']
             prefName = binding[u'prefName'][u'value']
-            if name == prefLabel or name == prefName:
+
+            if unicode(name, 'utf-8') == prefLabel or unicode(name, 'utf-8') == prefName:
                 return b_id
 
         return False

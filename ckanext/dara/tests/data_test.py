@@ -1,5 +1,5 @@
 #! -*- coding: utf-8 -*-
-
+# TODO: stripe down to just be `dara_authors`
 record1 = {
 "license_title": None,
 "maintainer": None,

@@ -6,8 +6,8 @@ import requests
 
 
 class BulkUpdater:
-    def __init__(self):
-        self.base = 'http://www.journaldata.zbw.eu/api/3/action/{action}'
+    def __init__(self, base='http://www.journaldata.zbw.eu/api/3/action/{action}'):
+        self.base = base
         self.lookup_base = 'http://zbw.eu/beta/econ-ws/suggest2?dataset=econ_corp&query={name}'
         self.errors = []
         self.packages = self.get_packages

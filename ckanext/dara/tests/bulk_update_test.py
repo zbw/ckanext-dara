@@ -1,3 +1,5 @@
+import os
+import json
 import ckan
 import webtest
 import datetime
@@ -8,11 +10,7 @@ from ckan.lib.helpers import url_for
 
 import pylons.test, pylons, pylons.config as c, ckan.model as model, ckan.plugins as plugins, ckan.tests.factories as factories
 
-import ckanext.dara.bulk_metadata_update as bmu
-import ckanext.dara.tests.data_test as data
-
-import ckan.model as model
-engine = model.meta.engine
+from ckanext.dara.bulk_metadata_update import BulkUpdater
 
 
 class TestBulkUpdater(helpers.FunctionalTestBase):
@@ -28,31 +26,39 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
         return app
 
 
-    def _create_package(self, data):
-        sysadmin = factories.Sysadmin()
-        context = {
-                    'user': sysadmin['name'],
-                    'ignore_auth': True
-                    }
-        user = helpers.call_action('user_create',
-                                    context=context,
-                                    email='sysadmin@email.email',
-                                    name='user',
-                                    password='required',
-                                    password_hash='hash')
+    def _create_package_resource(self, num_resources=1, resource=False, num_packages=1):
+        user = factories.User(sysadmin=True)
+        owner_org = factories.Organization(users=[{'name': user['id'], 'capacity': 'admin'}])
 
-        org = helpers.call_action('organization_create',
-                                   context=context,
-                                   name='test_org')
+        datasets = []
+        for _ in range(num_packages):
+            datasets.append(factories.Dataset(owner_org=owner_org['id'], dara_PublicationDate=2019, dara_currentVersion=1))
 
-        data['owner_org'] = org['id']
-        helpers.call_action('package_create', **data)
+        resources = []
+        if resource:
+            for _ in range(num_resources):
+                resources.append(factories.Resource(package_id=datasets[0]['id'], url='http://test.link/{}'.format(_)))
+            return datasets, resources
+        return datasets
 
 
-    def test_1_three_packages(self):
-        obj = bmu.BulkUpdater()
-        d1 = self._create_package(data.record1)
-        d2 = self._create_package(data.record2)
-        d3 = self._create_package(data.record3)
-        assert len(obj.packages) == 3, d1
+    def test_1_five_packages(self):
+        datasets = self._create_package_resource(num_packages=5)
+        url = "/api/3/action/package_list"
+
+        app = self._get_app()
+        res = app.get(url=url)
+
+        bulk = BulkUpdater(base='/api/3/action/{action}')
+        print(bulk.get_packages())
+
+        assert len(datasets) == 5, len(datasets)
+        assert len(json.loads(res.body)['result']) == 5, len(json.loads(res.body)['result'])
+
+        assert len(bulk.get_packages()) == 5, len(bulk.get_packages())
+
+    def test_2(self):
+        pass
+
+
 

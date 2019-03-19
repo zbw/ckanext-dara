@@ -183,10 +183,10 @@ def fileinfo(res):
     filename = last(filter(lambda i: i, url.split('/')))
     cr = last(req.headers.get('content-range', '0').split('/'))
     cl = req.headers.get('content-length', cr)
-    
+
     # for now we just take the original content-length
     # filesize = size(int(cl), system=si)
-    
+
     return {'filesize': cl,
             'filename': filename}
 
@@ -234,7 +234,7 @@ def resource_type(data):
 def _parse_authors(data):
     authors = []
     data = json.loads(data)
-    
+
     for author in data:
         first = author['firstname'][0]
         last = author['lastname']
@@ -266,11 +266,11 @@ def build_citation(data):
 
 def query_crossref(doi):
     """
-        Plan to only run this if there's a DOI but the publication 
+        Plan to only run this if there's a DOI but the publication
         metadata is incomplete.
     """
     base_url = "https://api.crossref.org/works/{doi}"
-    
+
     try:
         response = requests.get(base_url.format(doi=doi), timeout=3.05)
     except requests.exceptions.Timeout as e:

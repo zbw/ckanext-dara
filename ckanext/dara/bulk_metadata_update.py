@@ -48,9 +48,10 @@ class BulkUpdater:
 
 
     def lookup(self, name):
-        name = name.replace('-', ' ').replace('  ', ' ').replace('  ', ' ')
+        name = unicode(name.replace('-', ' ').replace('  ', ' ').replace('  ', ' '), 'utf-8')
         url = self.lookup_base.format(name=name)
         r = requests.get(url).json()['results']
+
 
         if len(r['bindings']) == 1:
             b_id = r['bindings'][0][u'concept'][u'value'].replace('http://d-nb.info/gnd/', '')

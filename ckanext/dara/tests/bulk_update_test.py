@@ -1,89 +1,168 @@
-import ast
-import random
 
-import ckanapi
-import requests
-import ckanext.dara.tests.data_test as data
+import ckan
+import json
+import webtest
+import datetime
+import paste.fixture
+import ckan.model as model
+from ckan.tests import helpers
+from ckan.lib.helpers import url_for
+import pylons.test, pylons, pylons.config as c, ckan.model as model, ckan.tests as tests, ckan.plugins as plugins, ckan.tests.factories as factories
 
+
+import ckanext.dara.tests.data_test as rd
 from ckanext.dara.bulk_metadata_update import BulkUpdater
 
+import ckan.model as model
+engine = model.meta.engine
 
-class TestBulkUpdater:
-    def __init__(self):
-        self.key = '4e78656e-51e0-43a2-a173-69e1b88b81e9'
-        self.ckan=ckanapi.RemoteCKAN('http://127.0.0.1:5000', apikey=self.key)
-        self.journal_name = 'test-journal-test'
+"""
+    TODO:
+        * check for DOIs
+"""
 
-
-    def _create_journal(self):
-        try:
-            journal = self.ckan.action.organization_create(name=self.journal_name)
-            return journal
-        except Exception as e:
-            journal = self.ckan.action.organization_show(id=self.journal_name)
-            return journal
+class TestBulkUpdater(helpers.FunctionalTestBase):
+    @classmethod
+    def setup_class(cls):
+        print('Starting class')
+        super(TestBulkUpdater, cls).setup_class()
 
 
-    def _delete_journal(self):
-        self.ckan.action.organization_purge(id=self.journal_name)
 
-
-    def _delete_package(self, id):
-        self.ckan.action.package_delete(id=id)
-
-
-    def setup(self):
-        print('\n\n**start')
-        owner = self._create_journal()
-        self.owner_org = owner['id']
+    def startup(self):
+        print("Starting")
+        helpers.reset_db()
 
 
     def teardown(self):
-        print('finishing')
-        #self._delete_package(self.pack1_id)
-        #self._delete_package(self.pack2_id)
-        #self._delete_package(self.pack3_id)
-        #self._delete_journal()
+        print('Rebuilding DB')
+        model.repo.rebuild_db()
 
 
-    def test_1_get_package(self):
-        bulk = BulkUpdater(base='http://127.0.0.1:5000/api/3/action/{action}')
+    @classmethod
+    def teardown_class(cls):
+        print('Tearing down class')
+        if plugins.plugin_loaded('edawax'):
+            plugins.unload('edawax')
+        if plugins.plugin_loaded('dara'):
+            plugins.unload('dara')
 
-        packages = bulk.get_packages()
-        assert len(packages) == 1, len(packages)
-        assert 'federal-reserve' in packages
+
+    def _get_app(self):
+        c['global_conf']['debug'] = 'true'
+        app = ckan.config.middleware.make_app(c['global_conf'], **c)
+        app = webtest.TestApp(app)
+        if not plugins.plugin_loaded('edawax'):
+            plugins.load('edawax')
+        if not plugins.plugin_loaded('dara'):
+            plugins.load('dara')
+        return app
 
 
-    def test_2_get_package1(self):
-        bulk = BulkUpdater(base='http://127.0.0.1:5000/api/3/action/{action}')
+    def _create_package_resource(self, num_resources=1, resource=False, num_journals=1):
+        user = factories.User(sysadmin=True)
+        owner_org = factories.Organization(users=[{'name': user['id'], 'capacity': 'admin'}])
 
-        packages = bulk.get_packages()
-        package = bulk.get_package('federal-reserve')
-        authors = ast.literal_eval(package['dara_authors'])
+        datasets = []
+        for _ in range(num_journals):
+            datasets.append(factories.Dataset(owner_org=owner_org['id'], dara_currentVersion=1, dara_PublicationDate='2019', dara_authors=json.dumps(rd.records[_]['dara_authors'], ensure_ascii=False)))
 
-        assert len(authors) == 3, len(authors)
-        assert authors[0]['affil'] == 'Federal Reserve Bank <Saint Louis, Mo.>', authors[0]['affil']
-        assert authors[1]['affil'] == 'Federal Reserve Bank <San Francisco, Calif.>', authors[1]['affil']
-        assert authors[2]['affil'] == 'NoWhere', authors[2]['affil']
+        resources = []
+        if resource:
+            for _ in range(num_resources):
+                resources.append(factories.Resource(package_id=datasets[0]['id'], url='http://test.link/{}'.format(_)))
+            return datasets, resources
+        return datasets
+
+
+    def test_1_list_3_packages(self):
+        pacakges = self._create_package_resource(num_journals=3)
+        tester = BulkUpdater(self._get_app(), key='my-test-key',test=True)
+
+        live_packages = tester.get_packages()
+
+        assert len(live_packages) == 3, live_packages
+
+
+    def test_2_get_packages(self):
+        packages = self._create_package_resource(num_journals=3)
+        tester = BulkUpdater(self._get_app(), key='my-test-key',test=True)
+
+        package0 = tester.get_package(packages[0]['id'])
+        package1 = tester.get_package(packages[1]['id'])
+        package2 = tester.get_package(packages[2]['id'])
+
+        assert package0 == packages[0], package0
+        assert package1 == packages[1], package1
+        assert package2 == packages[2], package2
 
 
     def test_3_lookup(self):
-        bulk = BulkUpdater(base='http://127.0.0.1:5000/api/3/action/{action}')
+        packages = self._create_package_resource(num_journals=3)
+        tester = BulkUpdater(self._get_app(), key='my-test-key',test=True)
 
-        packages = bulk.get_packages()
-        package = bulk.get_package('federal-reserve')
-        authors = ast.literal_eval(package['dara_authors'])
+        authors0 = json.loads(packages[0]['dara_authors'])
+        authors1 = json.loads(packages[1]['dara_authors'])
+        authors2 = json.loads(packages[2]['dara_authors'])
+
         affiliations = []
-        for author in authors:
-            l = bulk.lookup(author['affil'].encode('utf-8'))
-            affiliations.append( (author['affil'], l) )
+        for author in authors0:
+            affil_id = tester.lookup(author['affil'])
+            affiliations.append( (author['affil'], affil_id) )
+        assert (u'Institut f\xfcr Weltwirtschaft', u'1007681-5') in affiliations, affiliations
+        assert (u'Fake Plce', False) in affiliations, affiliations
+        assert (u'Deutsche Zentralbibliothek f\xfcr Wirtschaftswissenschaften  Leibniz-Informationszentrum Wirtschaft', False) in affiliations, affiliations
 
+        affiliations = []
+        for author in authors1:
+            affil_id = tester.lookup(author['affil'])
+            affiliations.append( (author['affil'], affil_id) )
+        assert (u'University of California Berkeley', u'2025100-2') in affiliations, affiliations
         assert (u'NoWhere', False) in affiliations, affiliations
-        assert (u'Federal Reserve Bank <Saint Louis, Mo.>', u'75261-7') in affiliations, affiliations
-        assert (u'Federal Reserve Bank <San Francisco, Calif.>', u'270186-8') in affiliations, affiliations
+
+        affiliations = []
+        for author in authors2:
+            affil_id = tester.lookup(author['affil'])
+            affiliations.append( (author['affil'], affil_id) )
+        assert (u'Federal Reserve Bank <Boston, Mass.>', u'270861-9') in affiliations, affiliations
+
+
+    def test_4_update_record(self):
+        packages = self._create_package_resource(num_journals=3)
+        tester = BulkUpdater(self._get_app(),key='my-test-key',test=True)
+
+        new_authors = tester.update_affil_id(packages[0]['name'])
+
+        affiliations = []
+        for author in new_authors:
+            affil_id = tester.lookup(author['affil'])
+            affiliations.append( (author['affil'], affil_id) )
+        assert (u'Institut f\xfcr Weltwirtschaft', u'1007681-5') in affiliations, affiliations
+
+        new_authors = tester.update_affil_id(packages[2]['name'])
+        assert new_authors[0]['affilID'] == u'270861-9', new_authors
+
+
+    def test_5_submit_updated_record(self):
+        sysadmin = factories.Sysadmin()
+        packages = self._create_package_resource(num_journals=3)
+        tester = BulkUpdater(self._get_app(), key=sysadmin['apikey'],test=True)
+
+        new_authors = tester.update_affil_id(packages[2]['name'])
+        result = tester.patch_package(id=packages[2]['name'], update=new_authors)
+        assert packages[2] != result, result
+        assert 'dara_authors' in result.keys(), result.keys()
+        assert json.loads(result['dara_authors'])[0]['affilID'] == u'270861-9', result['dara_authors'][0]['affilID']
+
+        updated_record = tester.get_package(packages[2]['name'])
+        assert '270861-9' in updated_record['dara_authors'], updated_record['dara_authors']
+
+        assert packages[0] == tester.get_package(packages[0]['name'])
 
 
 
 
-    def _test_4_update_record(self):
-        pass
+
+
+
+

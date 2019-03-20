@@ -1,12 +1,13 @@
 #! -*- coding: utf-8 -*-
 
-record1 = {
+records = [
+{
 "license_title": None,
 "maintainer": None,
 "relationships_as_object": [],
 "dara_DOI": "10.15456/jbnst.2015180.141408",
 "private": "False",
-"dara_authors": [{"authorID_URI": "", "firstname": "Donato", "url": "", "lastname": "De Rosa", "authorID": "", "authorID_Type": "", "affil": u"Deutsche Zentralbibliothek für Wirtschaftswissenschaften  Leibniz-Informationszentrum Wirtschaft"}, {"authorID_URI": "", "firstname": "Nishaal", "url": "", "lastname": "Gooroochurn", "authorID": "", "authorID_Type": "", "affil": "Fake Plce"}, {"authorID_URI": "", "firstname": "Holger", "url": "", "lastname": "Gu00f6rg", "authorID": "", "authorID_Type": "", "affil": u"Institut für Weltwirtschaft"}],
+"dara_authors": [{"authorID_URI": "", "firstname": "Donato", "url": "", "lastname": "De Rosa", "authorID": "", "authorID_Type": "", "affil": u"Deutsche Zentralbibliothek für Wirtschaftswissenschaften  Leibniz-Informationszentrum Wirtschaft"}, {"authorID_URI": "", "firstname": "Nishaal", "url": "", "lastname": "Gooroochurn", "authorID": "", "authorID_Type": "", "affil": "Fake Plce"}, {"authorID_URI": "", "firstname": "Holger", "url": "", "lastname": "Gurg", "authorID": "", "authorID_Type": "", "affil": u"Institut für Weltwirtschaft"}],
 "num_tags": 4,
 "dara_PublicationDate": "2015",
 "dara_Publication_PIDType": "DOI",
@@ -128,9 +129,9 @@ record1 = {
 "webstore_last_updated": None}],
 "title": "Corruption and Productivity: Firm-level Evidence (replication data)",
 "revision_id": "d1565f4f-1943-43db-89f5-5c01bd55df0b"
-}
+},
 
-record2 = {"license_title": None,
+{"license_title": None,
 "maintainer": None,
 "relationships_as_object": [],
 "dara_DOI": "10.15456/jbnst.2019024.172622",
@@ -233,10 +234,10 @@ record2 = {"license_title": None,
 "dara_Publication_Issue": "1",
 "dara_registered": "2019-01-26 18:55:20",
 "title": "Industrial Relations",
-"revision_id": "6671becc-6593-4bfd-89a6-24b4bdbef47c"}
+"revision_id": "6671becc-6593-4bfd-89a6-24b4bdbef47c"},
 
 
-record3 = {"license_title": None,
+{"license_title": None,
 "maintainer": None,
 "relationships_as_object": [],
 "dara_DOI": "10.15456/jbnst.2016117.070159",
@@ -381,3 +382,4 @@ record3 = {"license_title": None,
 "resource_type": None}],
 "title": "Still Different After All These Years (replication data)",
 "revision_id": "3b1c69ad-144f-44d7-a457-eb712766ec84"}
+]

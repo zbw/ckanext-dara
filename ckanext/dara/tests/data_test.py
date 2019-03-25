@@ -383,3 +383,13 @@ records = [
 "title": "Still Different After All These Years (replication data)",
 "revision_id": "3b1c69ad-144f-44d7-a457-eb712766ec84"}
 ]
+
+# last, first, aff, personID, affilID
+resources = [
+"[u'Hill',u'Hank',u'Strickland Propane',u'X',u'']",
+"[u'Yellen',u'Janet',u'Federal Reserve Bank <Saint Louis, Mo.>',u'Y',u'', \
+  u'Person', u'Mrs.', u'Chicago Council on Foreign Relations', u'Z', u'']",
+"[u'Simpson', u'Homer', u'Springfield Power Plant', u'A', u'', \
+  u'Spiderman', u'Mr.', u'Daily Bugel', u'B', u'', \
+  u'Powers', u'Max', u'Zoologischer Garten <Frankfurt, Main>', u'C', u'']"
+]

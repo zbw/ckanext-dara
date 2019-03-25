@@ -264,6 +264,8 @@ def darapi(auth, xml, test=False, register=False):
     talking with da|ra API. See da|ra reference:
     http://www.da-ra.de/fileadmin/media/da-ra.de/PDFs/dara_API_reference_v1.pdf
 
+    http://www.da-ra.de/fileadmin/media/da-ra.de/PDFs/dara_API_-_registration.pdf
+
     :param auth: tuple with username and password for the account at da|ra for
                  the account at da|ra
     :param xml: the XML string to post to da|ra, *without* the <?xml ... ?>
@@ -285,6 +287,10 @@ def darapi(auth, xml, test=False, register=False):
     '500' usually means that there's an error in your request. It unfortunately
     also returns a huge chunk of html output. However, it can be used for
     debugging.
+
+    POST: create a new resource. If the item already exists in the system.
+    It will be updated.
+        Requires the identifier and currentVersion in the `resourceIdentifier`
     """
     d = {False: 'http://www.da-ra.de/dara/study/importXML',
 #         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}

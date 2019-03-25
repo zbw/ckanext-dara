@@ -6,7 +6,13 @@ import json
 import requests
 import ckanapi
 
+from ckanext.dara.controller import DaraController as dc
 
+"""
+    TODO:
+        * updating resources
+        * resubmit something to dara
+"""
 
 class BulkUpdater:
     def __init__(self, app, key, test):
@@ -25,8 +31,16 @@ class BulkUpdater:
         return self.obj.action.package_show(id=id)
 
 
+    def get_resource(self, id):
+        return self.obj.action.resource_show(id=id)
+
+
     def patch_package(self, id, update):
         return self.obj.action.package_patch(id=id, dara_authors=json.dumps(update, ensure_ascii=False))
+
+
+    def patch_resource(self, id, update):
+        return self.obj.action.resource_patch(id=id, dara_authors=json.dumps(update, ensure_ascii=False))
 
 
     def lookup(self, name):
@@ -51,9 +65,10 @@ class BulkUpdater:
 
     def update_affil_id(self, name):
         package = self.get_package(name)
+
         try:
             authors = package['dara_authors']
-        except Exception:
+        except Exception as e:
             return False
 
         updated_authors = []
@@ -66,6 +81,42 @@ class BulkUpdater:
                     author['affilID'] = affID
                 updated_authors.append(author)
 
-        #package['dara_authors'] = updated_authors
         return updated_authors
+
+
+    def update_affil_resource(self, id):
+        package = self.get_resource(id)
+        try:
+            authors = package['dara_authors']
+        except Exception as e:
+            return False
+
+        updated_authors = []
+
+        authors = ast.literal_eval(authors)
+        if len(authors) > 5:
+            # chunk it up
+            a = [authors[x:x+5] for x in xrange(0, len(authors), 5)]
+            for author in a:
+                aff = author[2]
+                if aff and aff != '':
+                    affID = self.lookup(aff)
+
+                    if affID != False and affID != '':
+                        author[4] = u'{}'.format(affID)
+                        updated_authors = updated_authors + author
+                    else:
+                        updated_authors = updated_authors + author
+        else:
+            a = authors
+            aff = a[2]
+            if aff and aff != '':
+                affID = self.lookup(aff)
+
+                if affID != False and affID != '':
+                    author[4] = u'{}'.format(affID)
+            updated_authors = updated_authors + a
+
+        return updated_authors
+
 

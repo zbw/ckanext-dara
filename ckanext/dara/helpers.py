@@ -149,6 +149,7 @@ def dara_authors(dara_type, data):
         return None
     return get_collection_data(data)
 
+
 def get_collection_data(data):
     pack = data or dara_pkg()
     v = pack.get('dara_authors') # None if key does not exist

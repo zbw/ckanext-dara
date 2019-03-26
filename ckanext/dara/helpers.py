@@ -124,6 +124,12 @@ def dara_authors(dara_type, data):
                 if resource['id'] == c.resource_id:
                     if 'dara_authors' in resource.keys():
                         v = resource['dara_authors']
+                try:
+                    if resource['id'] == c.resource['id']:
+                        if 'dara_authors' in resource.keys():
+                            v = resource['dara_authors']
+                except:
+                    pass
         else:
             if 'dara_authors' in pack.keys():
                 v = pack['dara_authors']
@@ -137,7 +143,7 @@ def dara_authors(dara_type, data):
             if dct[0]['lastname'] == '' and dct[0]['institution'] == '':
                 # if the request is for XML return the collection data
                 # otherwise, return an empty string
-                if 'dara_xml' in request.path:
+                if 'dara_xml' in request.path or 'dara_register' in request.path:
                     return get_collection_data(data)
                 else:
                     return dct[:3]

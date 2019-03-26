@@ -40,6 +40,7 @@ we need to make sure here, that dara gets a title #}
 
 {# 4. creators  TODO: 4.2 institution #}
 {#XXX for now we take the authors given in the collection here #}
+{# if this is for a resource and there is no author, the authors for the article should be used. #}
 <creators>
 {% for author in dara_authors %}
     {{ macros.creator(author) }}

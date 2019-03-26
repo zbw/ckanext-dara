@@ -161,6 +161,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'org_extra_info': helpers.org_extra_info,
                 'resource_type': helpers.resource_type,
                 'build_citation': helpers.build_citation,
+                #'has_doi': helpers.has_doi,
                 }
 
     def is_fallback(self):

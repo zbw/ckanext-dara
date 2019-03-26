@@ -16,6 +16,12 @@ from toolz.itertoolz import last
 import json
 
 
+def has_doi(pkg):
+    doi = pkg.get('dara_DOI', False) or pkg.get('dara_DOI_Test', False)
+    if doi in ['', False]:
+        return False
+    return True
+
 
 def dara_pkg(id=None):
     """

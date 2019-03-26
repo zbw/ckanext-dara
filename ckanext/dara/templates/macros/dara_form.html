@@ -94,6 +94,9 @@ Examples:
         {#TODO optimize! #}
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
+            {% if h.has_doi(h.dara_pkg()) %}
+              {% do attrs.update({'readonly': 'readonly'}) %}
+            {% endif %}
         {% endif %}
 
 
@@ -195,7 +198,7 @@ Examples:
             {% if field.id == 'temporalCoverageFormal' %}
              {{ start_end_date(h, data, errors) }}
             {% endif %}
-             
+
             {#% if field.id == 'temporalCoverageFormal' %}
              {{ form.input(id, label=label,
                     id= field_id,
@@ -243,24 +246,24 @@ Examples:
     <div class="control-small control-group">
 
             {% for field in fields %}
-                    {% set start = {'element': '', 
-                                    'widget': '', 
-                                    'id': '', 
-                                    'value': '', 
-                                    'field_id': '', 
-                                    'label': '', 
-                                    'additional_classes': '', 
-                                    'classes': [], 
+                    {% set start = {'element': '',
+                                    'widget': '',
+                                    'id': '',
+                                    'value': '',
+                                    'field_id': '',
+                                    'label': '',
+                                    'additional_classes': '',
+                                    'classes': [],
                                     'attrs': ''} %}
-                    
-                    {% set end = {'element': '', 
-                                  'widget': '', 
-                                  'id': '', 
-                                  'value': '', 
-                                  'field_id': '', 
-                                  'label': '', 
-                                  'additional_classes': '', 
-                                  'classes': [], 
+
+                    {% set end = {'element': '',
+                                  'widget': '',
+                                  'id': '',
+                                  'value': '',
+                                  'field_id': '',
+                                  'label': '',
+                                  'additional_classes': '',
+                                  'classes': [],
                                   'attrs': ''} %}
 
                     {% if field.id == 'temporalCoverageFormal' %}
@@ -275,8 +278,8 @@ Examples:
 <div class="control-group {{ " " ~ classes | join(' ') }}">
     <label class="control-label" for="{{ for }}">{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Temporal Coverage') }}</label>
         <div class="controls{{ " " ~ control_classes | join(' ') }}">
-            <input id="{{ start.id }}" type="date" 
-                               name="{{ start.field_id }}" value="{{ start.value | empty_and_escape }}" 
+            <input id="{{ start.id }}" type="date"
+                               name="{{ start.field_id }}" value="{{ start.value | empty_and_escape }}"
                                placeholder="" {{ attributes(start.attrs) }} /> &mdash;
 
 
@@ -289,9 +292,9 @@ Examples:
                             {% if end.update({'label': end.widget.name}) %}{% endif %}
                             {% if end.update({'additional_classes': end.widget.classes}) %}{% endif %}
                             {% if end.update({'attrs': {"data-infotext": end.widget.info}}) %}{% endif %}
-                            
-            <input id="{{ end.id }}" type="date" 
-                                   name="{{ end.field_id }}" value="{{ end.value | empty_and_escape }}" 
+
+            <input id="{{ end.id }}" type="date"
+                                   name="{{ end.field_id }}" value="{{ end.value | empty_and_escape }}"
                                    placeholder="" {{ attributes(end.attrs) }} />
       {{ extra_html }}
     </div>

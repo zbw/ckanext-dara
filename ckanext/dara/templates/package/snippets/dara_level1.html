@@ -10,6 +10,13 @@
     {% resource 'dara/underscore.js' %}
     {% resource 'dara/dara_authors.js' %}
 
+    {% if h.has_doi(h.dara_pkg()) %}
+        {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
+            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """, 'readonly': 'readonly'} %}
+    {% else %}
+        {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
+            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """} %}
+    {% endif %}
 
     {{ form.input('title', id='field-title',
             label=_('Title'),
@@ -17,9 +24,7 @@
             value=data.title,
             error=errors.title,
             classes=['control-full', 'control-large', 'dara_required'],
-            attrs={'data-module': 'slug-preview-target', 'required':'required',
-            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """
-            })
+            attrs=attrs)
         }}
 
         {% set prefix = h.url_for(controller='package', action='read', id='') %}
@@ -27,12 +32,22 @@
                                     id='', qualified=true) %}
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% resource 'dara/preview-slug-new.js' %}
-        {% set attrs = {
-            'data-module': 'preview-slug-new',
-            'data-module-prefix': domain,
-            'data-module-placeholder': '<dataset>'
-            }
-        %}
+        {% if h.has_doi(h.dara_pkg()) %}
+            {% set attrs = {
+                'data-module': 'preview-slug-new',
+                'data-module-prefix': domain,
+                'data-module-placeholder': '<dataset>',
+                'readonly': 'readonly'
+                }
+            %}
+        {% else %}
+            {% set attrs = {
+                'data-module': 'preview-slug-new',
+                'data-module-prefix': domain,
+                'data-module-placeholder': '<dataset>',
+                }
+            %}
+        {% endif %}
         {# slug-preview-slug #}
 
         {{ form.prepend('name', id='field-name', label=_('URL'),
@@ -50,6 +65,7 @@
             attrs={"data-infotext": """Please provide information about the files you are submitting (eg. copy from any readme files you have)."""}
             )
         }}
+    }
 
 
 {# fields generated from schema #}

@@ -193,7 +193,8 @@ function clear_author_id(inp){
 
     $(aid.val(null));
 
-    if (window.location.href.indexOf('resource_edit') < 0){
+    /* if a _resource_ is being edited don't look for aid_type */
+    if (window.location.href.indexOf('resource') < 0){
         var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
         aid_type[0].parentNode.parentNode.style.display = 'none';
     }

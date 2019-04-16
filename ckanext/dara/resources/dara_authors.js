@@ -119,7 +119,7 @@ function ws_affil_call(val) {
             _.each(current_objects, function(obj){
                 var option = document.createElement('option');
                 var text = obj.prefLabel.value;
-                console.log(text);
+
                 option.text = text.substring(0, 150);
                 option.value = text + ' [gnd:]' + obj.concept.value;
                 if(! is_in_datalist(dl_affil, option.value)) {
@@ -173,7 +173,7 @@ function update_fields_aff (inp, val) {
         return ob.concept.value === val;
     });
     var aff_name = affiliation.prefName.value;
-    console.log(aff_name);
+
     inp.value = aff_name;
 
     $(affID_Type)

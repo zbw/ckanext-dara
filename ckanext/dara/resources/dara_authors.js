@@ -193,7 +193,7 @@ function clear_author_id(inp){
 
     $(aid.val(null));
 
-    if (window.location.href.indexOf('resource_edit') > 0){
+    if (window.location.href.indexOf('resource_edit') < 0){
         var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
         aid_type[0].parentNode.parentNode.style.display = 'none';
     }

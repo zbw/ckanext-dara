@@ -1,6 +1,6 @@
 
 .ui-widget {
-font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 /* font-size: 1em !important;*/
 }
 
@@ -35,7 +35,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
 #dara_2 > h4, #dara_Resource h4.dara_form_collapse {
  background-color: #FFD073 !important;
- background-image:none !important; 
+ background-image:none !important;
 }
 
 
@@ -43,7 +43,7 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
  /*background-color: #C9F76F !important; */
  /* background-color: #8cc68a !important; */
  background-color: #c5e2c4 !important;
- background-image:none !important; 
+ background-image:none !important;
 }
 
 
@@ -59,9 +59,9 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   }
 
 .dara_level_number {
-  text-align:right; 
-  float:right; 
-  font-size:60px; 
+  text-align:right;
+  float:right;
+  font-size:60px;
   margin-top:-40px;
 }
 
@@ -75,13 +75,13 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 .dara_form_header {
-    font-size:16px !important; 
+    font-size:16px !important;
 
 }
 
 /* 'add author' button */
 #add_author {
-    margin-left:80px; 
+    margin-left:80px;
 }
 
 #dara_additional_authors p {
@@ -128,9 +128,9 @@ font-family:'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 /* form field font size */
-.ui-widget input, 
-.ui-widget select, 
-.ui-widget textarea, 
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
 .ui-widget button {
 font-size:14px !important;
 }
@@ -206,7 +206,7 @@ fieldset.author {
     font-weight:bold;
     font-family:FontAwesome;
     font-size:0.85em;
-    
+
 }
 
 /* details selector for some fields. Only displays when required */
@@ -228,7 +228,7 @@ fieldset.author {
     appearance: none;*/
     margin-top:-10px;
     margin-bottom:25px;
-  
+
 }
 
 #dara_res_preselection option {
@@ -305,7 +305,7 @@ label[for="dara_res_preselection"] {
  */
 
 
-/* info circle 
+/* info circle
 .controls::after {
     content: '\f05a';
     display: inline;
@@ -320,7 +320,7 @@ label[for="dara_res_preselection"] {
     font-family: FontAwesome;
     font-weight: normal;
     font-style: normal;
-    text-decoration: inherit;   
+    text-decoration: inherit;
     margin-left:10px;
     cursor: help;
 }

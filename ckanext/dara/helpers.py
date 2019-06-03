@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
 
@@ -256,17 +257,27 @@ def _parse_authors(data):
 
 def build_citation(data):
     """ Build a citation using APA style for use in freetext 'publications' """
-    citation = '{authors} ({year}). {journal}{vol}, {pages}.'
+    citation = '{authors} ({year}). {journal}{vol}{pages}.'
     volume_issue = ''
+    journal_map = {'GER': 'German Economic Review', 'AEQ': 'Applied Economics Quarterly', 'IREE': 'International Journal for Re-Views in Empirical Economics', 'VSWG': 'Vierteljahrschrift für Sozial- und Wirtschaftsgeschichte'}
 
     authors = data.get('dara_authors', '')
-    journal_title = data['organization']['title']
+
+    temp_title = data['organization']['title']
+    if temp_title in journal_map.keys():
+        journal_title = journal_map[temp_tital]
+    else:
+        journal_title = temp_title
+
     vol = data.get('dara_Publication_Volume', '')
     iss = data.get('dara_Publication_Issue', '')
     date = data.get('dara_PublicationDate', '')
     start_page = data.get('dara_Publication_StartPage', '')
     end_page = data.get('dara_Publication_EndPage', '')
-    pages = '{}-{}'.format(start_page, end_page)
+    if start_page and end_page:
+        pages = ', {}-{}'.format(start_page, end_page)
+    else:
+        pages = ''
 
     authors = _parse_authors(authors)
 

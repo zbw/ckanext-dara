@@ -265,7 +265,7 @@ def build_citation(data):
 
     temp_title = data['organization']['title']
     if temp_title in journal_map.keys():
-        journal_title = journal_map[temp_tital]
+        journal_title = journal_map[temp_title]
     else:
         journal_title = temp_title
 

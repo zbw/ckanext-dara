@@ -2,6 +2,7 @@
 
 
 def replace_includes(schema):
+    import os
     url_prefix="http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/include/"
     return schema.replace('include/', url_prefix)
 
@@ -13,92 +14,93 @@ dara_schema = """<?xml version="1.0" encoding="UTF-8"?>
     targetNamespace="http://da-ra.de/schema/kernel-4" xmlns:dara="http://da-ra.de/schema/kernel-4"
     elementFormDefault="qualified" xml:lang="EN">
     <!-- include fields -->
-    <xs:include schemaLocation="include/dara-resourceType-v4.xsd">
+    <!-- include/dara-resourceType-v4.xsd -->
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-resourceType-v4.xsd">
         <xs:annotation>
             <xs:documentation>A predefined term to provide information about the type of resource being registered.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-otherTitleType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-otherTitleType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of additional titles or names of the registered resource to differentiate between the different title types.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-contributorType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-contributorType-v4.xsd">
         <xs:annotation>
             <xs:documentation>A classification of the role of the person to describe which specific task he/she holds to contribute to the registered resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-availabilityType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-availabilityType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of the availability conditions of the registered resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-relationType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-relationType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of relations between the resource being registered and a related resource, e.g. the registered resources is a new version ofthe related resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-pidType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-pidType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of Persistent Identifiers of the unstructured information of the publication.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-descriptionType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-descriptionType-v4.xsd">
         <xs:annotation>
             <xs:documentation>The type of the additional information about the registered resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-identifierSchemaType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-identifierSchemaType-v4.xsd">
         <xs:annotation>
             <xs:documentation>The name of the schema used to differentiate between different ID types that identify the container element; e.g. the person, the institution or the organization.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-timeDimensionType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-timeDimensionType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of time dimensions, e.g. if the survey examines a population on more than one occasion (longitudinal), if the study draws different samples from the same general population at different times (trend), etc.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-collectionModeType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-collectionModeType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of methods that are used to collect information from a sample in a survey. </xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-documentType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-documentType-v4.xsd">
         <xs:annotation>
             <xs:documentation>The type of publication that has been made available to the public.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-unitType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-unitType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Describes the entity being analysed or observed in the resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-rightsCCType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-rightsCCType-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of copyright-licences known as Creative Commons licenses to allow creators to communicate which rights they reserve for the registered resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-languageCodes-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-languageCodes-v4.xsd">
         <xs:annotation>
             <xs:documentation>The language of the metadata information. It applies to the according piece of information where it is specified. The value is a language code for the natural language and must conform to the ISO code 639-1.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-resourceLanguageCodes-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-resourceLanguageCodes-v4.xsd">
         <xs:annotation>
             <xs:documentation>A primary language of the registered resource itself, using ISO 3-letter codes (639-3) as the enumerated possible values.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-internalClassificationSchemaType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-internalClassificationSchemaType-v4.xsd">
         <xs:annotation>
             <xs:documentation>The name of the internal schema used to differentiate between classification systems describing the topical coverage of the registered resource.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-controlledKeywordSchemaType-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-controlledKeywordSchemaType-v4.xsd">
         <xs:annotation>
             <xs:documentation>The name of the internal schema used to differentiate between keywords to describe the topical coverage.</xs:documentation>
         </xs:annotation>
     </xs:include>
-    <xs:include schemaLocation="include/dara-geoCodes-v4.xsd">
+    <xs:include schemaLocation="file:///home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/dara-geoCodes-v4.xsd">
         <xs:annotation>
             <xs:documentation>Predefined terms to provide information about different types of locations or spatial regions covered by the data collection. Information about the Geographic Coverage has been standardized according to ISO3166-1, ISO3166-2 and ISO3166-3.</xs:documentation>
         </xs:annotation>

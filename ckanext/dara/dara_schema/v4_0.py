@@ -7,7 +7,7 @@ def replace_includes(schema):
     print(os.getcwd())
     log.error(os.getcwd())
     #url_prefix="http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/include/"
-    url_prefix = 'file:///home/edawax/src/ckanext-dara/ckanext/dara/dara_schema/import/'
+    url_prefix = 'file:///home/edawax/ckanenv/plugins/ckanext-dara/ckanext/dara/dara_schema/import/'
     return schema.replace('include/', url_prefix)
 
 

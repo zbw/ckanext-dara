@@ -28,6 +28,11 @@ import ckan.lib.uploader as uploader
 import paste.fileapp
 import mimetypes
 
+import xml.etree.ElementTree as ET
+
+import logging
+log = logging.getLogger(__name__)
+
 
 class DaraError(Exception):
     def __init__(self, msg):
@@ -123,6 +128,7 @@ class DaraController(PackageController):
         """
         returning valid dara XML
         """
+        # certs = '/etc/pki/tls/certs/ca-bundle.crt'
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
         xml_string = tk.render(template)
         # validate
@@ -305,5 +311,6 @@ def darapi(auth, xml, test=False, register=False):
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)
+    log.error(req)
 
     return req.status_code

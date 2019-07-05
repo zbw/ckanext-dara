@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 import logging
+from pylons import config
 log = logging.getLogger(__name__)
 
 def replace_includes(schema):
-    import os
-    print(os.getcwd())
-    log.error(os.getcwd())
+    home = config.get('ckan.site_url')
     #url_prefix="http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/include/"
-    url_prefix = 'file:///home/edawax/ckanenv/plugins/ckanext-dara/ckanext/dara/dara_schema/import/'
+    # test
+    if home == 'http://134.245.93.94':
+        url_prefix = 'file:///home/edawax/src/ckanext-dara/ckanext/dara/dara_schema/import/'
+    # Dev
+    elif home == 'http://127.0.0.1:5000':
+        url_prefix = './ckanext/dara/dara_schema/import/'
+    # production
+    else:
+        url_prefix = 'file:///home/edawax/ckanenv/plugins/ckanext-dara/ckanext/dara/dara_schema/import/'
     return schema.replace('include/', url_prefix)
 
 

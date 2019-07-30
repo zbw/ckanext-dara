@@ -203,11 +203,12 @@ def dara_doi_validator(key, data, errors, context):
         raise StopOnError
 
     # don't run the check if the package already exists
-    try:
-        if 'package' in context.keys():
-            return value
-    except KeyError:
-        pass
+    # always run
+    #try:
+    #    if 'package' in context.keys():
+    #        return value
+    #except KeyError:
+    #    pass
 
     type_ = data.get(('dara_Publication_PIDType', ))
     if type_ == 'DOI':

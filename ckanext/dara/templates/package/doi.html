@@ -22,7 +22,7 @@
 {% if registered or (use_testserver and (registered_test or updated_test)) %}
     {% set submit = 'Update' %}
     {% set register_title = "Registered at da|ra" %}
-    {% set register_background = "darkgreen" %}
+    {% set register_background = "darkorange" %}
     {% set register_text = "This dataset has been registered, but has not
     received a DOI yet. You can either check to recieve a DOI, just update the
     metadata, or register further resources below." %}
@@ -100,8 +100,8 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
     <table>
     {% if DOI  or (use_testserver and DOI_Test) %}
         <tr>
-            <td><span style="font-size:125%; color: darkgreen">DOI: </span</td>
-            <td><span style="font-size:125%; color: darkgreen">{{ DOI or DOI_Test }}</span</td>
+            <td><span style="font-size:125%; color: darkorange">DOI: </span</td>
+            <td><span style="font-size:125%; color: darkorange">{{ DOI or DOI_Test }}</span</td>
         </tr>
 
     {% else %}
@@ -190,14 +190,14 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
       <p class="description">
 
       {% if res['dara_DOI'] %}
-      DOI:  <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
+      DOI:  <span style="color:darkorange">{{ res['dara_DOI'] }}</span>
       {% elif use_testserver and res['dara_DOI_Test'] %}
-      DOI (Test): <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
+      DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
       {% else %}
       DOI Proposal: {{ h.res_doi(res) }}
       {% endif %}
       {% if isSysadmin %}
-       <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
+       <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
       {% endif %}
       </p>
 

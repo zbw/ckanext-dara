@@ -25,12 +25,12 @@
     {% set selected = res['dara_res_preselection'] or 'data' %}
     {{ form.select('dara_res_preselection',
                     id = 'dara_res_preselection',
-                    label = "This Resource is",
+                    label = "Resource type",
                     options = options,
                     error="",
                     selected=selected,
                     classes=['select-auto', 'control-select'],
-                    attrs={'data-infotext': """Please first choose whether the file you submit is a dataset, code, a text file, or something else."""}
+                    attrs={'data-infotext': """Please select the type of resource you would like to submit. You can choose between data(sets), ext-files (reademe, documentations, research instrucments), program code (syntax, e.g. do/sps/r-file) and other (images, sound, video)."""}
                     )
     }}
 

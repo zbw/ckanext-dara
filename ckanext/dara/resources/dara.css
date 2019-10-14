@@ -193,7 +193,7 @@ font-size:14px !important;
 
 /* group of author fields */
 fieldset.author {
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     margin-left: 50px;
 }
 

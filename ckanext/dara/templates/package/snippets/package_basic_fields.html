@@ -65,7 +65,7 @@ that we should integrate somehow here #}
 <input type="hidden" name="private" value="{{ h.is_private(pkg) }}" />
 
 
-{# XXX TEST 
+{# XXX TEST
 <p>JELs: {{ data.dara_jels }}</p>
 #}
 
@@ -92,7 +92,7 @@ that we should integrate somehow here #}
 
 
   {% if data.id and h.check_access('package_delete', {'id': data.id}) and data.state != 'active' %}
-    <div class="control-group">
+    <div class="control-group zbw-box box-full">
       <label for="field-state" class="control-label">{{ _('State') }}</label>
       <div class="controls">
         <select id="field-state" name="state">

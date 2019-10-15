@@ -227,7 +227,7 @@ fieldset.author {
     -moz-appearance: none;
     appearance: none;*/
     margin-top:-10px;
-    margin-bottom:25px;
+    /*margin-bottom:25px;*/
 
 }
 
@@ -238,7 +238,7 @@ fieldset.author {
 /* 'this resource is for' block at the top of the resource form */
 label[for="dara_res_preselection"] {
     font-size:normal;
-    margin-left:-20px;
+    /*margin-left:-20px;*/
     text-align:left;
 }
 

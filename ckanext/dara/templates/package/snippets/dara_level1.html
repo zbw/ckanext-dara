@@ -18,6 +18,8 @@
             'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """} %}
     {% endif %}
 
+    <div class="zbw-box box-bottom">
+
     {{ form.input('title', id='field-title',
             label=_('Title'),
             placeholder=_('eg. A descriptive title.'),
@@ -114,6 +116,7 @@
                 )
             }}
         #}
+    </div>
 
 
         {# Authors #}
@@ -121,7 +124,7 @@
 
 
 
-    <div id="publication">
+    <div id="publication" class="zbw-box box-full">
         {% set is_admin = h.check_access('sysadmin') or
                h.check_journal_role(data, 'admin') %}
                      <fieldset>

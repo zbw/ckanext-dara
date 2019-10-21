@@ -3,13 +3,15 @@
 
 
 {% if pkg %}
+  {% if h.is_landing_page() %}
+  {% else %}
   <section class="module module-narrow journal">
     <div class="module context-info">
       <div class="module-content">
-        <!--h1 class="heading" style="text-align:center";>{{ pkg.title or pkg.name }}</h1-->
+          <h1 class="heading zbw-box box-full" style="text-align:center";>{{ pkg.title or pkg.name }}</h1>
 
-
-    <div class="nums" style="border:none;">
+    {# num is repeated in a better position, no need for it to be here#}
+    <!--div class="nums" style="border:none;">
 
 {# XXX do we need this here? DOI Button could get into content_actions
 <div id="DOI" style="
@@ -43,8 +45,9 @@
         {% endif %}
 #}
 
-      </div>
+      </div-->
     </div>
   </section>
+  {% endif %}
 {% endif %}
 

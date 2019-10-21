@@ -18,19 +18,19 @@
     {'text': 'Other', 'value': 'other'}
     ]
     %}
-
+    <div class="zbw-box box-bottom">
     <div id="pres" data-infotext="Select a category for the resource you'd like to add.
         This will influence the number of metadata fields. In general, 'Data' has
         more fields than 'Code' or 'Text'.">
     {% set selected = res['dara_res_preselection'] or 'data' %}
     {{ form.select('dara_res_preselection',
                     id = 'dara_res_preselection',
-                    label = "This Resource is",
+                    label = "Resource type",
                     options = options,
                     error="",
                     selected=selected,
                     classes=['select-auto', 'control-select'],
-                    attrs={'data-infotext': """Please first choose whether the file you submit is a dataset, code, a text file, or something else."""}
+                    attrs={'data-infotext': """Please select the type of resource you would like to submit. You can choose between data(sets), ext-files (reademe, documentations, research instrucments), program code (syntax, e.g. do/sps/r-file) and other (images, sound, video)."""}
                     )
     }}
 
@@ -82,7 +82,7 @@
             </span>
         {% endcall %}
     {% endblock %}
-
+    </div>
 {% endblock basic_fields %}
 
 
@@ -108,7 +108,7 @@
 
     {#XXX DEBUG: dataset authors are overwritten by resource authors; off for
     now #}
-    <div id="resource_authors">
+    <div id="resource_authors" class="zbw-box box-full">
         <div id="add_authors_selection">
             <button type="button" class="plus-button" area-hidden="true" id="author_toggle_on"></button>
             <button type="button" class="minus-button" area-hidden="true" id="author_toggle_off" style="display: none;"></button>
@@ -118,18 +118,16 @@
             {{ authors.authors('resource', h, data, errors) }}
         </div>
     </div>
-    <hr>
 
-
-    <fieldset id="dara_data">
+    <fieldset id="dara_data" class="zbw-box box-full">
         {{ dara_form.md('data', h, data, errors) }}
     </fieldset>
 
-    <fieldset id="dara_text">
+    <fieldset id="dara_text" class="zbw-box box-full">
         {{ dara_form.md('text', h, data, errors) }}
     </fieldset>
 
-    <fieldset id="dara_code">
+    <fieldset id="dara_code" class="zbw-box box-full">
         {{ dara_form.md('code', h, data, errors) }}
     </fieldset>
 
@@ -147,7 +145,7 @@ the reason for this remove Previous button here #}
 {% block previous_button %}
 {#        <button class="btn" name="save" value="go-dataset" type="submit">{{
     _('Previous') }}</button> #}
-    <button class="btn btn-danger" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
+    <button class="btn btn-danger split-red" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
     <script>
         function cancel(event){
             var current = window.location.href;
@@ -161,7 +159,7 @@ the reason for this remove Previous button here #}
 
 
 {% block add_button %}
-    <button class="btn btn-danger" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
+    <button class="btn btn-danger split-red" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
     <script>
         function cancel(event){
             var current = window.location.href;
@@ -172,6 +170,6 @@ the reason for this remove Previous button here #}
         button.addEventListener('click', cancel, false);
     </script>
 
-      <button class="btn btn-primary" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
+      <button class="btn btn-primary split" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
       {% endblock %}
 

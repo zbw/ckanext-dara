@@ -193,7 +193,7 @@ font-size:14px !important;
 
 /* group of author fields */
 fieldset.author {
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     margin-left: 50px;
 }
 
@@ -219,15 +219,15 @@ fieldset.author {
 #dara_res_preselection {
     width:100%;
     height:auto;
-    font-size: 36px;
+    font-size: 30px;
     border:none;
-    color:darkred;
+    color: #ff9404;
     background:#ebebeb;
     /*-webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;*/
     margin-top:-10px;
-    margin-bottom:25px;
+    /*margin-bottom:25px;*/
 
 }
 
@@ -238,7 +238,7 @@ fieldset.author {
 /* 'this resource is for' block at the top of the resource form */
 label[for="dara_res_preselection"] {
     font-size:normal;
-    margin-left:-20px;
+    /*margin-left:-20px;*/
     text-align:left;
 }
 

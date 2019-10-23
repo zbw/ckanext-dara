@@ -15,7 +15,7 @@
 {# defaults = nothing registered #}
 {% set submit = 'Register' %}
 {% set register_title = "Register at da|ra" %}
-{% set register_background = "darkorange" %}
+{% set register_background = "darkred" %}
 {% set register_text = "This dataset has not been registered and has no DOI." %}
 
 {# registered #}
@@ -28,11 +28,16 @@
     metadata, or register further resources below." %}
 {% endif %}
 
-{% if DOI or (use_testserver and DOI_Test) %}
+{% if DOI %} {# real registration #}
     {% set register_text = "This dataset has already been registered, and
     received a DOI. You can, however, update the metadata at da|ra or register
     further resources below." %}
 {% endif %}
+
+{% if (use_testserver and DOI_Test) %} {# test registration #}
+    {% set register_text = "This dataset has been registered with the da|ra TEST server and shouldn't be used. You can make changes to the metadata, or register using the production server with the button below." %}
+{% endif %}
+
 
 {% block primary_content_inner %}
 {{ super() }}

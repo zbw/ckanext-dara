@@ -124,9 +124,14 @@
 
 
 
-    <div id="publication" class="zbw-box box-full">
-        {% set is_admin = h.check_access('sysadmin') or
+    {% set is_admin = h.check_access('sysadmin') or
                h.check_journal_role(data, 'admin') %}
+    {% if is_admin %}
+    {% snippet "package/snippets/reviewer_fields.html", form=form,
+        dara_type='dataset', errors=errors, data=data %}
+    {% endif %}
+
+    <div id="publication" class="zbw-box box-full">
                      <fieldset>
            {% if is_admin %}
                 <a name="doi"></a>
@@ -157,7 +162,7 @@
                     <select id="field-organizations" name="owner_org"
                         data-module="autocomplete"
                         data-infotext="Select the Journal your article was published in."
-                        >
+                        {% if not h.has_hammer() %}disabled=disabled{% endif %}>
                     <option value=""
                         {% if not selected_org and data.id %}
                             selected="selected"

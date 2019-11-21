@@ -20,11 +20,7 @@
             {{ submission_id }}
         </div>
     {% endif %}
-      {% if not h.hide_from_reviewer(package) %}
-        {% snippet 'package/snippets/authors.html', dara_authors=dara_authors %}
-      {% else %}
-        {% snippet 'package/snippets/authors.html', dara_authors="" %}
-      {% endif %}
+    {% snippet 'package/snippets/authors.html', dara_authors=dara_authors %}
 
     {{ super() }}
     {% endblock %}

@@ -114,7 +114,6 @@ def dara_md():
     return named_levels
 
 
-# XXX why is there a param 'data_type'?
 def dara_authors(dara_type, data):
     """
     return authors as dict

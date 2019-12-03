@@ -131,7 +131,7 @@
         dara_type='dataset', errors=errors, data=data %}
     {% endif %}
 
-    <div id="publication" class="zbw-box box-full">
+    <div id="publication" class="zbw-box box-full {% if not h.has_hammer() %}hidden_field{% endif %}">
                      <fieldset>
            {% if is_admin %}
                 <a name="doi"></a>
@@ -161,8 +161,7 @@
                 <div class="controls">
                     <select id="field-organizations" name="owner_org"
                         data-module="autocomplete"
-                        data-infotext="Select the Journal your article was published in."
-                        {% if not h.has_hammer() %}disabled=disabled{% endif %}>
+                        data-infotext="Select the Journal your article was published in.">
                     <option value=""
                         {% if not selected_org and data.id %}
                             selected="selected"

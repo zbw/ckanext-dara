@@ -59,22 +59,16 @@ that we should integrate somehow here #}
 <input type="hidden" value="{{ pkg['dara_DOI'] }}"  name="dara_DOI" />
 <input type="hidden" value="{{ pkg['dara_DOI_Test'] }}" name="dara_DOI_Test" />
 
-
 <input type="hidden" value="{{ h.in_review(pkg) }}"
        name="dara_edawax_review" />
 <input type="hidden" name="private" value="{{ h.is_private(pkg) }}" />
-
 
 {# XXX TEST
 <p>JELs: {{ data.dara_jels }}</p>
 #}
 
-
 {% snippet "package/snippets/dara_level1.html", form=form,
     dara_type='dataset', errors=errors, data=data %}
-
-
-
 
 {% endblock %}
 
@@ -86,10 +80,8 @@ that we should integrate somehow here #}
     <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
   {% endif %}
 
-
     {% block package_metadata_fields_visibility %}
     {% endblock %}
-
 
   {% if data.id and h.check_access('package_delete', {'id': data.id}) and data.state != 'active' %}
     <div class="control-group zbw-box box-full">

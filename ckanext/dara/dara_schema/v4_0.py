@@ -6,13 +6,13 @@ log = logging.getLogger(__name__)
 def replace_includes(schema):
     home = config.get('ckan.site_url')
     #url_prefix="http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/include/"
-    # test
+    # Test
     if home == 'http://134.245.93.94':
         url_prefix = 'file:///home/edawax/src/ckanext-dara/ckanext/dara/dara_schema/import/'
     # Dev
     elif home == 'http://127.0.0.1:5000':
-        url_prefix = './ckanext/dara/dara_schema/import/'
-    # production
+        url_prefix = '/home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/'
+    # Production
     else:
         url_prefix = 'file:///home/edawax/ckanenv/plugins/ckanext-dara/ckanext/dara/dara_schema/import/'
     return schema.replace('include/', url_prefix)

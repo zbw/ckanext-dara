@@ -131,7 +131,7 @@
         dara_type='dataset', errors=errors, data=data %}
     {% endif %}
 
-    <div id="publication" class="zbw-box box-full {% if not h.has_hammer() %}hidden_field{% endif %}">
+    <div id="publication" class="zbw-box box-full {% if not is_admin %}hidden_field{% endif %}">
                      <fieldset>
            {% if is_admin %}
                 <a name="doi"></a>

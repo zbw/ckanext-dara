@@ -19,35 +19,44 @@
 {# {% set debug = h.dara_debug() %} #}
 
 {#
-schema and example files: 
+schema and example files:
 http://www.da-ra.de/en/technical-information/doi-registration/
 #}
 
 
-<resource xmlns="http://da-ra.de/schema/kernel-4" 
+<resource xmlns="http://da-ra.de/schema/kernel-4"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://da-ra.de/schema/kernel-4 http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/dara.xsd">
 
-<resourceType>Collection</resourceType> 
-{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion) }} 
+<resourceType>Collection</resourceType>
+{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion) }}
 
 {# 1. title #}
-{{ macros.titles(pkg.title, 'en') }}  
+{{ macros.titles(pkg.title, 'en') }}
 
 {# 2. other titles #}
 {{ macros.otherTitles(
-    'eng', 
-    pkg.dara_OtherTitle, 
-    pkg.dara_OtherTitleType) 
-}} 
+    'eng',
+    pkg.dara_OtherTitle,
+    pkg.dara_OtherTitleType)
+}}
 
 {# TODO 3. collective title  #}
-      
+
 {# 4. creators  TODO: 4.2 institution #}
-<creators>  
-{% for author in dara_authors %}
-    {{ macros.creator(author) }}
-{% endfor %}
+<creators>
+{% if not h.hide_from_reviewer(pkg) %}
+    {% for author in dara_authors %}
+        {{ macros.creator(author) }}
+    {% endfor %}
+{% else %}
+    <creator>
+        <person>
+            <firstName>Name</firstName>
+            <lastName>Withheld</lastName>
+        </person>
+    </creator>
+{% endif %}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}
@@ -59,7 +68,7 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# 3 publisher #}
 {{ macros.publisher() }}
 
-{# *28/29 availability controlled/free 
+{# *28/29 availability controlled/free
 default is '1' (Download)
 #}
 {{ macros.availability('Download') }} {# Download is fix for collections #}
@@ -91,7 +100,7 @@ case) #}
 <relations>
 {% for res in pkg.resources %}
 {#    {% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doi_num %} #}
-    
+
     {# this is possible since ressources are registered before the
     collection. So if we have already a DOI we can use it here, otherwise we
     use the resource url. Either way, the relation is *always* registered #}

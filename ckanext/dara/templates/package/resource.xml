@@ -42,9 +42,18 @@ we need to make sure here, that dara gets a title #}
 {#XXX for now we take the authors given in the collection here #}
 {# if this is for a resource and there is no author, the authors for the article should be used. #}
 <creators>
-{% for author in dara_authors %}
-    {{ macros.creator(author) }}
-{% endfor %}
+{% if not h.hide_from_reviewer(pkg) %}
+    {% for author in dara_authors %}
+        {{ macros.creator(author) }}
+    {% endfor %}
+{% else %}
+    <creator>
+        <person>
+            <firstName>Name</firstName>
+            <lastName>Withheld</lastName>
+        </person>
+    </creator>
+{% endif %}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}

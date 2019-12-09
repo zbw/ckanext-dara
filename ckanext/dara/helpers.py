@@ -192,8 +192,9 @@ def fileinfo(res):
     """
     return dictionary with filename and filesize of res
     """
+    ca_file = config.get('ckan.cert_path')
     url = res['url']
-    req = requests.head(url, headers={'Accept-Encoding': 'identity'})
+    req = requests.head(url, headers={'Accept-Encoding': 'identity'}, verify=ca_file)
     filename = last(filter(lambda i: i, url.split('/')))
     cr = last(req.headers.get('content-range', '0').split('/'))
     cl = req.headers.get('content-length', cr)

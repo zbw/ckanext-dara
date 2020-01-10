@@ -20,7 +20,7 @@ class BulkUpdater:
             self.obj = ckanapi.TestAppCKAN(app, apikey=key)
         else:
             self.obj = ckanapi.RemoteCKAN(app, apikey=key)
-        self.lookup_base = u'http://www.zbw.eu/beta/econ-ws/suggest2?dataset=econ_corp&query={name}'
+        self.lookup_base = u'https://www.zbw.eu/beta/econ-ws/suggest2?dataset=econ_corp&query={name}'
 
 
     def get_packages(self):

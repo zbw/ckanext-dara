@@ -68,6 +68,7 @@ class DaraController(PackageController):
         context = self._context()
 
         if params()['test'] or params()['test_register']:
+            test = True
             doi_key = 'dara_DOI_Test'
             a = {201: ('dara_registered_test', 'Dataset registered (Test)'),
                  200: ('dara_updated_test', 'Dataset updated (Test)')}
@@ -77,7 +78,7 @@ class DaraController(PackageController):
                  200: ('dara_updated', 'Dataset updated')}
 
         def store():
-            d = doi.pkg_doi(c.pkg_dict)
+            d = doi.pkg_doi(c.pkg_dict, test)
             c.pkg_dict.update({doi_key: d})
             date = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
             k = get_in([dara, 0], a)

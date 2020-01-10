@@ -5,8 +5,11 @@ from datetime import datetime
 from pylons import config
 
 
-def dara_doi(org_name, created):
-    prefix = config.get('ckanext.dara.doi_prefix')
+def dara_doi(org_name, created, test=False):
+    if not test:
+        prefix = config.get('ckanext.dara.doi_prefix')
+    else:
+        prefix = '10.17889'
     dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f")
     timestamp = "{:%Y%j.%H%M%S}".format(dt)
     doi = u'{}/{}.{}'.format(prefix, org_name, timestamp)
@@ -31,7 +34,7 @@ def res_doi(res):
 
     # necessary to append 'R' here because of different creation timestamp
     # methods for packages and resources and possible clashes. # XXX CKAN!
-    # pkg['metadata_created'] uses UTC, resources['created'] local time. 
+    # pkg['metadata_created'] uses UTC, resources['created'] local time.
     # See https://github.com/ckan/ckan/issues/2903
     # Could be upgraded later (random char, random char/number combination)
     # which might be necessary for use with API
@@ -39,15 +42,15 @@ def res_doi(res):
 
 
 # helpers
-def pkg_doi(pkg):
+def pkg_doi(pkg, test=False):
     try:
         doi = pkg.get('dara_DOI', None)
         if doi:
             return doi
     except AttributeError:
         pass
-    return dara_doi(get_journal_name(pkg), pkg['metadata_created'])
- 
+    return dara_doi(get_journal_name(pkg), pkg['metadata_created'], test)
+
 
 # helpers
 def use_testserver():

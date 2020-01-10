@@ -311,7 +311,7 @@ def darapi(auth, xml, test=False, register=False):
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)
-    log.info("Requesting DOI [{}]: url".format(test, url))
+    log.info("Requesting DOI [{}]: {}".format(test, url))
     log.error(req)
 
     return req.status_code

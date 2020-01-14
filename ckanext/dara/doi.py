@@ -5,11 +5,8 @@ from datetime import datetime
 from pylons import config
 
 
-def dara_doi(org_name, created, test=False):
-    if not test:
-        prefix = config.get('ckanext.dara.doi_prefix')
-    else:
-        prefix = '10.17889'
+def dara_doi(org_name, created):
+    prefix = config.get('ckanext.dara.doi_prefix')
     dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f")
     timestamp = "{:%Y%j.%H%M%S}".format(dt)
     doi = u'{}/{}.{}'.format(prefix, org_name, timestamp)
@@ -42,14 +39,14 @@ def res_doi(res):
 
 
 # helpers
-def pkg_doi(pkg, test=False):
+def pkg_doi(pkg):
     try:
         doi = pkg.get('dara_DOI', None)
         if doi:
             return doi
     except AttributeError:
         pass
-    return dara_doi(get_journal_name(pkg), pkg['metadata_created'], test)
+    return dara_doi(get_journal_name(pkg), pkg['metadata_created'])
 
 
 # helpers

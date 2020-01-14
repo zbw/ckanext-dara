@@ -77,7 +77,7 @@ class DaraController(PackageController):
                  200: ('dara_updated', 'Dataset updated')}
 
         def store():
-            d = doi.pkg_doi(c.pkg_dict, params()['test'])
+            d = doi.pkg_doi(c.pkg_dict)
             c.pkg_dict.update({doi_key: d})
             date = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
             k = get_in([dara, 0], a)

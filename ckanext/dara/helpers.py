@@ -255,7 +255,10 @@ def _parse_authors(data):
     return ', '.join(authors)
 
 def build_citation(data):
-    """ Build a citation using APA style for use in freetext 'publications' """
+    """
+    Build a citation from CKAN data using APA style
+    for use in freetext 'publications'
+    """
     citation = '{authors} ({year}). {journal}{vol}{pages}.'
     volume_issue = ''
     journal_map = {'GER': 'German Economic Review', 'AEQ': 'Applied Economics Quarterly', 'IREE': 'International Journal for Re-Views in Empirical Economics', 'VSWG': 'Vierteljahrschrift für Sozial- und Wirtschaftsgeschichte'}
@@ -293,12 +296,18 @@ def query_crossref(doi):
         metadata is incomplete.
     """
     base_url = "https://api.crossref.org/works/{doi}"
+    headers = {
+        'User-Agent': 'ZBW - Journal Data Archive; mailto:journaldata@zbw.eu',
+        'From': 'journaldata@zbw.eu'
+    }
 
     try:
-        response = requests.get(base_url.format(doi=doi), timeout=3.05)
+        response = requests.get(base_url.format(doi=doi),
+                                headers=headers,
+                                timeout=3.05)
     except requests.exceptions.Timeout as e:
         return False
     if response.status_code == 200:
-        data = response.json()
+        data = response.json()['message']
         return data
     return False

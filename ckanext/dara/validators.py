@@ -201,6 +201,7 @@ def dara_doi_validator(key, data, errors, context):
     if value is missing or value is None:
         data.pop(key, None)
         raise StopOnError
+    value = value.strip()
 
     # don't run the check if the package is already published
     status = data.get(('dara_edawax_review', ))
@@ -211,11 +212,9 @@ def dara_doi_validator(key, data, errors, context):
         pass
 
     type_ = data.get(('dara_Publication_PIDType', ))
-    
     if type_ == 'DOI':
         pattern = re.compile('^10.\d{4,9}/[-._;()/:a-zA-Z0-9]+$')
         match = pattern.match(value)
-        print(match)
         if match is None:
             raise Invalid('DOI is invalid. Format should be: 10.xxxx/xxxx.')
 

@@ -19,6 +19,7 @@ import mimetypes
 import api
 from ckan.logic.action.create import resource_create as ckan_resource_create
 from ckan.logic.action.update import package_update as ckan_package_update
+from ckanext.edawax.helpers import is_author
 
 
 PREFIX = 'dara_'
@@ -42,8 +43,8 @@ def feedback_package_update(context, data_dict):
     if context.get('defer_commit', False):
         pass
     else:
-
-        helpers.flash_html('Dataset Created. Uploaded files can be seen under \
+        if is_author(package):
+            helpers.flash_html('Dataset Created. Uploaded files can be seen under \
                             "Data and Resources." <br> Your files were uploaded \
                             to the server...something else goes here?')
     return package

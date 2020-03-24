@@ -161,6 +161,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'org_extra_info': helpers.org_extra_info,
                 'resource_type': helpers.resource_type,
                 'build_citation': helpers.build_citation,
+                'get_journal_name': doi.get_journal_name,
                 #'has_doi': helpers.has_doi,
                 }
 

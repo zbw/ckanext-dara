@@ -2,6 +2,7 @@
 {% set pkg = h.dara_pkg() %}
 {#{% set debug = h.dara_debug() %} #}
 {# {% set pkg = c.pkg_dict %} #}
+{% set journal_name = h.get_journal_name(pkg) %}
 
 {% set isSysadmin = h.check_access('sysadmin', context) %}
 {% set DOI = pkg['dara_DOI'] %}
@@ -156,12 +157,10 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
   external URLs.</p>
 
     {% set resources = pkg['resources'] %}
-
+    
     {% if resources %}
       <ul class="resource-list">
           {% for res in resources %}
-
-
 
 {# originally from resource_item.html ##############################}
 
@@ -173,45 +172,46 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
 
 
 <li class="resource-item" data-id="{{ res.id }}">
-
-
+{#---------------#}
   <div style="float:right; margin-left:20px; text-align:right;" >
     {% if h.resource_is_internal(res) %}
 
-      {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
-                Get DOI
-      {% else %}
-        Update
-      {% endif %}
-     <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
-                value="register" />
+        {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
+            Get DOI
+        {% else %}
+            Update
+        {% endif %}
 
+        <input style="margin-top:-15px;" 
+            type="checkbox" 
+            name="{{ res.id }}"
+            value="register" />
 
-      {% if isSysadmin %}
-      <span style="margin-left:12px;">
-          <a href="{{ url }}/dara_xml">XML</a></span>
-      {% endif %}
+        {% if isSysadmin %}
+        <span style="margin-left:12px;">
+            <a href="{{ url }}/dara_xml">XML</a></span>
+        {% endif %}
 
-      <p class="description">
+        <p class="description">
+            {% if res['dara_DOI'] %}
+                DOI:  <span style="color:darkorange">{{ res['dara_DOI'] }}</span>
+            {% elif use_testserver and res['dara_DOI_Test'] %}
+                DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
+            {% else %}
+                DOI Proposal: {{ h.res_doi(res, pkg, journal_name) }}
+            {% endif %}
 
-      {% if res['dara_DOI'] %}
-      DOI:  <span style="color:darkorange">{{ res['dara_DOI'] }}</span>
-      {% elif use_testserver and res['dara_DOI_Test'] %}
-      DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
-      {% else %}
-      DOI Proposal: {{ h.res_doi(res) }}
-      {% endif %}
-      {% if isSysadmin %}
-       <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
-      {% endif %}
-      </p>
+            {% if isSysadmin %}
+                <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
+            {% endif %}
+        </p>
 
-      {% else %}
-      No DOI assignable
-  {% endif %}
+    {% else %}
+        No DOI assignable
+    {% endif %}
 
   </div>
-
+{#---------------#}
   <a class="heading" href="{{ url }}"
       title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}
@@ -226,13 +226,16 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
 
   </a>
 
+  
   <p class="description">
     {% if res.description %}
       {{ h.markdown_extract(res.description, extract_length=80) }}
     {% endif %}
   </p>
+  
 
 </li>
+
 {# end resource item ############################################ #}
 
 
@@ -249,9 +252,6 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
     {% endif %}
 <!-- end resources -->
 </div>
-
-
-
 
 
 </form>

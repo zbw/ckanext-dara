@@ -44,7 +44,7 @@ def feedback_package_update(context, data_dict):
         pass
     else:
         # message is given on submission to review
-        if is_author(package) and package['dara_edawax_review'] != 'false':
+        if is_author(package) and package['dara_edawax_review'] not in ['false', 'reauthor']:
             helpers.flash_html('Dataset Created. Uploaded files can be seen under \
                             "Data and Resources." <br> Your files were uploaded \
                             to the server...something else goes here?')

@@ -76,8 +76,7 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
         <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>
 
         {% if isSysadmin and not use_testserver %}
-        <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
-        />Test
+            <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked/>Test
         {% endif %}
 
         {# {% if not DOI and not (use_testserver and DOI_Test) %}#}
@@ -157,7 +156,7 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
   external URLs.</p>
 
     {% set resources = pkg['resources'] %}
-    
+
     {% if resources %}
       <ul class="resource-list">
           {% for res in resources %}
@@ -182,8 +181,8 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
             Update
         {% endif %}
 
-        <input style="margin-top:-15px;" 
-            type="checkbox" 
+        <input style="margin-top:-15px;"
+            type="checkbox"
             name="{{ res.id }}"
             value="register" />
 
@@ -226,13 +225,13 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
 
   </a>
 
-  
+
   <p class="description">
     {% if res.description %}
       {{ h.markdown_extract(res.description, extract_length=80) }}
     {% endif %}
   </p>
-  
+
 
 </li>
 

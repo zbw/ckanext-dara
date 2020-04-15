@@ -63,7 +63,6 @@ class DaraController(PackageController):
         """
         register at da|ra
         """
-
         self._check_access(id)
         context = self._context()
 

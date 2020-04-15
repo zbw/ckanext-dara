@@ -9,7 +9,7 @@ def replace_includes(schema):
     # test
     if home == 'http://134.245.93.94':
         url_prefix = 'file:///home/edawax/src/ckanext-dara/ckanext/dara/dara_schema/import/'
-    # Dev
+    # Dev - Need to start from within the folder for dara
     elif home == 'http://127.0.0.1:5000':
         url_prefix = './ckanext/dara/dara_schema/import/'
     # production

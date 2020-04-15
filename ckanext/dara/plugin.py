@@ -18,6 +18,7 @@ import doi
 import mimetypes
 import api
 from ckan.logic.action.create import resource_create as ckan_resource_create
+from ckan.logic.action.create import package_create as ckan_package_create
 from ckan.logic.action.update import package_update as ckan_package_update
 from ckanext.edawax.helpers import is_author
 
@@ -39,15 +40,14 @@ def feedback_package_update(context, data_dict):
     Provide the user feedback when creating the package
     """
     package = ckan_package_update(context, data_dict)
-    # this gets triggered twice, checking 'defer_commit' prevents duplicate messages
-    if context.get('defer_commit', False):
-        pass
-    else:
-        # message is given on submission to review
-        if is_author(package) and package['dara_edawax_review'] not in ['false', 'reauthor']:
-            helpers.flash_html('Dataset Created. Uploaded files can be seen under \
+    # t
+    if context.get('allow_state_change', False) \
+        and package['state'] == 'active' \
+            and package['dara_edawax_review'] == 'false':
+        helpers.flash_html('Dataset Created. Uploaded files can be seen under \
                             "Data and Resources." <br> Your files were uploaded \
-                            to the server...something else goes here?')
+                            to the server.')
+
     return package
 
 def dara_fields(dara_type):
@@ -72,6 +72,7 @@ def schema_update(schema, action):
                 dara_fields('publication'),
                 ds.hidden_fields(),
                 ds.single_fields())
+
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
 
     resource_schema_update(schema, action)
@@ -161,6 +162,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 }
 
     def get_actions(self):
+        # Package_create - triggers when first page is completed
         return {
                     'get_by_doi': api.get_by_doi,
                     'xml_show': api.xml_show,

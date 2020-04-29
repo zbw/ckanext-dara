@@ -201,11 +201,12 @@ def dara_doi_validator(key, data, errors, context):
     if value is missing or value is None:
         data.pop(key, None)
         raise StopOnError
+    value = value.strip()
 
-    # don't run the check if the package already exists
-    # always run
+    # don't run the check if the package is already published
+    status = data.get(('dara_edawax_review', ))
     try:
-        if 'package' in context.keys():
+        if status in ['back', 'reviewed']:
             return value
     except KeyError:
         pass

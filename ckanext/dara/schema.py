@@ -995,6 +995,7 @@ def hidden_fields():
                 # TODO this really should be in ckanext.edawax, but we had trouble
                 # with two IDatasetForm implements
                 HiddenField('edawax_review', ('ignore_missing',)),
+                HiddenField('related_citation', ('ignore_missing',)),
              )
     return fields
 

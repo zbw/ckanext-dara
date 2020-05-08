@@ -75,7 +75,7 @@ function ws_affil_init () {
 
 function ws_names_call(val) {
     $.ajax({
-        url: "http://zbw.eu/beta/econ-ws/suggest2",
+        url: "https://zbw.eu/beta/econ-ws/suggest2",
         dataType: "json",
         async: true,
         data: {
@@ -105,7 +105,7 @@ function ws_names_call(val) {
 
 function ws_affil_call(val) {
     $.ajax({
-        url: "http://zbw.eu/beta/econ-ws/suggest2",
+        url: "https://zbw.eu/beta/econ-ws/suggest2",
         dataType: "json",
         async: true,
         data: {

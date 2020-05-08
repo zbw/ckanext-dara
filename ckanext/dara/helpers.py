@@ -2,6 +2,7 @@
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
 
+from ckan.lib.helpers import _Flash
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request
 from ckanext.dara import schema as dara_schema
@@ -15,6 +16,11 @@ import requests
 from hurry.filesize import size, si
 from toolz.itertoolz import last
 import json
+
+
+flash = _Flash()
+def flash_html(message, allow_html=True, category='alert-success'):
+    flash(message, category=category, allow_html=allow_html)
 
 
 def has_doi(pkg):
@@ -191,8 +197,9 @@ def fileinfo(res):
     """
     return dictionary with filename and filesize of res
     """
+    ca_file = config.get('ckan.cert_path')
     url = res['url']
-    req = requests.head(url, headers={'Accept-Encoding': 'identity'})
+    req = requests.head(url, headers={'Accept-Encoding': 'identity'}, verify=ca_file)
     filename = last(filter(lambda i: i, url.split('/')))
     cr = last(req.headers.get('content-range', '0').split('/'))
     cl = req.headers.get('content-length', cr)

@@ -141,8 +141,8 @@
         {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}
         {% if data.group_id %}
-      <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
-    {% endif %}
+            <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
+        {% endif %}
     {% set existing_org = data.owner_org or data.group_id %}
 
     {# original org-selector:

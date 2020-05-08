@@ -6,6 +6,7 @@
 # import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+import ckan.lib.helpers as h
 # from ckan.lib.navl.dictization_functions import missing, StopOnError, Invalid
 from ckanext.dara import schema as ds
 from itertools import chain
@@ -16,10 +17,38 @@ from pylons import config
 import doi
 import mimetypes
 import api
+from ckan.logic.action.create import resource_create as ckan_resource_create
+from ckan.logic.action.create import package_create as ckan_package_create
+from ckan.logic.action.update import package_update as ckan_package_update
+from ckanext.edawax.helpers import is_author
 
 
 PREFIX = 'dara_'
 
+
+def feedback_resource_create(context, data_dict):
+    """
+    Provide the user feedback when they are adding resources
+    """
+    resource = ckan_resource_create(context, data_dict)
+    h.flash_success('The file "{}" was added to the dataset.'.format(resource['name']))
+    return resource
+
+
+def feedback_package_update(context, data_dict):
+    """
+    Provide the user feedback when creating the package
+    """
+    package = ckan_package_update(context, data_dict)
+    # t
+    if context.get('allow_state_change', False) \
+        and package['state'] == 'active' \
+            and package['dara_edawax_review'] == 'false':
+        helpers.flash_html('Dataset Created. Uploaded files can be seen under \
+                            "Data and Resources." <br> Your files were uploaded \
+                            to the server.')
+
+    return package
 
 def dara_fields(dara_type):
     return filter(lambda field: dara_type in field.adapt, ds.fields())
@@ -43,6 +72,7 @@ def schema_update(schema, action):
                 dara_fields('publication'),
                 ds.hidden_fields(),
                 ds.single_fields())
+
     map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
 
     resource_schema_update(schema, action)
@@ -132,9 +162,12 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 }
 
     def get_actions(self):
+        # Package_create - triggers when first page is completed
         return {
                     'get_by_doi': api.get_by_doi,
-                    'xml_show': api.xml_show
+                    'xml_show': api.xml_show,
+                    'resource_create': feedback_resource_create,
+                    'package_update': feedback_package_update,
                }
 
     def get_helpers(self):
@@ -161,6 +194,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'org_extra_info': helpers.org_extra_info,
                 'resource_type': helpers.resource_type,
                 'build_citation': helpers.build_citation,
+                'get_journal_name': doi.get_journal_name,
                 #'has_doi': helpers.has_doi,
                 }
 

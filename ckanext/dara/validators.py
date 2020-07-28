@@ -227,3 +227,22 @@ patterns = {
                 'Repec': '^p[a-z]{2}[1-9]\d{0,4}$',
                 'WoS': '^[A-Z]-\d{4}-(19|20)\d\d$'
             }
+
+import mimetypes
+import ckan.lib.navl.dictization_functions as df
+Missing = df.Missing
+# Newer versions allow validators to be overriden
+def guess_empty_format(key, data, errors, context):
+    value = data[key]
+    resource_id = data.get(key[:-1] + ('id',))
+
+    # if resource_id then an update
+    if (not value or value is Missing) and not resource_id:
+        url = data.get(key[:-1] + ('url',), '')
+        mimetype, encoding = mimetypes.guess_type(url)
+        if mimetype:
+            data[key] = mimetype
+        else:
+            values = url.split('.')
+            mimetype = values[-1]
+            data[key] = mimetype.upper()

@@ -243,6 +243,9 @@ def guess_empty_format(key, data, errors, context):
         if mimetype:
             data[key] = mimetype
         else:
-            values = url.split('.')
-            mimetype = values[-1]
-            data[key] = mimetype.upper()
+            try:
+                values = url.split('.')
+                mimetype = values[-1]
+                data[key] = mimetype.upper()
+            except:
+                data[key] = 'TXT'

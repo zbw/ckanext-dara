@@ -93,11 +93,6 @@ def resource_schema_update(schema, action):
     map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
         tk.get_validator(v), f.validators)}), dara_fields('resource'))
 
-    schema['resources'].update({
-        'format':[tk.get_validator('ignore_missing'), unicode, validators.guess_empty_format]
-    })
-
-
 def dara_package_schema(schema):
     schema_update(schema, 'update')
     return schema
@@ -163,7 +158,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'jel_convert': validators.jel_convert,
                 'dates': validators.dates,
                 'dara_doi_validator': validators.dara_doi_validator,
-                'guess_empty_format': validators.guess_empty_format,
                 }
 
     def get_actions(self):

@@ -1,5 +1,5 @@
 from functools import wraps
-from itertools import izip_longest
+from itertools import zip_longest
 
 
 def memoize(func):
@@ -16,7 +16,7 @@ def memoize(func):
 # build blocks of size from seq
 def grouper(seq, size):
     bargs = [iter(seq)] * size
-    return izip_longest(*bargs)
+    return zip_longest(*bargs)
 
 
 # build dictionary from seq with ids as keys

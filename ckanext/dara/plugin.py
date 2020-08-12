@@ -13,10 +13,10 @@ from itertools import chain
 from ckanext.dara import helpers
 from ckanext.dara import validators, converters
 from copy import deepcopy
-from pylons import config
-import doi
+from ckan.common import config
+import ckanext.dara.doi as doi
 import mimetypes
-import api
+import ckanext.dara.api as api
 from ckan.logic.action.create import resource_create as ckan_resource_create
 from ckan.logic.action.create import package_create as ckan_package_create
 from ckan.logic.action.update import package_update as ckan_package_update

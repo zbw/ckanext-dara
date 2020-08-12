@@ -3,7 +3,7 @@
 
 from collections import namedtuple
 from datetime import datetime
-import geography_coverage as geo
+import ckanext.dara.geography_coverage as geo
 
 # TODO: make field selection/config runtime-editable (instead of commenting
 # them out)

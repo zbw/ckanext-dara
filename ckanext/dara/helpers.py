@@ -3,19 +3,21 @@
 # ZBW - Leibniz Information Centre for Economics
 
 from ckan.lib.helpers import _Flash
+from ckan.lib.helpers import url_for
 import ckan.plugins.toolkit as tk
-from ckan.common import c, request
+from ckan.common import g, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
-from pylons import config
+from ckan.common import config
 import json
-from ckan.new_authz import users_role_for_group_or_org
+from ckan.authz import users_role_for_group_or_org
 from ckan import model
 import requests
 from hurry.filesize import size, si
 from toolz.itertoolz import last
 import json
+from urllib.parse import urlparse
 
 
 flash = _Flash()
@@ -30,7 +32,20 @@ def has_doi(pkg):
     return True
 
 
-def dara_pkg(id=None):
+def _get_id(type):
+    if '/api/' in request.url:
+        # get id from URL
+        parsed = urlparse.urlparse(request.url)
+        id = urlparse.parse_qs(parsed.query)[type][0]
+    elif 'urlvars' in dir(request):
+        id = request.urlvars[type]
+    else:
+        id = request.view_args[type]
+
+    return id
+
+
+def dara_pkg(id=None, type='id'):
     """
     get package for several helper functions
     XXX DO WE REALLY NEED THIS?
@@ -39,13 +54,16 @@ def dara_pkg(id=None):
         pkg = tk.get_action('package_show')(None, {'id': id})
         return pkg
 
-    pkg_id = tk.c.id
+    try:
+        pkg_id = _get_id(type)
+    except:
+        return False
+
     try:
         pkg = tk.get_action('package_show')(None, {'id': pkg_id})
     except:
         pkg = model.Package.by_name(pkg_id)
 
-    # params = request.params
     return pkg
 
 
@@ -63,7 +81,7 @@ def dara_auto_fields():
         site_url = "http://edawax.de"
 
     if pkg:
-        pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+        pkg_url = url_for(controller='package', action='read', id=pkg['name'])
     else:
         pkg_url = ''
     dara_url = site_url + pkg_url
@@ -80,21 +98,12 @@ def resource_author_fields():
 
 def dara_resource():
     """
-    somehow hack. c.resource doesnt return a resource when calling .../dara_xml
+    Return the dara resource
     """
-    # TODO improve this. We should somehow be able to get the type of the
-    # context (resource or package)
     try:
-        if 'resource' in request.path:
-            return tk.get_action('resource_show')(None, {'id': c.resource_id})
-        else:
-            return c.resource
+        return tk.get_action('resource_show')(None, {'id': _get_id('resource_id')})
     except:
         return False
-
-
-# def get_request_params():
-#    return tk.request.params
 
 
 def dara_resource_url(url):
@@ -120,6 +129,7 @@ def dara_md():
     return named_levels
 
 
+# XXX why is there a param 'data_type'?
 def dara_authors(dara_type, data):
     """
     return authors as dict
@@ -133,14 +143,13 @@ def dara_authors(dara_type, data):
         pack = data or dara_pkg()
         if 'resources' in pack.keys():
             for resource in pack['resources']:
-                if resource['id'] == c.resource_id:
-                    if 'dara_authors' in resource.keys():
-                        v = resource['dara_authors']
                 try:
-                    if resource['id'] == c.resource['id']:
+                    # Use the resource that matches the current page
+                    if resource['id'] == _get_id('resource_id'):
                         if 'dara_authors' in resource.keys():
                             v = resource['dara_authors']
-                except:
+                except Exception as e:
+                    print(e)
                     pass
         else:
             if 'dara_authors' in pack.keys():
@@ -155,7 +164,9 @@ def dara_authors(dara_type, data):
             if dct[0]['lastname'] == '' and dct[0]['institution'] == '':
                 # if the request is for XML return the collection data
                 # otherwise, return an empty string
-                if 'dara_xml' in request.path or 'dara_register' in request.path:
+                if 'dara_xml' in request.path \
+                    or 'dara_register' in request.path \
+                        or '/api/' in request.url:
                     return get_collection_data(data)
                 else:
                     return dct[:3]
@@ -173,7 +184,7 @@ def get_collection_data(data):
     v = pack.get('dara_authors') # None if key does not exist
     if isinstance(v, list):
         return list_dicter(v[:], [i.id for i in author_fields()])
-    if isinstance(v, basestring):
+    if isinstance(v, str):
         return json.loads(v)
     return None
 
@@ -262,10 +273,7 @@ def _parse_authors(data):
     return ', '.join(authors)
 
 def build_citation(data):
-    """
-    Build a citation from CKAN data using APA style
-    for use in freetext 'publications'
-    """
+    """ Build a citation using APA style for use in freetext 'publications' """
     citation = '{authors} ({year}). {journal}{vol}{pages}.'
     volume_issue = ''
     journal_map = {'GER': 'German Economic Review', 'AEQ': 'Applied Economics Quarterly', 'IREE': 'International Journal for Re-Views in Empirical Economics', 'VSWG': 'Vierteljahrschrift für Sozial- und Wirtschaftsgeschichte'}
@@ -303,18 +311,12 @@ def query_crossref(doi):
         metadata is incomplete.
     """
     base_url = "https://api.crossref.org/works/{doi}"
-    headers = {
-        'User-Agent': 'ZBW - Journal Data Archive; mailto:journaldata@zbw.eu',
-        'From': 'journaldata@zbw.eu'
-    }
 
     try:
-        response = requests.get(base_url.format(doi=doi),
-                                headers=headers,
-                                timeout=3.05)
+        response = requests.get(base_url.format(doi=doi), timeout=3.05)
     except requests.exceptions.Timeout as e:
         return False
     if response.status_code == 200:
-        data = response.json()['message']
+        data = response.json()
         return data
     return False

@@ -2,7 +2,7 @@
 
 import ckan.plugins.toolkit as tk
 from datetime import datetime
-from pylons import config
+from ckan.common import config
 
 
 def dara_doi(org_name, created):

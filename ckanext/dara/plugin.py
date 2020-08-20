@@ -13,10 +13,10 @@ from itertools import chain
 from ckanext.dara import helpers
 from ckanext.dara import validators, converters
 from copy import deepcopy
-from pylons import config
-import doi
+from ckan.common import config
+import ckanext.dara.doi as doi
 import mimetypes
-import api
+import ckanext.dara.api as api
 from ckan.logic.action.create import resource_create as ckan_resource_create
 from ckan.logic.action.create import package_create as ckan_package_create
 from ckan.logic.action.update import package_update as ckan_package_update
@@ -60,8 +60,7 @@ def vc(action, field):
     # c_update = map(lambda c: tk.get_converter(c), field.converters_update)
     # m = {'show': c_show + vals,
     # 'update': vals + c_update}
-
-    vals = map(lambda v: tk.get_validator(v), field.validators)
+    vals = list(map(lambda v: tk.get_validator(v), field.validators))
     m = {'show': [tk.get_converter('convert_from_extras')] + vals,
          'update': vals + [tk.get_converter('convert_to_extras')]}
     return m[action]
@@ -73,7 +72,9 @@ def schema_update(schema, action):
                 ds.hidden_fields(),
                 ds.single_fields())
 
-    map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
+    #map(lambda f: schema.update({PREFIX + f.id: vc(action, f)}), fields)
+    for f in fields:
+        schema.update({PREFIX + f.id: vc(action, f)})
 
     resource_schema_update(schema, action)
 
@@ -115,20 +116,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IActions)
 
 
-
-   #def before_create(self, context, resource):
-   #
-   #    def get_pkg():
-   #        return tk.get_action('package_show')(context, {'id': context['package'].id})
-   #    import ipdb; ipdb.set_trace()
-
-    # def after_update(self, context, pkg_dict):
-        # import ipdb; ipdb.set_trace()
-
-    # def before_view(self, pkg_dict):
-        # import ipdb; ipdb.set_trace()
-
-
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
         schema_update(schema, 'show')
@@ -145,7 +132,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'public')
-        tk.add_resource('resources', 'dara')
+        tk.add_resource('assets', 'dara')
         mimetypes.add_type('STATA do', '.do')
         mimetypes.add_type('STATA data', '.dta')
         mimetypes.add_type('SRC', '.src')

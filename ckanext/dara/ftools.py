@@ -1,5 +1,5 @@
 from functools import wraps
-from itertools import izip_longest
+from itertools import zip_longest
 
 
 def memoize(func):

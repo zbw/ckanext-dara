@@ -177,7 +177,7 @@ def jel_convert(value, context):
     if isinstance(value, list):
         return ','.join(value)
 
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         return value.replace('{', '').replace('}', '').split(',')
 
     return value

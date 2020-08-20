@@ -4,13 +4,12 @@
 
 from ckan.lib.helpers import _Flash
 import ckan.plugins.toolkit as tk
-from ckan.common import c, request
+from ckan.common import c, request, config
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
-from pylons import config
 import json
-from ckan.new_authz import users_role_for_group_or_org
+from ckan.authz import users_role_for_group_or_org
 from ckan import model
 import requests
 from hurry.filesize import size, si
@@ -30,7 +29,20 @@ def has_doi(pkg):
     return True
 
 
-def dara_pkg(id=None):
+def _get_id(type):
+    if '/api/' in request.url:
+        # get id from URL
+        parsed = urlparse.urlparse(request.url)
+        id = urlparse.parse_qs(parsed.query)[type][0]
+    elif 'urlvars' in dir(request):
+        id = request.urlvars[type]
+    else:
+        id = request.view_args[type]
+
+    return id
+
+
+def dara_pkg(id=None, type='id'):
     """
     get package for several helper functions
     XXX DO WE REALLY NEED THIS?
@@ -39,13 +51,16 @@ def dara_pkg(id=None):
         pkg = tk.get_action('package_show')(None, {'id': id})
         return pkg
 
-    pkg_id = tk.c.id
+    try:
+        pkg_id = _get_id(type)
+    except:
+        return False
+
     try:
         pkg = tk.get_action('package_show')(None, {'id': pkg_id})
     except:
         pkg = model.Package.by_name(pkg_id)
 
-    # params = request.params
     return pkg
 
 
@@ -173,7 +188,7 @@ def get_collection_data(data):
     v = pack.get('dara_authors') # None if key does not exist
     if isinstance(v, list):
         return list_dicter(v[:], [i.id for i in author_fields()])
-    if isinstance(v, basestring):
+    if isinstance(v, str):
         return json.loads(v)
     return None
 

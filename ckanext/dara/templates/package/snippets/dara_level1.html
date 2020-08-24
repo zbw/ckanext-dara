@@ -6,9 +6,9 @@
         We believe that you should cite data in just the same way that you can cite other sources of information, such as articles and books. Data citation can help by enabling easy reuse and verification of data, allowing the impact of data to be tracked, and creating a scholarly structure that recognises and rewards data producers.
     </p>
     #}
-    {% resource 'dara/dara.js' %}
-    {% resource 'dara/underscore.js' %}
-    {% resource 'dara/dara_authors.js' %}
+    {% asset 'dara/dara.js' %}
+    {% asset 'dara/underscore.js' %}
+    {% asset 'dara/dara_authors.js' %}
 
     {% if h.has_doi(h.dara_pkg()) %}
         {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
@@ -29,11 +29,10 @@
             attrs=attrs)
         }}
 
-        {% set prefix = h.url_for(controller='package', action='read', id='') %}
-        {% set domain = h.url_for(controller='package', action='read',
-                                    id='', qualified=true) %}
+        {% set prefix = h.url_for('dataset.read', id='') %}
+        {% set domain = h.url_for('dataset.read', id='', qualified=true) %}
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-        {% resource 'dara/preview-slug-new.js' %}
+        {% asset 'dara/preview-slug-new.js' %}
         {% if h.has_doi(h.dara_pkg()) %}
             {% set attrs = {
                 'data-module': 'preview-slug-new',

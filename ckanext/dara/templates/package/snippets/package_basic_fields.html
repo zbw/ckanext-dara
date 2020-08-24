@@ -12,7 +12,7 @@ that we should integrate somehow here #}
 {#{% set dara_authors = h.dara_authors() %}#}
 {% set form_style = c.form_style or c.action %}
 {# {% set debug = h.dara_debug() %} #}
-{% set pkg = c.pkg_dict %}
+{% set pkg = h.dara_pkg() %}
 
 
 {% asset 'dara/jquery-ui.js' %}

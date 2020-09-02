@@ -148,14 +148,13 @@ def dara_authors(dara_type, data):
         pack = data or dara_pkg()
         if 'resources' in pack.keys():
             for resource in pack['resources']:
-                if resource['id'] == c.resource_id:
-                    if 'dara_authors' in resource.keys():
-                        v = resource['dara_authors']
                 try:
-                    if resource['id'] == c.resource['id']:
+                    # Use the resource that matches the current page
+                    if resource['id'] == _get_id('resource_id'):
                         if 'dara_authors' in resource.keys():
                             v = resource['dara_authors']
-                except:
+                except Exception as e:
+                    print(e)
                     pass
         else:
             if 'dara_authors' in pack.keys():
@@ -163,14 +162,16 @@ def dara_authors(dara_type, data):
             else:
                 return None
 
-        if isinstance(v, unicode):
+        if isinstance(v, str):
             import ast
             new_v = ast.literal_eval(v)
             dct=list_dicter(new_v[:], [i.id for i in resource_author_fields()])
             if dct[0]['lastname'] == '' and dct[0]['institution'] == '':
                 # if the request is for XML return the collection data
                 # otherwise, return an empty string
-                if 'dara_xml' in request.path or 'dara_register' in request.path:
+                if 'dara_xml' in request.path \
+                    or 'dara_register' in request.path \
+                        or '/api/' in request.url:
                     return get_collection_data(data)
                 else:
                     return dct[:3]

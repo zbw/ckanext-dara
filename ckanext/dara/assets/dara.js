@@ -141,7 +141,7 @@ function dara_info(el, action, container) {
 $(function infobutton () {
 
     var controls = $('.controls');
-    controls.after('<div class="ib"><i class="icon-info-sign" /></div>');
+    controls.after('<div class="ib"><i class="fa fa-info-circle" /></div>');
 
     $('.ib').on('click', function() {
         dara_info($(this), 'open', $(this).prev());

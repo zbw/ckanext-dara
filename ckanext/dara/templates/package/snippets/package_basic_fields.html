@@ -12,15 +12,12 @@ that we should integrate somehow here #}
 {#{% set dara_authors = h.dara_authors() %}#}
 {% set form_style = c.form_style or c.action %}
 {# {% set debug = h.dara_debug() %} #}
-{% set pkg = c.pkg_dict %}
+{% set pkg = h.dara_pkg() %}
 
 
-{% resource 'dara/jquery-ui.js' %}
-{% resource 'dara/dara.css' %}
-{% resource 'dara/dara.js' %}
-{# {% resource 'dara/econws.js' %} #}
-{# {% resource 'dara/jquery-migrate.js' %} #}
-{#{% resource 'dara/jquery-ui.css' %}#}
+{#% asset 'dara/jquery-ui-js' %#}
+{% asset 'dara/dara-css' %}
+{% asset 'dara/dara-js' %}
 
 {% block package_basic_fields_license %}
 {% endblock %}

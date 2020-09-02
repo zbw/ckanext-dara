@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from pylons import config
+from ckan.common import config
 log = logging.getLogger(__name__)
 
 def replace_includes(schema):

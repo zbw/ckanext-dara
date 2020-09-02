@@ -5,11 +5,10 @@
 from ckan.lib.helpers import _Flash
 from ckan.lib.helpers import url_for
 import ckan.plugins.toolkit as tk
-from ckan.common import g, request
+from ckan.common import c, request, config
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
-from ckan.common import config
 import json
 from ckan.authz import users_role_for_group_or_org
 from ckan import model
@@ -157,7 +156,7 @@ def dara_authors(dara_type, data):
             else:
                 return None
 
-        if isinstance(v, unicode):
+        if isinstance(v, str):
             import ast
             new_v = ast.literal_eval(v)
             dct=list_dicter(new_v[:], [i.id for i in resource_author_fields()])

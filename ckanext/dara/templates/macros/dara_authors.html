@@ -1,16 +1,15 @@
 {# used in level 1 of datasets #}
 {% import 'macros/form.html' as form %}
 
-{% resource 'dara/underscore.js' %}
-{% resource 'dara/dara.js' %}
-{% resource 'dara/dara_authors.js' %}
-{# {% resource 'dara/dara_authors_affiliation.js' %}#}
+{% asset 'dara/underscore-js' %}
+{% asset 'dara/dara-js' %}
+{% asset 'dara/dara_authors-js' %}
 
 {% macro authors(dara_type, h, data, errors) -%}
 
 
-    {% resource 'dara/underscore.js' %}
-    {% resource 'dara/dara.js' %}
+    {% asset 'dara/underscore-js' %}
+    {% asset 'dara/dara-js' %}
 
 
     {# {% set debug = h.dara_debug() %}#}
@@ -68,7 +67,7 @@
 
 
 {% macro authorfields(author, name, h, errors, index=1, hide=False, type=None) -%}
-    {% resource 'dara/dara.js' %}
+    {% asset 'dara/dara-js' %}
     {% if type == 'dataset' %}
         {% set fields = h.dara_author_fields() %}
         {% set who = 'Author' %}

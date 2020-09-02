@@ -1,0 +1,65 @@
+dara-css:
+  contents:
+    - dara.css
+  output: dara/%(version)s_dara.css
+  filters: cssrewrite
+
+jquery-ui-css:
+  contents:
+    - jquery-ui.css
+  output: dara/%(version)s_jquery-ui.css
+  filters: cssrewrite
+
+dara_authors-js:
+  contents:
+    - dara_authors.js
+  filters: rjsmin
+  output: dara/%(version)s_dara_authors.js
+
+
+#select2:
+#  contents:
+#    - select2.js
+#  filters: rjsmin
+#  output: dara/%(version)s_select2.js
+
+dara-js:
+  contents:
+    - dara.js
+  filters: rjsmin
+  output: dara/%(version)s_dara.js
+  extra:
+    preload:
+      - vendor/bootstrap
+      - vendor/vendor
+      - dara/jquery-ui-js
+
+date_validation-js:
+  contents:
+    - date_validation.js
+  filters: rjsmin
+  output: dara/%(version)s_date_validation.js
+
+resource_authors-js:
+  contents:
+    - resource_authors.js
+  filters: rjsmin
+  output: dara/%(version)s_resource_authors.js
+
+jquery-ui-js:
+  contents:
+    - jquery-ui.js
+  filters: rjsmin
+  output: dara/%(version)s_jquery-ui.js
+
+underscore-js:
+  contents:
+    - underscore.js
+  filters: rjsmin
+  output: dara/%(version)s_underscore.js
+
+jquery-migrate-js:
+  contents:
+    - jquery-migrate.js
+  filters: rjsmin
+  output: dara/%(version)s_jquery-migrate.js

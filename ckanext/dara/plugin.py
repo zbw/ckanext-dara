@@ -114,21 +114,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions)
 
-
-
-   #def before_create(self, context, resource):
-   #
-   #    def get_pkg():
-   #        return tk.get_action('package_show')(context, {'id': context['package'].id})
-   #    import ipdb; ipdb.set_trace()
-
-    # def after_update(self, context, pkg_dict):
-        # import ipdb; ipdb.set_trace()
-
-    # def before_view(self, pkg_dict):
-        # import ipdb; ipdb.set_trace()
-
-
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
         schema_update(schema, 'show')

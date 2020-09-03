@@ -1,7 +1,6 @@
 {% extends 'package/edit_base.html' %}
+
 {% set pkg = h.dara_pkg() %}
-{#{% set debug = h.dara_debug() %} #}
-{# {% set pkg = c.pkg_dict %} #}
 {% set journal_name = h.get_journal_name(pkg) %}
 
 {% set isSysadmin = h.check_access('sysadmin', context) %}
@@ -43,7 +42,7 @@
 {% block primary_content_inner %}
 {{ super() }}
 
-{% resource 'dara/doi-confirm.js' %}
+{% asset 'dara/doi-confirm-js' %}
 {% set confirm = h.dump_json({'content': '
 <p>This will register a DOI (Digital Object Identifier) for the dataset. A
 DOI is a persistent identifier that <em>must</em> link to a valid URI.
@@ -164,8 +163,8 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
 {# originally from resource_item.html ##############################}
 
 {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
-{% set url_action = 'resource_edit' if url_is_edit and can_edit else 'resource_read' %}
-{% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
+{% set url_action = '.edit' if url_is_edit and can_edit else '.read' %}
+{% set url = h.url_for('dataset_resource' + url_action, id=pkg.name, resource_id=res.id) %}
 {#{% set xml = "/dataset/{{ pkg['id'] }}/resource/{{ res['id'] }}/dara_xml" %}
 #}
 

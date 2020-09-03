@@ -154,9 +154,12 @@ def doi(id):
     DOI manager page
     """
     context = _context()
-    g.pkg_dict = tk.get_action('package_show')(context, {'id': id})
-    g.pkg = context['package']
-    return tk.render('package/doi.html')
+    pkg_dict = tk.get_action('package_show')(context, {'id': id})
+    pkg = context['package']
+
+    extra_vars = {u'pkg_dict': pkg_dict}
+
+    return tk.render('package/doi.html', extra_vars)
 
 def _check_extension(filename):
     """

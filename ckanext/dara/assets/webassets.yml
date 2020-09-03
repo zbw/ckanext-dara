@@ -2,7 +2,7 @@ dara-css:
   contents:
     - dara.css
   output: dara/%(version)s_dara.css
-  filters: cssrewrite
+  #filters: cssrewrite
 
 jquery-ui-css:
   contents:
@@ -15,13 +15,6 @@ dara_authors-js:
     - dara_authors.js
   filters: rjsmin
   output: dara/%(version)s_dara_authors.js
-
-
-#select2:
-#  contents:
-#    - select2.js
-#  filters: rjsmin
-#  output: dara/%(version)s_select2.js
 
 dara-js:
   contents:
@@ -63,3 +56,9 @@ jquery-migrate-js:
     - jquery-migrate.js
   filters: rjsmin
   output: dara/%(version)s_jquery-migrate.js
+
+doi-confirm-js:
+  contents:
+    doi-confirm.js
+  filters: rjsmin
+  output: dara/%(version)s_doi_confirm.js

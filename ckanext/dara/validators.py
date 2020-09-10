@@ -89,7 +89,7 @@ def authors(key, data, errors, context):
     dk = map(lambda a: a.strip(), data[key])
 
     authors = (list_dicter(dk, [field.id for field in author_fields()]))
-    data[key] = json.dumps(map(id_check, validate(authors)))
+    data[key] = json.dumps(list(map(id_check, validate(authors))))
 
 
 def dates(key, data, errors, context):

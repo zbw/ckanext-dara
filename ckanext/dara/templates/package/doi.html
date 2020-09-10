@@ -54,9 +54,9 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
 
 <div class="zbw-box box-bottom">
 {% if use_testserver %}
-<span style="font-size:100%; color: #9E0707">
-!!!using da|ra Testserver!!!
-</span>
+    <span style="font-size:100%; color: #9E0707">
+        !!!using da|ra Testserver!!!
+    </span>
 {% endif %}
 
 <h1>DOI Registration</h1>
@@ -80,8 +80,8 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
 
         {# {% if not DOI and not (use_testserver and DOI_Test) %}#}
         {% if not (use_testserver and DOI_Test) and not DOI  %}
-        <input type="checkbox" name="DOI" value="true"
-        style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
+            <input type="checkbox" name="DOI" value="true"
+            style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
         {% endif %}
 
         <p style="margin-top:12px;">
@@ -196,7 +196,7 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
             {% elif use_testserver and res['dara_DOI_Test'] %}
                 DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
             {% else %}
-                DOI Proposal: {{ h.res_doi(res, pkg, journal_name) }}
+                DOI Proposal: {{ h.res_doi(res) }}
             {% endif %}
 
             {% if isSysadmin %}

@@ -126,7 +126,7 @@ Publications are not relevant for resources (yet!), so only here in collection
 <publications>
     <publication>
         <unstructuredPublication>
-            <freetext>{{ h.build_citation(pkg).decode('utf-8') }}</freetext>
+            <freetext>{{ h.build_citation(pkg) }}</freetext>
             <PIDs>
                 <PID>
                     <ID>{{ pkg.dara_Publication_PID }}</ID>

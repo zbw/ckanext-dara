@@ -21,10 +21,21 @@ def get_journal_name(pkg):
 
 
 # helpers
-def res_doi(res, pkg, journal_name):
+def res_doi(res):
     doi = res.get('dara_DOI', None)
     if doi:
         return doi
+
+    pkg = tk.get_action('package_show')(None, {'id': res[u'package_id']})
+    doi_gen = dara_doi(get_journal_name(pkg), res['created'])
+
+    # necessary to append 'R' here because of different creation timestamp
+    # methods for packages and resources and possible clashes. # XXX CKAN!
+    # pkg['metadata_created'] uses UTC, resources['created'] local time.
+    # See https://github.com/ckan/ckan/issues/2903
+    # Could be upgraded later (random char, random char/number combination)
+    # which might be necessary for use with API
+    return "{}R".format(doi_gen)
 
     #pkg = tk.get_action('package_show')(None, {'id': res['package_id']})
     doi_gen = dara_doi(journal_name, res['created'])

@@ -65,11 +65,11 @@ TODO
 {# 4. creators #}
 {% macro creator(author) -%}
 <creator>
-    {% if author['lastname'] %}
+    {%- if author['lastname'] -%}
     <person>
         <firstName>{{ author['firstname'] or None }}</firstName>
         <lastName>{{ author['lastname'] or None }}</lastName>
-        {% if author['authorID'] %}
+        {%- if author['authorID'] -%}
             {% if author['authorID_Type'] == 'GND' %}
                 {% set uri = "http://d-nb.info/gnd/" ~ author['authorID'] %}
             {% elif author['authorID_Type'] == 'ORCID' %}
@@ -82,7 +82,7 @@ TODO
                 {% set uri = "https://www.scopus.com/authid/detail.uri?authorId=" ~ author['authorID'] %}
             {% else %}
                 {% set uri = "http://d-nb.info/gnd/" ~ author['authorID'] %}
-            {% endif %}
+            {%- endif -%}
             <personIDs>
                 <personID>
                     <identifierURI>{{ uri }}</identifierURI>
@@ -95,9 +95,9 @@ TODO
                     </identifierSchema>
                 </personID>
             </personIDs>
-        {% endif %}
+        {%- endif -%}
         {# TODO condition einbauen, statt None #}
-        {% if author['affil'] or author['institution'] -%}
+        {%- if author['affil'] or author['institution'] -%}
         <affiliation>
             <affiliationName>
                 {%- if author['affil'] -%}
@@ -106,19 +106,19 @@ TODO
                     {{ author['institution'] }}
                 {%- endif -%}
             </affiliationName>
-            {% if author['affilID'] %}
-                {% set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] %}
+            {%- if author['affilID'] -%}
+                {%- set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] -%}
                 <affiliationIDs>
                     <affiliationID>
                         <identifierURI>{{ aff_uri }}</identifierURI>
                         <identifierSchema>GND</identifierSchema>
                     </affiliationID>
                 </affiliationIDs>
-            {% endif %}
+            {%- endif -%}
         </affiliation>
-        {%- endif %}
+        {%- endif -%}
     </person>
-    {% endif %}
+    {%- endif -%}
     {%- if author['institution'] and not author['lastname'] -%}
     <institution>
         <institutionName>

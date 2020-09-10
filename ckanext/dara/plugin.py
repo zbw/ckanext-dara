@@ -206,6 +206,9 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           view_func=views.xml,
                           methods=['GET', 'POST'])
         dara.add_url_rule(u'/<id>/resource/<resource_id>/dara_xml',
+                           view_func=views.xml,
+                           methods=[u'GET', u'POST'])
+        dara.add_url_rule(u'/<id>/resource/<resource_id>/dara_xml',
                           view_func=views.xml,
                           methods=['GET', 'POST'])
         dara.add_url_rule(u'/<id>/dara_register',

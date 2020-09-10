@@ -80,7 +80,7 @@ def dara_auto_fields():
         site_url = "http://edawax.de"
 
     if pkg:
-        pkg_url = url_for(controller='package', action='read', id=pkg['name'])
+        pkg_url = url_for('dataset.read', id=pkg['name'])
     else:
         pkg_url = ''
     dara_url = site_url + pkg_url

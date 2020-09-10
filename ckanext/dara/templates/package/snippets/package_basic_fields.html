@@ -74,9 +74,10 @@ that we should integrate somehow here #}
 
 {% block package_basic_fields_org %}
   {# if we have a default group then this wants remembering #}
-  {% if data.group_id %}
+  {# Removing, otherwise this field will appear twice (it is also part of dara_level1) and cause an error when sending to database #}
+  {#% if data.group_id %}
     <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
-  {% endif %}
+  {% endif %#}
 
     {% block package_metadata_fields_visibility %}
     {% endblock %}

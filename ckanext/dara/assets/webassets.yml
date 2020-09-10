@@ -62,3 +62,7 @@ doi-confirm-js:
     doi-confirm.js
   filters: rjsmin
   output: dara/%(version)s_doi_confirm.js
+  extra:
+    preload:
+      - base/ckan
+      - base/main

@@ -268,7 +268,8 @@ def _parse_authors(data):
     for author in data:
         first = author['firstname'][0]
         last = author['lastname']
-        authors.append('{}, {}.'.format(last.encode('utf-8'), first))
+        #authors.append('{}, {}.'.format(last.encode('utf-8'), first))
+        authors.append(u'{}, {}.'.format(last, first))
     return ', '.join(authors)
 
 def build_citation(data):

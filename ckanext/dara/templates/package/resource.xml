@@ -57,7 +57,7 @@ we need to make sure here, that dara gets a title #}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}
-{{ macros.doi(url, h.res_doi(res)) }}
+{{ macros.doi(url, h.res_doi(res, pkg, pkg['organization']['name'])) }}
 
 {# *12.publication date #}
 {{ macros.publicationDate(res.dara_PublicationDate or pkg.dara_PublicationDate) }}

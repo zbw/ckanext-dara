@@ -81,7 +81,7 @@ we need to make sure here, that dara gets a title #}
 
 {# 17. description #}
 {% if res.description %}
-{{ macros.description(res.description) }}
+    {{ macros.description(res.description) }}
 {% endif %}
 
 {# XXX controlled not implemented yet; can have multiple entries #}
@@ -106,7 +106,7 @@ dara expects content, but schema does not force it #}
     <dataSet>
         {% if res.dara_numberUnits %}
             {% set v = res.dara_unitType %}
-            {% if v in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'] %}  {# backward compatibility v4.0 #}
+            {% if v in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'] %}
                 {% set v = h.unit_type_transform(v) %}
             {% endif %}
             <unitType>{{ v }}</unitType>
@@ -123,7 +123,7 @@ dara expects content, but schema does not force it #}
                 </dataType>
             </dataTypes>
         {% endif %}
-        {% if res.url_type == "upload" %}
+        {% if res.url_type and res.url_type == "upload" %}
             {% set fileinfo = h.fileinfo(res) %}
             <files>
                 <file>
@@ -135,8 +135,6 @@ dara expects content, but schema does not force it #}
         {% endif %}
     </dataSet>
 </dataSets>
-
-
 
 {# 27. note #}
 {{ macros.note(res.dara_note) or None }}

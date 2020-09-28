@@ -63,8 +63,10 @@ def xml_show(context, data_dict):
     id_ = context.get('id', data_dict.get('id', None))
     method, pkg = _get_type(id_)
     if method == 'package_show':
-        tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=id_, template='package/collection.xml')
+        #tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=id_, template='package/collection.xml')
+        tk.redirect_to('dara.dara_xml', id=id_, template='package/collection.xml')
     elif method == 'resource_show':
-        tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=pkg['package_id'], resource_id=id_, template='package/resource.xml')
+        tk.redirect_to('dara.dara_xml', id=pkg['package_id'], resource_id=id_, template='package/resource.xml')
+        #tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=pkg['package_id'], resource_id=id_, template='package/resource.xml')
     return 'Unable to generate XML.'
 

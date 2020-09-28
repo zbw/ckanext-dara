@@ -182,7 +182,7 @@ def xml(id, resource_id=None):
     xmlschema_doc = etree.fromstring(str.encode(schema))
     xmlschema = etree.XMLSchema(xmlschema_doc)
     doc = etree.fromstring(xml_string)
-    xmlschema.assertValid(doc)
+    #xmlschema.assertValid(doc)
 
     if 'dara_xml' in request.url:
         return make_response(xml_string, 200, headers)

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
-
+import os
+import ckan.lib.uploader as uploader
 from ckan.lib.helpers import _Flash
 from ckan.lib.helpers import url_for
 import ckan.plugins.toolkit as tk
@@ -209,15 +210,12 @@ def fileinfo(res):
     """
     ca_file = config.get('ckan.cert_path')
     url = res['url']
-    req = requests.head(url, headers={'Accept-Encoding': 'identity'}, verify=ca_file)
+    upload = uploader.get_resource_uploader(res)
+    filepath = upload.get_path(res[u'id'])
+    filesize = os.path.getsize(filepath)
     filename = last(filter(lambda i: i, url.split('/')))
-    cr = last(req.headers.get('content-range', '0').split('/'))
-    cl = req.headers.get('content-length', cr)
 
-    # for now we just take the original content-length
-    # filesize = size(int(cl), system=si)
-
-    return {'filesize': cl,
+    return {'filesize': filesize,
             'filename': filename}
 
 

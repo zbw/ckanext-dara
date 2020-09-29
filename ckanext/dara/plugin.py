@@ -89,12 +89,8 @@ def resource_schema_update(schema, action):
                 ds.hidden_fields())
 
     for f in fields:
-        #schema['resources'].update({PREFIX + f.id: v})
-        schema['resources'].update({PREFIX + f.id:  vc(action, f)})
+        schema['resources'].update({PREFIX + f.id: v})
 
-    #map(lambda f: schema['resources'].update({PREFIX + f.id: v}), fields)
-    #map(lambda f: schema['resources'].update({PREFIX + f.id: map(lambda v:
-    #    tk.get_validator(v), f.validators)}), fields)
 
 def dara_package_schema(schema):
     schema_update(schema, 'update')

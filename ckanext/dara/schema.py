@@ -500,18 +500,18 @@ def fields():
             )
         ),
 
-        DaraField('dataType',
-            ('data',), ('ignore_missing',),
+        #DaraField('dataType',
+        #    ('data',), ('ignore_missing',),
 
-            Input(
-            name = 'Type of Data',
-            placeholder= '',
-            info=u""" In this field we kindly ask you to provide some
-            information on the type of data. For instance, it can be a
-            longitudinal study, a cross-sectional study, experimental data, or
-            something other.""",
-            )
-        ),
+        #    Input(
+        #    name = 'Type of Data',
+        #    placeholder= '',
+        #    info=u""" In this field we kindly ask you to provide some
+        #    information on the type of data. For instance, it can be a
+        #    longitudinal study, a cross-sectional study, experimental data, or
+        #    something other.""",
+        #    )
+        #),
 
         # technical file data; format is retrieved from CKAN
         # XXX done by h.fileinfo()

@@ -21,7 +21,7 @@ def grouper(seq, size):
 
 # build dictionary from seq with ids as keys
 def dicter(seq, ids):
-    return map(lambda t: dict(zip(ids, t)), seq)
+    return list(map(lambda t: dict(zip(ids, t)), seq))
 
 
 # put _grouper and _dicter together; build dictionary from flat lists

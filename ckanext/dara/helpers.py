@@ -212,7 +212,10 @@ def fileinfo(res):
     url = res['url']
     upload = uploader.get_resource_uploader(res)
     filepath = upload.get_path(res[u'id'])
-    filesize = os.path.getsize(filepath)
+    try:
+        filesize = os.path.getsize(filepath)
+    except FileNotFoundError:
+        filesize = 0
     filename = last(filter(lambda i: i, url.split('/')))
 
     return {'filesize': filesize,

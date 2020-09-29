@@ -142,7 +142,7 @@ def register(id):
             xml = xml(id, 'package/resource.xml')
             dara = darapi(auth(), xml, test=params()['test'],
                     register=params()['register'])
-            if dara in a.iterkeys():
+            if dara in a.keys():
                 resource[doi_key] = digital_object.res_doi(resource)
                 tk.get_action('resource_update')(context, resource)
             else:

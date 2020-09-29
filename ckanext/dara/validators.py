@@ -143,7 +143,7 @@ def _orcid(author_orig):
     req = orcid_call(author['authorID'])
     if req.status_code == 200:
         profile = req.json()
-        author.update(map(orcid_map, mapping.iterkeys()))
+        author.update(map(orcid_map, mapping.keys()))
         return author
 
     # TODO: more detailed error reasons

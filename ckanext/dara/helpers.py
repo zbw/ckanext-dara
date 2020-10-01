@@ -6,7 +6,7 @@ import ckan.lib.uploader as uploader
 from ckan.lib.helpers import _Flash
 from ckan.lib.helpers import url_for
 import ckan.plugins.toolkit as tk
-from ckan.common import c, request, config
+from ckan.common import c, request, config, g
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
@@ -189,7 +189,7 @@ def get_collection_data(data):
     return None
 
 def check_journal_role(pkg, role):
-    user = tk.c.user
+    user = g.userobj.name
     if not user:
         return False
     group = pkg.get('owner_org', pkg.get('group_id', False))

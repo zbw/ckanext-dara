@@ -161,7 +161,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_pkg': helpers.dara_pkg,
                 'dara_resource': helpers.dara_resource,
                 'dara_debug': helpers.dara_debug,
-                'dara_c': tk.c,
                 'dara_authors': helpers.dara_authors,
                 'dara_fields': dara_fields,
                 'dara_auto_fields': helpers.dara_auto_fields,

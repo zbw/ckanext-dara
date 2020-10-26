@@ -103,7 +103,7 @@ class BulkUpdater:
                     affID = self.lookup(aff)
 
                     if affID != False and affID != '':
-                        author[4] = u'{}'.format(affID)
+                        author[4] = f'{affID}'
                         updated_authors = updated_authors + author
                     else:
                         updated_authors = updated_authors + author
@@ -114,7 +114,7 @@ class BulkUpdater:
                 affID = self.lookup(aff)
 
                 if affID != False and affID != '':
-                    author[4] = u'{}'.format(affID)
+                    author[4] = f'{affID}'
             updated_authors = updated_authors + a
 
         return updated_authors

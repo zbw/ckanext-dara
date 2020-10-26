@@ -8,8 +8,8 @@ from ckan.common import config
 def dara_doi(org_name, created):
     prefix = config.get('ckanext.dara.doi_prefix')
     dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f")
-    timestamp = "{:%Y%j.%H%M%S}".format(dt)
-    doi = u'{}/{}.{}'.format(prefix, org_name, timestamp)
+    timestamp = f"{dt:%Y%j.%H%M%S}"
+    doi = f'{prefix}/{org_name}.{timestamp}'
     return doi
 
 
@@ -35,7 +35,7 @@ def res_doi(res):
     # See https://github.com/ckan/ckan/issues/2903
     # Could be upgraded later (random char, random char/number combination)
     # which might be necessary for use with API
-    return "{}R".format(doi_gen)
+    return f"{doi_gen}R"
 
 
 # helpers

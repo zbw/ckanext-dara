@@ -35,14 +35,14 @@ def get_by_doi(context, q):
     ts = config.get('ckanext.dara.use_testserver', 'false')
     field = {'true': 'dara_DOI_Test', 'false': 'dara_DOI'}.get(ts)
 
-    search_str = u'{}:{}'.format(field, doi)
+    search_str = f'{field}:{doi}'
     pkg_data_dict = {'fq': search_str}
     res_data_dict = {'query': search_str}
 
     data = get_package(pkg_data_dict) or get_resource(res_data_dict) or None
 
     if not data:
-        raise tk.ObjectNotFound("Object with DOI {}".format(doi))
+        raise tk.ObjectNotFound(f"Object with DOI {doi}")
 
     return data
 

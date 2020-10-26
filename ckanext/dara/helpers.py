@@ -269,8 +269,7 @@ def _parse_authors(data):
     for author in data:
         first = author['firstname'][0]
         last = author['lastname']
-        #authors.append('{}, {}.'.format(last.encode('utf-8'), first))
-        authors.append(u'{}, {}.'.format(last, first))
+        authors.append(f'{last}, {first}.')
     return ', '.join(authors)
 
 def build_citation(data):
@@ -293,16 +292,16 @@ def build_citation(data):
     start_page = data.get('dara_Publication_StartPage', '')
     end_page = data.get('dara_Publication_EndPage', '')
     if start_page and end_page:
-        pages = ', {}-{}'.format(start_page, end_page)
+        pages = f', {start_page}-{end_page}'
     else:
         pages = ''
 
     authors = _parse_authors(authors)
 
     if vol:
-        volume_issue += ", {}".format(vol)
+        volume_issue += f", {vol}"
     if iss:
-        volume_issue += "({})".format(iss)
+        volume_issue += f"({iss})"
 
     return citation.format(authors=authors, year=date, journal=journal_title, vol=volume_issue, pages=pages)
 

@@ -130,7 +130,7 @@ def _orcid(author_orig):
     def orcid_call(author_id):
         orcid_base = "https://pub.orcid.org/v2.1"
         headers = {'Accept': 'application/orcid+json'}
-        url = '{}/{}/personal-details'.format(orcid_base, author_id)
+        url = f'{orcid_base}/{author_id}/personal-details'
         try:
             return requests.get(url, headers=headers, timeout=3.05)
         except requests.exceptions.Timeout as e:
@@ -147,7 +147,7 @@ def _orcid(author_orig):
         return author
 
     # TODO: more detailed error reasons
-    msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
+    msg = f"Personal ID {author['authorID']} does not seem to be a valid ORCID ID"
     author[error_key] = msg
     return author
 
@@ -159,7 +159,7 @@ def id_validation(data):
     pattern = re.compile(patterns[t])
     match = pattern.match(i)
     if match is None:
-        msg = 'Personal ID "{}"" does not seem to be a valid {} ID'.format(i, t)
+        msg = f'Personal ID "{i}" does not seem to be a valid {t} ID'
         raise Invalid(msg)
     return data
 

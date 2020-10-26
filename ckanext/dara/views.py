@@ -120,7 +120,7 @@ def register(id):
     def store():
         d = digital_object.pkg_doi(pkg_dict)
         pkg_dict.update({doi_key: d})
-        date = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+        date = f'{datetime.now():%Y-%m-%d %H:%M:%S}'
         k = get_in([dara, 0], a)
         pkg_dict[k] = date
         tk.get_action('package_update')(context, pkg_dict)
@@ -130,9 +130,8 @@ def register(id):
             store()
             h.flash_success(get_in([dara, 1], a))
         else:
-            h.flash_error("ERROR! Sorry, dataset has not been registered or\
-                        updated. Please contact your friendly sysadmin. ({})\
-                        ".format(dara))
+            h.flash_error(f"ERROR! Sorry, dataset has not been registered or\
+                        updated. Please contact your friendly sysadmin. ({dara})")
         return h.redirect_to(u'dara_doi', id=id)
 
     def register_resources():
@@ -146,8 +145,8 @@ def register(id):
                 resource[doi_key] = digital_object.res_doi(resource)
                 tk.get_action('resource_update')(context, resource)
             else:
-                h.flash_error("ERROR! Resource {} could not be registered ({}).\
-                        Dataset has not been registered".format(resource_id, dara))
+                h.flash_error(f"ERROR! Resource {resource_id} could not be registered ({dara}).\
+                        Dataset has not been registered")
                 tk.redirect_to('dara_doi', id=id)
 
         pkg_dict = tk.get_action('package_show')(context, {'id': id})
@@ -311,8 +310,8 @@ def darapi(auth, xml, test=False, register=False):
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)
-    log.info("Requesting DOI [{}]: {}".format(test, url))
-    log.error("Response: {} {} {}".format(req, req.reason, req.text))
+    log.info(f"Requesting DOI [{test}]: {url}")
+    log.error(f"Response: {req} {req.reason} {req.text}")
 
     return req.status_code
 
@@ -320,8 +319,8 @@ def auth():
     def gc(kw):
         auths = list(map(lambda t: config.get(t, False), kw))
         if not all(auths):
-            raise DaraError("User and/or password ({}, {}) not \
-                   set in CKAN config".format(kw[0], kw[1]))
+            raise DaraError(f"User and/or password ({kw[0]}, {kw[1]}) not \
+                   set in CKAN config")
         return tuple(auths)  # requests needs tuple
 
     if params()['test']:

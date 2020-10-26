@@ -32,7 +32,7 @@ def feedback_resource_create(context, data_dict):
     Provide the user feedback when they are adding resources
     """
     resource = ckan_resource_create(context, data_dict)
-    h.flash_success(u'The file "{}" was added to the dataset.'.format(resource['name']))
+    h.flash_success(f"The file \"{resource['name']}\" was added to the dataset.")
     return resource
 
 

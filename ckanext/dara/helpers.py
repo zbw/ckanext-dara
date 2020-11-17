@@ -189,9 +189,7 @@ def get_collection_data(data):
     return None
 
 def check_journal_role(pkg, role):
-    if not g.userobj:
-        return False
-    user = g.userobj.name
+    user = getattr(g.userobj, 'name', None)
     if not user:
         return False
     group = pkg.get('owner_org', pkg.get('group_id', False))

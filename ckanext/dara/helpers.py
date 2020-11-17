@@ -189,6 +189,8 @@ def get_collection_data(data):
     return None
 
 def check_journal_role(pkg, role):
+    if not g.userobj:
+        return False
     user = g.userobj.name
     if not user:
         return False

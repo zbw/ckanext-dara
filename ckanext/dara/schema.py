@@ -115,7 +115,7 @@ def fields():
                 ],
                 name='Availability',
                 classes=['dara_required'],
-                info=u"""By default the availability is 'Free Download'. Please change it to 'Onsite Only,' if you've provided a link or DOI to a dataset that you cannot upload for legal reasons (see 'URL' field above).""",
+                info=u"""By default the availability is 'Free Download'. Please change it to 'Onsite Only,' if you've provided a link or DOI to a dataset that you cannot upload for legal reasons.""",
 
             ),
         ),

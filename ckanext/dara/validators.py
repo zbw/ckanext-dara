@@ -147,7 +147,7 @@ def _orcid(author_orig):
         return author
 
     # TODO: more detailed error reasons
-    msg = f"Personal ID {author['authorID']} does not seem to be a valid ORCID ID"
+    msg = f"Personal ID '{author['authorID']}' does not seem to be a valid ORCID ID"
     author[error_key] = msg
     return author
 

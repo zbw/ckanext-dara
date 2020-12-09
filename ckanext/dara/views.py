@@ -262,12 +262,12 @@ def cancel(pkg_id):
     pkg['state'] = 'active'
     update = tk.get_action('package_update')(context, pkg)
 
-    redirect(pkg_id)
+    return redirect(pkg_id)
 
 
 def redirect(id):
     #tk.redirect_to(controller='package', action='read', id=id)
-    h.redirect_to('dataset.read', id=id)
+    return h.redirect_to('dataset.read', id=id)
 
 def darapi(auth, xml, test=False, register=False):
     """

@@ -149,7 +149,8 @@ the reason for this remove Previous button here #}
     <script>
         function cancel(event){
             var current = window.location.href;
-            window.location.href = current.replace('/new_resource', '/state');
+            console.log(current);
+            window.location.href = current.replace('/resource/new', '/state');
         }
 
         var button = document.getElementById('cancel_button');
@@ -171,5 +172,5 @@ the reason for this remove Previous button here #}
     </script>
 
       <button class="btn btn-primary split" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
-      {% endblock %}
+{% endblock %}
 

@@ -216,7 +216,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         dara.add_url_rule(u'/<id>/resource/<resource_id>/download/<filename>',
                           view_func=views.resource_download,
                           methods=['GET', 'POST'])
-        dara.add_url_rule(u'/state/<pkg_id>',
+        dara.add_url_rule(u'/<pkg_id>/state',
                           view_func=views.cancel,
                           methods=['GET', 'POST'])
 

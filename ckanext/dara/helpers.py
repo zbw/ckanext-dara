@@ -149,7 +149,7 @@ def dara_authors(dara_type, data):
                         if 'dara_authors' in resource.keys():
                             v = resource['dara_authors']
                 except Exception as e:
-                    print(e)
+                    #print(e)
                     pass
         else:
             if 'dara_authors' in pack.keys():

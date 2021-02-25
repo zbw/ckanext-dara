@@ -119,11 +119,10 @@
            {% do classes.append(c) %}
         {% endfor %}
 
-        {# TODO optimize! collides with autofill via ORCID or GND
+        {# TODO optimize! collides with autofill via ORCID or GND #}
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
         {% endif %}
-        #}
 
         {% if h.has_doi(h.dara_pkg()) %}
             {%- do attrs.update({'readonly': 'readonly', 'disabled': 'disabled'}) -%}

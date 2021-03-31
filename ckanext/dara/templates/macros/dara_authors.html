@@ -124,7 +124,9 @@
         {% endif %}
 
         {% if h.has_doi(h.dara_pkg()) %}
-            {%- do attrs.update({'readonly': 'readonly'}) -%}
+            {% if not h.has_hammer() %}
+                {%- do attrs.update({'readonly': 'readonly'}) -%}
+            {% endif %}
         {% endif %}
 
 

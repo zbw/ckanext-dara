@@ -119,13 +119,12 @@
            {% do classes.append(c) %}
         {% endfor %}
 
-        {# TODO optimize! collides with autofill via ORCID or GND #}
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
         {% endif %}
 
         {% if h.has_doi(h.dara_pkg()) %}
-            {%- do attrs.update({'readonly': 'readonly', 'disabled': 'disabled'}) -%}
+            {%- do attrs.update({'readonly': 'readonly'}) -%}
         {% endif %}
 
 
@@ -135,7 +134,6 @@
            {% set placeholder = '' %}
         {% endif %}
 
-        {# this relies on the correct sort order in fields dict! #}
         {% if widget.role == 'master' %}
             {% do classes.append('dara_master') %}
             <fieldset class="dara_master_slave">
@@ -166,7 +164,7 @@
         {% endif %}
 
        {% if widget.form_type == 'input' and 'hidden_author_field' in widget.classes %}
-       {#{% do attrs.update({'data-author': key}) %}
+       {#% do attrs.update({'data-author': key}) %}
             {{ form.input(name, label=None,
                     type="hidden",
                     placeholder=placeholder,
@@ -174,7 +172,7 @@
                     error=errors[id],
                     classes=classes,
                     attrs=attrs)
-                    }}#}
+                    }#}
             <input type="hidden" value="{{ value }}" data-author="{{ key }}"
                    name={{ name }} />
         {% endif %}
@@ -211,10 +209,6 @@
             {% do classes.append('control-small') %}
         {% endif %}
 
-
-
-
-       {#XXX this works only when there's only one slave! #}
         {% if widget.role == 'slave' %}
             </fieldset>
         {% endif %}

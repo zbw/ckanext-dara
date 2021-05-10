@@ -41,8 +41,7 @@ def params():
     so we fake it (test_register).
     defaults: register at 'real' server and get a DOI
     """
-
-    ptest = lambda p: p in tk.request.params
+    ptest = lambda p: p in request.form
     ctest = {'true': True, 'false': False}.get(config.get('ckanext.dara.use_testserver', 'false'))
 
     # defaults
@@ -150,7 +149,7 @@ def register(id):
                 tk.redirect_to('dara_doi', id=id)
 
         pkg_dict = tk.get_action('package_show')(context, {'id': id})
-        resources = filter(lambda res: res['id'] in tk.request.params,
+        resources = filter(lambda res: res['id'] in tk.request.form,
                 pkg_dict['resources'])
         map(reg, resources)
 
@@ -314,6 +313,7 @@ def darapi(auth, xml, test=False, register=False):
     log.error(f"Response: {req} {req.reason} {req.text}")
 
     return req.status_code
+
 
 def auth():
     def gc(kw):

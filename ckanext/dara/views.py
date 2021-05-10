@@ -53,7 +53,7 @@ def params():
         test = True
 
     if test and register:
-        #register = False
+        register = False
         test_register = True
     return {'test': test, 'register': register,
             'test_register': test_register}

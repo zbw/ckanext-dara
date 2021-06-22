@@ -214,7 +214,6 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
       title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}
     <span class="format-label"
-        property="dc:format"
         data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
     </span>
 

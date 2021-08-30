@@ -169,7 +169,7 @@ def xml(id, resource_id=None):
     """
     # Determine which template to use
     request_url = request.url
-    if 'resource' in request_url:
+    if '/resource/' in request_url:
         template = 'package/resource.xml'
     else:
         template = 'package/collection.xml'

@@ -4,9 +4,15 @@ import ckan.plugins.toolkit as tk
 from datetime import datetime
 from ckan.common import config
 
+from ckan.common import request
+
 
 def dara_doi(org_name, created):
-    prefix = config.get('ckanext.dara.doi_prefix')
+    use_test = request.form.get('testserver', None)
+    if not use_test:
+        prefix = config.get('ckanext.dara.doi_prefix')
+    else:
+        prefix = config.get('ckanext.dara.test_doi_prefix')
     dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f")
     timestamp = f"{dt:%Y%j.%H%M%S}"
     doi = f'{prefix}/{org_name}.{timestamp}'

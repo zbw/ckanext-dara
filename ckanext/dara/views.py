@@ -43,7 +43,6 @@ def params():
     """
     ptest = lambda p: p in request.form
     ctest = {'true': True, 'false': False}.get(config.get('ckanext.dara.use_testserver', 'false'))
-
     # defaults
     test = False
     register = ptest('DOI')
@@ -100,7 +99,6 @@ def register(id):
     """
     _check_access(id)
     context = _context()
-
     request_url = request.url
     if 'resource' in request_url:
         template = 'package/resource.xml'
@@ -126,7 +124,7 @@ def register(id):
 
     def response():
         if dara in a.keys():
-            store()
+            #store()
             h.flash_success(get_in([dara, 1], a))
         else:
             h.flash_error(f"ERROR! Sorry, dataset has not been registered or\
@@ -137,8 +135,8 @@ def register(id):
         def reg(resource):
             resource_id = resource['id']
             resource = tk.get_action('resource_show')(context, {'id': resource_id})
-            xml = xml(id, 'package/resource.xml')
-            dara = darapi(auth(), xml, test=params()['test'],
+            r_xml = xml(id, 'package/resource.xml')
+            dara = darapi(auth(), r_xml, test=params()['test'],
                     register=params()['register'])
             if dara in a.keys():
                 resource[doi_key] = digital_object.res_doi(resource)

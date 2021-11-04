@@ -124,7 +124,7 @@ def register(id):
 
     def response():
         if dara in a.keys():
-            #store()
+            store()
             h.flash_success(get_in([dara, 1], a))
         else:
             h.flash_error(f"ERROR! Sorry, dataset has not been registered or\

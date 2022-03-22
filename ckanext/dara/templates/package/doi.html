@@ -159,88 +159,87 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
     {% if resources %}
       <ul class="resource-list">
           {% for res in resources %}
+            {# originally from resource_item.html ##############################}
 
-{# originally from resource_item.html ##############################}
-
-{% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
-{% set url_action = '.edit' if url_is_edit and can_edit else '.read' %}
-{% set url = h.url_for('dataset_resource' + url_action, id=pkg.name, resource_id=res.id) %}
-{#{% set xml = "/dataset/{{ pkg['id'] }}/resource/{{ res['id'] }}/dara_xml" %}
-#}
-
-
-<li class="resource-item" data-id="{{ res.id }}">
-{#---------------#}
-  <div style="float:right; margin-left:20px; text-align:right;" >
-    {% if h.resource_is_internal(res) %}
-
-        {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
-            Get DOI
-        {% else %}
-            Update
-        {% endif %}
-
-        <input style="margin-top:-15px;"
-            type="checkbox"
-            name="{{ res.id }}"
-            value="register" />
-
-        {% if isSysadmin %}
-        <span style="margin-left:12px;">
-            <a href="{{ url }}/dara_xml">XML</a></span>
-        {% endif %}
-
-        <p class="description">
-            {% if res['dara_DOI'] %}
-                DOI:  <span style="color:darkorange">{{ res['dara_DOI'] }}</span>
-            {% elif use_testserver and res['dara_DOI_Test'] %}
-                DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
-            {% else %}
-                DOI Proposal: {{ h.res_doi(res) }}
-            {% endif %}
-
-            {% if isSysadmin %}
-                <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
-            {% endif %}
-        </p>
-
-    {% else %}
-        No DOI assignable
-    {% endif %}
-
-  </div>
-{#---------------#}
-  <a class="heading" href="{{ url }}"
-      title="{{ res.name or res.description }}">
-    {{ h.resource_display_name(res) | truncate(50) }}
-    <span class="format-label"
-        data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
-    </span>
-
-    {# XXX throws an error, off for now
-    {{ h.popular('views', res.tracking_summary.total, min=10) }}
-    #}
-
-  </a>
+            {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
+            {% set url_action = '.edit' if url_is_edit and can_edit else '.read' %}
+            {% set url = h.url_for('dataset_resource' + url_action, id=pkg.name, resource_id=res.id) %}
+            {#{% set xml = "/dataset/{{ pkg['id'] }}/resource/{{ res['id'] }}/dara_xml" %}
+            #}
 
 
-  <p class="description">
-    {% if res.description %}
-      {{ h.markdown_extract(res.description, extract_length=80) }}
-    {% endif %}
-  </p>
+            <li class="resource-item" data-id="{{ res.id }}">
+            {#---------------#}
+            <div style="float:right; margin-left:20px; text-align:right;" >
+                {% if h.resource_is_internal(res) %}
+
+                    {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
+                        Get DOI
+                    {% else %}
+                        Update
+                    {% endif %}
+
+                    <input style="margin-top:-15px;"
+                        type="checkbox"
+                        name="{{ res.id }}"
+                        value="register" />
+
+                    {% if isSysadmin %}
+                    <span style="margin-left:12px;">
+                        <a href="{{ url }}/dara_xml">XML</a></span>
+                    {% endif %}
+
+                    <p class="description">
+                        {% if res['dara_DOI'] %}
+                            DOI:  <span style="color:darkorange">{{ res['dara_DOI'] }}</span>
+                        {% elif use_testserver and res['dara_DOI_Test'] %}
+                            DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
+                        {% else %}
+                            DOI Proposal: {{ h.res_doi(res) }}
+                        {% endif %}
+
+                        {% if isSysadmin %}
+                            <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
+                        {% endif %}
+                    </p>
+
+                {% else %}
+                    No DOI assignable
+                {% endif %}
+
+            </div>
+            {#---------------#}
+            <a class="heading" href="{{ url }}"
+                title="{{ res.name or res.description }}">
+                {{ h.resource_display_name(res) | truncate(50) }}
+                <span class="format-label"
+                    data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
+                </span>
+
+                {# XXX throws an error, off for now
+                {{ h.popular('views', res.tracking_summary.total, min=10) }}
+                #}
+
+            </a>
 
 
-</li>
+            <p class="description">
+                {% if res.description %}
+                {{ h.markdown_extract(res.description, extract_length=80) }}
+                {% endif %}
+            </p>
 
-{# end resource item ############################################ #}
+
+            </li>
+
+            {# end resource item ############################################ #}
 
 
-         {% endfor %}
-      </ul>
+          {% endfor %}
+        </ul>
     {% else %}
       {% if h.check_access('resource_create', pkg) %}
-          {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
+          {% trans url=h.url_for('dataset_resource.new', id=pkg.name) %}
             <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
           {% endtrans %}
       {% else %}
@@ -249,8 +248,6 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
     {% endif %}
 <!-- end resources -->
 </div>
-
-
 </form>
 </div>
 

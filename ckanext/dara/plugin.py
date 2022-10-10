@@ -47,7 +47,7 @@ def feedback_package_update(context, data_dict):
             and package['dara_edawax_review'] == 'false':
         helpers.flash_html('Dataset Created. Uploaded files can be seen under \
                             "Data and Resources." <br> To send your data to the \
-                            "editorial office, please press the “Send to Journal” button')
+                            editorial office, please press the “Complete Submission” button')
 
     return package
 

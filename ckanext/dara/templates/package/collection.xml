@@ -26,7 +26,7 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 
 <resource xmlns="http://da-ra.de/schema/kernel-4"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://da-ra.de/schema/kernel-4 http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/dara.xsd">
+         xsi:schemaLocation="http://da-ra.de/schema/kernel-4 https://www.da-ra.de/dara/schemadefinitions/dara.xsd">
 
 <resourceType>Collection</resourceType>
 {{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion) }}

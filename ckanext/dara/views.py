@@ -309,6 +309,9 @@ def darapi(auth, xml, test=False, register=False):
             params=parameters)
     log.info(f"Requesting DOI [{test}]: {url} p={parameters}")
 
+    if req.status_code not in ['200', '201']:
+        log.info(f"Failed to create DOI: {req.status_code}: {req.text}, {req.reason}")
+
     return req.status_code
 
 

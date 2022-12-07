@@ -232,7 +232,7 @@ def resource_download(id, resource_id, filename=None):
         rsc = get_action('resource_show')(context, {'id': resource_id})
         get_action('package_show')(context, {'id': id})
     except (NotFound, NotAuthorized):
-        abort(404, _('Resource not found'))
+        tk.abort(404, _('Resource not found'))
 
     if rsc.get(u'url_type') == u'upload':
         upload = uploader.get_resource_uploader(rsc)
@@ -303,7 +303,8 @@ def darapi(auth, xml, test=False, register=False):
     # XXX do we always get unicode object???
     xml_encoded = xml.encode('utf-8')
 
-    parameters = keyfilter(lambda x: register, {'registration': 'true'})
+    #parameters = keyfilter(lambda x: register, {'registration': 'true'})
+    parameters = {'registration': 'true'}
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)

@@ -14,7 +14,7 @@ def dara_doi(org_name, created):
     else:
         prefix = config.get('ckanext.dara.test_doi_prefix')
     dt = datetime.strptime(created, "%Y-%m-%dT%H:%M:%S.%f")
-    timestamp = f"{dt:%Y%j.%H%M%S}"
+    timestamp = f"{dt:%Y%j.%H%M%f}"
     doi = f'{prefix}/{org_name}.{timestamp}'
     return doi
 

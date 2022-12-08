@@ -303,8 +303,7 @@ def darapi(auth, xml, test=False, register=False):
     # XXX do we always get unicode object???
     xml_encoded = xml.encode('utf-8')
 
-    #parameters = keyfilter(lambda x: register, {'registration': 'true'})
-    parameters = {'registration': 'true'}
+    parameters = keyfilter(lambda x: register, {'registration': 'true'})
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)

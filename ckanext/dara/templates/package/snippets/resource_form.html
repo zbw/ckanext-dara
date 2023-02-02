@@ -53,11 +53,11 @@
     {% block basic_fields_name %}
         {{ form.input('name',
             id='field-name',
-            label=_('Name'),
+            label=_('Name*'),
             placeholder=_('eg. January 2011 Gold Prices'),
             value=data.name, error=errors.name,
             classes=['control-full'],
-            attrs={'data-infotext': """If you would like to rename a file, you can do it here."""},
+            attrs={'data-infotext': """If you would like to rename a file, you can do it here.""", 'required': 'required'},
             )
         }}
     {% endblock %}

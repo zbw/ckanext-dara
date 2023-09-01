@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
-
+import logging
+from ckan.common import config
+log = logging.getLogger(__name__)
 
 def replace_includes(schema):
-    url_prefix="http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/include/"
+    home = config.get('ckan.site_url')
+    #url_prefix="http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/include/"
+    # Test
+    if home == 'http://134.245.93.94':
+        url_prefix = 'file:///home/edawax/src/ckanext-dara/ckanext/dara/dara_schema/import/'
+    # Dev - Need to start from within the folder for dara
+    elif home == 'http://127.0.0.1:5000':
+        url_prefix = '/home/ckan/Python/src/ckanext-dara/ckanext/dara/dara_schema/import/'
+    # Production
+    else:
+        url_prefix = 'file:///home/edawax/ckanenv/plugins/ckanext-dara/ckanext/dara/dara_schema/import/'
     return schema.replace('include/', url_prefix)
 
 
@@ -13,6 +25,7 @@ dara_schema = """<?xml version="1.0" encoding="UTF-8"?>
     targetNamespace="http://da-ra.de/schema/kernel-4" xmlns:dara="http://da-ra.de/schema/kernel-4"
     elementFormDefault="qualified" xml:lang="EN">
     <!-- include fields -->
+    <!-- include/dara-resourceType-v4.xsd -->
     <xs:include schemaLocation="include/dara-resourceType-v4.xsd">
         <xs:annotation>
             <xs:documentation>A predefined term to provide information about the type of resource being registered.</xs:documentation>

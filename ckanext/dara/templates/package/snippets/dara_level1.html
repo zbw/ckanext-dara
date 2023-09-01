@@ -1,69 +1,75 @@
 {% import 'macros/dara_form.html' as dara_form %}
 {% import 'macros/dara_authors.html' as authors %}
 
-    {# ich würde hier erstmal keinen Einleitungstext hinschreiben, zumal er auch nicht auf alle der folgenden Felder zutrifft 
+    {# ich würde hier erstmal keinen Einleitungstext hinschreiben, zumal er auch nicht auf alle der folgenden Felder zutrifft
     <p class="dara_info_text">
         We believe that you should cite data in just the same way that you can cite other sources of information, such as articles and books. Data citation can help by enabling easy reuse and verification of data, allowing the impact of data to be tracked, and creating a scholarly structure that recognises and rewards data producers.
     </p>
     #}
-    {% resource 'dara/dara.js' %}
-    {% resource 'dara/underscore.js' %}
-    {% resource 'dara/dara_authors.js' %}
-   
-    
-    {{ form.input('title', id='field-title', 
-            label=_('Title'), 
-            placeholder=_('eg. A descriptive title.'), 
-            value=data.title, 
-            error=errors.title, 
-            classes=['control-full', 'control-large', 'dara_required'], 
-            attrs={'data-module': 'slug-preview-target', 'required':'required', 
-            'data-infotext': """The title of your submission could be the title of your article,
-            supplemented by the addition '(replication data)'. By adding the
-            title of your paper and ‚replication data‘ the findability of your
-            data by search engines is facilitated. In addition, it is much
-            easier to interlink your paper with your data in the data
-            publisher. Please note: This is a mandatory field."""
-            }) 
-        }}
-        
-        {% set prefix = h.url_for(controller='package', action='read', id='') %}
-        {% set domain = h.url_for(controller='package', action='read', 
-                                    id='', qualified=true) %}
-        {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-        {% set attrs = {
-            'data-module': 'slug-preview-slug', 
-            'data-module-prefix': domain, 
-            'data-module-placeholder': '<dataset>'
-            } 
-        %}
+    {% asset 'dara/dara-js' %}
+    {% asset 'dara/underscore-js' %}
+    {% asset 'dara/dara_authors-js' %}
 
-        {{ form.prepend('name', id='field-name', label=_('URL'), 
-            prepend=prefix, 
-            placeholder=_('eg. my-dataset'), 
-            value=data.name, 
-            error=errors.name, 
+    {% if h.has_doi(h.dara_pkg()) %}
+        {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
+            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """, 'readonly': 'readonly'} %}
+    {% else %}
+        {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
+            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """} %}
+    {% endif %}
+
+    <div class="zbw-box box-bottom">
+
+    {{ form.input('title', id='field-title',
+            label=_('Title'),
+            placeholder=_('eg. A descriptive title.'),
+            value=data.title,
+            error=errors.title,
+            classes=['control-full', 'control-large', 'dara_required'],
+            attrs=attrs)
+        }}
+
+        {% set prefix = h.url_for('dataset.read', id='') %}
+        {% set domain = h.url_for('dataset.read', id='', qualified=true) %}
+        {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+        {% if h.has_doi(h.dara_pkg()) %}
+            {% set attrs = {
+                'data-module': 'slug-preview-slug',
+                'data-module-prefix': domain,
+                'data-module-placeholder': '<dataset>',
+                'readonly': 'readonly'
+                }
+            %}
+        {% else %}
+            {% set attrs = {
+                'data-module': 'slug-preview-slug',
+                'data-module-prefix': domain,
+                'data-module-placeholder': '<dataset>',
+                }
+            %}
+        {% endif %}
+        {# slug-preview-slug #}
+
+        {{ form.prepend('name', id='field-name', label=_('URL'),
+            prepend=prefix,
+            placeholder=_('eg. my-dataset'),
+            value=data.name,
+            error=errors.name,
             attrs=attrs) }}
 
-        {{ form.markdown('notes', id='field-notes', 
-            label=_('Description'), 
-            placeholder=_('Abstract or similiar'), 
-            value=data.notes, 
+        {{ form.markdown('notes', id='field-notes',
+            label=_('Description'),
+            placeholder=_('Abstract or similiar'),
+            value=data.notes,
             error=errors.notes,
-            attrs={"data-infotext": """Here, you are invited to provide would-be
-            replicators and interested readers with some information on the
-            entirety of your data submission. If you do not want or are simply
-            not able to provide such information, we recommend inserting the
-            abstract of your article into the description field. Thereby users
-            of the data publisher receive an impression of your research, the
-            aims and objectives as well as the methods and the type of data
-            associated with your research article."""}
+            attrs={"data-infotext": """Please provide information about the files you are submitting (eg. copy from any readme files you have)."""}
             )
         }}
 
 
+
 {# fields generated from schema #}
-                
+
         <div id="dara_level_1">
              <fieldset>
                 {{ dara_form.md('dataset', h, data, errors) }}
@@ -74,93 +80,93 @@
 
  {# old block package_basic_fields_tags #}
     {% set tag_attrs = {
-            'data-module-tags': '', 
-            'data-module': 'autocomplete', 
+            'data-module-tags': '',
+            'data-module': 'autocomplete',
             'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?',
-            'data-infotext': """Please provide the data publisher with some
-            keywords which fit to your research article and/or to the data you
-            would like to submit. Most often, you can simply copy and paste the
-            keywords that have been mentioned in the abstract of your
-            article."""
-            } 
+            'data-infotext': """Please enter the keywords from your abstract."""
+            }
         %}
-        {{ form.input('tag_string', id='field-tags', 
-            label=_('Keywords'), 
-            placeholder=_('eg. economy, mental health, government'), 
-            value=data.tag_string, error=errors.tags, 
-            classes=['control-medium'], 
+        {{ form.input('tag_string', id='field-tags',
+            label=_('Keywords'),
+            placeholder=_('eg. economy, mental health, government'),
+            value=data.tag_string,
+            error=errors.tags,
+            classes=['control-medium'],
             attrs=tag_attrs) }}
 
 
         {# master_slave_input() does not work properly for markdown
-        fields?  
+        fields?
         TODO try again when restructuring fields in md_schema
 
-            {% set selected = dara.dara_DescriptionType %}
-            {{ form.select('dara_DescriptionType', 
-                id='field-dara_DescriptionType', 
+            {#{ form.select('dara_DescriptionType',
+                id='field-dara_DescriptionType',
                 label="Type of Description",
                 classes=['dara_slave'],
                 options=[
-                    {'value': '1', 'text' :'Abstract'}, 
-                    {'value': '2', 'text' : 'Series Information'}, 
-                    {'value': '3', 'text' :'Table of Contents'},
-                    {'value' : '4', 'te#XXX optimise!
+                    {'value': '1', 'text' :'Abstract'},
+                    {'value': '2', 'text' : 'Series Information'},
+                    {'value': '3', 'text' :'Table of Contents'}
                 ],
                 error=errors.dara_DescriptionType,
                 selected=selected
-                ) 
-            }} 
-        #}   
-        
-        
+                )
+            }#}
+
+    </div>
+
+
         {# Authors #}
         {{ authors.authors('dataset', h, data, errors) }}
 
 
 
-    <div id="publication">
-        {% set is_admin = h.check_access('sysadmin') or
+    {% set is_admin = h.check_access('sysadmin') or
                h.check_journal_role(data, 'admin') %}
+    {% if is_admin %}
+    {% snippet "package/snippets/reviewer_fields.html", form=form,
+        dara_type='dataset', errors=errors, data=data %}
+    {% endif %}
+
+    <div id="publication" class="zbw-box box-full {% if not is_admin %}hidden_field{% endif %}">
                      <fieldset>
            {% if is_admin %}
+                <a name="doi"></a>
                 <legend>Related Publication</legend>
-
            {% endif %}
 
-         {# old block_package_basic_fields #}
+        {# old block_package_basic_fields #}
         {# if we have a default group then this wants remembering #}
         {% if data.group_id %}
-      <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
-    {% endif %}
+            <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
+        {% endif %}
     {% set existing_org = data.owner_org or data.group_id %}
-        
+
     {# original org-selector:
-    or data.get('state', 'draft').startswith('draft') 
-    or data.get('state', 'none') ==  'none' 
+    or data.get('state', 'draft').startswith('draft')
+    or data.get('state', 'none') ==  'none'
     %}
     #}
       {% set organizations_available = h.organizations_available('create_dataset') %}
           {% if organizations_available %}
             {# only show journal selection if author is member of more than
-                one journal #}  
+                one journal #}
             {% if organizations_available|length > 1 %}
             <div class="control-group">
                 <label for="field-organizations" class="control-label">{{ _('Journal') }}
                 </label>
                 <div class="controls">
                     <select id="field-organizations" name="owner_org"
-                        data-module="autocomplete" 
-                        data-infotext="Select the Journal"
-                        >
-                    <option value="" 
+                        data-module="autocomplete"
+                        data-infotext="Select the Journal your article was published in.">
+                    <option value=""
                         {% if not selected_org and data.id %}
-                            selected="selected" 
+                            selected="selected"
                         {% endif %}>{{ _('Select a journal...') }}</option>
                     {% for organization in organizations_available %}
                         {# get out first org from users list only if there is not an existing org #}
-                        {% set selected_org = 
-                            (existing_org and existing_org == organization.id) 
+                        {% set selected_org =
+                            (existing_org and existing_org == organization.id)
                             or (not existing_org and not data.id and organization.id == organizations_available[0].id)
                         %}
                         <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.title }}</option>
@@ -169,17 +175,14 @@
                 </div>
                 </div>
             {% else %}
-                <input type="hidden" name="owner_org"  
+                <input type="hidden" name="owner_org"
                     value="{{ existing_org or organizations_available[0].id }}" />
             {% endif %}
         {% endif %}
-        
+
 {% if is_admin %}
        {{ dara_form.md('publication', h, data, errors) }}
 {% endif %}
       </fieldset>
     </div>
 
-
-
- 

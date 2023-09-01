@@ -3,23 +3,25 @@
 
 
 {% if pkg %}
-  <section class="module module-narrow">
+  {% if h.is_landing_page() %}
+  {% else %}
+  <section class="module module-narrow journal">
     <div class="module context-info">
       <div class="module-content">
-        <h1 class="heading" style="text-align:center";>{{ pkg.title or pkg.name }}</h1>
-        
-        
-    <div class="nums" style="border:none;">
-        
-{# XXX do we need this here? DOI Button could get into content_actions 
+          <h1 class="heading zbw-box box-full" style="text-align:center";>{{ pkg.title or pkg.name }}</h1>
+
+    {# num is repeated in a better position, no need for it to be here#}
+    <!--div class="nums" style="border:none;">
+
+{# XXX do we need this here? DOI Button could get into content_actions
 <div id="DOI" style="
     text-align:center; font-size:0.75em;">
     {% set url = h.url_for(controller='ckanext.dara.controller:DaraController', action='doi',id=pkg.name) %}
-      
+
   {% if not DOI and can_edit %}
          <a class="btn btn-success" href="{{ url }}">
          + Get DOI</a>
-  
+
    {% elif DOI and can_edit %}
   <a style="color:darkgreen"
      href="{{ url }}">doi:{{ DOI }}</a>
@@ -30,7 +32,7 @@
   {% endif %}
 </div>
 #}
-{# for now noone uses follow function in dara context 
+{# for now noone uses follow function in dara context
           <dl>
             <dt>{{ _('Followers') }}</dt>
             <dd>{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</dd>
@@ -43,8 +45,9 @@
         {% endif %}
 #}
 
-      </div>
+      </div-->
     </div>
   </section>
+  {% endif %}
 {% endif %}
 

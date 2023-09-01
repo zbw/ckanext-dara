@@ -56,7 +56,9 @@ this.ckan.module('doi-confirm', function (jQuery, _) {
       // Center the modal in the middle of the screen.
       this.modal.css({
         'margin-top': this.modal.height() * -0.5,
-        'top': '50%'
+        'top': '50%',
+        'padding-right': 0,
+        'height': 'fit-content'
       });
     },
 

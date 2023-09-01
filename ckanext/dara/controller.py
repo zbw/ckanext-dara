@@ -1,9 +1,8 @@
 # Hendrik Bunke
 # ZBW - Leibniz Information Centre for Economics
-
 from ckan.controllers.package import PackageController
 import ckan.plugins.toolkit as tk
-from ckan.common import c, response
+from ckan.common import c, response, _
 from ckan import model
 import ckan.lib.helpers as h
 from StringIO import StringIO
@@ -16,6 +15,23 @@ import requests
 from toolz.dicttoolz import keyfilter, get_in
 from ckanext.dara.helpers import check_journal_role
 import doi
+
+import os
+import ckan.lib.uploader as uploader
+import paste.fileapp
+import mimetypes
+
+
+# imports for new download function
+import os
+import ckan.lib.uploader as uploader
+import paste.fileapp
+import mimetypes
+
+import xml.etree.ElementTree as ET
+
+import logging
+log = logging.getLogger(__name__)
 
 
 class DaraError(Exception):
@@ -31,7 +47,6 @@ class DaraController(PackageController):
     displays and validates dara XML for the dataset or resource, and registers
     it at da|ra.
     """
-
     def _context(self):
         return {'model': model, 'session': model.Session,
                 'user': c.user or c.author, 'for_view': True,
@@ -48,7 +63,6 @@ class DaraController(PackageController):
         """
         register at da|ra
         """
-
         self._check_access(id)
         context = self._context()
 
@@ -64,7 +78,7 @@ class DaraController(PackageController):
         def store():
             d = doi.pkg_doi(c.pkg_dict)
             c.pkg_dict.update({doi_key: d})
-            date = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+            date = f'{datetime.now():%Y-%m-%d %H:%M:%S}'
             k = get_in([dara, 0], a)
             c.pkg_dict[k] = date
             tk.get_action('package_update')(context, c.pkg_dict)
@@ -74,9 +88,8 @@ class DaraController(PackageController):
                 store()
                 h.flash_success(get_in([dara, 1], a))
             else:
-                h.flash_error("ERROR! Sorry, dataset has not been registered or\
-                          updated. Please contact your friendly sysadmin. ({})\
-                          ".format(dara))
+                h.flash_error(f"ERROR! Sorry, dataset has not been registered or\
+                          updated. Please contact your friendly sysadmin. ({dara})")
             tk.redirect_to('dara_doi', id=id)
 
         def register_resources():
@@ -90,8 +103,8 @@ class DaraController(PackageController):
                     c.resource[doi_key] = doi.res_doi(c.resource)
                     tk.get_action('resource_update')(context, c.resource)
                 else:
-                    h.flash_error("ERROR! Resource {} could not be registered ({}).\
-                            Dataset has not been registered".format(resource_id, dara))
+                    h.flash_error(f"ERROR! Resource {resource_id} could not be registered ({dara}).\
+                            Dataset has not been registered")
                     tk.redirect_to('dara_doi', id=id)
 
             c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
@@ -113,6 +126,7 @@ class DaraController(PackageController):
         """
         returning valid dara XML
         """
+        # certs = '/etc/pki/tls/certs/ca-bundle.crt'
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
         xml_string = tk.render(template)
         # validate
@@ -131,6 +145,81 @@ class DaraController(PackageController):
         c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
         c.pkg = context['package']
         return tk.render(template)
+
+    def _check_extension(self, filename):
+        """
+        check if the file extension should force a download
+        """
+        extensions_for_download = ['.txt', '.do', '.log']
+        if filename:
+           try:
+              name, ext = os.path.splitext(filename)
+           except:
+              return False
+           if ext in extensions_for_download:
+              return True
+        return False
+
+    def resource_download(self, id, resource_id, filename=None):
+        """
+        Force the download for the specified files
+        """
+        context = self._context()
+        context['ignore_auth'] = True
+
+        force_download = self._check_extension(filename)
+
+        try:
+           rsc = tk.get_action('resource_show')(context, {'id': resource_id})
+           pkg = tk.get_action('package_show')(context, {'id': id})
+        except tk.ObjectNotFound:
+            tk.abort(404, 'Resource not found')
+        except tk.NotAuthorized:
+            tk.abort(401, 'Unauthorized to read resource %s' % id)
+
+        if rsc.get('url_type') == 'upload':
+           upload = uploader.ResourceUpload(rsc)
+           filepath = upload.get_path(rsc['id'])
+           fileapp = paste.fileapp.FileApp(filepath)
+           try:
+              status, headers, app_iter = tk.request.call_application(fileapp)
+           except OSError:
+              tk.abort(404, _('Resource data not found'))
+           response.headers.update(dict(headers))
+           content_type, content_enc = mimetypes.guess_type(rsc.get('url', ''))
+           if content_type:
+              response.headers['Content-Type'] = content_type
+              if force_download:
+                 header_value = f"attachment; filename={filename}"
+                 response.headers['Content-Disposition'] = header_value
+           response.status = status
+           return app_iter
+        elif not 'url' in rsc:
+           abort(404, _('No download is available'))
+        redirect(rsc['url'])
+
+
+    def cancel(self, pkg_id):
+        """
+            When a user cancels adding additional resources, they were being
+            put into the `draft` state which prevented them from appearing
+            in the list of datasets.
+
+            Drafts only appear in the list of author's submissions even if they have been published.
+
+            This assumes `canceled` datasets are finished but the author made
+            a mistake in trying to add too many resources.
+        """
+        context = self._context()
+        pkg = tk.get_action('package_show')(None, {'id': pkg_id})
+        pkg['state'] = 'active'
+        update = tk.get_action('package_update')(context, pkg)
+
+        redirect(pkg_id)
+
+
+def redirect(id):
+    tk.redirect_to(controller='package', action='read', id=id)
 
 
 # @memoize
@@ -165,8 +254,8 @@ def auth():
     def gc(kw):
         auths = map(lambda t: config.get(t, False), kw)
         if not all(auths):
-            raise DaraError("User and/or password ({}, {}) not \
-                   set in CKAN config".format(kw[0], kw[1]))
+            raise DaraError(f"User and/or password ({kw[0]}, {kw[1]}) not \
+                   set in CKAN config")
         return tuple(auths)  # requests needs tuple
 
     if params()['test']:
@@ -178,6 +267,8 @@ def darapi(auth, xml, test=False, register=False):
     """
     talking with da|ra API. See da|ra reference:
     http://www.da-ra.de/fileadmin/media/da-ra.de/PDFs/dara_API_reference_v1.pdf
+
+    http://www.da-ra.de/fileadmin/media/da-ra.de/PDFs/dara_API_-_registration.pdf
 
     :param auth: tuple with username and password for the account at da|ra for
                  the account at da|ra
@@ -200,11 +291,14 @@ def darapi(auth, xml, test=False, register=False):
     '500' usually means that there's an error in your request. It unfortunately
     also returns a huge chunk of html output. However, it can be used for
     debugging.
-    """
 
+    POST: create a new resource. If the item already exists in the system.
+    It will be updated.
+        Requires the identifier and currentVersion in the `resourceIdentifier`
+    """
     d = {False: 'http://www.da-ra.de/dara/study/importXML',
 #         True: 'http://dara-test.gesis.org:8084/dara/study/importXML'}
-          True: 'http://labs.da-ra.de/dara/study/importXML'}  
+          True: 'http://labs.da-ra.de/dara/study/importXML'}
     url = d.get(test)
     # socket does not take unicode, so we need to encode our unicode object
     # see http://stackoverflow.com/questions/9752521/sending-utf-8-with-sockets
@@ -215,5 +309,7 @@ def darapi(auth, xml, test=False, register=False):
     headers = {'content-type': 'application/xml;charset=UTF-8'}
     req = requests.post(url, auth=auth, headers=headers, data=xml_encoded,
             params=parameters)
+    log.info(f"Requesting DOI [{test}]: {url}")
+    log.error(f"Response: {req} {req.reason} {req.text}")
 
     return req.status_code

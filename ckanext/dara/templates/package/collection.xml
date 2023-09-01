@@ -7,42 +7,56 @@
 {% import 'macros/dara_metadata.xml' as macros %}
 
 
-{% set auto = h.dara_auto_fields() %}
-{% set pkg = h.dara_pkg() %}
-{% set dara_authors = h.dara_authors('dataset', data) %}
+{% if id %}
+    {% set pkg = h.dara_pkg() %}
+{% else %}
+    {% set pkg = h.dara_pkg(id) %}
+{% endif %}
 
+{% set auto = h.dara_auto_fields() %}
+
+{% set dara_authors = h.dara_authors('dataset', data) %}
 {# {% set debug = h.dara_debug() %} #}
 
 {#
-schema and example files: 
+schema and example files:
 http://www.da-ra.de/en/technical-information/doi-registration/
 #}
 
 
-<resource xmlns="http://da-ra.de/schema/kernel-4" 
+<resource xmlns="http://da-ra.de/schema/kernel-4"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://da-ra.de/schema/kernel-4 http://www.da-ra.de/fileadmin/media/da-ra.de/Technik/4.0/dara.xsd">
+         xsi:schemaLocation="http://da-ra.de/schema/kernel-4 https://www.da-ra.de/dara/schemadefinitions/dara.xsd">
 
-<resourceType>Collection</resourceType> 
-{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion)}} 
+<resourceType>Collection</resourceType>
+{{ macros.resourceIdentifier(pkg.id, pkg.dara_currentVersion) }}
 
 {# 1. title #}
-{{ macros.titles(pkg.title, 'en') }}  
+{{ macros.titles(pkg.title, 'en') }}
 
 {# 2. other titles #}
 {{ macros.otherTitles(
-    'eng', 
-    pkg.dara_OtherTitle, 
-    pkg.dara_OtherTitleType) 
-}} 
+    'eng',
+    pkg.dara_OtherTitle,
+    pkg.dara_OtherTitleType)
+}}
 
 {# TODO 3. collective title  #}
-      
+
 {# 4. creators  TODO: 4.2 institution #}
-<creators>  
-{% for author in dara_authors %}
-    {{ macros.creator(author) }}
-{% endfor %}
+<creators>
+{% if not h.hide_from_reviewer(pkg) %}
+    {% for author in dara_authors %}
+        {{ macros.creator(author) }}
+    {% endfor %}
+{% else %}
+    <creator>
+        <person>
+            <firstName>Name</firstName>
+            <lastName>Withheld</lastName>
+        </person>
+    </creator>
+{% endif %}
 </creators>
 
 {# 8. URL, 9. DOI proposal #}
@@ -51,7 +65,10 @@ http://www.da-ra.de/en/technical-information/doi-registration/
 {# *12.publication date #}
 {{ macros.publicationDate(pkg.dara_PublicationDate) }}
 
-{# *28/29 availability controlled/free 
+{# 3 publisher #}
+{{ macros.publisher() }}
+
+{# *28/29 availability controlled/free
 default is '1' (Download)
 #}
 {{ macros.availability('Download') }} {# Download is fix for collections #}
@@ -67,6 +84,8 @@ default is '1' (Download)
 {# 11. JEL classification #}
 {{ macros.classification(pkg.dara_jels or None) }}
 
+{# Author supplied classification #}
+{{ macros.author_classification(pkg.tags or None) }}
 
 {# 17. description #}
 {{ macros.description(pkg.notes) }}
@@ -81,7 +100,7 @@ case) #}
 <relations>
 {% for res in pkg.resources %}
 {#    {% set doi = pkg.dara_DOI_Proposal ~ '.' ~ res.dara_doi_num %} #}
-    
+
     {# this is possible since ressources are registered before the
     collection. So if we have already a DOI we can use it here, otherwise we
     use the resource url. Either way, the relation is *always* registered #}
@@ -107,7 +126,7 @@ Publications are not relevant for resources (yet!), so only here in collection
 <publications>
     <publication>
         <unstructuredPublication>
-            <freetext></freetext>
+            <freetext>{{ h.build_citation(pkg) }}</freetext>
             <PIDs>
                 <PID>
                     <ID>{{ pkg.dara_Publication_PID }}</ID>
@@ -118,6 +137,10 @@ Publications are not relevant for resources (yet!), so only here in collection
     </publication>
 </publications>
 {% endif %}
+
+{# 32 Publications but with more fields #}
+{#% set identification = h.org_extra_info(pkg) %#}
+{#{ macros.publication(pkg, identification) }#}
 
 </resource>
 

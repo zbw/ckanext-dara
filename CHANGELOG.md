@@ -3,6 +3,26 @@ Changelog
 
 started with v1.1.1
 
+v1.4.0
+------
+[2021-03-03]
+
+-   Migrate from Pylons to Flask
+
+v1.3.3
+------
+[2020-08-12]
+
+-   Add form space to add Reviewer
+
+-   Improve feedback to user when adding datasets
+
+v1.3.2
+------
+[2019-10-21]
+
+-   New design for JDA, updates to html and css
+
 v1.3.1
 ------
 [2017-10-16]

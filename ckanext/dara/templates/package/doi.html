@@ -1,10 +1,10 @@
 {% extends 'package/edit_base.html' %}
-{% set pkg = h.dara_pkg() %} 
-{#{% set debug = h.dara_debug() %} #}
-{# {% set pkg = c.pkg_dict %} #}
+
+{% set pkg = h.dara_pkg() %}
+{% set journal_name = h.get_journal_name(pkg) %}
 
 {% set isSysadmin = h.check_access('sysadmin', context) %}
-{% set DOI = pkg['dara_DOI'] %} 
+{% set DOI = pkg['dara_DOI'] %}
 {% set DOI_Test = pkg['dara_DOI_Test'] %}
 {% set registered = pkg['dara_registered'] %}
 {% set registered_test = pkg['dara_registered_test'] %}
@@ -22,22 +22,27 @@
 {% if registered or (use_testserver and (registered_test or updated_test)) %}
     {% set submit = 'Update' %}
     {% set register_title = "Registered at da|ra" %}
-    {% set register_background = "darkgreen" %}
+    {% set register_background = "darkorange" %}
     {% set register_text = "This dataset has been registered, but has not
     received a DOI yet. You can either check to recieve a DOI, just update the
     metadata, or register further resources below." %}
 {% endif %}
 
-{% if DOI or (use_testserver and DOI_Test) %}
+{% if DOI %} {# real registration #}
     {% set register_text = "This dataset has already been registered, and
     received a DOI. You can, however, update the metadata at da|ra or register
     further resources below." %}
 {% endif %}
 
+{% if (use_testserver and DOI_Test) %} {# test registration #}
+    {% set register_text = "This dataset has been registered with the da|ra TEST server and shouldn't be used. You can make changes to the metadata, or register using the production server with the button below." %}
+{% endif %}
+
+
 {% block primary_content_inner %}
 {{ super() }}
 
-{% resource 'dara/doi-confirm.js' %}
+{% asset 'dara/doi-confirm-js' %}
 {% set confirm = h.dump_json({'content': '
 <p>This will register a DOI (Digital Object Identifier) for the dataset. A
 DOI is a persistent identifier that <em>must</em> link to a valid URI.
@@ -47,41 +52,40 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
 'heading': 'Please Confirm DOI Registration',
 }) %}
 
-
+<div class="zbw-box box-bottom">
 {% if use_testserver %}
-<span style="font-size:100%; color: #9E0707">
-!!!using da|ra Testserver!!!
-</span>
+    <span style="font-size:100%; color: #9E0707">
+        !!!using da|ra Testserver!!!
+    </span>
 {% endif %}
 
 <h1>DOI Registration</h1>
 
 <form id="doiregform" action="/dataset/{{ pkg['id'] }}/dara_register" method='post'>
 
-<div id="register" 
+<div id="register"
     style="float:right; text-align:center; width:200px;
         margin:10px 0px 0px 10px; margin-top:-60px;">
 
     <p style="background-color:{{ register_background }}; width:100%; font-size:125%;
     font-weight:normal; color:white; ">{{ register_title }}</p>
-     
+
     <div id="doi_form" style=" padding:0px 10px 10px 10px;">
-        
-        <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>  
-        
-        {% if isSysadmin and not use_testserver %} 
-        <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked
-        />Test
+
+        <p style="font-size:0.8em; line-height:normal;">{{ register_text }}</p>
+
+        {% if isSysadmin and not use_testserver %}
+            <input style="margin-top:-15px; margin-right:3px;" type="checkbox" name="testserver" value="true" checked/>Test
         {% endif %}
-         
+
         {# {% if not DOI and not (use_testserver and DOI_Test) %}#}
         {% if not (use_testserver and DOI_Test) and not DOI  %}
-        <input type="checkbox" name="DOI" value="true"
-        style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
+            <input type="checkbox" name="DOI" value="true"
+            style="margin-left:15px; margin-right:3px; margin-top:-15px"/>Get DOI
         {% endif %}
-        
+
         <p style="margin-top:12px;">
-           {% if DOI  or (use_testserver and DOI_Test) %} 
+           {% if DOI  or (use_testserver and DOI_Test) %}
                 <input class="btn btn-primary" type="submit"
                     value="{{ submit }}" />
             {% else %}
@@ -100,8 +104,8 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
     <table>
     {% if DOI  or (use_testserver and DOI_Test) %}
         <tr>
-            <td><span style="font-size:125%; color: darkgreen">DOI: </span</td>
-            <td><span style="font-size:125%; color: darkgreen">{{ DOI or DOI_Test }}</span</td>
+            <td><span style="font-size:125%; color: darkorange">DOI: </span</td>
+            <td><span style="font-size:125%; color: darkorange">{{ DOI or DOI_Test }}</span</td>
         </tr>
 
     {% else %}
@@ -110,8 +114,8 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
             <td><span style="color:darkred"> {{ h.pkg_doi(pkg) }}</span></td>
         </tr>
     {% endif %}
- 
-    {% if registered or (use_testserver and registered_test) %} 
+
+    {% if registered or (use_testserver and registered_test) %}
     <tr>
         <td>Registered: </td>
         <td>{{ registered or registered_test }}</td>
@@ -124,7 +128,7 @@ Therefore, the dataset can neither be deleted, nor be retracted after registrati
         <td>{{ updated or updated_test }}</td>
     </tr>
     {% endif %}
-    </table>    
+    </table>
 
     {% if isSysadmin %}
     <div style="background:lightgrey; max-width:400px;
@@ -139,10 +143,10 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
      </pre>
         </div>
     {% endif %}
-       
+
 </div>
-    
-<div id="resources" style="margin-top:36px;">  
+
+<div id="resources" style="margin-top:36px;">
   <h2>Resources</h2>
   <p class="description">By default, single resources do not get a DOI, only the dataset as a
   collection. Here you can, however, select resources that you would like to
@@ -151,91 +155,91 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
   external URLs.</p>
 
     {% set resources = pkg['resources'] %}
-    
+
     {% if resources %}
       <ul class="resource-list">
           {% for res in resources %}
-          
-         
+            {# originally from resource_item.html ##############################}
 
-{# originally from resource_item.html ##############################}
-
-{% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
-{% set url_action = 'resource_edit' if url_is_edit and can_edit else 'resource_read' %}
-{% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
-{#{% set xml = "/dataset/{{ pkg['id'] }}/resource/{{ res['id'] }}/dara_xml" %}
-#}
+            {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
+            {% set url_action = '.edit' if url_is_edit and can_edit else '.read' %}
+            {% set url = h.url_for('dataset_resource' + url_action, id=pkg.name, resource_id=res.id) %}
+            {#{% set xml = "/dataset/{{ pkg['id'] }}/resource/{{ res['id'] }}/dara_xml" %}
+            #}
 
 
-<li class="resource-item" data-id="{{ res.id }}">
-  
-   
-  <div style="float:right; margin-left:20px; text-align:right;" >
-    {% if h.resource_is_internal(res) %}
-    
-      {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
-                Get DOI
-      {% else %}
-        Update 
-      {% endif %}
-     <input style="margin-top:-15px;" type="checkbox" name="{{ res.id }}"
-                value="register" /> 
+            <li class="resource-item" data-id="{{ res.id }}">
+            {#---------------#}
+            <div style="float:right; margin-left:20px; text-align:right;" >
+                {% if h.resource_is_internal(res) %}
 
-      
-      {% if isSysadmin %}
-      <span style="margin-left:12px;">
-          <a href="{{ url }}/dara_xml">XML</a></span>
-      {% endif %}
-      
-      <p class="description">
-      
-      {% if res['dara_DOI'] %}
-      DOI:  <span style="color:darkgreen">{{ res['dara_DOI'] }}</span>
-      {% elif use_testserver and res['dara_DOI_Test'] %}
-      DOI (Test): <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
-      {% else %}
-      DOI Proposal: {{ h.res_doi(res) }}  
-      {% endif %}
-      {% if isSysadmin %}
-       <span style="color:darkgreen">{{ res['dara_DOI_Test'] }}</span>
-      {% endif %}
-      </p>
-  
-      {% else %}
-      No DOI assignable
-  {% endif %}
-  
-  </div>
+                    {% if not (res['dara_DOI'] or (use_testserver and res['dara_DOI_Test'])) %}
+                        Get DOI
+                    {% else %}
+                        Update
+                    {% endif %}
 
-  <a class="heading" href="{{ url }}" 
-      title="{{ res.name or res.description }}">
-    {{ h.resource_display_name(res) | truncate(50) }}
-    <span class="format-label" 
-        property="dc:format" 
-        data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
-    </span>
-    
-    {# XXX throws an error, off for now
-    {{ h.popular('views', res.tracking_summary.total, min=10) }}
-    #}
+                    <input style="margin-top:-15px;"
+                        type="checkbox"
+                        name="{{ res.id }}"
+                        value="register" />
 
-  </a>
+                    {% if isSysadmin %}
+                    <span style="margin-left:12px;">
+                        <a href="{{ url }}/dara_xml">XML</a></span>
+                    {% endif %}
 
-  <p class="description">
-    {% if res.description %}
-      {{ h.markdown_extract(res.description, extract_length=80) }}
-    {% endif %}
-  </p>
- 
-</li>
-{# end resource item ############################################ #}
+                    <p class="description">
+                        {% if res['dara_DOI'] %}
+                            DOI:  <span style="color:darkorange">{{ res['dara_DOI'] }}</span>
+                        {% elif use_testserver and res['dara_DOI_Test'] %}
+                            DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
+                        {% else %}
+                            DOI Proposal: {{ h.res_doi(res) }}
+                        {% endif %}
 
-        
-         {% endfor %}
-      </ul>
+                        {% if isSysadmin %}
+                            <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
+                        {% endif %}
+                    </p>
+
+                {% else %}
+                    No DOI assignable
+                {% endif %}
+
+            </div>
+            {#---------------#}
+            <a class="heading" href="{{ url }}"
+                title="{{ res.name or res.description }}">
+                {{ h.resource_display_name(res) | truncate(50) }}
+                <span class="format-label"
+                    data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}
+                </span>
+
+                {# XXX throws an error, off for now
+                {{ h.popular('views', res.tracking_summary.total, min=10) }}
+                #}
+
+            </a>
+
+
+            <p class="description">
+                {% if res.description %}
+                {{ h.markdown_extract(res.description, extract_length=80) }}
+                {% endif %}
+            </p>
+
+
+            </li>
+
+            {# end resource item ############################################ #}
+
+
+          {% endfor %}
+        </ul>
     {% else %}
       {% if h.check_access('resource_create', pkg) %}
-          {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
+          {% trans url=h.url_for('dataset_resource.new', id=pkg.name) %}
             <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
           {% endtrans %}
       {% else %}
@@ -244,12 +248,7 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
     {% endif %}
 <!-- end resources -->
 </div>
-
-
-
-
-
 </form>
-
+</div>
 
 {% endblock %}

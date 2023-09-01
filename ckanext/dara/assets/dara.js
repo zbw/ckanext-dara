@@ -16,10 +16,17 @@ $(".select_jels").select2({
     allowClear: true,
 });
 
+$(".select_geo").select2({
+// TODO: get JELs with request to econ_ws
+// https://select2.org/data-sources/ajax
+    placeholder: "Start typing and select countries",
+    allowClear: true,
+});
+
 
 function master_slave_input() {
 
-  // conditional field based on input 
+  // conditional field based on input
     $('.dara_master_slave').each(function () {
       var master = $(this).find('.dara_master').find(':input').first();
       var slave = $(this).find('.dara_slave');
@@ -31,7 +38,7 @@ function master_slave_input() {
         slave_input.val('');
       }
 
-      $(master).on("input change keyup paste", function () 
+      $(master).on("input change keyup paste", function ()
         {
           if(master.prop('value') !=="") {
             slave.fadeIn();
@@ -39,7 +46,7 @@ function master_slave_input() {
             slave_input.prop('required', true);
             }
           else {
-           slave.fadeOut(); 
+           slave.fadeOut();
            //slave_input.prop('disabled', true);
            slave_input.prop('required', false);
            slave_input.val('');
@@ -93,10 +100,10 @@ $(function fill_resource_name() {
         var url = $('#field-image-url').val();
         $('#field-name').val(url);
         $('#field-name').focus();
-        
+
         // needs to
         // be called four times (or so) to actually get the correct url value
-        $(fill_resource_name()); 
+        $(fill_resource_name());
     });
 });
 
@@ -134,7 +141,7 @@ function dara_info(el, action, container) {
 $(function infobutton () {
 
     var controls = $('.controls');
-    controls.after('<div class="ib"><i class="icon-info-sign" /></div>');
+    controls.after('<div class="ib"><i class="fa fa-info-circle" /></div>');
 
     $('.ib').on('click', function() {
         dara_info($(this), 'open', $(this).prev());
@@ -142,5 +149,5 @@ $(function infobutton () {
     $('.ib').on('mouseout', function () {
         dara_info($(this), 'destroy', $(this).prev());
     });
-            
+
 });

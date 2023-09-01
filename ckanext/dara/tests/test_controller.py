@@ -24,6 +24,7 @@ def _get_package_action_page(app, package_name, action):
         url=action_url,
         # extra_environ=env,
     )
+
     return response
 
 
@@ -38,6 +39,7 @@ def _get_resource_action_page(app, package_name, resource_id, action):
         url=action_url,
         # extra_environ=env,
     )
+
     return response
 
 
@@ -93,9 +95,11 @@ class TestDaraController(FunctionalTestBase):
             dara_authors=['Bargfrede', 'Philipp', '', '', '', '', ''],
             dara_PublicationDate='2002',
             dara_currentVersion="1",
-            owner_org=self.test_org_1['id']
+            owner_org=self.test_org_1['id'],
+            resource_type="Dataset",
         )
         return pkg
+
     
     def test_dataset_xml(self):
         """
@@ -115,11 +119,11 @@ class TestDaraController(FunctionalTestBase):
     def test_resource_xml(self):
         app = self._get_test_app()
         pkg = self.test_package
-        res = factories.Resource(package_id=pkg['id'])
+        res = factories.Resource(package_id=pkg['id'], resource_type="Dataset")
         response = _get_resource_action_page(app, pkg['name'], res['id'], 'dara_xml')
         nt.eq_(response.headers['Content-Type'], 'text/xml; charset=utf-8')
         assert "<firstName>Philipp</firstName>" in response.body
-        assert "<lastName>Bargfrede</lastName>" in response.body
+        assert "<lastName>Bargfrede</lastName>" in response.body, response
    
     def test_register(self):
         """ test DOI registration
@@ -161,6 +165,6 @@ def test_darapi_resource():
 
 
 
-            
+
 
 

@@ -40,7 +40,7 @@ It enables field repeating, which simply means you can add as many authors as yo
 
 
 ## Requirements
-Tested with CKAN 2.4.
+Tested with CKAN 2.9 and Python3.
 
 Required Python packages (all installed with the package):
 
@@ -91,4 +91,4 @@ This extension is open and licensed under the GNU General Public License (GPL)
 v3.0. Its full text may be found at: http://www.gnu.org/licenses/gpl.html
 
 ## Contact
-Please use GitHub issues for filing any bug or problem. If you have further questions please contact h.bunke@zbw.eu.
+Please use GitHub issues for filing any bug or problem.

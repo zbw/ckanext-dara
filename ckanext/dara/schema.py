@@ -3,6 +3,7 @@
 
 from collections import namedtuple
 from datetime import datetime
+import ckanext.dara.geography_coverage as geo
 
 # TODO: make field selection/config runtime-editable (instead of commenting
 # them out)
@@ -46,7 +47,7 @@ class Text(DaraWidget):
     """
     DaraWidget for textfields
     """
-    def __init__(self, placeholder='', **kw):
+    def __init__(self,  size='', placeholder='', **kw):
         super(Text, self).__init__(**kw)
         self.form_type = 'text'
 
@@ -55,9 +56,10 @@ class Date(DaraWidget):
     """
     DaraWidget for date fields
     """
-    def __init__(self, **kw):
+    def __init__(self, size='', **kw):
         super(Date, self).__init__(**kw)
         self.form_type = "date"
+        self.size = size
 
 
 class Number(DaraWidget):
@@ -81,6 +83,12 @@ def fields():
     """
 
     DaraField = namedtuple('DaraField', 'id adapt validators widget')
+    # id: will appear in the 'id' tag of the HTML page. Gets appended to
+    #     dara_field....
+    # adapt: defines the form(s) that the field will appear in (?)
+    # validators: validator and converter for the field
+    # widget: holds info used to create the HTML element
+    #!!!!see macros for implementation
 
     fields = (
 
@@ -93,9 +101,8 @@ def fields():
                 mi = 1000,
                 ma = datetime.now().year,
                 classes=['dara_required'],
-                info=u"""Please provide us with the publication year of your
-                    article. If you do not know the year, yet, please choose the
-                    actual year. Please note: This is a mandatory field."""
+                info=u"""Please provide the publication year of your
+                    article."""
                 )
         ),
 
@@ -104,18 +111,11 @@ def fields():
             Select(
                 options=[
                     {'value': 'Download', 'text': 'Free Download'},
-                    {'value': 'Delivery', 'text': 'Delivery on demand'},
                     {'value': 'OnSite', 'text': 'Onsite only'},
-                    {'value': 'NotAvailable', 'text': 'Not available'},
-                    {'value': 'Unknown', 'text': 'Unknown'},
                 ],
                 name='Availability',
                 classes=['dara_required'],
-                info=u"""By default the availability is 'Free Download'. You
-                should only change this value in cases when you are not
-                able/not allowed to upload the dataset used for your
-                calculations AND when you would like to provide a link to the
-                dataset, instead. Please note: This is a mandatory field.""",
+                info=u"""By default the availability is 'Free Download'. Please change it to 'Onsite Only,' if you've provided a link or DOI to a dataset that you cannot upload for legal reasons.""",
 
             ),
         ),
@@ -163,11 +163,7 @@ def fields():
                 name = 'Version',
                 size = 'small',
                 classes= ['dara_required'],
-                info=u"""The default version number is 1. You should only
-                change the version number if you submit a revised version of
-                your supplementary data. In this case please choose an
-                appropriate new version number (e.g. 1.1 for minor revisions or
-                2 for major revisions)."""
+                info=u"""The default version number is 1. This should only be changed in the case of minor revisions (eg. 1.1) or major revisions (eg. 2) to your submitted data."""
                 )
         ),
 
@@ -240,29 +236,23 @@ def fields():
        #        )
        #),
 
-
-        #TODO erstmal raus wegen fehlendem Vokabular
-       #DaraField('geographicCoverage',
-       #         ('dataset', 'data'), ('ignore_missing',),
-
-       #        Select(
-       #        classes = ['todo'],
-       #        name = 'Geographic Coverage (controlled)',
-       #        options = [{'text': ''}],
-       #        )
-       #),
+       DaraField('geographicCoverage',
+                ('data',), ('ignore_missing', 'jel_convert',),
+               Select(
+               classes = ["select.geo"],
+               name = 'Geographic Coverage (controlled)',
+               options = geo.geo,
+               )
+       ),
 
 
         DaraField('geographicCoverageFree',
-                 ('data',), ('ignore_missing', 'dara'),
+                 ('data',), ('ignore_missing',),
                 Input(
-                placeholder = 'eg. West-Germany',
+                placeholder = 'eg. Berlin',
                 name = 'Geographic Coverage (free)',
                 size = 'medium',
-                info=u"""Please state, which geographical areas are covered by
-                your dataset. This is a free text field, therefore you are free
-                to mention the region(s) that fit most (e.g. North-America;
-                Eurozone, Germany, EU-Member States,...)""",
+                info=u"""Please detail which geographic areas are acovered by your dataset.""",
 
                 )
         ),
@@ -291,18 +281,34 @@ def fields():
        #),
 
 
-        #TODO
-       #DaraField('temporalCoverageFormal',
-       #        ('data',), ('ignore_missing',)
-       #        Date(
-       #            classes= ['todo'],
-       #            name = "Temporal Coverage (controlled)",
-       #            )
-       #),
+        DaraField('temporalCoverageFormal',
+                ('data',), ('ignore_missing',),
+                Date(
+                    classes= [],
+                    size= 'small',
+                    name = "Start Date",
+                    )
+        ),
+
+        DaraField('temporalCoverageFormal_end',
+                ('data',), ('ignore_missing',),
+                Date(
+                    classes= [],
+                    size= 'small',
+                    name = "End Date",
+                    )
+        ),
+
+        #DaraField('temporalCoverageFormal',
+        #        ('data',), ('ignore_missing',),
+        #        Date(
+        #            classes= [],
+        #            name = "Temporal Coverage (Formal)",
+        #            )
+        #),
 
         DaraField('temporalCoverageFree',
                 ('data',), ('ignore_missing',),
-
                 Input(
                     placeholder="",
                     name="Temporal Coverage (free)",
@@ -494,18 +500,18 @@ def fields():
             )
         ),
 
-        DaraField('dataType',
-            ('data',), ('ignore_missing',),
+        #DaraField('dataType',
+        #    ('data',), ('ignore_missing',),
 
-            Input(
-            name = 'Type of Data',
-            placeholder= '',
-            info=u""" In this field we kindly ask you to provide some
-            information on the type of data. For instance, it can be a
-            longitudinal study, a cross-sectional study, experimental data, or
-            something other.""",
-            )
-        ),
+        #    Input(
+        #    name = 'Type of Data',
+        #    placeholder= '',
+        #    info=u""" In this field we kindly ask you to provide some
+        #    information on the type of data. For instance, it can be a
+        #    longitudinal study, a cross-sectional study, experimental data, or
+        #    something other.""",
+        #    )
+        #),
 
         # technical file data; format is retrieved from CKAN
         # XXX done by h.fileinfo()
@@ -541,15 +547,15 @@ def fields():
       #     )
       # ),
 
-        DaraField('note',
-                ('data', 'code'), ('ignore_missing',),
-                Text(
-                placeholder = 'any additional notes',
-                name = 'Additional Notes',
-                info=u""" Here you can state additional remarks, if needed
-                (free text field).""",
-                )
-        ),
+        # DaraField('note',
+        #         ('data', 'code'), ('ignore_missing',),
+        #         Text(
+        #         placeholder = 'any additional notes',
+        #         name = 'Additional Notes',
+        #         info=u"""Please provide any additional remarks regarding your dataset
+        #         (free text field).""",
+        #         )
+        # ),
 
         DaraField('jda_submission_id',
             ('dataset',), ('ignore_missing',),
@@ -564,12 +570,12 @@ def fields():
                 ('dataset',), ('ignore_missing', 'jel_convert',),
                 Select(
                     name="JELs",
-                    info="Put as many JELs as you like here",
+                    info="Enter as many JELs as necessary.",
                     classes=["select.jels"],
                     options=jels_to_options(),
                    # size="medium",
                 ),
-                
+
         ),
 
 
@@ -627,15 +633,15 @@ def fields():
         # XXX out as long we have edawax_url. we need a mechanism for transferring
         # the old url value to this field
         DaraField('Publication_PID',
-            ('publication',), ('ignore_missing',),
+            #('publication',), ('ignore_missing',),
+            ('publication',), ('ignore_missing', 'dara_doi_validator',),
             Input(
                 role = 'master',
                 name = 'Identifier',
                 placeholder = 'DOI, URL, or other identifier',
                 size = 'medium',
                 classes = [],
-                info=u"""Enter an identifier for the article. This should be an
-                URL, DOI, or Handle""",
+                info=u"""Please enter the article's http-address or DOI. If using a DOI, please start with the suffix: 10.XXXX ('dx.doi.org' is not required).""",
                 )
         ),
 
@@ -796,7 +802,6 @@ def fields():
 
     return fields
 
-
 def author_fields():
 
     AuthorField = namedtuple('AuthorField', 'id widget')
@@ -809,11 +814,8 @@ def author_fields():
                 name = 'Last Name',
                 size = 'medium',
                 classes = ['econws', 'dara_required'],
-                info=u"""Please specify the last name of author.
-                You will get autosuggests as soon you've typed the first
-                letters. In case of a
-                middle name, please add the middle name to the field 'first
-                name'. This is a mandatory field.""",
+                info=u"""Please specify the last name of the author.
+                Choose the name from the list, if available. Middle names should be included in the field 'First Name'""",
                 )
             ),
 
@@ -836,21 +838,43 @@ def author_fields():
                 name = 'Affiliation',
                 size = 'medium',
                 classes=['econws_affil'],
-                info=u"""Please state the affiliation you are working for
-                respectively the affiliation you already have mentioned in your
-                paper.""",
+                info=u"""Please provide the author's affiliation when the article was submitted for publication.""",
                 ),
             ),
+
+        AuthorField('affilID',
+            Input(
+                placeholder = 'Your institution',
+                name = 'Affiliation ID',
+                size = 'medium',
+                classes=['no_display'],
+                info=u""".""",
+                ),
+            ),
+
+        # For the time being, all IDS are assumed to be GND
+        #AuthorField('affID_Type',
+        #        Select(
+        #        name = 'ID Type',
+        #        options = [
+        #            {'text': '', 'value': ''},
+        #            {'text': 'GND', 'value': 'GND'},
+        #            {'text': 'ORCID', 'value': 'ORCID'},
+        #            {'text': 'Scopus', 'value': 'Scopus'},
+        #            {'text': 'RePEc', 'value': 'Repec'},
+        #            {'text': 'Web of Science', 'value': 'WoS'}
+        #        ],
+        #        classes = ['no_display'],
+        #        info=u""".""",
+        #        ),
+        #),
 
         AuthorField('url',
             Input(
                 placeholder = 'http://www...',
                 name = 'Professional URL',
                 classes = [],
-                info=u"""In this field, you can state your personal or
-                institutional website. Thereby, other users and visitors of
-                your data submission are enabled to directly inform themselves
-                about you and your fields of research.""",
+                info=u"""Enter your personal or institutional homepage. Start with 'http'""",
                 ),
             ),
 
@@ -862,10 +886,7 @@ def author_fields():
                 size = '',
                 classes = [],
                 role = 'master',
-                info=u"""If available please enter your personal ID. In case of
-                ORCID the system will then try to get all other data
-                automatically from the ORCID API. Please note that if you give
-                a value here you must give the type of the ID also.""",
+                info=u"""Enter any personal ID you have (eg. ORCID, WOS, RePEc). If you choose your last name from a list, this will be filled in automatically.""",
                 ),
         ),
 
@@ -887,8 +908,69 @@ def author_fields():
                 ),
         ),
 
-        
+
         )
+
+    return fields
+
+
+def resource_author_fields():
+    AuthorField = namedtuple('ResourceAuthorField', 'id widget')
+    fields = (
+
+        AuthorField('lastname',
+            Input(
+                placeholder = '',
+                name = 'Last Name',
+                size = 'medium',
+                classes = ['econws'],
+                info = u"""Please specify the last name of the author.
+                Choose the name from the list, if available. Middle names should be included in the field 'First Name.'""",
+            )
+        ),
+
+        AuthorField('firstname',
+            Input(
+                placeholder = '',
+                name = 'First Name',
+                size = 'medium',
+                classes = [''],
+                info = u"""Please specify the first name of author. In case of a middle name, please also add it here.""",
+            )
+        ),
+
+        AuthorField('institution',
+            Input(
+                placeholder = '',
+                name = 'Institution',
+                size = 'medium',
+                classes = ['econws_affil'],
+                info = u"""If an institution is responsible for the creation of the data resource, please list it here. Otherwise, this field can be used to track creator affiliation.""",
+            )
+        ),
+
+        AuthorField('authorID',
+            Input(
+                name = 'Personal ID',
+                placeholder = 'GND',
+                size = '',
+                classes = ['no_display'],
+                role = '',
+                info=u""" """,
+                ),
+        ),
+
+        AuthorField('affilID',
+            Input(
+                placeholder = 'Your institution',
+                name = 'Affiliation ID',
+                size = 'medium',
+                classes=['no_display'],
+                info=u""" """,
+             ),
+        ),
+
+    )
 
     return fields
 
@@ -913,6 +995,7 @@ def hidden_fields():
                 # TODO this really should be in ckanext.edawax, but we had trouble
                 # with two IDatasetForm implements
                 HiddenField('edawax_review', ('ignore_missing',)),
+                HiddenField('related_citation', ('ignore_missing',)),
              )
     return fields
 

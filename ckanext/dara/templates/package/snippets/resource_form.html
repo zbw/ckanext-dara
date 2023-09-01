@@ -6,7 +6,6 @@
 
 {% set res = h.dara_resource() %}
 
-
 {% block basic_fields %}
 
     {# must copy the whole block here and can't use super() because we need to
@@ -19,107 +18,116 @@
     {'text': 'Other', 'value': 'other'}
     ]
     %}
-    
+    <div class="zbw-box box-bottom">
     <div id="pres" data-infotext="Select a category for the resource you'd like to add.
         This will influence the number of metadata fields. In general, 'Data' has
         more fields than 'Code' or 'Text'.">
-        
     {% set selected = res['dara_res_preselection'] or 'data' %}
-    {{ form.select('dara_res_preselection', 
+    {{ form.select('dara_res_preselection',
                     id = 'dara_res_preselection',
-                    label = "This Resource is",
+                    label = "Resource type",
                     options = options,
-                    error=errors,
+                    error="",
                     selected=selected,
                     classes=['select-auto', 'control-select'],
+                    attrs={'data-infotext': """Please select the type of resource you would like to submit. You can choose between data(sets), text-files (readme, documentation, research instruments), program code (syntax, e.g. do/sps/r-file) and other (images, sound, video)."""}
                     )
     }}
 
     </div>
 
-    {% block basic_fields_url %}
-        {% set is_upload = (data.url_type == 'upload') %}
-        {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
-            is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
-            upload_label=_('File'), url_label=_('URL')) }}
+
+    <div id="image_upload" data-infotext="Test data here.">
+        {% block basic_fields_url %}
+            {% set is_upload = (data.url_type == 'upload') %}
+            {{ dara_form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
+                is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
+                upload_label=_('File'), url_label=_('URL'),
+                attrs={'data-infotext': """Remove the current file and upload a different one."""}
+                )
+            }}
         {% endblock %}
+    </div>
 
 
     {% block basic_fields_name %}
-        {{ form.input('name', 
-            id='field-name', 
-            label=_('Name'), 
-            placeholder=_('eg. January 2011 Gold Prices'), 
+        {{ form.input('name',
+            id='field-name',
+            label=_('Name*'),
+            placeholder=_('eg. January 2011 Gold Prices'),
             value=data.name, error=errors.name,
-            classes=['control-full'], 
-            attrs={'data-infotext': """Please provide the name of the file. System will
-            automatically insert the name of the uploaded file, but you can also insert
-            a new name. Please note that the file will be shown as 'unnamed resource' in
-            cases, where you do not provide a name for the resource."""},
-            ) 
+            classes=['control-full'],
+            attrs={'data-infotext': """If you would like to rename a file, you can do it here.""", 'required': 'required'},
+            )
         }}
     {% endblock %}
 
     {% block basic_fields_description %}
-        {{ form.markdown('description', 
+        {{ form.markdown('description',
             id='field-description',
-            label=_('Description'), 
+            label=_('Description'),
             placeholder=_('Some useful notes about the data'),
-            value=data.description, 
+            value=data.description,
             error=errors.description,
-            attrs={'data-infotext': """You are free to submit additional information on the
-            dataset within this field. For instance, you can describe the type of
-            information that is available in the dataset or the way which has been
-            used to collect the data."""},
-            ) 
+            attrs={'data-infotext': """Please provide information about the file (eg. type of data, software used, origin, methodology...)."""},
+            )
         }}
     {% endblock %}
 
     {% block basic_fields_format %}
-        {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
+        {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?', 'data-infotext': """Enter the format of the file."""} %}
         {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}
             <span class="info-block info-block-small">
-            <i class="icon-info-sign"></i>
+            <i class="fa fa-info-circle"></i>
             {{ _('This will be guessed automatically. Leave blank if you wish') }}
             </span>
         {% endcall %}
     {% endblock %}
-
+    </div>
 {% endblock basic_fields %}
 
 
 
 {% block metadata_fields %}
-    {% resource 'dara/dara.css' %}
-    {% resource 'dara/underscore.js' %}
-    {% resource 'dara/jquery-ui.js' %} 
-    {% resource 'dara/dara.js' %}
-        
+    {% asset 'dara/dara-css' %}
+    {% asset 'dara/underscore-js' %}
+    {% asset 'dara/dara-js' %}
+    {% asset 'dara/date_validation-js' %}
+    {% asset 'dara/resource_authors-js' %}
+    {% asset 'dara/dara_authors-js' %}
+
     {% set res_type = res.dara_type or
         h.get_request_param('dara_res_preselection'), 'resource' %}
 
-    <input type="hidden" value="{{ res.dara_DOI }}" 
+    <input type="hidden" value="{{ res.dara_DOI }}"
                     name="dara_DOI" />
-    <input type="hidden" value="{{ res.dara_DOI_Test }}" 
+    <input type="hidden" value="{{ res.dara_DOI_Test }}"
                     name="dara_DOI_Test" />
 
 
-    
-    {#XXX DEBUG: dataset authors are overwritten by resource authors; off for 
-    now 
-    {{ authors.authors('resource', h) }}
-    #}
-       
 
-    <fieldset id="dara_data">
+    {#XXX DEBUG: dataset authors are overwritten by resource authors; off for
+    now #}
+    <div id="resource_authors" class="zbw-box box-full">
+        <div id="add_authors_selection">
+            <button type="button" class="plus-button" area-hidden="true" id="author_toggle_on"></button>
+            <button type="button" class="minus-button" area-hidden="true" id="author_toggle_off" style="display: none;"></button>
+            <strong id="message">Creator (if the creator is not the author(s), please click to edit this field)</strong>
+        </div>
+        <div id="resource_authors_section" style="display: none;">
+            {{ authors.authors('resource', h, data, errors) }}
+        </div>
+    </div>
+
+    <fieldset id="dara_data" class="zbw-box box-full">
         {{ dara_form.md('data', h, data, errors) }}
     </fieldset>
 
-    <fieldset id="dara_text">
+    <fieldset id="dara_text" class="zbw-box box-full">
         {{ dara_form.md('text', h, data, errors) }}
     </fieldset>
 
-    <fieldset id="dara_code">
+    <fieldset id="dara_code" class="zbw-box box-full">
         {{ dara_form.md('code', h, data, errors) }}
     </fieldset>
 
@@ -137,6 +145,35 @@ the reason for this remove Previous button here #}
 {% block previous_button %}
 {#        <button class="btn" name="save" value="go-dataset" type="submit">{{
     _('Previous') }}</button> #}
+    <button class="btn btn-danger split-red" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
+    <script>
+        function cancel(event){
+            var current = window.location.href;
+            console.log(current);
+            window.location.href = current.replace('/resource/new', '/state');
+        }
+
+        var button = document.getElementById('cancel_button');
+        button.addEventListener('click', cancel, false);
+    </script>
 {% endblock %}
 
 
+{% block add_button %}
+    <button class="btn btn-danger split-red" id="cancel_button" style="float:left;" type="button">{{ _('Cancel') }}</button>
+    <script>
+        function cancel(event){
+            var current = window.location.href;
+            window.location.href = current.replace('/new_resource', '/state');
+        }
+
+        var button = document.getElementById('cancel_button');
+        button.addEventListener('click', cancel, false);
+    </script>
+
+      <button class="btn btn-primary split" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
+{% endblock %}
+
+{% block save_button %}
+    <button class="btn btn-primary" name="save" value="go-metadata" type="submit">{% block save_button_text %}{{ _('Last Step') }}{% endblock %}</button>
+{% endblock %}
